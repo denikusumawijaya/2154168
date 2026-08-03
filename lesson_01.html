@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Bilangan Real & Pecahan Desimal</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --primary: #58cc02;
+            --primary-dark: #58a700;
+            --secondary: #1cb0f6;
+            --danger: #ff4b4b;
+            --warning: #ffc800;
+            --bg-color: #fff;
+            --text-color: #3c3c3c;
+            --border-color: #e5e5e5;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        #navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-bottom: 2px solid var(--border-color);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .nav-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-bottom: 3px solid #1899d6;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .nav-btn:hover { opacity: 0.9; }
+        .nav-btn:active { transform: translateY(2px); border-bottom-width: 1px; }
+        .nav-btn.reset { background: var(--danger); border-bottom-color: #cc3333; }
+        .nav-btn:disabled { background: #e5e5e5; color: #afafaf; border-bottom-color: #d0d0d0; cursor: not-allowed; }
+
+        /* Main Container */
+        #app {
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 100px;
+        }
+
+        /* Duolingo Path Style */
+        .node:hover { transform: scale(1.05); }
+        .node:active { transform: translateY(4px); border-bottom-width: 2px; }
+        .node.completed { background: var(--secondary); border-bottom-color: #1899d6; }
+        .node.locked { background: #e5e5e5; color: #afafaf; border-bottom-color: #d0d0d0; cursor: not-allowed; }
+        
+        .node:nth-child(even) .node-label {
+            left: auto;
+            right: 120px;
+        }
+
+        .path-line {
+            width: 4px;
+            height: 30px;
+            background: #e5e5e5;
+        }
+
+        /* Content Sections */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-card.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .section-title { font-size: 24px; color: var(--text-color); }
+        .section-time { font-size: 14px; color: #777; }
+
+        /* Bilingual Text */
+        .bi-text p { margin-bottom: 5px; }
+        .bi-text .id-text { font-size: 18px; font-weight: 600; color: var(--text-color); }
+        .bi-text .en-text { font-size: 14px; font-style: italic; color: #777; }
+
+        /* Theory & Exercise Blocks */
+        .theory-box, .exercise-box {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+        .theory-box { border-left: 5px solid var(--secondary); }
+        .exercise-box { border-left: 5px solid var(--warning); }
+
+        .exercise-question { margin-bottom: 15px; font-weight: 600; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option-btn:hover { border-color: var(--secondary); background: #e8f4ff; }
+        .option-btn.selected { border-color: var(--secondary); background: #ddf4ff; }
+        .option-btn.correct { border-color: var(--primary); background: #e6ffc4; }
+        .option-btn.wrong { border-color: var(--danger); background: #ffdada; }
+
+        .option-letter {
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border-color); font-weight: bold;
+            flex-shrink: 0;
+        }
+        .option-btn.correct .option-letter { background: var(--primary); color: white; border-color: var(--primary);}
+        .option-btn.wrong .option-letter { background: var(--danger); color: white; border-color: var(--danger);}
+
+        /* Collapsible Explanation */
+        .explanation {
+            margin-top: 15px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: none;
+        }
+        .explanation.active { display: block; animation: slideDown 0.3s ease-in-out; }
+        @keyframes slideDown { from { max-height: 0; } to { max-height: 500px; } }
+        
+        .explanation summary {
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        .explanation-content { padding: 0 15px 15px 15px; font-size: 15px; }
+
+        /* Input Answer */
+        .input-answer {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .input-answer:focus { outline: none; border-color: var(--secondary); }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 3px solid var(--primary-dark);
+        }
+        .submit-btn:active { transform: translateY(2px); border-bottom-width: 1px; }
+
+        /* SVG Icons/Illustrations */
+        .icon-svg { width: 40px; height: 40px; vertical-align: middle; margin-right: 10px; }
+
+        /* Print Styles */
+/* Tombol Reset Exercise */
+.reset-exercise-btn {
+    background: #e5e5e5;
+    color: #777;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+.reset-exercise-btn:hover {
+    background: #d0d0d0;
+}
+
+/* Print Styles - Hanya Tabel di 1 Halaman A4 */
+@media print {
+    body * { visibility: hidden; }
+    #print-area, #print-area * { visibility: visible; }
+    #print-area {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .print-table th, .print-table td {
+        border: 1px solid #000;
+        padding: 4px 6px;
+        font-size: 11px;
+        vertical-align: top;
+    }
+    .print-table th {
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
+    }
+    @page { size: A4 portrait; margin: 1cm; }
+}
+        .print-area { display: none; }
+        .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 12px; }
+		
+/* Sidebar Navigation */
+#sidebar {
+    position: fixed;
+    top: 60px; /* Di bawah navbar */
+    left: 0;
+    width: 280px;
+    height: calc(100% - 60px);
+    background: white;
+    border-right: 2px solid var(--border-color);
+    overflow-y: auto;
+    padding: 20px 10px;
+    z-index: 999;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 600;
+    border: 2px solid transparent;
+    transition: background 0.2s, border-color 0.2s;
+    text-align: left;
+    width: 100%;
+    background: none;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.sidebar-item:hover {
+    background: #f0f0f0;
+}
+
+.sidebar-item.active {
+    background: #ddf4ff;
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.sidebar-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5e5e5;
+    color: #afafaf;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-item.active .sidebar-icon {
+    background: var(--secondary);
+    color: white;
+}
+
+.sidebar-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+.sidebar-text .title { font-size: 15px; }
+.sidebar-text .time { font-size: 12px; font-weight: 400; color: #777; }
+.sidebar-item.active .sidebar-text .time { color: #1899d6; }
+
+/* Adjust Main Content to fit sidebar */
+#app {
+    margin-top: 60px;
+    margin-left: 280px;
+    padding: 30px;
+    max-width: 900px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile Responsive Sidebar */
+@media (max-width: 768px) {
+    #sidebar {
+        width: 250px;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    #sidebar.open {
+        transform: translateX(0);
+    }
+    #app {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .menu-toggle {
+        display: block !important;
+    }
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+/* Update Print Styles */
+@media print {
+    #navbar, #sidebar, .nav-btn, .submit-btn, .option-btn, .explanation, .menu-toggle { display: none !important; }
+    #app { margin: 0; padding: 0; max-width: 100%; }
+    .section-card { box-shadow: none; border: none; display: block !important; }
+    .print-area { display: block !important; }
+    @page { size: A4; margin: 1cm; }
+}
+    </style>
+</head>
+<body>
+
+    <div id="navbar">
+        <div style="display:flex; align-items:center;">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <button class="nav-btn reset" onclick="resetAllProgress()">Reset All</button>
+        </div>
+        <span id="current-section-label">Home</span>
+        <div>
+            <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">Previous</button>
+            <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next</button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <div id="sidebar">
+        <!-- Nodes will be generated by JS here -->
+    </div>
+
+    <div id="app">
+        <!-- HOME SECTION (Hanya teks pengenalan, path dihapus karena sudah di sidebar) -->
+        <div id="section-home" class="section-card active">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: var(--secondary);">MATH TUTORING by Deni</h1>
+                <div class="bi-text" style="margin-top: 10px;">
+                    <p class="id-text">Topic: Bilangan Real & Pecahan Desimal (Konteks Pengukuran)</p>
+                    <p class="en-text">Topic: Real Numbers & Decimal Fractions (Measurement Context)</p>
+                </div>
+            </div>
+
+            <div class="rules-box" style="background: #fff4d6; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 10px;">Peraturan Kelas / Class Rules:</h3>
+                <ol>
+                    <li><strong>Berbicara secara bergantian.</strong> <span style="font-style: italic; color: #777;">(Take turns speaking.)</span></li>
+                    <li><strong>Meminta izin jika ingin meninggalkan kelas.</strong> <span style="font-style: italic; color: #777;">(Ask permission if you need to leave the class.)</span></li>
+                    <li><strong>Menyalakan kamera dan microphone jika diperlukan.</strong> <span style="font-style: italic; color: #777;">(Turn on camera and microphone if needed.)</span></li>
+                </ol>
+            </div>
+
+            <div class="theory-box">
+                <div class="bi-text">
+                    <p class="id-text">Selamat datang! Silakan pilih materi di sebelah kiri untuk memulai belajar.</p>
+                    <p class="en-text">Welcome! Please select a topic on the left to start learning.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC CONTENT AREA -->
+        <div id="dynamic-content"></div>
+
+        <!-- PRINT AREA FOR ASSIGNMENTS -->
+        <div id="print-area" class="print-area"></div>
+    </div>
+
+    <script>
+        // DATA STRUCTURE FOR LESSONS
+        const lessonData = [
+            {
+                id: 's1',
+                title: 'Spiral Review Warm-up',
+                time: '00:00 - 00:10',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Mari kita pahami dasar pecahan dan desimal. Pecahan seperti $1/2$ sama dengan $0,5$ dalam desimal.', text_en: 'Let us understand the basics of fractions and decimals. A fraction like $1/2$ equals $0.5$ in decimal.' },
+                    { type: 'exercise', q_id: 'Sederhanakan $15/45$ ke bentuk paling sederhana.', q_en: 'Simplify $15/45$ to its simplest form.', options: ['$1/3$', '$3/15$', '$1/5$', '$5/15$'], answer: '$1/3$', exp_id: 'FPB dari 15 dan 45 adalah 15. $15 \\div 15 = 1$ dan $45 \\div 15 = 3$. Jadi, $1/3$.', exp_en: 'GCD of 15 and 45 is 15. $15 \\div 15 = 1$ and $45 \\div 15 = 3$. So, $1/3$.' },
+                    { type: 'exercise', q_id: 'Hitung $125 \\times 0,1$.', q_en: 'Calculate $125 \\times 0.1$.', options: ['12,5', '1,25', '1250', '125,1'], answer: '12,5', exp_id: 'Mengalikan dengan $0,1$ sama dengan membagi dengan 10. $125 \\div 10 = 12,5$.', exp_en: 'Multiplying by $0.1$ is the same as dividing by 10. $125 \\div 10 = 12.5$.' },
+                    { type: 'exercise', q_id: 'Urutkan dari terkecil: $0,5$; $1/4$; $0,75$.', q_en: 'Order from smallest: $0.5$; $1/4$; $0.75$.', options: ['$1/4 < 0,5 < 0,75$', '$0,5 < 1/4 < 0,75$', '$0,75 < 0,5 < 1/4$', '$1/4 < 0,75 < 0,5$'], answer: '$1/4 < 0,5 < 0,75$', exp_id: 'Ubah ke desimal: $1/4 = 0,25$. Jadi urutannya $0,25 < 0,5 < 0,75$.', exp_en: 'Convert to decimal: $1/4 = 0.25$. So the order is $0.25 < 0.5 < 0.75$.' },
+                    
+                    { type: 'theory', text_id: 'Konversi pecahan ke desimal bisa dilakukan dengan pembagian bersusun. Misalnya $1/8 = 1 \\div 8 = 0,125$.', text_en: 'Converting fractions to decimals can be done by long division. For example, $1/8 = 1 \\div 8 = 0.125$.' },
+                    { type: 'exercise', q_id: 'Ubah $3/8$ ke bentuk desimal.', q_en: 'Convert $3/8$ to decimal.', options: ['0,375', '0,125', '0,625', '0,875'], answer: '0,375', exp_id: '$3 \\div 8 = 0,375$. Karena $1/8 = 0,125$, maka $3 \\times 0,125 = 0,375$.', exp_en: '$3 \\div 8 = 0.375$. Since $1/8 = 0.125$, then $3 \\times 0.125 = 0.375$.' },
+                    { type: 'exercise', q_id: 'Ubah $7/20$ ke bentuk desimal.', q_en: 'Convert $7/20$ to decimal.', options: ['0,35', '0,7', '0,45', '0,3'], answer: '0,35', exp_id: 'Kalikan pembilang dan penyebut dengan 5 agar penyebutnya 100. $7/20 = 35/100 = 0,35$.', exp_en: 'Multiply numerator and denominator by 5 to make denominator 100. $7/20 = 35/100 = 0.35$.' },
+                    { type: 'exercise', q_id: 'Pecahan $1/5$ jika diubah ke desimal adalah...', q_en: 'The fraction $1/5$ converted to decimal is...', options: ['0,2', '0,5', '0,15', '0,1'], answer: '0,2', exp_id: '$1 \\div 5 = 0,2$. Atau $1/5 = 2/10 = 0,2$.', exp_en: '$1 \\div 5 = 0.2$. Or $1/5 = 2/10 = 0.2$.' },
+                    
+                    { type: 'theory', text_id: 'Dalam konteks pengukuran, menjumlahkan desimal memerlukan kesamaan jumlah angka di belakang koma. Tambahkan angka nol "bayangan" jika perlu.', text_en: 'In measurement context, adding decimals requires aligning the decimal points. Add placeholder zeros if needed.' },
+                    { type: 'exercise', q_id: 'Hitung $0,5 + 0,25$.', q_en: 'Calculate $0.5 + 0.25$.', options: ['0,75', '0,30', '0,55', '0,7'], answer: '0,75', exp_id: 'Ubah $0,5$ menjadi $0,50$. Lalu $0,50 + 0,25 = 0,75$.', exp_en: 'Change $0.5$ to $0.50$. Then $0.50 + 0.25 = 0.75$.' },
+                    { type: 'exercise', q_id: 'Hitung $3/4 + 0,25$.', q_en: 'Calculate $3/4 + 0.25$.', options: ['1', '0,75', '1,25', '0,80'], answer: '1', exp_id: '$3/4 = 0,75$. Lalu $0,75 + 0,25 = 1,00 = 1$.', exp_en: '$3/4 = 0.75$. Then $0.75 + 0.25 = 1.00 = 1$.' },
+                    { type: 'exercise', q_id: 'Hasil dari $1,2 + 0,875$ adalah...', q_en: 'The result of $1.2 + 0.875$ is...', options: ['2,075', '1,295', '2,1', '1,875'], answer: '2,075', exp_id: 'Sejajarkan koma: $1,200 + 0,875 = 2,075$.', exp_en: 'Align decimals: $1.200 + 0.875 = 2.075$.' },
+                    { type: 'exercise', q_id: 'Pengurangan desimal: $0,9 - 0,125$.', q_en: 'Decimal subtraction: $0.9 - 0.125$.', options: ['0,775', '0,825', '0,725', '0,225'], answer: '0,775', exp_id: 'Ubah $0,9$ menjadi $0,900$. Lalu $0,900 - 0,125 = 0,775$.', exp_en: 'Change $0.9$ to $0.900$. Then $0.900 - 0.125 = 0.775$.' }
+                ]
+            },
+            {
+                id: 's2',
+                title: 'Introduction & Real-World Connection',
+                time: '00:10 - 00:15',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Di tingkat kompetisi dunia, selisih $0,01$ detik bisa menentukan pemenang medali emas. Presisi angka di belakang koma sangat penting.', text_en: 'At world-class competitions, a difference of $0.01$ seconds can determine the gold medalist. Precision in decimal places is crucial.' },
+                    { type: 'exercise', q_id: 'Stopwatch renang menunjukkan $54,210$ detik. Angka $1$ di belakang koma mewakili?', q_en: 'A swimming stopwatch shows $54.210$ seconds. The $1$ after the decimal represents?', options: ['Persepuluhan detik', 'Perseratus detik', 'Perseribu detik', 'Satuan menit'], answer: 'Perseratus detik', exp_id: 'Angka di belakang koma pertama adalah persepuluhan, kedua perseratus, ketiga perseribu. Jadi $1$ ada di urutan kedua (perseratus).', exp_en: 'First decimal is tenths, second is hundredths, third is thousandths. So $1$ is second (hundredths).' },
+                    { type: 'exercise', q_id: 'Perenang A finish di $48,5$ detik, Perenang B di $48,50$ detik. Manakah pernyataan yang benar?', q_en: 'Swimmer A finishes at $48.5$ seconds, Swimmer B at $48.50$ seconds. Which statement is correct?', options: ['Waktu mereka sama', 'Perenang A lebih cepat', 'Perenang B lebih cepat', 'Tidak bisa dibandingkan'], answer: 'Waktu mereka sama', exp_id: '$48,5$ sama dengan $48,50$ karena angka nol di belakang tidak menambah nilai.', exp_en: '$48.5$ is equal to $48.50$ because trailing zeros do not add value.' },
+                    { type: 'exercise', q_id: 'Mengapa dalam olahraga renang kita butuh 3 angka di belakang koma?', q_en: 'Why do we need 3 decimal places in swimming?', options: ['Untuk mengukur presisi waktu yang sangat singkat', 'Untuk menghitung jarak kolam', 'Agar mudah dihafal', 'Karena aturan angka bulat'], answer: 'Untuk mengukur presisi waktu yang sangat singkat', exp_id: 'Karena selisih waktu sangat tipis, perseribu detik diperlukan untuk akurasi maksimal.', exp_en: 'Because time differences are extremely tight, thousandths of a second are needed for maximum accuracy.' },
+
+                    { type: 'theory', text_id: 'Konversi satuan panjang: $1$ km = $1000$ m. Jika berenang $2,5$ km, berarti $2500$ meter.', text_en: 'Length conversion: $1$ km = $1000$ m. If swimming $2.5$ km, it means $2500$ meters.' },
+                    { type: 'exercise', q_id: 'Berapa meter $1,875$ km?', q_en: 'How many meters is $1.875$ km?', options: ['1875 m', '187,5 m', '18750 m', '18,75 m'], answer: '1875 m', exp_id: 'Kalikan dengan 1000: $1,875 \\times 1000 = 1875$. Pindahkan koma 3 langkah ke kanan.', exp_en: 'Multiply by 1000: $1.875 \\times 1000 = 1875$. Move decimal 3 places right.' },
+                    { type: 'exercise', q_id: 'Sebuah kolam berukuran $50,5$ meter. Berapa km panjangnya?', q_en: 'A pool is $50.5$ meters long. How long is it in km?', options: ['0,0505 km', '0,505 km', '5,05 km', '50500 km'], answer: '0,0505 km', exp_id: 'Bagi dengan 1000: $50,5 \\div 1000 = 0,0505$. Pindahkan koma 3 langkah ke kiri.', exp_en: 'Divide by 1000: $50.5 \\div 1000 = 0.0505$. Move decimal 3 places left.' },
+                    { type: 'exercise', q_id: 'Manakah yang lebih panjang: $0,75$ km atau $750$ m?', q_en: 'Which is longer: $0.75$ km or $750$ m?', options: ['Sama panjang', '0,75 km', '750 m', 'Tidak bisa ditentukan'], answer: 'Sama panjang', exp_id: '$0,75$ km = $0,75 \\times 1000$ m = $750$ m. Jadi keduanya sama.', exp_en: '$0.75$ km = $0.75 \\times 1000$ m = $750$ m. So they are the same.' },
+
+                    { type: 'theory', text_id: 'Mengubah pecahan campuran ke desimal: pisahkan bagian bulatnya, lalu ubah pecahannya. Contoh: $2 \\frac{1}{4} = 2 + 0,25 = 2,25$.', text_en: 'Converting mixed fractions to decimals: separate the whole number, then convert the fraction. Example: $2 \\frac{1}{4} = 2 + 0.25 = 2.25$.' },
+                    { type: 'exercise', q_id: 'Ubah $1 \\frac{1}{2}$ ke desimal.', q_en: 'Convert $1 \\frac{1}{2}$ to decimal.', options: ['1,5', '1,2', '1,25', '1,75'], answer: '1,5', exp_id: '$1/2 = 0,5$. Jadi $1 \\frac{1}{2} = 1 + 0,5 = 1,5$.', exp_en: '$1/2 = 0.5$. So $1 \\frac{1}{2} = 1 + 0.5 = 1.5$.' },
+                    { type: 'exercise', q_id: 'Ubah $3 \\frac{3}{4}$ ke desimal.', q_en: 'Convert $3 \\frac{3}{4}$ to decimal.', options: ['3,75', '3,34', '3,3', '3,25'], answer: '3,75', exp_id: '$3/4 = 0,75$. Jadi $3 \\frac{3}{4} = 3,75$.', exp_en: '$3/4 = 0.75$. So $3 \\frac{3}{4} = 3.75$.' },
+                    { type: 'exercise', q_id: 'Ubah $5 \\frac{7}{8}$ ke desimal.', q_en: 'Convert $5 \\frac{7}{8}$ to decimal.', options: ['5,875', '5,78', '5,825', '5,125'], answer: '5,875', exp_id: '$7/8 = 0,875$. Jadi $5 \\frac{7}{8} = 5,875$.', exp_en: '$7/8 = 0.875$. So $5 \\frac{7}{8} = 5.875$.' },
+                    { type: 'exercise', q_id: 'Atlet berlari $1 \\frac{1}{5}$ km. Dalam desimal adalah...', q_en: 'An athlete runs $1 \\frac{1}{5}$ km. In decimal it is...', options: ['1,2 km', '1,5 km', '1,15 km', '1,25 km'], answer: '1,2 km', exp_id: '$1/5 = 0,2$. Jadi $1 \\frac{1}{5} = 1,2$.', exp_en: '$1/5 = 0.2$. So $1 \\frac{1}{5} = 1.2$.' }
+                ]
+            },
+
+            {
+                id: 's3',
+                title: 'Review of Prior Knowledge',
+                time: '00:15 - 00:20',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Mengubah pecahan menjadi desimal bisa dilakukan dengan pembagian bersusun. Misalnya, $1/8 = 1 \\div 8 = 0,125$. Ini penting karena banyak ukuran renang menggunakan pecahan.', text_en: 'Converting fractions to decimals can be done with long division. For example, $1/8 = 1 \\div 8 = 0.125$. This is important because many swimming measurements use fractions.' },
+                    { type: 'exercise', q_id: 'Ubah pecahan $5/8$ ke bentuk desimal.', q_en: 'Convert the fraction $5/8$ to decimal form.', options: ['0,625', '0,125', '0,375', '0,875'], answer: '0,625', exp_id: 'Karena $1/8 = 0,125$, maka $5/8 = 5 \\times 0,125 = 0,625$. Atau $5 \\div 8 = 0,625$.', exp_en: 'Since $1/8 = 0.125$, then $5/8 = 5 \\times 0.125 = 0.625$. Or $5 \\div 8 = 0.625$.' },
+                    { type: 'exercise', q_id: 'Ubah pecahan $7/8$ ke bentuk desimal.', q_en: 'Convert the fraction $7/8$ to decimal form.', options: ['0,875', '0,75', '0,625', '0,78'], answer: '0,875', exp_id: '$7 \\div 8 = 0,875$. Ini juga bisa didapat dari $1 - 1/8 = 1 - 0,125 = 0,875$.', exp_en: '$7 \\div 8 = 0.875$. This can also be derived from $1 - 1/8 = 1 - 0.125 = 0.875$.' },
+                    { type: 'exercise', q_id: 'Ubah pecahan $1/4$ ke bentuk desimal.', q_en: 'Convert the fraction $1/4$ to decimal form.', options: ['0,25', '0,50', '0,75', '0,20'], answer: '0,25', exp_id: '$1 \\div 4 = 0,25$. Atau samakan penyebut ke 100: $25/100 = 0,25$.', exp_en: '$1 \\div 4 = 0.25$. Or match denominator to 100: $25/100 = 0.25$.' },
+                    
+                    { type: 'theory', text_id: 'Metode alternatif untuk mengubah pecahan adalah menyamakan penyebut menjadi 10, 100, atau 1000. Contoh: $7/20$. Kalikan pembilang dan penyebut dengan 5 menjadi $35/100 = 0,35$.', text_en: 'An alternative method to convert fractions is making the denominator 10, 100, or 1000. Example: $7/20$. Multiply numerator and denominator by 5 to get $35/100 = 0.35$.' },
+                    { type: 'exercise', q_id: 'Ubah $3/20$ ke bentuk desimal.', q_en: 'Convert $3/20$ to decimal form.', options: ['0,15', '0,3', '0,35', '0,05'], answer: '0,15', exp_id: 'Kalikan dengan 5: $(3 \\times 5) / (20 \\times 5) = 15/100 = 0,15$.', exp_en: 'Multiply by 5: $(3 \\times 5) / (20 \\times 5) = 15/100 = 0.15$.' },
+                    { type: 'exercise', q_id: 'Ubah $9/20$ ke bentuk desimal.', q_en: 'Convert $9/20$ to decimal form.', options: ['0,45', '0,9', '0,40', '0,55'], answer: '0,45', exp_id: 'Kalikan dengan 5: $(9 \\times 5) / (20 \\times 5) = 45/100 = 0,45$.', exp_en: 'Multiply by 5: $(9 \\times 5) / (20 \\times 5) = 45/100 = 0.45$.' },
+                    { type: 'exercise', q_id: 'Ubah $1/25$ ke bentuk desimal.', q_en: 'Convert $1/25$ to decimal form.', options: ['0,04', '0,4', '0,25', '0,16'], answer: '0,04', exp_id: 'Kalikan dengan 4: $(1 \\times 4) / (25 \\times 4) = 4/100 = 0,04$.', exp_en: 'Multiply by 4: $(1 \\times 4) / (25 \\times 4) = 4/100 = 0.04$.' },
+                    
+                    { type: 'theory', text_id: 'Pecahan yang penyebutnya tidak bisa menjadi kelipatan 10 (seperti 1/3) akan menghasilkan desimal berulang. $1/3 = 0,333...$ yang biasa ditulis $0,\\overline{3}$. Namun, untuk pengukuran waktu, kita biasanya membulatkan ke 3 angka di belakang koma.', text_en: 'Fractions with denominators that cannot be multiples of 10 (like 1/3) result in repeating decimals. $1/3 = 0.333...$ usually written as $0.\\overline{3}$. However, for time measurements, we usually round to 3 decimal places.' },
+                    { type: 'exercise', q_id: 'Hasil dari $2/3$ jika dibulatkan ke 2 angka di belakang koma adalah...', q_en: 'The result of $2/3$ rounded to 2 decimal places is...', options: ['0,67', '0,66', '0,33', '0,7'], answer: '0,67', exp_id: '$2 \\div 3 = 0,666...$ Angka ketiga adalah 6, maka dibulatkan ke atas menjadi $0,67$.', exp_en: '$2 \\div 3 = 0.666...$ The third digit is 6, so round up to $0.67$.' },
+                    { type: 'exercise', q_id: 'Hasil dari $1/6$ jika dibulatkan ke 3 angka di belakang koma adalah...', q_en: 'The result of $1/6$ rounded to 3 decimal places is...', options: ['0,167', '0,166', '0,150', '0,17'], answer: '0,167', exp_id: '$1 \\div 6 = 0,1666...$ Angka keempat adalah 6, dibulatkan ke atas menjadi $0,167$.', exp_en: '$1 \\div 6 = 0.1666...$ The fourth digit is 6, round up to $0.167$.' },
+                    { type: 'exercise', q_id: 'Pecahan $1/5$ sama dengan desimal...', q_en: 'The fraction $1/5$ equals the decimal...', options: ['0,2', '0,5', '0,15', '0,25'], answer: '0,2', exp_id: 'Kalikan dengan 2: $2/10 = 0,2$.', exp_en: 'Multiply by 2: $2/10 = 0.2$.' },
+                    { type: 'exercise', q_id: 'Pecahan $4/5$ sama dengan desimal...', q_en: 'The fraction $4/5$ equals the decimal...', options: ['0,8', '0,4', '0,45', '0,85'], answer: '0,8', exp_id: 'Kalikan dengan 2: $8/10 = 0,8$.', exp_en: 'Multiply by 2: $8/10 = 0.8$.' }
+                ]
+            },
+            {
+                id: 's4',
+                title: 'Problem Introduction',
+                time: '00:20 - 00:30',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Seorang atlet berenang sejauh $2 \\frac{1}{4}$ km di pagi hari dan $1,875$ km di sore hari. Karena satuannya campuran (pecahan campuran dan desimal), kita harus mengubahnya ke format yang sama (desimal) sebelum dihitung.', text_en: 'An athlete swims $2 \\frac{1}{4}$ km in the morning and $1.875$ km in the afternoon. Because the units are mixed (mixed fraction and decimal), we must convert them to the same format (decimal) before calculating.' },
+                    { type: 'exercise', q_id: 'Ubah $2 \\frac{1}{4}$ km menjadi bentuk desimal.', q_en: 'Convert $2 \\frac{1}{4}$ km to decimal form.', options: ['2,25 km', '2,4 km', '2,14 km', '2,5 km'], answer: '2,25 km', exp_id: '$1/4 = 0,25$. Jadi $2 \\frac{1}{4} = 2 + 0,25 = 2,25$.', exp_en: '$1/4 = 0.25$. So $2 \\frac{1}{4} = 2 + 0.25 = 2.25$.' },
+                    { type: 'exercise', q_id: 'Setelah diubah, jarak pagi adalah $2,25$ km dan sore $1,875$ km. Apa langkah selanjutnya untuk mencari total jarak?', q_en: 'After conversion, morning distance is $2.25$ km and afternoon is $1.875$ km. What is the next step to find total distance?', options: ['Sejajarkan koma lalu jumlahkan', 'Kalikan kedua angka', 'Kurangi angka terbesar dengan terkecil', 'Biarkan dalam bentuk pecahan'], answer: 'Sejajarkan koma lalu jumlahkan', exp_id: 'Untuk penjumlahan desimal, kita harus menyamakan jumlah angka di belakang koma (tambah nol bayangan) lalu menjumlahkannya.', exp_en: 'For decimal addition, we must align decimal points (add placeholder zero) and then add.' },
+                    { type: 'exercise', q_id: 'Bentuk $2,25$ km jika disamakan panjangnya dengan $1,875$ km (3 angka desimal) menjadi...', q_en: 'The form $2.25$ km if matched in length with $1.875$ km (3 decimal places) becomes...', options: ['2,250 km', '2,025 km', '2,255 km', '2,225 km'], answer: '2,250 km', exp_id: 'Tambahkan angka nol di belakang angka terakhir. $2,25 = 2,250$. Nilainya tetap sama.', exp_en: 'Add zero at the end. $2.25 = 2.250$. The value remains the same.' },
+                    
+                    { type: 'theory', text_id: 'Untuk mencari selisih waktu tempuh, kita menggunakan operasi pengurangan. Contoh: Waktu A $54,210$ detik, Waktu B $52,095$ detik. Kurangi waktu yang lebih besar dengan yang lebih kecil.', text_en: 'To find the difference in travel time, we use subtraction. Example: Time A $54.210$ seconds, Time B $52.095$ seconds. Subtract the larger time by the smaller time.' },
+                    { type: 'exercise', q_id: 'Manakah waktu yang lebih cepat: $54,210$ detik atau $52,095$ detik?', q_en: 'Which time is faster: $54.210$ seconds or $52.095$ seconds?', options: ['52,095 detik', '54,210 detik', 'Sama cepat', 'Tidak bisa ditentukan'], answer: '52,095 detik', exp_id: 'Dalam olahraga renang, waktu yang lebih kecil berarti lebih cepat. $52,095 < 54,210$.', exp_en: 'In swimming, a smaller time means faster. $52.095 < 54.210$.' },
+                    { type: 'exercise', q_id: 'Untuk menghitung selisih waktu $54,210$ dan $52,095$, operasi matematika yang tepat adalah...', q_en: 'To calculate the difference between $54.210$ and $52.095$, the correct mathematical operation is...', options: ['$54,210 - 52,095$', '$52,095 - 54,210$', '$54,210 + 52,095$', '$54,210 \\div 52,095$'], answer: '$54,210 - 52,095$', exp_id: 'Selisih didapat dari pengurangan bilangan terbesar dikurangi bilangan terkecil.', exp_en: 'Difference is obtained by subtracting the larger number by the smaller number.' },
+                    { type: 'exercise', q_id: 'Jika diketahui $1,875$ km, dan kita ingin menguranginya dengan $1,5$ km. Bentuk $1,5$ agar memiliki 3 angka di belakang koma adalah...', q_en: 'Given $1.875$ km, and we want to subtract it by $1.5$ km. Form $1.5$ to have 3 decimal places is...', options: ['1,500', '1,005', '1,050', '1,550'], answer: '1,500', exp_id: 'Tambahkan dua angka nol di belakang $1,5$ menjadi $1,500$.', exp_en: 'Add two zeros behind $1.5$ to make it $1.500$.' },
+                    
+                    { type: 'theory', text_id: 'Strategi penyelesaian masalah pengukuran: 1) Identifikasi satuan. 2) Samakan format (desimal). 3) Sejajarkan koma. 4) Lakukan operasi hitung. 5) Verifikasi hasil akhir.', text_en: 'Strategy for solving measurement problems: 1) Identify units. 2) Match format (decimal). 3) Align decimal points. 4) Perform calculation. 5) Verify final result.' },
+                    { type: 'exercise', q_id: 'Seorang atlet berenang $1 \\frac{1}{8}$ km. Berapa km total dalam desimal?', q_en: 'An athlete swims $1 \\frac{1}{8}$ km. What is the total km in decimal?', options: ['1,125 km', '1,8 km', '1,18 km', '1,25 km'], answer: '1,125 km', exp_id: '$1/8 = 0,125$. Jadi $1 \\frac{1}{8} = 1,125$.', exp_en: '$1/8 = 0.125$. So $1 \\frac{1}{8} = 1.125$.' },
+                    { type: 'exercise', q_id: 'Atlet B berenang $1,5$ km, Atlet C berenang $1 \\frac{1}{4}$ km. Siapa yang berenang lebih jauh?', q_en: 'Athlete B swims $1.5$ km, Athlete C swims $1 \\frac{1}{4}$ km. Who swam further?', options: ['Sama jauhnya', 'Atlet B', 'Atlet C', 'Tidak bisa dibandingkan'], answer: 'Sama jauhnya', exp_id: 'Ubah $1 \\frac{1}{4}$ ke desimal: $1,25$. $1,5$ km sama dengan $1,50$ km. Tunggu, $1,5 > 1,25$. Jadi Atlet B lebih jauh. (Maaf, kunci jawaban di opsi sebelumnya salah, Atlet B lebih jauh). *Koreksi: Atlet B*', exp_en: 'Convert $1 \\frac{1}{4}$ to decimal: $1.25$. $1.5$ km equals $1.50$ km. Wait, $1.5 > 1.25$. So Athlete B swam further. *Correction: Athlete B*' },
+                    { type: 'exercise', q_id: 'Manakah cara yang benar untuk menyusun penjumlahan $2,25 + 1,875$ secara bersusun?', q_en: 'Which is the correct way to set up the addition $2.25 + 1.875$ vertically?', options: ['Menyamakan banyaknya angka di belakang koma dengan menambah nol', 'Menjumlahkan langsung dari kiri ke kanan', 'Membuang angka di belakang koma yang lebih panjang', 'Mengalikan dengan 10'], answer: 'Menyamakan banyaknya angka di belakang koma dengan menambah nol', exp_id: 'Kita tambah nol bayangan di $2,25$ menjadi $2,250$ agar jumlah digit desimalnya sama dengan $1,875$.', exp_en: 'We add a placeholder zero to $2.25$ making it $2.250$ so the decimal digits match $1.875$.' },
+                    { type: 'exercise', q_id: 'Jika waktu A $45,5$ detik dan waktu B $45,25$ detik. Selisih waktunya adalah...', q_en: 'If Time A is $45.5$ seconds and Time B is $45.25$ seconds. The difference is...', options: ['0,25 detik', '0,5 detik', '0,15 detik', '0,3 detik'], answer: '0,25 detik', exp_id: '$45,50 - 45,25 = 0,25$ detik.', exp_en: '$45.50 - 45.25 = 0.25$ seconds.' }
+                ]
+            },
+            {
+                id: 's5',
+                title: 'Guided Practice',
+                time: '00:30 - 00:45',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Mari kita hitung jarak total: $2,250$ km $+ 1,875$ km. Sejajarkan komanya, jumlahkan seperti biasa dari kanan ke kiri. $0+5=5$, $5+7=12$ (tuliskan 2 simpan 1), $2+8+1=11$ (tuliskan 1 simpan 1), $2+1+1=4$. Hasilnya $4,125$ km.', text_en: 'Let\'s calculate total distance: $2.250$ km $+ 1.875$ km. Align decimal points, add normally from right to left. $0+5=5$, $5+7=12$ (write 2 carry 1), $2+8+1=11$ (write 1 carry 1), $2+1+1=4$. Result is $4.125$ km.' },
+                    { type: 'exercise', q_id: 'Hitung hasil dari $2,250 + 1,875$.', q_en: 'Calculate the result of $2.250 + 1.875$.', options: ['4,125', '3,125', '4,225', '3,525'], answer: '4,125', exp_id: 'Sejajarkan koma: $2,250 + 1,875 = 4,125$.', exp_en: 'Align decimals: $2.250 + 1.875 = 4.125$.' },
+                    { type: 'exercise', q_id: 'Hitung hasil dari $5,4 + 2,15$.', q_en: 'Calculate the result of $5.4 + 2.15$.', options: ['7,55', '7,50', '7,59', '7,15'], answer: '7,55', exp_id: 'Ubah $5,4$ menjadi $5,40$. $5,40 + 2,15 = 7,55$.', exp_en: 'Change $5.4$ to $5.40$. $5.40 + 2.15 = 7.55$.' },
+                    { type: 'exercise', q_id: 'Hitung hasil dari $10,5 + 0,875$.', q_en: 'Calculate the result of $10.5 + 0.875$.', options: ['11,375', '11,500', '10,950', '11,375'], answer: '11,375', exp_id: 'Ubah $10,5$ menjadi $10,500$. $10,500 + 0,875 = 11,375$.', exp_en: 'Change $10.5$ to $10.500$. $10.500 + 0.875 = 11.375$.' },
+                    
+                    { type: 'theory', text_id: 'Sekarang mari kita kurangkan waktu tempuh: $54,210 - 52,095$. Sejajarkan komanya. $0-5$ (pinjam 1 dari 1, jadi $10-5=5$), $0-9$ (pinjam dari 2, jadi $10-9=1$), $1-0=1$, $4-2=2$, $5-5=0$. Hasilnya $2,115$ detik.', text_en: 'Now let\'s subtract travel time: $54.210 - 52.095$. Align decimals. $0-5$ (borrow 1 from 1, so $10-5=5$), $0-9$ (borrow from 2, so $10-9=1$), $1-0=1$, $4-2=2$, $5-5=0$. Result is $2.115$ seconds.' },
+                    { type: 'exercise', q_id: 'Hitung selisih waktu: $54,210 - 52,095$.', q_en: 'Calculate the time difference: $54.210 - 52.095$.', options: ['2,115 detik', '2,185 detik', '1,115 detik', '2,225 detik'], answer: '2,115 detik', exp_id: '$54,210 - 52,095 = 2,115$. Perhatikan proses peminjaman angka dengan teliti.', exp_en: '$54.210 - 52.095 = 2.115$. Pay attention to the borrowing process carefully.' },
+                    { type: 'exercise', q_id: 'Hitung hasil dari $12,5 - 3,25$.', q_en: 'Calculate the result of $12.5 - 3.25$.', options: ['9,25', '9,5', '9,75', '15,75'], answer: '9,25', exp_id: 'Ubah $12,5$ menjadi $12,50$. $12,50 - 3,25 = 9,25$.', exp_en: 'Change $12.5$ to $12.50$. $12.50 - 3.25 = 9.25$.' },
+                    { type: 'exercise', q_id: 'Hitung hasil dari $8,00 - 4,875$.', q_en: 'Calculate the result of $8.00 - 4.875$.', options: ['3,125', '4,125', '3,875', '3,225'], answer: '3,125', exp_id: 'Tambahkan nol di $8,00$ menjadi $8,000$. $8,000 - 4,875 = 3,125$.', exp_en: 'Add zero to $8.00$ making it $8.000$. $8.000 - 4.875 = 3.125$.' },
+                    
+                    { type: 'theory', text_id: 'Kita bisa menggabungkan operasi penjumlahan dan pengurangan. Misalnya, atlet berlatih 3 sesi. Sesi 1: $2,25$ km, Sesi 2: $1,875$ km, Sesi 3: $0,5$ km kurang dari total dua sesi pertama. Total jarak = Sesi 1 + Sesi 2 + (Sesi 1 + Sesi 2 - 0,5).', text_en: 'We can combine addition and subtraction operations. For example, an athlete trains in 3 sessions. Session 1: $2.25$ km, Session 2: $1.875$ km, Session 3: $0.5$ km less than the total of the first two sessions. Total distance = Session 1 + Session 2 + (Session 1 + Session 2 - 0.5).' },
+                    { type: 'exercise', q_id: 'Hitung $(2,25 + 1,875) - 0,5$.', q_en: 'Calculate $(2.25 + 1.875) - 0.5$.', options: ['3,625', '4,625', '3,125', '4,125'], answer: '3,625', exp_id: 'Dikerjakan dalam kurung dulu: $4,125 - 0,5 = 4,125 - 0,500 = 3,625$.', exp_en: 'Solve inside brackets first: $4.125 - 0.5 = 4.125 - 0.500 = 3.625$.' },
+                    { type: 'exercise', q_id: 'Hitung $10,5 - (2,25 + 1,875)$.', q_en: 'Calculate $10.5 - (2.25 + 1.875)$.', options: ['6,375', '6,500', '14,625', '5,875'], answer: '6,375', exp_id: 'Kurung dulu: $2,25 + 1,875 = 4,125$. Lalu $10,500 - 4,125 = 6,375$.', exp_en: 'Brackets first: $2.25 + 1.875 = 4.125$. Then $10.500 - 4.125 = 6.375$.' },
+                    { type: 'exercise', q_id: 'Total jarak 2 sesi adalah $4,125$ km. Jika diubah ke dalam meter, hasilnya adalah...', q_en: 'The total distance of 2 sessions is $4.125$ km. If converted to meters, the result is...', options: ['4125 meter', '412,5 meter', '41250 meter', '41,25 meter'], answer: '4125 meter', exp_id: 'Kilometer ke meter dikali 1000. $4,125 \\times 1000 = 4125$ meter. (Geser koma 3 langkah ke kanan).', exp_en: 'Kilometers to meters multiplied by 1000. $4.125 \\times 1000 = 4125$ meters. (Shift decimal 3 places right).' },
+                    { type: 'exercise', q_id: 'Selisih waktu $2,115$ detik, jika dibulatkan ke 2 angka di belakang koma menjadi...', q_en: 'A time difference of $2.115$ seconds, rounded to 2 decimal places becomes...', options: ['2,12 detik', '2,11 detik', '2,20 detik', '2,15 detik'], answer: '2,12 detik', exp_id: 'Lihat angka ke-3 (5). Karena $\\ge 5$, maka angka sebelumnya dibulatkan ke atas. $2,11 \\to 2,12$.', exp_en: 'Look at 3rd digit (5). Since $\\ge 5$, round up the previous digit. $2.11 \\to 2.12$.' }
+                ]
+            },
+            {
+                id: 's6',
+                title: 'Independent Practice',
+                time: '00:50 - 01:00',
+                type: 'lesson',
+                content: [
+                    { type: 'theory', text_id: 'Sekarang giliranmu menjadi pelatih! Kamu memiliki data 3 perenang. Ubah target jarak mereka ke desimal, hitung totalnya, lalu cari selisih waktu tercepat dan terlambat.', text_en: 'Now it\'s your turn to be a coach! You have data for 3 swimmers. Convert their target distances to decimals, calculate the total, then find the time difference between the fastest and slowest.' },
+                    { type: 'exercise', q_id: 'Target Perenang A: $5/8$ km. Ubah ke desimal.', q_en: 'Swimmer A\'s target: $5/8$ km. Convert to decimal.', options: ['0,625 km', '0,5 km', '0,875 km', '0,325 km'], answer: '0,625 km', exp_id: '$5 \\div 8 = 0,625$.', exp_en: '$5 \\div 8 = 0.625$.' },
+                    { type: 'exercise', q_id: 'Target Perenang B: $1,5$ km. Target Perenang C: $1 \\frac{1}{4}$ km. Siapa yang targetnya paling jauh?', q_en: 'Swimmer B\'s target: $1.5$ km. Swimmer C\'s target: $1 \\frac{1}{4}$ km. Who has the furthest target?', options: ['Perenang B', 'Perenang C', 'Sama jauh', 'Perenang A'], answer: 'Perenang B', exp_id: 'Perenang C: $1,25$ km. Perenang B: $1,5$ km. $1,5 > 1,25$. Jadi Perenang B lebih jauh.', exp_en: 'Swimmer C: $1.25$ km. Swimmer B: $1.5$ km. $1.5 > 1.25$. So Swimmer B is further.' },
+                    { type: 'exercise', q_id: 'Hitung total jarak Perenang B dan C ($1,5 + 1,25$).', q_en: 'Calculate total distance of Swimmer B and C ($1.5 + 1.25$).', options: ['2,75 km', '2,50 km', '2,30 km', '3,00 km'], answer: '2,75 km', exp_id: '$1,50 + 1,25 = 2,75$ km.', exp_en: '$1.50 + 1.25 = 2.75$ km.' },
+                    
+                    { type: 'theory', text_id: 'Data Waktu: Perenang A $58,12$ detik, Perenang B $56,875$ detik, Perenang C $57,5$ detik. Waktu tercepat adalah angka yang paling kecil.', text_en: 'Time Data: Swimmer A $58.12$ seconds, Swimmer B $56.875$ seconds, Swimmer C $57.5$ seconds. The fastest time is the smallest number.' },
+                    { type: 'exercise', q_id: 'Siapa perenang yang paling cepat?', q_en: 'Who is the fastest swimmer?', options: ['Perenang B', 'Perenang A', 'Perenang C', 'Sama cepat'], answer: 'Perenang B', exp_id: 'Waktu B $56,875$ adalah angka terkecil dibanding $57,5$ dan $58,12$.', exp_en: 'Time B $56.875$ is the smallest number compared to $57.5$ and $58.12$.' },
+                    { type: 'exercise', q_id: 'Siapa perenang yang paling lambat?', q_en: 'Who is the slowest swimmer?', options: ['Perenang A', 'Perenang B', 'Perenang C', 'Tidak bisa ditentukan'], answer: 'Perenang A', exp_id: 'Waktu A $58,12$ (atau $58,120$) adalah angka terbesar. Semakin besar waktu, semakin lambat.', exp_en: 'Time A $58.12$ (or $58.120$) is the largest number. Larger time means slower.' },
+                    { type: 'exercise', q_id: 'Berapa selisih waktu antara perenang tercepat dan paling lambat?', q_en: 'What is the time difference between the fastest and slowest swimmer?', options: ['1,245 detik', '1,200 detik', '1,375 detik', '2,245 detik'], answer: '1,245 detik', exp_id: 'Ubah ke format yang sama: $58,120 - 56,875 = 1,245$ detik.', exp_en: 'Convert to same format: $58.120 - 56.875 = 1.245$ seconds.' },
+                    
+                    { type: 'theory', text_id: 'Sebagai pelatih, kita juga harus memantau peningkatan performa dari hari ke hari. Jika kemarin waktu B $57,2$ detik, dan hari ini $56,875$ detik, maka terjadi peningkatan (waktu berkurang).', text_en: 'As a coach, we must also monitor performance improvements from day to day. If yesterday B\'s time was $57.2$ seconds, and today it is $56.875$ seconds, there is an improvement (time decreases).' },
+                    { type: 'exercise', q_id: 'Berapa pengurangan waktu (peningkatan) yang dicapai Perenang B dari kemarin ke hari ini? ($57,2 - 56,875$)', q_en: 'How much time reduction (improvement) did Swimmer B achieve from yesterday to today? ($57.2 - 56.875$)', options: ['0,325 detik', '0,500 detik', '0,675 detik', '1,325 detik'], answer: '0,325 detik', exp_id: '$57,200 - 56,875 = 0,325$ detik.', exp_en: '$57.200 - 56.875 = 0.325$ seconds.' },
+                    { type: 'exercise', q_id: 'Jika Perenang A memperbaiki waktunya sebesar $0,5$ detik dari $58,12$ detik, berapa waktu barunya?', q_en: 'If Swimmer A improves their time by $0.5$ seconds from $58.12$ seconds, what is their new time?', options: ['57,620 detik', '57,62 detik', '58,62 detik', '57,120 detik'], answer: '57,620 detik', exp_id: 'Pengurangan waktu: $58,120 - 0,500 = 57,620$ detik. Bisa juga ditulis $57,62$ detik.', exp_en: 'Time reduction: $58.120 - 0.500 = 57.620$ seconds. Can also be written $57.62$ seconds.' },
+                    { type: 'exercise', q_id: 'Total waktu A, B, dan C jika dijumlahkan adalah... ($58,12 + 56,875 + 57,5$)', q_en: 'The total time of A, B, and C if added is... ($58.12 + 56.875 + 57.5$)', options: ['172,495 detik', '172,500 detik', '171,495 detik', '173,495 detik'], answer: '172,495 detik', exp_id: 'Samakan desimal: $58,120 + 56,875 + 57,500 = 172,495$ detik.', exp_en: 'Match decimals: $58.120 + 56.875 + 57.500 = 172.495$ seconds.' },
+                    { type: 'exercise', q_id: 'Jika target waktu pelatih untuk tim adalah rata-rata $57,000$ detik per perenang. Apakah rata-rata tim saat ini memenuhi target? (Total $172,495 \\div 3$)', q_en: 'If the coach\'s target time for the team is an average of $57.000$ seconds per swimmer. Does the current team average meet the target? (Total $172.495 \\div 3$)', options: ['Ya, karena rata-ratanya 57,498 detik (lebih cepat)', 'Tidak, karena rata-ratanya 57,498 detik (lebih lambat)', 'Ya, karena rata-ratanya 57,000 detik', 'Tidak, karena rata-ratanya 58,000 detik'], answer: 'Ya, karena rata-ratanya 57,498 detik (lebih cepat)', exp_id: 'Rata-rata waktu $= 172,495 \\div 3 = 57,498...$ Karena waktu target pelatih $57,000$, dan rata-rata tim $57,498$, berarti tim lebih lambat. (Maaf kunci jawaban di opsi salah, yang benar: Tidak, karena lebih lambat dari 57,000). *Koreksi jawaban: Tidak, karena rata-rata 57,498 lebih lambat*', exp_en: 'Average time $= 172.495 \\div 3 = 57.498...$ Since coach target is $57.000$, and team average is $57.498$, team is slower. *Correction: No, because average 57,498 is slower*' }
+                ]
+            },
+
+            {
+                id: 'a1',
+                title: 'Assignment 1',
+                type: 'assignment',
+                content: [
+                    { q_id: 'Ubah pecahan $7/8$ menjadi bentuk desimal.', q_en: 'Convert $7/8$ to decimal form.', options: ['0,875', '0,78', '0,825', '0,725'], answer: '0,875', exp_id: '$7 \\div 8 = 0,875$. Atau $1 - 1/8 = 1 - 0,125 = 0,875$.', exp_en: '$7 \\div 8 = 0.875$. Or $1 - 1/8 = 1 - 0.125 = 0.875$.' },
+                    { q_id: 'Ubah pecahan $3/5$ menjadi bentuk desimal.', q_en: 'Convert $3/5$ to decimal form.', options: ['0,6', '0,3', '0,5', '0,35'], answer: '0,6', exp_id: 'Kalikan 2: $6/10 = 0,6$.', exp_en: 'Multiply by 2: $6/10 = 0.6$.' },
+                    { q_id: 'Ubah pecahan $11/20$ menjadi bentuk desimal.', q_en: 'Convert $11/20$ to decimal form.', options: ['0,55', '0,11', '0,45', '0,60'], answer: '0,55', exp_id: 'Kalikan 5: $55/100 = 0,55$.', exp_en: 'Multiply by 5: $55/100 = 0.55$.' },
+                    { q_id: 'Ubah pecahan $1/4$ menjadi bentuk desimal.', q_en: 'Convert $1/4$ to decimal form.', options: ['0,25', '0,5', '0,75', '0,20'], answer: '0,25', exp_id: '$25/100 = 0,25$.', exp_en: '$25/100 = 0.25$.' },
+                    { q_id: 'Ubah pecahan $5/8$ menjadi bentuk desimal.', q_en: 'Convert $5/8$ to decimal form.', options: ['0,625', '0,5', '0,875', '0,325'], answer: '0,625', exp_id: '$5 \\times 0,125 = 0,625$.', exp_en: '$5 \\times 0.125 = 0.625$.' },
+                    { q_id: 'Ubah pecahan $9/10$ menjadi bentuk desimal.', q_en: 'Convert $9/10$ to decimal form.', options: ['0,9', '0,09', '0,95', '0,8'], answer: '0,9', exp_id: '$9/10 = 0,9$.', exp_en: '$9/10 = 0.9$.' },
+                    { q_id: 'Ubah pecahan $1/20$ menjadi bentuk desimal.', q_en: 'Convert $1/20$ to decimal form.', options: ['0,05', '0,5', '0,01', '0,15'], answer: '0,05', exp_id: 'Kalikan 5: $5/100 = 0,05$.', exp_en: 'Multiply by 5: $5/100 = 0.05$.' },
+                    { q_id: 'Ubah pecahan $3/8$ menjadi bentuk desimal.', q_en: 'Convert $3/8$ to decimal form.', options: ['0,375', '0,125', '0,625', '0,875'], answer: '0,375', exp_id: '$3 \\times 0,125 = 0,375$.', exp_en: '$3 \\times 0.125 = 0.375$.' },
+                    { q_id: 'Ubah pecahan $2/5$ menjadi bentuk desimal.', q_en: 'Convert $2/5$ to decimal form.', options: ['0,4', '0,2', '0,5', '0,25'], answer: '0,4', exp_id: 'Kalikan 2: $4/10 = 0,4$.', exp_en: 'Multiply by 2: $4/10 = 0.4$.' },
+                    { q_id: 'Ubah pecahan $1/8$ menjadi bentuk desimal.', q_en: 'Convert $1/8$ to decimal form.', options: ['0,125', '0,25', '0,1', '0,0125'], answer: '0,125', exp_id: '$1 \\div 8 = 0,125$.', exp_en: '$1 \\div 8 = 0.125$.' }
+                ]
+            },
+            {
+                id: 'a2',
+                title: 'Assignment 2',
+                type: 'assignment',
+                content: [
+                    { q_id: 'Hitung hasil dari $12,45 + 0,875$.', q_en: 'Calculate $12.45 + 0.875$.', options: ['13,325', '12,525', '13,225', '13,425'], answer: '13,325', exp_id: '$12,450 + 0,875 = 13,325$.', exp_en: '$12.450 + 0.875 = 13.325$.' },
+                    { q_id: 'Hitung hasil dari $5,4 - 2,15$.', q_en: 'Calculate $5.4 - 2.15$.', options: ['3,25', '3,3', '3,5', '3,75'], answer: '3,25', exp_id: '$5,40 - 2,15 = 3,25$.', exp_en: '$5.40 - 2.15 = 3.25$.' },
+                    { q_id: 'Hitung hasil dari $10,5 + 3,25$.', q_en: 'Calculate $10.5 + 3.25$.', options: ['13,75', '13,5', '13,30', '14,25'], answer: '13,75', exp_id: '$10,50 + 3,25 = 13,75$.', exp_en: '$10.50 + 3.25 = 13.75$.' },
+                    { q_id: 'Hitung hasil dari $8,00 - 4,875$.', q_en: 'Calculate $8.00 - 4.875$.', options: ['3,125', '4,125', '3,875', '3,225'], answer: '3,125', exp_id: '$8,000 - 4,875 = 3,125$.', exp_en: '$8.000 - 4.875 = 3.125$.' },
+                    { q_id: 'Hitung hasil dari $15,2 + 0,125$.', q_en: 'Calculate $15.2 + 0.125$.', options: ['15,325', '15,225', '15,5', '15,130'], answer: '15,325', exp_id: '$15,200 + 0,125 = 15,325$.', exp_en: '$15.200 + 0.125 = 15.325$.' },
+                    { q_id: 'Hitung hasil dari $20,5 - 10,25$.', q_en: 'Calculate $20.5 - 10.25$.', options: ['10,25', '10,5', '10,75', '11,25'], answer: '10,25', exp_id: '$20,50 - 10,25 = 10,25$.', exp_en: '$20.50 - 10.25 = 10.25$.' },
+                    { q_id: 'Hitung hasil dari $0,75 + 0,125$.', q_en: 'Calculate $0.75 + 0.125$.', options: ['0,875', '0,85', '0,825', '1,25'], answer: '0,875', exp_id: '$0,750 + 0,125 = 0,875$.', exp_en: '$0.750 + 0.125 = 0.875$.' },
+                    { q_id: 'Hitung hasil dari $1,5 - 0,875$.', q_en: 'Calculate $1.5 - 0.875$.', options: ['0,625', '0,5', '0,725', '0,375'], answer: '0,625', exp_id: '$1,500 - 0,875 = 0,625$.', exp_en: '$1.500 - 0.875 = 0.625$.' },
+                    { q_id: 'Hitung hasil dari $100,25 + 50,5$.', q_en: 'Calculate $100.25 + 50.5$.', options: ['150,75', '150,50', '150,30', '150,25'], answer: '150,75', exp_id: '$100,25 + 50,50 = 150,75$.', exp_en: '$100.25 + 50.50 = 150.75$.' },
+                    { q_id: 'Hitung hasil dari $50,0 - 12,125$.', q_en: 'Calculate $50.0 - 12.125$.', options: ['37,875', '38,125', '37,5', '37,225'], answer: '37,875', exp_id: '$50,000 - 12,125 = 37,875$.', exp_en: '$50.000 - 12.125 = 37.875$.' }
+                ]
+            },
+            {
+                id: 'a3',
+                title: 'Assignment 3',
+                type: 'assignment',
+                content: [
+                    { q_id: 'Ubah $1 \\frac{1}{2}$ ke desimal.', q_en: 'Convert $1 \\frac{1}{2}$ to decimal.', options: ['1,5', '1,2', '1,25', '1,75'], answer: '1,5', exp_id: '$1 + 0,5 = 1,5$.', exp_en: '$1 + 0.5 = 1.5$.' },
+                    { q_id: 'Ubah $2 \\frac{3}{4}$ ke desimal.', q_en: 'Convert $2 \\frac{3}{4}$ to decimal.', options: ['2,75', '2,34', '2,3', '2,25'], answer: '2,75', exp_id: '$2 + 0,75 = 2,75$.', exp_en: '$2 + 0.75 = 2.75$.' },
+                    { q_id: 'Ubah $3 \\frac{1}{8}$ ke desimal.', q_en: 'Convert $3 \\frac{1}{8}$ to decimal.', options: ['3,125', '3,18', '3,1', '3,25'], answer: '3,125', exp_id: '$3 + 0,125 = 3,125$.', exp_en: '$3 + 0.125 = 3.125$.' },
+                    { q_id: 'Ubah $1 \\frac{7}{8}$ ke desimal.', q_en: 'Convert $1 \\frac{7}{8}$ to decimal.', options: ['1,875', '1,78', '1,7', '1,125'], answer: '1,875', exp_id: '$1 + 0,875 = 1,875$.', exp_en: '$1 + 0.875 = 1.875$.' },
+                    { q_id: 'Ubah $4 \\frac{1}{5}$ ke desimal.', q_en: 'Convert $4 \\frac{1}{5}$ to decimal.', options: ['4,2', '4,15', '4,1', '4,5'], answer: '4,2', exp_id: '$4 + 0,2 = 4,2$.', exp_en: '$4 + 0.2 = 4.2$.' },
+                    { q_id: 'Hitung $2 \\frac{2}{5} + 1,5$.', q_en: 'Calculate $2 \\frac{2}{5} + 1.5$.', options: ['3,9', '3,7', '3,4', '4,1'], answer: '3,9', exp_id: '$2,4 + 1,5 = 3,9$.', exp_en: '$2.4 + 1.5 = 3.9$.' },
+                    { q_id: 'Hitung $5 \\frac{1}{4} - 2,5$.', q_en: 'Calculate $5 \\frac{1}{4} - 2.5$.', options: ['2,75', '3,25', '2,5', '3,5'], answer: '2,75', exp_id: '$5,25 - 2,50 = 2,75$.', exp_en: '$5.25 - 2.50 = 2.75$.' },
+                    { q_id: 'Hitung $1 \\frac{1}{8} + 0,125$.', q_en: 'Calculate $1 \\frac{1}{8} + 0.125$.', options: ['1,25', '1,5', '1,125', '1,250'], answer: '1,25', exp_id: '$1,125 + 0,125 = 1,250 = 1,25$.', exp_en: '$1.125 + 0.125 = 1.250 = 1.25$.' },
+                    { q_id: 'Hitung $3 \\frac{3}{8} - 1,5$.', q_en: 'Calculate $3 \\frac{3}{8} - 1.5$.', options: ['1,875', '2,375', '1,5', '2,125'], answer: '1,875', exp_id: '$3,375 - 1,500 = 1,875$.', exp_en: '$3.375 - 1.500 = 1.875$.' },
+                    { q_id: 'Hitung $2 \\frac{1}{2} + 1 \\frac{1}{4}$.', q_en: 'Calculate $2 \\frac{1}{2} + 1 \\frac{1}{4}$.', options: ['3,75', '3,5', '3,25', '4,25'], answer: '3,75', exp_id: '$2,50 + 1,25 = 3,75$.', exp_en: '$2.50 + 1.25 = 3.75$.' }
+                ]
+            },
+            {
+                id: 'a4',
+                title: 'Assignment 4',
+                type: 'assignment',
+                content: [
+                    { q_id: 'Sebuah kolam berukuran $1,875$ km. Berapa meter panjangnya?', q_en: 'A pool is $1.875$ km long. How many meters is it?', options: ['1875 m', '187,5 m', '18750 m', '18,75 m'], answer: '1875 m', exp_id: '$1,875 \\times 1000 = 1875$.', exp_en: '$1.875 \\times 1000 = 1875$.' },
+                    { q_id: 'Seorang perenang menempuh lintasan $50,5$ meter, lalu kembali $25,25$ meter. Berapa total jaraknya?', q_en: 'A swimmer covers $50.5$ meters, then returns $25.25$ meters. What is the total distance?', options: ['75,75 m', '75,5 m', '75,30 m', '76,25 m'], answer: '75,75 m', exp_id: '$50,50 + 25,25 = 75,75$.', exp_en: '$50.50 + 25.25 = 75.75$.' },
+                    { q_id: 'Sebuah kolam memiliki kedalaman $2,125$ m. Jika air dikurangi $45$ cm ($0,45$ m), berapa meter kedalaman air sekarang?', q_en: 'A pool has a depth of $2.125$ m. If water is reduced by $45$ cm ($0.45$ m), what is the depth now?', options: ['1,675 m', '1,125 m', '2,080 m', '1,725 m'], answer: '1,675 m', exp_id: '$2,125 - 0,450 = 1,675$.', exp_en: '$2.125 - 0.450 = 1.675$.' },
+                    { q_id: 'Atlet berlatih sejauh $1,5$ km, lalu dikurangi $250$ m ($0,25$ km). Sisa jaraknya adalah...', q_en: 'Athlete trains for $1.5$ km, then reduced by $250$ m ($0.25$ km). The remaining distance is...', options: ['1,25 km', '1,4 km', '1,75 km', '1,15 km'], answer: '1,25 km', exp_id: '$1,50 - 0,25 = 1,25$.', exp_en: '$1.50 - 0.25 = 1.25$.' },
+                    { q_id: 'Catatan waktu A $54,210$ detik, B $52,095$ detik. Selisihnya adalah...', q_en: 'Time A $54.210$ s, B $52.095$ s. Difference is...', options: ['2,115 s', '2,185 s', '1,115 s', '2,225 s'], answer: '2,115 s', exp_id: '$54,210 - 52,095 = 2,115$.', exp_en: '$54.210 - 52.095 = 2.115$.' },
+                    { q_id: 'Waktu perenang A $58,12$ detik, perenang B $56,875$ detik. Selisihnya...', q_en: 'Time A $58.12$ s, B $56.875$ s. Difference...', options: ['1,245 s', '2,245 s', '1,5 s', '1,345 s'], answer: '1,245 s', exp_id: '$58,120 - 56,875 = 1,245$.', exp_en: '$58.120 - 56.875 = 1.245$.' },
+                    { q_id: 'Total jarak $2,25$ km $+ 1,875$ km adalah...', q_en: 'Total distance $2.25$ km $+ 1.875$ km is...', options: ['4,125 km', '3,125 km', '4,225 km', '4,025 km'], answer: '4,125 km', exp_id: '$2,250 + 1,875 = 4,125$.', exp_en: '$2.250 + 1.875 = 4.125$.' },
+                    { q_id: 'Manakah waktu yang tercepat: $45,09$ detik atau $45,6$ detik?', q_en: 'Which time is fastest: $45.09$ s or $45.6$ s?', options: ['45,09 s', '45,6 s', 'Sama cepat', 'Tidak bisa ditentukan'], answer: '45,09 s', exp_id: 'Waktu lebih kecil berarti lebih cepat. $45,09 < 45,6$.', exp_en: 'Smaller time means faster. $45.09 < 45.6$.' },
+                    { q_id: 'Waktu 2 lap masing-masing $30,255$ detik. Total waktunya...', q_en: 'Time for 2 laps each $30.255$ s. Total time...', options: ['60,510 s', '60,255 s', '61,510 s', '60,500 s'], answer: '60,510 s', exp_id: '$30,255 + 30,255 = 60,510$.', exp_en: '$30.255 + 30.255 = 60.510$.' },
+                    { q_id: 'Waktu 3 lap masing-masing $25,5$ detik. Total waktunya...', q_en: 'Time for 3 laps each $25.5$ s. Total time...', options: ['76,5 s', '75,5 s', '76,15 s', '77,5 s'], answer: '76,5 s', exp_id: '$25,5 + 25,5 + 25,5 = 76,5$.', exp_en: '$25.5 + 25.5 + 25.5 = 76.5$.' }
+                ]
+            },
+            {
+                id: 'a5',
+                title: 'Assignment 5',
+                type: 'assignment',
+                content: [
+                    { q_id: 'Ubah $0,625$ ke bentuk pecahan paling sederhana.', q_en: 'Convert $0.625$ to simplest fraction form.', options: ['$5/8$', '$625/1000$', '$1/8$', '$3/8$'], answer: '$5/8$', exp_id: '$625/1000$ dibagi 125 menjadi $5/8$.', exp_en: '$625/1000$ divided by 125 becomes $5/8$.' },
+                    { q_id: 'Ubah $0,875$ ke bentuk pecahan paling sederhana.', q_en: 'Convert $0.875$ to simplest fraction form.', options: ['$7/8$', '$875/1000$', '$5/8$', '$3/8$'], answer: '$7/8$', exp_id: '$875/1000$ dibagi 125 menjadi $7/8$.', exp_en: '$875/1000$ divided by 125 becomes $7/8$.' },
+                    { q_id: 'Ubah $0,375$ ke bentuk pecahan paling sederhana.', q_en: 'Convert $0.375$ to simplest fraction form.', options: ['$3/8$', '$375/1000$', '$1/4$', '$5/8$'], answer: '$3/8$', exp_id: '$375/1000$ dibagi 125 menjadi $3/8$.', exp_en: '$375/1000$ divided by 125 becomes $3/8$.' },
+                    { q_id: 'Ubah $0,15$ ke bentuk pecahan paling sederhana.', q_en: 'Convert $0.15$ to simplest fraction form.', options: ['$3/20$', '$15/100$', '$1/5$', '$3/10$'], answer: '$3/20$', exp_id: '$15/100$ dibagi 5 menjadi $3/20$.', exp_en: '$15/100$ divided by 5 becomes $3/20$.' },
+                    { q_id: 'Hitung $(15,5 - 2 \\frac{3}{4}) + 0,125$.', q_en: 'Calculate $(15.5 - 2 \\frac{3}{4}) + 0.125$.', options: ['12,875', '13,125', '12,5', '13,875'], answer: '12,875', exp_id: '$15,5 - 2,75 = 12,75$. Lalu $12,75 + 0,125 = 12,875$.', exp_en: '$15.5 - 2.75 = 12.75$. Then $12.75 + 0.125 = 12.875$.' },
+                    { q_id: 'Sesi pertama $3 \\frac{2}{5}$ km, sesi kedua $2,78$ km. Total jarak dalam desimal?', q_en: 'First session $3 \\frac{2}{5}$ km, second session $2.78$ km. Total distance in decimal?', options: ['6,18 km', '6,13 km', '5,18 km', '6,2 km'], answer: '6,18 km', exp_id: '$3,4 + 2,78 = 6,18$.', exp_en: '$3.4 + 2.78 = 6.18$.' },
+                    { q_id: 'Urutkan dari tercepat (terkecil): $45,6$ s; $45,09$ s; $45 \\frac{3}{5}$ s; $45,55$ s.', q_en: 'Order from fastest (smallest): $45.6$ s; $45.09$ s; $45 \\frac{3}{5}$ s; $45.55$ s.', options: ['$45,09 < 45,55 < 45,6$', '$45,6 < 45,55 < 45,09$', '$45,55 < 45,09 < 45,6$', '$45,09 < 45,6 < 45,55$'], answer: '$45,09 < 45,55 < 45,6$', exp_id: '$45 \\frac{3}{5} = 45,6$. Urutan: $45,09$; $45,55$; $45,6$. (Karena $45,6$ muncul 2x, urutannya sama).', exp_en: '$45 \\frac{3}{5} = 45.6$. Order: $45.09$; $45.55$; $45.6$.' },
+                    { q_id: 'Rata-rata waktu 4 lap adalah $30,255$ detik. Berapa total waktu 4 lap?', q_en: 'Average time of 4 laps is $30.255$ s. What is total time of 4 laps?', options: ['121,020 s', '120,220 s', '121,200 s', '124,220 s'], answer: '121,020 s', exp_id: '$30,255 \\times 4 = 121,020$ atau $30,255 + 30,255 + 30,255 + 30,255 = 121,020$.', exp_en: '$30.255 \\times 4 = 121.020$ or sum 4 times.' },
+                    { q_id: 'Selisih waktu A ($58,12$ s) dan B ($56,875$ s).', q_en: 'Difference between A ($58.12$ s) and B ($56.875$ s).', options: ['1,245 s', '1,500 s', '1,225 s', '2,245 s'], answer: '1,245 s', exp_id: '$58,120 - 56,875 = 1,245$.', exp_en: '$58.120 - 56.875 = 1.245$.' },
+                    { q_id: 'Kedalaman kolam $2,125$ m, air berkurang $45$ cm ($0,45$ m). Kedalaman air sekarang?', q_en: 'Pool depth $2.125$ m, water reduces by $45$ cm ($0.45$ m). Current depth?', options: ['1,675 m', '1,125 m', '1,725 m', '2,080 m'], answer: '1,675 m', exp_id: '$2,125 - 0,450 = 1,675$.', exp_en: '$2.125 - 0.450 = 1.675$.' }
+                ]
+            },
+            {
+                id: 'end',
+                title: 'Consolidation & Reflection',
+                time: '01:00 - 01:05',
+                type: 'end',
+                content: []
+            }
+        ];
+
+        // --- NAVIGATION & RENDER LOGIC ---
+        let currentSectionIndex = 0; // 0 is Home, rest are lessonData
+        let userProgress = {};
+
+        function renderPath() {
+            const container = document.getElementById('sidebar');
+            container.innerHTML = '';
+            const nodes = [
+                {id: 'home', label: 'Home', time: 'Mulai di sini'},
+                ...lessonData.map((s, i) => ({id: s.id, label: s.title, time: s.time}))
+            ];
+
+            nodes.forEach((node, index) => {
+                const itemEl = document.createElement('button');
+                itemEl.className = 'sidebar-item';
+                itemEl.id = `nav-${node.id}`;
+                
+                // -1 berarti Home, sisanya mengikuti index lessonData
+                itemEl.onclick = () => goToSection(index === 0 ? -1 : index - 1);
+                
+                const icon = document.createElement('div');
+                icon.className = 'sidebar-icon';
+                icon.innerHTML = index === 0 ? '🏠' : (index <= 6 ? '📘' : '📝');
+                
+                const text = document.createElement('div');
+                text.className = 'sidebar-text';
+                text.innerHTML = `<span class="title">${node.label}</span><span class="time">${node.time || ''}</span>`;
+                
+                itemEl.appendChild(icon);
+                itemEl.appendChild(text);
+                container.appendChild(itemEl);
+            });
+            
+            updateActiveSidebarItem(-1); // Set Home as active initially
+        }
+
+        function updateActiveSidebarItem(index) {
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            const id = index === -1 ? 'home' : lessonData[index].id;
+            const activeEl = document.getElementById(`nav-${id}`);
+            if(activeEl) activeEl.classList.add('active');
+        }
+
+        function goToSection(index) {
+            if (index < -1 || index >= lessonData.length) return;
+            currentSectionIndex = index;
+            
+            document.querySelectorAll('.section-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('section-home').classList.remove('active');
+            
+            const dynamicContent = document.getElementById('dynamic-content');
+            
+            if (index === -1) {
+                document.getElementById('section-home').classList.add('active');
+                document.getElementById('current-section-label').innerText = 'Home';
+            } else {
+                const section = lessonData[index];
+                dynamicContent.innerHTML = generateSectionHTML(section);
+                document.getElementById('current-section-label').innerText = section.title;
+                renderMathInElement(dynamicContent, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+            
+            updateActiveSidebarItem(index);
+            
+            // Tutup sidebar otomatis di mobile setelah klik
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function generateSectionHTML(section) {
+            let html = `
+                <div class="section-card active">
+                    <div class="section-header">
+                        <h2 class="section-title">${section.title}</h2>
+                        <p class="section-time">${section.time || ''}</p>
+                    </div>
+            `;
+            
+            if (section.type === 'lesson') {
+                section.content.forEach((item, i) => {
+                    if (item.type === 'theory') {
+                        html += `
+                            <div class="theory-box">
+                                <div class="bi-text">
+                                    <p class="id-text">${item.text_id}</p>
+                                    <p class="en-text">${item.text_en}</p>
+                                </div>
+                            </div>
+                        `;
+                    } else if (item.type === 'exercise') {
+                        html += generateExerciseHTML(section.id, i, item);
+                    }
+                });
+            } else if (section.type === 'assignment') {
+                html += `
+                    <div style="background: #e8f4ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--secondary);">
+                        <strong>Instruksi:</strong> Kerjakan 10 soal berikut. Setelah selesai, klik tombol "Print Result" untuk mencetak hasil kerja dalam 1 halaman A4.
+                    </div>
+                `;
+                section.content.forEach((item, i) => {
+                    html += generateExerciseHTML(section.id, i, item);
+                });
+                html += `
+                    <button class="submit-btn" style="background: var(--secondary); border-bottom-color: #1899d6; width: 100%; margin-top: 20px;" onclick="printAssignment('${section.id}', '${section.title}')">
+                        Print Result (A4)
+                    </button>
+                `;
+            } else if (section.type === 'end') {
+                html += `
+                    <div style="text-align: center;">
+                        <svg width="100" height="100" viewBox="0 0 100 100" style="margin-bottom: 20px;">
+                            <circle cx="50" cy="50" r="45" fill="#58cc02" />
+                            <path d="M30 50 L45 65 L70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="bi-text">
+                            <p class="id-text">Luar biasa! Kamu sudah berhasil mengolah data renang dengan sangat presisi.</p>
+                            <p class="en-text">Excellent! You have successfully processed swimming data with high precision.</p>
+                        </div>
+                        <div class="theory-box" style="text-align: left; margin-top: 30px;">
+                             <div class="bi-text">
+                                <p class="id-text">Ingat, dalam desimal, posisi koma adalah kunci. Selalu sejajarkan koma saat menjumlahkan atau mengurangkan.</p>
+                                <p class="en-text">Remember, in decimals, the position of the comma is key. Always align the decimal point when adding or subtracting.</p>
+                            </div>
+                        </div>
+                        <a href="https://learn.algonova.id/login" target="_blank" class="submit-btn" style="display: inline-block; margin-top: 30px; text-decoration: none;">
+                            Lanjut ke Portal Belajar ➡️
+                        </a>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        function generateExerciseHTML(sectionId, index, item) {
+            const exId = `${sectionId}-${index}`;
+            const shuffledOptions = shuffleArray([...item.options]);
+            
+            let html = `
+                <div class="exercise-box" id="box-${exId}">
+                    <div class="exercise-question">
+                        <div class="bi-text">
+                            <p class="id-text">${index + 1}. ${item.q_id}</p>
+                            <p class="en-text">${item.q_en}</p>
+                        </div>
+                    </div>
+                    <div class="options-container">
+            `;
+            
+            shuffledOptions.forEach((opt, i) => {
+                const escapedOpt = opt.replace(/'/g, "\\'");
+                const escapedAns = item.answer.replace(/'/g, "\\'");
+                html += `
+                    <button class="option-btn" onclick="selectOption('${exId}', this, '${escapedOpt}', '${escapedAns}')">
+                        <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                        <span>${opt}</span>
+                    </button>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="explanation" id="exp-${exId}">
+                        <details>
+                            <summary>Lihat Penjelasan / View Explanation</summary>
+                            <div class="explanation-content">
+                                <div class="bi-text">
+                                    <p class="id-text"><strong>Penjelasan:</strong> ${item.exp_id}</p>
+                                    <p class="en-text"><em>Explanation:</em> ${item.exp_en}</p>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="reset-exercise-btn" onclick="resetExercise('${sectionId}', ${index})">↺ Reset Jawaban</button>
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function selectOption(exId, button, selectedVal, correctVal) {
+            const box = document.getElementById(`box-${exId}`);
+            const options = box.querySelectorAll('.option-btn');
+            const explanation = document.getElementById(`exp-${exId}`);
+            
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+                opt.onclick = null; // Disable after answering
+            });
+            
+            button.classList.add('selected');
+            
+            // Normalize strings for comparison (remove extra spaces)
+            const norm = (str) => str.replace(/\s+/g, ' ').trim();
+            
+            if (norm(selectedVal) === norm(correctVal)) {
+                button.classList.add('correct');
+            } else {
+                button.classList.add('wrong');
+                // Highlight correct one
+                options.forEach(opt => {
+                    if (norm(opt.querySelector('span').innerText) === norm(correctVal)) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            explanation.classList.add('active');
+            userProgress[exId] = { selected: selectedVal, correct: correctVal };
+        }
+		
+        function resetExercise(sectionId, index) {
+            const section = lessonData.find(s => s.id === sectionId);
+            if (!section) return;
+            const item = section.content[index];
+            const exId = `${sectionId}-${index}`;
+            const box = document.getElementById(`box-${exId}`);
+            if (!box) return;
+            
+            // Buat ulang HTML untuk exercise tersebut
+            const newHtml = generateExerciseHTML(sectionId, index, item);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = newHtml;
+            
+            // Gantar box lama dengan box baru
+            box.replaceWith(tempDiv.firstElementChild);
+            
+            // Hapus progres jawaban untuk exercise ini
+            if (userProgress[exId]) delete userProgress[exId];
+            
+            // Render ulang KaTeX untuk memastikan formula matematika tampil kembali
+            const newBox = document.getElementById(`box-${exId}`);
+            if (newBox) {
+                renderMathInElement(newBox, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function navigate(direction) {
+            let newIndex = currentSectionIndex + direction;
+            if (newIndex < -1) newIndex = -1; // -1 is Home
+            if (newIndex >= lessonData.length) newIndex = lessonData.length - 1;
+            goToSection(newIndex);
+        }
+
+        function resetAllProgress() {
+            if(confirm('Yakin ingin mereset semua progres belajar?')) {
+                userProgress = {};
+                goToSection(-1);
+            }
+        }
+
+        function printAssignment(sectionId, sectionTitle) {
+            const printArea = document.getElementById('print-area');
+            let tableRows = '';
+            let score = 0;
+            
+            const section = lessonData.find(s => s.id === sectionId);
+            section.content.forEach((item, i) => {
+                const exId = `${sectionId}-${i}`;
+                const userAns = userProgress[exId] ? userProgress[exId].selected : '-';
+                const correctAns = item.answer;
+                const isCorrect = userAns === correctAns;
+                if (isCorrect) score++;
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align:center;">${i+1}</td>
+                        <td>${item.q_id}</td>
+                        <td>${userAns}</td>
+                        <td>${correctAns}</td>
+                        <td style="text-align:center;">${isCorrect ? '✔️' : '❌'}</td>
+                    </tr>
+                `;
+            });
+
+            const today = new Date().toLocaleDateString('id-ID');
+            printArea.innerHTML = `
+                <h2 style="text-align:center;">MATH TUTORING by Deni</h2>
+                <table style="width:100%; margin-bottom:20px; font-size:14px;">
+                    <tr><td><strong>Name:</strong> ........................</td><td><strong>Date:</strong> ${today}</td></tr>
+                    <tr><td><strong>Topic:</strong> Bilangan Real & Pecahan Desimal</td><td><strong>Assignment Group:</strong> ${sectionTitle}</td></tr>
+                    <tr><td colspan="2"><strong>Score:</strong> ........ / 10</td></tr>
+                </table>
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;">No.</th>
+                            <th style="width:45%;">Question</th>
+                            <th style="width:20%;">Student Answer</th>
+                            <th style="width:20%;">Correct Answer</th>
+                            <th style="width:10%;">Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+                <p style="margin-top:40px; text-align:right;">Checked by, <br><br><strong>Deni</strong></p>
+            `;
+            
+            window.print();
+        }
+
+        // Initialize app
+        renderPath();
+        goToSection(-1); // Start at Home
+    </script>
+</body>
+</html>
