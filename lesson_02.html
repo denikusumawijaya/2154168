@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring - Perkalian & Pembagian Desimal</title>
+	<!-- KaTeX CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+	<!-- KaTeX JS -->
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; }
+        .sidebar { transition: width 0.3s; }
+        .nav-item { transition: all 0.2s; cursor: pointer; }
+        .nav-item:hover { background-color: #e2efda; }
+        .nav-item.active { background-color: #4caf50; color: white; font-weight: bold; }
+        .content-card { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .exercise-box { border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-top: 15px; background: white; transition: border-color 0.3s; }
+        .exercise-box.correct { border-color: #4caf50; background-color: #e8f5e9; }
+        .exercise-box.wrong { border-color: #f44336; background-color: #ffebee; }
+        .option-btn { transition: all 0.2s; cursor: pointer; border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px; margin: 5px 0; text-align: left; }
+        .option-btn:hover { border-color: #2196f3; background-color: #e3f2fd; }
+        .option-btn.selected { border-color: #2196f3; background-color: #bbdefb; }
+        .translate-text { font-size: 0.85em; color: #666; font-style: italic; margin-top: 2px; }
+        .btn-primary { background-color: #4caf50; color: white; padding: 8px 16px; border-radius: 8px; transition: background-color 0.3s; }
+        .btn-primary:hover { background-color: #45a049; }
+        .btn-secondary { background-color: #2196f3; color: white; padding: 8px 16px; border-radius: 8px; transition: background-color 0.3s; }
+        .btn-secondary:hover { background-color: #1976d2; }
+        .btn-danger { background-color: #f44336; color: white; padding: 8px 16px; border-radius: 8px; transition: background-color 0.3s; }
+        .btn-danger:hover { background-color: #d32f2f; }
+        
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10mm; display: block !important; }
+            @page { size: A4; margin: 5mm; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid black; padding: 4px; text-align: left; font-size: 10pt; }
+        }
+        #print-area { display: none; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar w-64 bg-white shadow-lg flex flex-col h-full overflow-y-auto">
+        <div class="p-4 bg-green-600 text-white text-center">
+            <h1 class="text-xl font-bold">MATH TUTORING</h1>
+            <p class="text-sm">by Deni</p>
+        </div>
+        <nav class="flex-1 py-4" id="nav-menu">
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('home')">
+                <span class="mr-2">🏠</span> Home
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec1')">
+                <span class="mr-2">🔄</span> Spiral Review (00:00-00:10)
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec2')">
+                <span class="mr-2">🏗️</span> Introduction (00:10-00:15)
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec3')">
+                <span class="mr-2">📚</span> Prior Knowledge (00:15-00:20)
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec4')">
+                <span class="mr-2">🧩</span> Problem Intro (00:20-00:30)
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec5')">
+                <span class="mr-2">🧑‍🏫</span> Guided Practice (00:30-00:45)
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec6')">
+                <span class="mr-2">🚀</span> Independent Prac. (00:50-01:00)
+            </div>
+            <div class="px-4 py-2 text-xs text-gray-500 font-bold mt-4">ASSIGNMENTS</div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadAssignment(1)">
+                <span class="mr-2">📝</span> Assignment 1
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadAssignment(2)">
+                <span class="mr-2">📝</span> Assignment 2
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadAssignment(3)">
+                <span class="mr-2">📝</span> Assignment 3
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadAssignment(4)">
+                <span class="mr-2">📝</span> Assignment 4
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadAssignment(5)">
+                <span class="mr-2">📝</span> Assignment 5
+            </div>
+            <div class="nav-item p-3 border-b flex items-center" onclick="loadSection('sec7')">
+                <span class="mr-2">🎓</span> Consolidation (01:00-01:05)
+            </div>
+        </nav>
+        <div class="p-4 border-t">
+            <button class="btn-danger w-full" onclick="resetAllProgress()">Reset All Progress</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto p-8" id="main-content">
+        <!-- Konten akan dirender di sini -->
+    </div>
+
+    <!-- Print Area (Hidden) -->
+    <div id="print-area"></div>
+
+    <script>
+        // Database Soal & Konten (Akan diisi di bagian selanjutnya)
+        const contentData = {
+            home: {
+                title: "Home",
+                content: `
+                    <div class="content-card max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                        <h2 class="text-3xl font-bold text-green-600 mb-4">MATH TUTORING by Deni</h2>
+                        <div class="mb-6">
+                            <p class="text-xl text-gray-800">Topic: Perkalian & Pembagian Desimal</p>
+                            <p class="translate-text">Topic: Decimal Multiplication & Division</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <h3 class="font-bold text-blue-700 mb-2">Rules (Aturan Kelas):</h3>
+                            <ul class="list-disc list-inside text-gray-700">
+                                <li>Berbicara secara bergantian. <span class="translate-text">Take turns speaking.</span></li>
+                                <li>Meminta izin jika ingin meninggalkan kelas. <span class="translate-text">Ask for permission if you need to leave the class.</span></li>
+                                <li>Menyalakan kamera dan microphone jika diperlukan. <span class="translate-text">Turn on camera and microphone if needed.</span></li>
+                            </ul>
+                        </div>
+                        <button class="btn-primary w-full" onclick="loadSection('sec1')">Mulai Belajar (Start Learning) 🚀</button>
+                    </div>
+                `
+            },
+            sec1: {
+                title: "Spiral Review Warm-up (00:00-00:10)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Pemanasan Matematika</h3>
+                        <p class="text-gray-700">Sebelum kita masuk ke proyek desain hari ini, mari kita asah otak sebentar. Ketelitian adalah kunci seorang arsitek!</p>
+                        <p class="translate-text">Before we start today's design project, let's warm up our brains. Accuracy is an architect's key!</p>
+                        <div class="my-4 flex justify-center">
+                            <svg width="150" height="150" viewBox="0 0 200 200">
+                                <rect x="50" y="50" width="100" height="100" fill="#e3f2fd" stroke="#2196f3" stroke-width="4" rx="10">
+                                    <animate attributeName="stroke-dasharray" from="0,400" to="400,0" dur="2s" repeatCount="indefinite" />
+                                </rect>
+                                <text x="100" y="110" font-size="40" text-anchor="middle" fill="#2196f3">123</text>
+                            </svg>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian 1-10: Berapa hasil dari \\( 7 \\times 6 \\) ?", options: ["36", "42", "48", "49"], correct: "42", explain: "7 dikali 6 sama dengan 42. (7 times 6 equals 42.)" },
+                    { type: 'exercise', q: "Pemanasan Pembagian 1-10: Berapa hasil dari \\( 54 \\div 9 \\) ?", options: ["5", "6", "7", "8"], correct: "6", explain: "54 dibagi 9 sama dengan 6. (54 divided by 9 equals 6.)" },
+                    { type: 'exercise', q: "Sebuah kabel baja panjangnya 12,55 meter dipotong 3,2 meter. Berapa sisanya?", options: ["9,35 m", "9,33 m", "15,75 m", "9,45 m"], correct: "9,35 m", explain: "12,55 - 3,20 = 9,35 m. Untuk pengurangan desimal, sejajarkan koma. (Align decimals for subtraction.)" },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Perkalian Dasar Desimal</h3>
+                        <p class="text-gray-700">Jika sebuah ubin memiliki lebar 0,45 m, berapa total lebar 10 ubin? Saat mengalikan desimal dengan 10, 100, dst, kita cukup menggeser koma ke kanan.</p>
+                        <p class="translate-text">Multiplying decimals by 10, 100, etc., shifts the comma to the right.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p class="katex-inline">\\( 0,45 \\times 10 = 4,5 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 8 \\times 9 \\) = ?", options: ["64", "72", "81", "63"], correct: "72", explain: "8 dikali 9 sama dengan 72." },
+                    { type: 'exercise', q: "Hitung cepat perkalian desimal: \\( 0,6 \\times 0,7 \\) = ?", options: ["0,42", "4,2", "0,042", "42"], correct: "0,42", explain: "6x7=42. Total angka di belakang koma ada 2 (satu dari 0,6 dan satu dari 0,7). Jadi 0,42. (Count decimal places: 1+1=2)." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 40 \\div 8 \\) = ?", options: ["4", "5", "6", "8"], correct: "5", explain: "40 dibagi 8 sama dengan 5." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Pembagian Dasar Desimal</h3>
+                        <p class="text-gray-700">Saat membagi desimal, kita ingin pembaginya menjadi bilangan bulat. Misalnya \\( 2,4 \\div 0,8 \\). Kita kalikan keduanya dengan 10 agar pembaginya bulat.</p>
+                        <p class="translate-text">To divide decimals, make the divisor a whole number.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( 2,4 \\div 0,8 \\) menjadi \\( 24 \\div 8 = 3 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Hitung pembagian desimal: \\( 2,4 \\div 0,8 \\) = ?", options: ["0,3", "3", "30", "1,6"], correct: "3", explain: "Geser koma satu kali pada keduanya: 24 / 8 = 3." },
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 12 \\times 5 \\) = ?", options: ["50", "55", "60", "65"], correct: "60", explain: "10x5=50, 2x5=10. 50+10=60." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 72 \\div 8 \\) = ?", options: ["8", "9", "10", "12"], correct: "9", explain: "9 x 8 = 72, jadi 72 / 8 = 9." },
+                    { type: 'exercise', q: "Latihan logika desimal: \\( 0,9 \\div 0,3 \\) = ?", options: ["0,3", "3", "30", "0,03"], correct: "3", explain: "Menjadi 9 / 3 = 3." }
+                ]
+            },
+			
+            sec2: {
+                title: "Introduction & Real-World Connection (00:10-00:15)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Desimal dalam Arsitektur</h3>
+                        <p class="text-gray-700">Bayangkan kamu sedang merancang gedung pencakar langit. Kamu perlu menghitung panjang penyangga miring menggunakan rumus Pythagoras. Di sana, kamu akan sering bertemu angka seperti 1,2 kuadrat.</p>
+                        <p class="translate-text">Imagine designing a skyscraper. You need to calculate the length of a slanted support using the Pythagorean theorem. There, you'll often encounter numbers like 1.2 squared.</p>
+                        <div class="my-4 flex justify-center">
+                            <svg width="200" height="150" viewBox="0 0 200 150">
+                                <polygon points="40,130 40,50 120,130" fill="#e8f5e9" stroke="#4caf50" stroke-width="3" />
+                                <rect x="35" y="45" width="10" height="90" fill="#81c784" />
+                                <rect x="35" y="125" width="90" height="10" fill="#81c784" />
+                                <text x="20" y="90" font-size="12" fill="#333" transform="rotate(-90 20,90)">Tinggi: 1,2m</text>
+                                <text x="70" y="145" font-size="12" fill="#333">Alas: 1,5m</text>
+                            </svg>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 6 \\times 8 \\) = ?", options: ["42", "48", "54", "56"], correct: "48", explain: "6 x 8 = 48. (6 times 8 equals 48.)" },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 81 \\div 9 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 9 = 81, jadi 81 / 9 = 9." },
+                    { type: 'exercise', q: "Sebuah alat berat butuh 0,5 liter oli. Jika ada 10 alat, berapa total oli?", options: ["0,5 L", "5 L", "50 L", "1 L"], correct: "5 L", explain: "0,5 x 10 = 5 L (geser koma 1 kali ke kanan)." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Biaya Sewa Alat</h3>
+                        <p class="text-gray-700">Selain bangunan, kamu juga harus menghitung biaya sewa alat berat yang dihitung per jam dengan tarif desimal. Misalnya, tarif ekskavator adalah Rp 0,5 juta per jam.</p>
+                        <p class="translate-text">You must calculate heavy equipment rental costs calculated per hour with decimal rates. For example, an excavator rate is 0.5 million per hour.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( \\text{Total Biaya} = \\text{Tarif per jam} \\times \\text{Jumlah jam} \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 7 \\times 7 \\) = ?", options: ["49", "42", "56", "14"], correct: "49", explain: "7 x 7 = 49." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 36 \\div 6 \\) = ?", options: ["5", "6", "7", "8"], correct: "6", explain: "6 x 6 = 36." },
+                    { type: 'exercise', q: "Jika tarif parkir Rp 0,2 juta per jam, berapa biaya untuk 5 jam?", options: ["0,2 juta", "1 juta", "5 juta", "0,5 juta"], correct: "1 juta", explain: "0,2 x 5 = 1,0 juta. (0.2 times 5 equals 1 million)." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Persiapan Pythagoras</h3>
+                        <p class="text-gray-700">Untuk menghitung sisi miring, kita butuh menguasai kuadrat bilangan desimal. Hari ini, kita akan menguasai 'senjata' matematika tersebut!</p>
+                        <p class="translate-text">To calculate the hypotenuse, we need to master squaring decimal numbers. Today, we will master this math 'weapon'!</p>
+                        <div class="bg-yellow-50 p-4 rounded-md mt-2 border-l-4 border-yellow-500">
+                            <p>\\( c^2 = a^2 + b^2 \\)</p>
+                            <p class="text-sm mt-2">Di mana \\( a \\) dan \\( b \\) bisa berupa bilangan desimal.</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 9 \\times 4 \\) = ?", options: ["36", "45", "13", "81"], correct: "36", explain: "9 x 4 = 36." },
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 8 \\times 8 \\) = ?", options: ["64", "56", "16", "88"], correct: "64", explain: "8 x 8 = 64." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 64 \\div 8 \\) = ?", options: ["6", "7", "8", "9"], correct: "8", explain: "8 x 8 = 64, jadi 64 / 8 = 8." },
+                    { type: 'exercise', q: "Apa simbol untuk 'kuadrat' dalam matematika?", options: ["^", "//", "x", "+"], correct: "^", explain: "Tanda pangkat dua (kuadrat) dilambangkan dengan ^2. (Squared symbol is ^2.)" }
+                ]
+            },
+            sec3: {
+                title: "Review of Prior Knowledge (00:15-00:20)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Aturan Perkalian Desimal</h3>
+                        <p class="text-gray-700">Ingat aturan utama: saat mengalikan desimal, kita hitung total angka di belakang koma dari kedua bilangan, lalu taruh koma pada hasil perkalian biasa.</p>
+                        <p class="translate-text">Rule: when multiplying decimals, count total decimal places in both numbers, then place the comma in the normal multiplication result.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>Contoh: \\( 0,12 \\times 0,3 \\)</p>
+                            <p>Perkalian biasa: \\( 12 \\times 3 = 36 \\)</p>
+                            <p>Angka di belakang koma: 2 (dari 0,12) + 1 (dari 0,3) = 3</p>
+                            <p>Hasil: \\( 0,036 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 6 \\times 5 \\) = ?", options: ["30", "35", "11", "40"], correct: "30", explain: "6 x 5 = 30." },
+                    { type: 'exercise', q: "Pada \\( 0,15 \\times 0,2 \\), berapa total angka di belakang koma?", options: ["2", "3", "4", "1"], correct: "3", explain: "0,15 punya 2 angka di belakang koma, 0,2 punya 1. Total = 3." },
+                    { type: 'exercise', q: "Hitung: \\( 0,12 \\times 0,3 \\) = ?", options: ["0,36", "0,036", "3,6", "0,0036"], correct: "0,036", explain: "12x3=36. Geser koma 3 langkah ke kiri menjadi 0,036." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Aturan Pembagian Desimal</h3>
+                        <p class="text-gray-700">Saat membagi, kita ingin pembaginya menjadi bilangan bulat. Caranya? Kalikan pembagi dan yang dibagi dengan kelipatan 10 yang sama (10, 100, dst).</p>
+                        <p class="translate-text">To divide, make the divisor a whole number by multiplying both numbers by 10, 100, etc.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>Contoh: \\( 4,5 \\div 0,5 \\)</p>
+                            <p>Kalikan keduanya dengan 10: \\( 45 \\div 5 = 9 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 12 \\times 4 \\) = ?", options: ["48", "40", "16", "36"], correct: "48", explain: "10x4=40, 2x4=8. 40+8=48." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 24 \\div 4 \\) = ?", options: ["5", "6", "7", "8"], correct: "6", explain: "6 x 4 = 24." },
+                    { type: 'exercise', q: "Agar \\( 6,4 \\div 0,2 \\) menjadi pembagian bilangan bulat, kalikan dengan?", options: ["10", "100", "1", "1000"], correct: "10", explain: "Kalikan dengan 10 agar 0,2 menjadi 2 dan 6,4 menjadi 64." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Menganalisis Kesalahan Koma</h3>
+                        <p class="text-gray-700">Kesalahan paling umum adalah salah menghitung jumlah tempat desimal atau salah menggeser koma. Selalu tuliskan jumlah tempat desimal sebelum meletakkan koma!</p>
+                        <p class="translate-text">The most common mistake is miscounting decimal places. Always write the count before placing the comma!</p>
+                        <div class="bg-red-50 p-4 rounded-md mt-2 border-l-4 border-red-500">
+                            <p>Salah: \\( 1,5 \\times 1,5 = 2,25 \\) (Hanya 2 desimal? Salah! Harusnya 2 desimal dari 15x15=225, tapi 1,5+1,5=2 desimal. Jadi 2,25 benar. Tapi jika 1,5x1,5=225 itu SALAH).</p>
+                            <p class="mt-2">Benar: \\( 1,5 \\times 1,5 = 2,25 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 9 \\times 6 \\) = ?", options: ["54", "56", "48", "45"], correct: "54", explain: "9 x 6 = 54." },
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 7 \\times 8 \\) = ?", options: ["54", "56", "63", "64"], correct: "56", explain: "7 x 8 = 56." },
+                    { type: 'exercise', q: "Manakah yang BENAR untuk \\( 0,2 \\times 0,2 \\)?", options: ["0,4", "0,04", "4", "0,004"], correct: "0,04", explain: "2x2=4. Total desimal = 2. Hasilnya 0,04." },
+                    { type: 'exercise', q: "Manakah yang BENAR untuk \\( 3,3 \\div 0,3 \\)?", options: ["1,1", "11", "0,11", "110"], correct: "11", explain: "33 / 3 = 11." }
+                ]
+            },
+            sec4: {
+                title: "Problem Introduction (00:20-00:30)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Kuadrat Desimal untuk Pythagoras</h3>
+                        <p class="text-gray-700">Untuk pondasi Pythagoras, kita butuh menghitung kuadrat desimal. Misalnya \\( (1,5)^2 \\). Ini artinya \\( 1,5 \\times 1,5 \\).</p>
+                        <p class="translate-text">For Pythagorean foundations, we calculate decimal squares. For example, (1.5)^2 means 1.5 x 1.5.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( 1,5 \\times 1,5 = 2,25 \\)</p>
+                            <p class="text-sm">Hitung seperti biasa: 15 x 15 = 225. Lalu hitung desimalnya: 1 + 1 = 2. Taruh koma 2 langkah dari kanan.</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 5 \\times 5 \\) = ?", options: ["10", "20", "25", "30"], correct: "25", explain: "5 x 5 = 25." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 45 \\div 5 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 5 = 45." },
+                    { type: 'exercise', q: "Hitung \\( (1,5)^2 \\) = ?", options: ["2,25", "1,25", "3,0", "1,5"], correct: "2,25", explain: "15x15=225. Desimal 1+1=2. Hasilnya 2,25." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Biaya per Jam (Tarif)</h3>
+                        <p class="text-gray-700">Jika biaya sewa ekskavator adalah Rp1,5 juta untuk 2,5 jam, berapa biaya per jamnya? Ini berarti kita membagi 1,5 dengan 2,5.</p>
+                        <p class="translate-text">If excavator rental is 1.5 million for 2.5 hours, what's the cost per hour? Divide 1.5 by 2.5.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( 1,5 \\div 2,5 \\)</p>
+                            <p>Kalikan dengan 10: \\( 15 \\div 25 \\)</p>
+                            <p>Sederhanakan: \\( 3 \\div 5 = 0,6 \\)</p>
+                            <p class="mt-2 font-bold">Jadi biayanya Rp 0,6 juta per jam.</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 4 \\times 9 \\) = ?", options: ["36", "35", "38", "13"], correct: "36", explain: "4 x 9 = 36." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 32 \\div 8 \\) = ?", options: ["3", "4", "5", "6"], correct: "4", explain: "4 x 8 = 32." },
+                    { type: 'exercise', q: "Hitung \\( 1,5 \\div 2,5 \\) = ?", options: ["0,6", "0,5", "1,0", "6,0"], correct: "0,6", explain: "15 / 25 = 3 / 5 = 0,6." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Latihan Menghitung Tanpa Kalkulator</h3>
+                        <p class="text-gray-700">Mari kita bedah cara menghitungnya tanpa kalkulator. Kunci adalah mengubah desimal menjadi bilangan bulat terlebih dahulu, atau menggunakan pecahan.</p>
+                        <p class="translate-text">Let's break down how to calculate without a calculator. The key is converting decimals to whole numbers first, or using fractions.</p>
+                        <div class="my-4 flex justify-center">
+                            <svg width="200" height="100" viewBox="0 0 200 100">
+                                <circle cx="50" cy="50" r="40" fill="#fff3e0" stroke="#ff9800" stroke-width="3" />
+                                <text x="50" y="55" font-size="20" text-anchor="middle" fill="#e65100">1,5</text>
+                                <path d="M100 50 L 160 50" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+                                <circle cx="170" cy="50" r="30" fill="#e8f5e9" stroke="#4caf50" stroke-width="3" />
+                                <text x="170" y="55" font-size="20" text-anchor="middle" fill="#2e7d32">15</text>
+                                <defs>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 11 \\times 6 \\) = ?", options: ["66", "60", "61", "17"], correct: "66", explain: "11 x 6 = 66." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 56 \\div 7 \\) = ?", options: ["7", "8", "9", "6"], correct: "8", explain: "8 x 7 = 56." },
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 6 \\times 9 \\) = ?", options: ["45", "54", "56", "48"], correct: "54", explain: "6 x 9 = 54." },
+                    { type: 'exercise', q: "Biaya Rp 2,4 juta untuk 0,8 jam. Berapa biaya per jam?", options: ["3 juta", "0,3 juta", "1,6 juta", "2 juta"], correct: "3 juta", explain: "2,4 / 0,8 = 24 / 8 = 3 juta." }
+                ]
+            },
+			
+            sec5: {
+                title: "Guided Practice (00:30-00:45)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Menghitung Kuadrat Desimal Bersama</h3>
+                        <p class="text-gray-700">Ayo kita kerjakan bersama. Untuk pondasi Pythagoras, kita butuh \\( (2,5)^2 \\). Ini artinya \\( 2,5 \\times 2,5 \\).</p>
+                        <p class="translate-text">Let's do this together. For Pythagorean foundations, we need (2.5)^2. This means 2.5 x 2.5.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>Langkah 1: Hitung 25 x 25 = 625</p>
+                            <p>Langkah 2: Hitung total desimal (1 + 1 = 2)</p>
+                            <p>Langkah 3: Taruh koma 2 langkah dari kanan: <strong>6,25</strong></p>
+                        </div>
+                        <div class="my-4 flex justify-center">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <rect x="10" y="10" width="100" height="100" fill="#fff3e0" stroke="#ff9800" stroke-width="3" rx="8" />
+                                <text x="60" y="70" font-size="30" text-anchor="middle" fill="#e65100">2,5²</text>
+                                <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
+                            </svg>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 9 \\times 9 \\) = ?", options: ["81", "72", "18", "99"], correct: "81", explain: "9 x 9 = 81." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 63 \\div 9 \\) = ?", options: ["6", "7", "8", "9"], correct: "7", explain: "7 x 9 = 63." },
+                    { type: 'exercise', q: "Hitunglah \\( (1,2)^2 \\) = ?", options: ["1,44", "14,4", "1,4", "2,4"], correct: "1,44", explain: "12 x 12 = 144. Total desimal = 2. Hasilnya 1,44." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Menghitung Tarif (Luas per Jam)</h3>
+                        <p class="text-gray-700">Jika luas dinding 12,6 m² dan dicat dalam 3,5 jam, berapa m² per jamnya? Kita bagi 12,6 dengan 3,5.</p>
+                        <p class="translate-text">If wall area is 12.6 m² and painted in 3.5 hours, how many m² per hour? Divide 12.6 by 3.5.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( 12,6 \\div 3,5 \\)</p>
+                            <p>Kalikan dengan 10: \\( 126 \\div 35 \\)</p>
+                            <p>Sederhanakan (bagi 7): \\( 18 \\div 5 = 3,6 \\) m²/jam</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 7 \\times 8 \\) = ?", options: ["54", "56", "63", "48"], correct: "56", explain: "7 x 8 = 56." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 48 \\div 6 \\) = ?", options: ["6", "7", "8", "9"], correct: "8", explain: "8 x 6 = 48." },
+                    { type: 'exercise', q: "Hitung \\( 12,6 \\div 3,5 \\) = ?", options: ["3,6", "36", "0,36", "4,5"], correct: "3,6", explain: "126 / 35 = 18 / 5 = 3,6." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Kuadrat Desimal Lainnya</h3>
+                        <p class="text-gray-700">Coba kita lihat \\( (0,9)^2 \\). Ini sama dengan \\( 0,9 \\times 0,9 \\).</p>
+                        <p class="translate-text">Let's look at (0.9)^2. This equals 0.9 x 0.9.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>9 x 9 = 81.</p>
+                            <p>Total desimal = 2.</p>
+                            <p>Hasil = <strong>0,81</strong></p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 8 \\times 7 \\) = ?", options: ["54", "56", "64", "15"], correct: "56", explain: "8 x 7 = 56." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 81 \\div 9 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 9 = 81." },
+                    { type: 'exercise', q: "Hitunglah \\( (0,9)^2 \\) = ?", options: ["0,81", "8,1", "0,18", "0,9"], correct: "0,81", explain: "9x9=81. Desimal 2. Hasilnya 0,81." },
+                    { type: 'exercise', q: "Hitunglah \\( (2,5)^2 \\) = ?", options: ["6,25", "5,0", "25", "2,25"], correct: "6,25", explain: "25x25=625. Desimal 2. Hasilnya 6,25." }
+                ]
+            },
+            sec6: {
+                title: "Independent Practice (00:50-01:00)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Solo Mission: Kuadrat Kecil</h3>
+                        <p class="text-gray-700">Sekarang waktunya 'Solo Mission'. Selesaikan soal ini sendiri. Arsitek yang baik tidak boleh salah hitung meski hanya 0,1 cm! Hitunglah \\( (0,13)^2 \\).</p>
+                        <p class="translate-text">Solo Mission time. Solve this yourself. A good architect can't miscalculate even by 0.1 cm! Calculate (0.13)^2.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>Langkah 1: 13 x 13 = 169</p>
+                            <p>Langkah 2: Total desimal = 2 + 2 = 4</p>
+                            <p>Langkah 3: Taruh koma 4 langkah dari kanan. Karena 169 hanya 3 digit, tambah 0 di depan: <strong>0,0169</strong></p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 12 \\times 3 \\) = ?", options: ["36", "24", "15", "9"], correct: "36", explain: "12 x 3 = 36." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 72 \\div 8 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 8 = 72." },
+                    { type: 'exercise', q: "Hitung \\( (0,12)^2 \\) = ?", options: ["0,0144", "0,144", "1,44", "0,24"], correct: "0,0144", explain: "12x12=144. Desimal=4. Tambah 0 di depan: 0,0144." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Solo Mission: Tarif Sewa</h3>
+                        <p class="text-gray-700">Sebuah mesin bor disewa seharga Rp2,25 juta untuk 4,5 jam. Berapa tarif per jamnya?</p>
+                        <p class="translate-text">A drilling machine is rented for 2.25 million for 4.5 hours. What is the rate per hour?</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( 2,25 \\div 4,5 \\)</p>
+                            <p>Kalikan dengan 100: \\( 225 \\div 450 \\)</p>
+                            <p>Sederhanakan (bagi 225): \\( 1 \\div 2 = 0,5 \\) juta/jam</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 9 \\times 8 \\) = ?", options: ["72", "81", "17", "64"], correct: "72", explain: "9 x 8 = 72." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 42 \\div 7 \\) = ?", options: ["5", "6", "7", "8"], correct: "6", explain: "6 x 7 = 42." },
+                    { type: 'exercise', q: "Hitung \\( 2,25 \\div 4,5 \\) = ?", options: ["0,5", "5", "0,05", "2"], correct: "0,5", explain: "225 / 450 = 1 / 2 = 0,5." },
+                    
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Solo Mission: Kombinasi Kuadrat</h3>
+                        <p class="text-gray-700">Hitung nilai dari \\( (1,1)^2 + (0,5)^2 \\). Ini melatih ketelitian ganda: kuadrat dan penjumlahan desimal.</p>
+                        <p class="translate-text">Calculate (1.1)^2 + (0.5)^2. This trains double accuracy: squaring and decimal addition.</p>
+                        <div class="bg-gray-100 p-4 rounded-md mt-2">
+                            <p>\\( (1,1)^2 = 1,1 \\times 1,1 = 1,21 \\)</p>
+                            <p>\\( (0,5)^2 = 0,5 \\times 0,5 = 0,25 \\)</p>
+                            <p>Jumlah: \\( 1,21 + 0,25 = 1,46 \\)</p>
+                        </div>
+                    `},
+                    { type: 'exercise', q: "Pemanasan Perkalian: \\( 7 \\times 9 \\) = ?", options: ["63", "56", "72", "16"], correct: "63", explain: "7 x 9 = 63." },
+                    { type: 'exercise', q: "Pemanasan Pembagian: \\( 64 \\div 8 \\) = ?", options: ["6", "7", "8", "9"], correct: "8", explain: "8 x 8 = 64." },
+                    { type: 'exercise', q: "Hitung \\( (1,1)^2 \\) = ?", options: ["1,21", "1,1", "2,2", "0,11"], correct: "1,21", explain: "11 x 11 = 121. Desimal 2. Hasilnya 1,21." },
+                    { type: 'exercise', q: "Hitung \\( (1,1)^2 + (0,5)^2 \\) = ?", options: ["1,46", "1,36", "2,6", "1,71"], correct: "1,46", explain: "1,21 + 0,25 = 1,46. Jangan lupa sejajarkan komanya!" }
+                ]
+            },
+			
+            // ================= ASSIGNMENTS & SECTION 7 =================
+            assignment1: {
+                title: "Assignment 1",
+                isAssignment: true,
+                blocks: [
+                    { type: 'exercise', q: "Warm-up: \\( 8 \\times 8 \\) = ?", options: ["54", "64", "72", "81"], correct: "64", explain: "8 x 8 = 64." },
+                    { type: 'exercise', q: "Warm-up: \\( 45 \\div 5 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 5 = 45." },
+                    { type: 'exercise', q: "Hitung \\( 3,5 \\times 1,2 \\) = ?", options: ["4,2", "0,42", "42", "3,7"], correct: "4,2", explain: "35x12=420. Total desimal 2 (1+1). Hasilnya 4,20 atau 4,2." },
+                    { type: 'exercise', q: "Hitung \\( (0,8)^2 \\) = ?", options: ["0,16", "1,6", "0,64", "6,4"], correct: "0,64", explain: "8x8=64. Desimal 2. Hasilnya 0,64." },
+                    { type: 'exercise', q: "Hitung \\( 7,5 \\div 0,5 \\) = ?", options: ["15", "1,5", "0,15", "7"], correct: "15", explain: "75 / 5 = 15." },
+                    { type: 'exercise', q: "Kain 5,6 m dibagi 4 bagian sama. Panjang tiap bagian?", options: ["1,2 m", "1,4 m", "1,6 m", "0,14 m"], correct: "1,4 m", explain: "5,6 / 4 = 1,4 m." },
+                    { type: 'exercise', q: "Warm-up: \\( 7 \\times 6 \\) = ?", options: ["42", "36", "48", "13"], correct: "42", explain: "7 x 6 = 42." },
+                    { type: 'exercise', q: "Warm-up: \\( 72 \\div 9 \\) = ?", options: ["6", "7", "8", "9"], correct: "8", explain: "8 x 9 = 72." },
+                    { type: 'exercise', q: "Biaya Rp 1,5 juta untuk 2,5 jam. Tarif per jam?", options: ["0,6 juta", "0,5 juta", "1,0 juta", "6 juta"], correct: "0,6 juta", explain: "1,5 / 2,5 = 15 / 25 = 3 / 5 = 0,6 juta." },
+                    { type: 'exercise', q: "Hitung \\( (1,1)^2 \\) = ?", options: ["1,21", "2,2", "1,1", "0,11"], correct: "1,21", explain: "11 x 11 = 121. Desimal 2. Hasilnya 1,21." }
+                ]
+            },
+            assignment2: {
+                title: "Assignment 2",
+                isAssignment: true,
+                blocks: [
+                    { type: 'exercise', q: "Warm-up: \\( 7 \\times 8 \\) = ?", options: ["54", "56", "63", "64"], correct: "56", explain: "7 x 8 = 56." },
+                    { type: 'exercise', q: "Warm-up: \\( 56 \\div 8 \\) = ?", options: ["6", "7", "8", "9"], correct: "7", explain: "7 x 8 = 56." },
+                    { type: 'exercise', q: "Hitung \\( (1,25)^2 \\) = ?", options: ["1,5625", "15,625", "1,25", "2,5"], correct: "1,5625", explain: "125x125=15625. Desimal 4. Hasilnya 1,5625." },
+                    { type: 'exercise', q: "Pompa air 2,25 liter dalam 1,5 jam. Berapa liter per jam?", options: ["1,5 liter", "0,15 liter", "15 liter", "3,75 liter"], correct: "1,5 liter", explain: "2,25 / 1,5 = 22,5 / 15 = 1,5." },
+                    { type: 'exercise', q: "Hitung \\( (0,6)^2 + (0,8)^2 \\) = ?", options: ["1,0", "0,14", "1,4", "10"], correct: "1,0", explain: "0,36 + 0,64 = 1,00. Ya, ini bilangan bulat (1)." },
+                    { type: 'exercise', q: "Tarif parkir Rp3.500,50 per jam. Total untuk 2,5 jam?", options: ["Rp 8.751,25", "Rp 8.500,00", "Rp 3.500,50", "Rp 7.001,00"], correct: "Rp 8.751,25", explain: "3500,50 x 2,5 = 8751,25." },
+                    { type: 'exercise', q: "Warm-up: \\( 12 \\times 5 \\) = ?", options: ["50", "55", "60", "65"], correct: "60", explain: "12 x 5 = 60." },
+                    { type: 'exercise', q: "Warm-up: \\( 81 \\div 9 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 9 = 81." },
+                    { type: 'exercise', q: "Hitung \\( (4,8 \\div 1,2) \\times (0,5)^2 \\) = ?", options: ["1,0", "0,1", "2,0", "4,0"], correct: "1,0", explain: "4,8/1,2 = 4. (0,5)^2 = 0,25. 4 x 0,25 = 1,0." },
+                    { type: 'exercise', q: "Denah 1 cm = 2,5 meter. Dinding 4,2 cm. Panjang asli?", options: ["10,5 m", "6,7 m", "1,68 m", "105 m"], correct: "10,5 m", explain: "4,2 x 2,5 = 10,5 meter." }
+                ]
+            },
+            assignment3: {
+                title: "Assignment 3",
+                isAssignment: true,
+                blocks: [
+                    { type: 'exercise', q: "Warm-up: \\( 9 \\times 6 \\) = ?", options: ["45", "54", "56", "48"], correct: "54", explain: "9 x 6 = 54." },
+                    { type: 'exercise', q: "Warm-up: \\( 64 \\div 8 \\) = ?", options: ["6", "7", "8", "9"], correct: "8", explain: "8 x 8 = 64." },
+                    { type: 'exercise', q: "Hitung \\( 0,15 \\times 0,2 \\) = ?", options: ["0,03", "0,3", "0,003", "3"], correct: "0,03", explain: "15x2=30. Desimal 3. Hasilnya 0,030 = 0,03." },
+                    { type: 'exercise', q: "Hitung \\( 6,4 \\div 0,2 \\) = ?", options: ["32", "3,2", "0,32", "12,8"], correct: "32", explain: "64 / 2 = 32." },
+                    { type: 'exercise', q: "Hitung \\( (2,5)^2 \\) = ?", options: ["6,25", "5,0", "2,25", "25"], correct: "6,25", explain: "25x25=625. Desimal 2. Hasilnya 6,25." },
+                    { type: 'exercise', q: "Biaya Rp 2,4 juta untuk 0,8 jam. Tarif per jam?", options: ["3 juta", "0,3 juta", "1,6 juta", "2 juta"], correct: "3 juta", explain: "2,4 / 0,8 = 24 / 8 = 3 juta." },
+                    { type: 'exercise', q: "Warm-up: \\( 11 \\times 4 \\) = ?", options: ["44", "40", "14", "48"], correct: "44", explain: "11 x 4 = 44." },
+                    { type: 'exercise', q: "Warm-up: \\( 42 \\div 6 \\) = ?", options: ["6", "7", "8", "9"], correct: "7", explain: "7 x 6 = 42." },
+                    { type: 'exercise', q: "Hitung \\( (0,9)^2 \\) = ?", options: ["0,81", "8,1", "0,18", "0,9"], correct: "0,81", explain: "9x9=81. Desimal 2. Hasilnya 0,81." },
+                    { type: 'exercise', q: "Hitung \\( 12,6 \\div 3,5 \\) = ?", options: ["3,6", "36", "0,36", "4,5"], correct: "3,6", explain: "126 / 35 = 18 / 5 = 3,6." }
+                ]
+            },
+            assignment4: {
+                title: "Assignment 4",
+                isAssignment: true,
+                blocks: [
+                    { type: 'exercise', q: "Warm-up: \\( 8 \\times 9 \\) = ?", options: ["64", "72", "81", "17"], correct: "72", explain: "8 x 9 = 72." },
+                    { type: 'exercise', q: "Warm-up: \\( 63 \\div 7 \\) = ?", options: ["8", "9", "10", "7"], correct: "9", explain: "9 x 7 = 63." },
+                    { type: 'exercise', q: "Hitung \\( (1,5)^2 \\) = ?", options: ["2,25", "1,25", "3,0", "1,5"], correct: "2,25", explain: "15x15=225. Desimal 2. Hasilnya 2,25." },
+                    { type: 'exercise', q: "Hitung \\( 1,5 \\div 2,5 \\) = ?", options: ["0,6", "0,5", "1,0", "6,0"], correct: "0,6", explain: "15 / 25 = 3 / 5 = 0,6." },
+                    { type: 'exercise', q: "Hitung \\( (0,13)^2 \\) = ?", options: ["0,0169", "0,169", "0,0144", "1,69"], correct: "0,0169", explain: "13x13=169. Desimal 4. Tambah 0 di depan: 0,0169." },
+                    { type: 'exercise', q: "Hitung \\( 2,25 \\div 4,5 \\) = ?", options: ["0,5", "5", "0,05", "2"], correct: "0,5", explain: "225 / 450 = 1 / 2 = 0,5." },
+                    { type: 'exercise', q: "Warm-up: \\( 7 \\times 9 \\) = ?", options: ["63", "56", "72", "16"], correct: "63", explain: "7 x 9 = 63." },
+                    { type: 'exercise', q: "Warm-up: \\( 48 \\div 8 \\) = ?", options: ["5", "6", "7", "8"], correct: "6", explain: "6 x 8 = 48." },
+                    { type: 'exercise', q: "Hitung \\( (1,1)^2 + (0,5)^2 \\) = ?", options: ["1,46", "1,36", "2,6", "1,71"], correct: "1,46", explain: "1,21 + 0,25 = 1,46." },
+                    { type: 'exercise', q: "Hitung \\( 0,45 \\times 10 \\) = ?", options: ["4,5", "0,045", "45", "0,45"], correct: "4,5", explain: "Geser koma 1 langkah ke kanan." }
+                ]
+            },
+            assignment5: {
+                title: "Assignment 5",
+                isAssignment: true,
+                blocks: [
+                    { type: 'exercise', q: "Warm-up: \\( 12 \\times 6 \\) = ?", options: ["72", "60", "66", "18"], correct: "72", explain: "12 x 6 = 72." },
+                    { type: 'exercise', q: "Warm-up: \\( 54 \\div 6 \\) = ?", options: ["8", "9", "7", "6"], correct: "9", explain: "9 x 6 = 54." },
+                    { type: 'exercise', q: "Hitung \\( 3,5 \\times 1,2 \\) = ?", options: ["4,2", "0,42", "42", "3,7"], correct: "4,2", explain: "35x12=420. Desimal 2. Hasilnya 4,2." },
+                    { type: 'exercise', q: "Hitung \\( 7,5 \\div 0,5 \\) = ?", options: ["15", "1,5", "0,15", "7"], correct: "15", explain: "75 / 5 = 15." },
+                    { type: 'exercise', q: "Hitung \\( (0,8)^2 \\) = ?", options: ["0,64", "0,16", "1,6", "6,4"], correct: "0,64", explain: "8x8=64. Desimal 2. Hasilnya 0,64." },
+                    { type: 'exercise', q: "Kain 5,6 m dibagi 4 bagian. Panjang tiap bagian?", options: ["1,4 m", "1,2 m", "1,6 m", "0,14 m"], correct: "1,4 m", explain: "5,6 / 4 = 1,4 m." },
+                    { type: 'exercise', q: "Warm-up: \\( 9 \\times 4 \\) = ?", options: ["36", "45", "13", "81"], correct: "36", explain: "9 x 4 = 36." },
+                    { type: 'exercise', q: "Warm-up: \\( 72 \\div 8 \\) = ?", options: ["6", "7", "8", "9"], correct: "9", explain: "9 x 8 = 72." },
+                    { type: 'exercise', q: "Hitung \\( (1,25)^2 \\) = ?", options: ["1,5625", "15,625", "1,25", "2,5"], correct: "1,5625", explain: "125x125=15625. Desimal 4. Hasilnya 1,5625." },
+                    { type: 'exercise', q: "Hitung \\( (4,8 \\div 1,2) \\times (0,5)^2 \\) = ?", options: ["1,0", "0,1", "2,0", "4,0"], correct: "1,0", explain: "4,8/1,2 = 4. (0,5)^2 = 0,25. 4 x 0,25 = 1,0." }
+                ]
+            },
+            sec7: {
+                title: "Consolidation & Reflection (01:00-01:05)",
+                blocks: [
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Ringkasan & Refleksi</h3>
+                        <p class="text-gray-700">Hari ini kamu sudah menguasai kuadrat desimal dan perhitungan tarif. Ini adalah fondasi penting untuk teknik dan arsitektur. Latihan membuatmu sempurna!</p>
+                        <p class="translate-text">Today you mastered decimal squares and rate calculations. This is an important foundation for engineering and architecture. Practice makes perfect!</p>
+                        <div class="bg-green-50 p-4 rounded-md mt-4 border-l-4 border-green-500">
+                            <p class="font-bold text-green-700">Poin Utama (Key Takeaways):</p>
+                            <ul class="list-disc list-inside mt-2 text-gray-700">
+                                <li>Perkalian desimal: Hitung total angka di belakang koma dari kedua bilangan.</li>
+                                <li>Pembagian desimal: Kalikan pembagi dan yang dibagi agar pembagi menjadi bilangan bulat.</li>
+                                <li>Kuadrat desimal: Sama dengan perkalian desimal dengan dirinya sendiri. Contoh: \\( (1,5)^2 = 1,5 \\times 1,5 = 2,25 \\).</li>
+                                <li>Tarif per jam = Total Biaya \\( \\div \\) Total Jam.</li>
+                            </ul>
+                        </div>
+                    `},
+                    { type: 'theory', html: `
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Refleksi Diri</h3>
+                        <p class="text-gray-700">Apa bagian yang paling menantang hari ini? Apakah kamu sudah siap untuk membangun gedung pencakar langit? Silakan lanjutkan latihanmu di platform belajar.</p>
+                        <p class="translate-text">What was the most challenging part today? Are you ready to build a skyscraper? Please continue your practice on the learning platform.</p>
+                        <div class="mt-6 flex flex-col items-center gap-4">
+                            <div class="text-6xl animate-bounce">🎓</div>
+                            <a href="https://learn.algonova.id/login" target="_blank" class="btn-primary text-lg px-8 py-3 inline-block no-print">
+                                🚀 Lanjut ke learn.algonova.id
+                            </a>
+                        </div>
+                    `}
+                ]
+            }
+        }; // Penutup contentData
+
+        let currentSection = 'home';
+        let currentBlockIndex = 0;
+        let userProgress = {}; // Menyimpan jawaban sementara
+
+        function renderMath(element) {
+            element.querySelectorAll('p, div, span, li, h3, h2, button, td, summary').forEach(el => {
+                if (el.children.length === 0 || el.classList.contains('katex-inline') || el.tagName === 'BUTTON') {
+                    const html = el.innerHTML;
+                    const newHtml = html.replace(/\\\((.*?)\\\)/g, (match, p1) => {
+                        try { return katex.renderToString(p1, { throwOnError: false }); } catch(e) { return match; }
+                    }).replace(/\\\[(.*?)\\\]/g, (match, p1) => {
+                        try { return katex.renderToString(p1, { displayMode: true, throwOnError: false }); } catch(e) { return match; }
+                    });
+                    if (newHtml !== html) el.innerHTML = newHtml;
+                }
+            });
+        }
+
+        function loadSection(sectionId) {
+            currentSection = sectionId;
+            currentBlockIndex = 0;
+            updateActiveNav(sectionId);
+            const data = contentData[sectionId];
+            if (!data) return;
+
+            if (sectionId === 'home') {
+                document.getElementById('main-content').innerHTML = data.content;
+                renderMath(document.getElementById('main-content'));
+                return;
+            }
+
+            renderBlock();
+        }
+
+        function renderBlock() {
+            const data = contentData[currentSection];
+            if (!data || !data.blocks) return;
+
+            const block = data.blocks[currentBlockIndex];
+            const mainContent = document.getElementById('main-content');
+            
+            let html = `
+                <div class="content-card max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-green-600">${data.title}</h2>
+                        <button class="text-sm btn-secondary" onclick="resetSection()">Reset Section</button>
+                    </div>
+            `;
+
+            if (block.type === 'theory') {
+                html += `<div class="theory-block">${block.html}</div>`;
+                html += `<div class="mt-8 flex justify-between">
+                            <button class="btn-secondary opacity-50" disabled>Previous</button>
+                            <button class="btn-primary" onclick="nextBlock()">Next ➡️</button>
+                         </div>`;
+            } else if (block.type === 'exercise') {
+                let optionsHtml = '';
+                const shuffledOptions = [...block.options].sort(() => 0.5 - Math.random());
+                
+                shuffledOptions.forEach(opt => {
+                    optionsHtml += `<button class="option-btn w-full" onclick="selectAnswer(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+                });
+
+                html += `
+                    <div class="exercise-box" id="exercise-box">
+                        <p class="text-lg font-semibold mb-4">${block.q}</p>
+                        <div class="flex flex-col">${optionsHtml}</div>
+                        <div class="mt-4 hidden" id="explain-box">
+                            <div class="bg-blue-50 p-3 rounded-md border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-700">Penjelasan:</p>
+                                <p class="text-gray-700">${block.explain}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="flex gap-2">
+                                <button class="btn-secondary" onclick="prevBlock()">⬅️ Previous</button>
+                                <button class="btn-primary" id="check-btn" onclick="checkAnswer('${block.correct.replace(/'/g, "\\'")}')">Check</button>
+                                <button class="btn-secondary" id="reset-exercise-btn" style="display:none;" onclick="resetCurrentExercise()">🔄 Reset</button>
+                            </div>
+                            <button class="btn-primary" onclick="nextBlock()">Next ➡️</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            mainContent.innerHTML = html;
+            renderMath(mainContent);
+        }
+
+        function selectAnswer(btn, answer) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            btn.dataset.selected = "true";
+            parent.dataset.selectedAnswer = answer;
+        }
+
+        function checkAnswer(correctAnswer) {
+            const box = document.getElementById('exercise-box');
+            const optionsContainer = box.querySelector('.flex.flex-col');
+            const selected = optionsContainer.dataset.selectedAnswer;
+            
+            if (!selected) {
+                alert("Pilih jawaban dulu ya! (Please select an answer first!)");
+                return;
+            }
+
+            const btns = optionsContainer.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctAnswer) {
+                    btn.style.backgroundColor = '#c8e6c9';
+                    btn.style.borderColor = '#4caf50';
+                } else if (btn.dataset.selected === "true") {
+                    btn.style.backgroundColor = '#ffcdd2';
+                    btn.style.borderColor = '#f44336';
+                }
+            });
+
+            if (selected.trim() === correctAnswer.trim()) {
+                box.classList.add('correct');
+            } else {
+                box.classList.add('wrong');
+            }
+
+            document.getElementById('explain-box').classList.remove('hidden');
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('reset-exercise-btn').style.display = 'inline-block';
+        }
+
+        function nextBlock() {
+            const blocks = contentData[currentSection].blocks;
+            if (currentBlockIndex < blocks.length - 1) {
+                currentBlockIndex++;
+                renderBlock();
+            } else {
+                // Selesai section, kembali ke home atau kasih notif
+                alert("Section selesai! (Section completed!)");
+                loadSection('home');
+            }
+        }
+
+        function prevBlock() {
+            if (currentBlockIndex > 0) {
+                currentBlockIndex--;
+                renderBlock();
+            }
+        }
+
+        function resetSection() {
+            currentBlockIndex = 0;
+            renderBlock();
+        }
+
+        function resetCurrentExercise() {
+            // Jika di Assignment, hapus jawaban yang tersimpan agar bisa diulang
+            if (currentSection.startsWith('assignment') && userProgress[currentSection]) {
+                userProgress[currentSection][currentBlockIndex] = null;
+                
+                // Hitung ulang skor
+                assignmentScores[currentSection] = 0;
+                userProgress[currentSection].forEach((ans, i) => {
+                    if (ans === contentData[currentSection].blocks[i].correct) {
+                        assignmentScores[currentSection]++;
+                    }
+                });
+                
+                renderAssignmentBlock();
+            } else {
+                // Jika di Section biasa, cukup render ulang block saat ini
+                renderBlock();
+            }
+        }
+
+        let assignmentScores = {}; // Menyimpan skor assignment
+
+        function updateActiveNav(sectionId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                const onclickAttr = item.getAttribute('onclick') || '';
+                if (onclickAttr.includes(`'${sectionId}'`)) {
+                    item.classList.add('active');
+                } else if (sectionId.startsWith('assignment') && onclickAttr.includes(`loadAssignment(${sectionId.replace('assignment', '')})`)) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function loadAssignment(num) {
+            currentSection = 'assignment' + num;
+            currentBlockIndex = 0;
+            if (!userProgress[currentSection]) {
+                userProgress[currentSection] = new Array(10).fill(null);
+                assignmentScores[currentSection] = 0;
+            }
+            updateActiveNav(currentSection);
+            renderAssignmentBlock();
+        }
+
+        function renderAssignmentBlock() {
+            const data = contentData[currentSection];
+            const block = data.blocks[currentBlockIndex];
+            const mainContent = document.getElementById('main-content');
+            
+            const prevAnswer = userProgress[currentSection][currentBlockIndex];
+            
+            let optionsHtml = '';
+            const shuffledOptions = [...block.options].sort(() => 0.5 - Math.random());
+            
+            shuffledOptions.forEach(opt => {
+                let classes = 'option-btn w-full';
+                let styles = '';
+                let disabled = '';
+                
+                if (prevAnswer !== null) {
+                    disabled = 'disabled';
+                    if (opt === block.correct) {
+                        styles = 'background-color: #c8e6c9; border-color: #4caf50;';
+                    } else if (opt === prevAnswer) {
+                        styles = 'background-color: #ffcdd2; border-color: #f44336;';
+                    }
+                } else if (prevAnswer === opt) {
+                    classes += ' selected';
+                }
+                
+                optionsHtml += `<button class="${classes}" style="${styles}" ${disabled} onclick="selectAssignmentAnswer(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+            });
+
+            const isAnswered = prevAnswer !== null;
+            let checkBtnHtml = isAnswered ? '' : `<button class="btn-primary" id="check-btn" onclick="checkAssignmentAnswer('${block.correct.replace(/'/g, "\\'")}')">Check</button>`;
+            let resetBtnHtml = isAnswered ? `<button class="btn-secondary" id="reset-exercise-btn" onclick="resetCurrentExercise()">🔄 Reset</button>` : `<button class="btn-secondary" id="reset-exercise-btn" style="display:none;" onclick="resetCurrentExercise()">🔄 Reset</button>`;
+            
+            let explainHtml = isAnswered ? `
+                <details class="mt-4 bg-blue-50 p-3 rounded-md border-l-4 border-blue-500" open>
+                    <summary class="font-bold text-blue-700 cursor-pointer">Penjelasan (Klik untuk sembunyikan)</summary>
+                    <p class="text-gray-700 mt-2">${block.explain}</p>
+                </details>` : '';
+
+            let html = `
+                <div class="content-card max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-green-600">${data.title} <span class="text-sm text-gray-500 font-normal">(${currentBlockIndex + 1}/10)</span></h2>
+                        <button class="text-sm btn-danger" onclick="resetAssignment()">Reset Assignment</button>
+                    </div>
+                    <div class="exercise-box ${isAnswered ? (prevAnswer === block.correct ? 'correct' : 'wrong') : ''}" id="exercise-box">
+                        <p class="text-lg font-semibold mb-4">${block.q}</p>
+                        <div class="flex flex-col">${optionsHtml}</div>
+                        ${explainHtml}
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="flex gap-2">
+                                <button class="btn-secondary" onclick="prevAssignmentBlock()" ${currentBlockIndex === 0 ? 'disabled style="opacity:0.5"' : ''}>⬅️ Previous</button>
+                                ${checkBtnHtml}
+                                ${resetBtnHtml}
+                            </div>
+                            <button class="btn-primary" onclick="nextAssignmentBlock()">Next ➡️</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            mainContent.innerHTML = html;
+            renderMath(mainContent);
+        }
+
+        function selectAssignmentAnswer(btn, answer) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            parent.dataset.selectedAnswer = answer;
+        }
+
+        function checkAssignmentAnswer(correctAnswer) {
+            const box = document.getElementById('exercise-box');
+            const optionsContainer = box.querySelector('.flex.flex-col');
+            const selected = optionsContainer.dataset.selectedAnswer;
+            
+            if (!selected) {
+                alert("Pilih jawaban dulu ya! (Please select an answer first!)");
+                return;
+            }
+
+            userProgress[currentSection][currentBlockIndex] = selected;
+            
+            assignmentScores[currentSection] = 0;
+            userProgress[currentSection].forEach((ans, i) => {
+                if (ans === contentData[currentSection].blocks[i].correct) {
+                    assignmentScores[currentSection]++;
+                }
+            });
+
+            const btns = optionsContainer.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent === correctAnswer) {
+                    btn.style.backgroundColor = '#c8e6c9';
+                    btn.style.borderColor = '#4caf50';
+                } else if (btn.classList.contains('selected')) {
+                    btn.style.backgroundColor = '#ffcdd2';
+                    btn.style.borderColor = '#f44336';
+                }
+            });
+
+            if (selected.trim() === correctAnswer.trim()) {
+                box.classList.add('correct');
+            } else {
+                box.classList.add('wrong');
+            }
+
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('reset-exercise-btn').style.display = 'inline-block';
+
+            const explainBox = document.createElement('div');
+            explainBox.className = 'mt-4 bg-blue-50 p-3 rounded-md border-l-4 border-blue-500';
+            explainBox.innerHTML = `
+                <details open>
+                    <summary class="font-bold text-blue-700 cursor-pointer">Penjelasan (Klik untuk sembunyikan)</summary>
+                    <p class="text-gray-700 mt-2">${contentData[currentSection].blocks[currentBlockIndex].explain}</p>
+                </details>`;
+            
+            const controls = box.querySelector('.mt-4');
+            box.insertBefore(explainBox, controls);
+        }
+
+        function nextAssignmentBlock() {
+            const blocks = contentData[currentSection].blocks;
+            if (currentBlockIndex < blocks.length - 1) {
+                currentBlockIndex++;
+                renderAssignmentBlock();
+            } else {
+                renderAssignmentCompletion();
+            }
+        }
+
+        function prevAssignmentBlock() {
+            if (currentBlockIndex > 0) {
+                currentBlockIndex--;
+                renderAssignmentBlock();
+            }
+        }
+
+        function resetAssignment() {
+            if (confirm("Yakin ingin mengulang assignment ini? (Are you sure to restart this assignment?)")) {
+                userProgress[currentSection] = new Array(10).fill(null);
+                assignmentScores[currentSection] = 0;
+                currentBlockIndex = 0;
+                renderAssignmentBlock();
+            }
+        }
+
+        function renderAssignmentCompletion() {
+            const score = assignmentScores[currentSection] || 0;
+            const num = currentSection.replace('assignment', '');
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="content-card max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md text-center">
+                    <h2 class="text-3xl font-bold text-green-600 mb-4">Selamat! 🎉</h2>
+                    <p class="text-xl mb-2">Kamu telah menyelesaikan Assignment ${num}.</p>
+                    <p class="text-lg mb-6">Skor kamu: <span class="font-bold text-blue-600 text-2xl">${score} / 10</span></p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
+                        <button class="btn-secondary" onclick="generatePrintContent('${currentSection}')">🖨️ Print Result (A4)</button>
+                        <button class="btn-primary" onclick="prevAssignmentBlock()">⬅️ Review Answers</button>
+                        <button class="btn-primary" onclick="loadAssignment(${parseInt(num) + 1 <= 5 ? parseInt(num) + 1 : 1})">Next Assignment ➡️</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generatePrintContent(assignmentId) {
+            const num = assignmentId.replace('assignment', '');
+            const data = contentData[assignmentId];
+            const score = assignmentScores[assignmentId] || 0;
+            let rowsHtml = '';
+            
+            data.blocks.forEach((block, index) => {
+                const userAns = userProgress[assignmentId][index] || '-';
+                const isCorrect = userAns === block.correct;
+                const note = isCorrect ? '✓' : 'X';
+                let qText = block.q; // Biarkan tag LaTeX tetap ada, akan dirender oleh renderMath()
+                
+                rowsHtml += `
+                    <tr>
+                        <td style="text-align:center;">${index + 1}</td>
+                        <td>${qText}</td>
+                        <td style="text-align:center;">${userAns}</td>
+                        <td style="text-align:center;">${block.correct}</td>
+                        <td style="text-align:center; font-weight:bold; color:${isCorrect ? 'green' : 'red'};">${note}</td>
+                    </tr>
+                `;
+            });
+
+            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const printHtml = `
+                <div style="font-family: 'Times New Roman', serif; font-size: 12pt; color: #000;">
+                    <h2 style="text-align:center; margin:0; text-transform:uppercase;">MATH TUTORING by Deni</h2>
+                    <hr style="border: 1px solid #000; margin: 10px 0;">
+                    <table style="width:100%; margin-bottom: 15px;">
+                        <tr>
+                            <td style="width:50%;"><strong>Name:</strong> .............................................</td>
+                            <td><strong>Date:</strong> ${today}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topic:</strong> Perkalian & Pembagian Desimal</td>
+                            <td><strong>Assignment Group:</strong> Assignment ${num}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Score:</strong> <span style="font-size: 14pt; font-weight:bold;">${score} / 10</span></td>
+                        </tr>
+                    </table>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr style="background:#e0e0e0;">
+                                <th style="border:1px solid #000; padding:5px; width:5%;">No.</th>
+                                <th style="border:1px solid #000; padding:5px; width:45%;">Question</th>
+                                <th style="border:1px solid #000; padding:5px; width:15%;">Student Answer</th>
+                                <th style="border:1px solid #000; padding:5px; width:15%;">Correct Answer</th>
+                                <th style="border:1px solid #000; padding:5px; width:20%;">Note (check/cross)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                    <br><br>
+                    <div style="text-align:right; margin-top: 30px;">
+                        <p>Checked by,</p>
+                        <br><br><br>
+                        <p style="font-weight:bold; text-decoration: underline;">Deni</p>
+                    </div>
+                </div>
+            `;
+            
+            const printArea = document.getElementById('print-area');
+            printArea.innerHTML = printHtml;
+            renderMath(printArea); // Render KaTeX di area print sebelum dicetak
+            window.print();
+        }
+        
+        // Override resetAllProgress to handle assignments
+        function resetAllProgress() {
+            if (confirm("Yakin ingin mereset SEMUA progress? (Are you sure to reset ALL progress?)")) {
+                userProgress = {};
+                assignmentScores = {};
+                loadSection('home');
+            }
+        }
+
+        // Init
+        window.onload = () => loadSection('home');
+    </script>
+</body>
+</html>
