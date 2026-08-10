@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilangan Bulat & Operasinya - Math Tutoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bg4:#242B35;
+  --tx:#E6EDF3;--tx2:#8B949E;--tx3:#6E7681;
+  --ac:#F0883E;--ac2:#D2751F;--acg:rgba(240,136,62,.12);
+  --ok:#3FB950;--okg:rgba(63,185,80,.1);
+  --er:#F85149;--erg:rgba(248,81,73,.1);
+  --bd:#30363D;--bd2:#21262D;
+  --side-w:280px;
+  --font-d:'Space Grotesk',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--bg);color:var(--tx);display:flex;min-height:100vh;overflow:hidden;
+  background-image:radial-gradient(ellipse at 85% 5%,rgba(240,136,62,.04) 0%,transparent 50%),radial-gradient(ellipse at 15% 95%,rgba(63,185,80,.025) 0%,transparent 50%)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--tx3)}
+
+/* ===== SIDEBAR ===== */
+#sidebar{width:var(--side-w);min-height:100vh;background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:50;transition:transform .3s ease}
+.side-logo{padding:20px 20px 16px;border-bottom:1px solid var(--bd)}
+.side-logo h2{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--ac);letter-spacing:.5px}
+.side-logo p{font-size:11px;color:var(--tx3);margin-top:2px}
+.side-progress{padding:12px 20px;border-bottom:1px solid var(--bd)}
+.side-progress-bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden;margin-top:6px}
+.side-progress-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ok));border-radius:2px;transition:width .4s ease;width:0%}
+.side-progress span{font-size:11px;color:var(--tx2)}
+.side-nav{flex:1;overflow-y:auto;padding:8px 0}
+.side-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:all .15s ease;border-left:3px solid transparent;position:relative}
+.side-item:hover{background:rgba(240,136,62,.06)}
+.side-item.active{background:var(--acg);border-left-color:var(--ac)}
+.side-item.active .si-title{color:var(--tx);font-weight:600}
+.si-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:var(--bg3);color:var(--tx2);transition:all .15s ease}
+.side-item.active .si-icon{background:var(--ac);color:#fff}
+.si-text{flex:1;min-width:0}
+.si-title{font-size:12.5px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s ease}
+.si-time{font-size:10px;color:var(--tx3);margin-top:1px}
+.si-badge{font-size:9px;background:var(--ac);color:#fff;padding:2px 7px;border-radius:10px;font-weight:600}
+.si-check{color:var(--ok);font-size:11px;margin-left:auto;opacity:0;transition:opacity .3s ease}
+.si-check.visible{opacity:1}
+.side-divider{height:1px;background:var(--bd);margin:6px 20px}
+
+/* ===== MENU TOGGLE (mobile) ===== */
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:60;width:40px;height:40px;border-radius:10px;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);font-size:16px;cursor:pointer;align-items:center;justify-content:center}
+.side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:45}
+
+/* ===== MAIN CONTENT ===== */
+#main{margin-left:var(--side-w);flex:1;display:flex;flex-direction:column;height:100vh;min-width:0}
+#main-header{flex-shrink:0;padding:16px 32px;border-bottom:1px solid var(--bd);background:var(--bg);position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px}
+#main-header h1{font-family:var(--font-d);font-size:18px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-progress{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx2);flex-shrink:0}
+.header-progress-bar{width:100px;height:6px;background:var(--bd);border-radius:3px;overflow:hidden}
+.header-progress-fill{height:100%;background:var(--ac);border-radius:3px;transition:width .4s ease}
+
+#main-body{flex:1;overflow-y:auto;padding:28px 40px 20px}
+#block-container{max-width:720px;margin:0 auto;position:relative}
+
+/* ===== BLOCK ANIMATIONS ===== */
+.block-enter-right{animation:slideR .35s ease both}
+.block-enter-left{animation:slideL .35s ease both}
+.block-enter-fade{animation:fadeUp .4s ease both}
+@keyframes slideR{from{transform:translateX(50px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideL{from{transform:translateX(-50px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== THEORY BLOCK ===== */
+.theory-card{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:28px 28px 24px;margin-bottom:8px}
+.theory-card .en{font-size:13px;color:var(--tx3);margin-top:6px;line-height:1.5;font-style:italic}
+.theory-card h3{font-family:var(--font-d);font-size:17px;font-weight:600;color:var(--ac);margin-bottom:14px}
+.theory-card p{font-size:14.5px;line-height:1.75;color:var(--tx);margin-bottom:10px}
+.theory-card svg{display:block;margin:16px auto;max-width:100%}
+.theory-card ul{padding-left:20px;margin-bottom:10px}
+.theory-card li{font-size:14px;line-height:1.7;color:var(--tx);margin-bottom:4px}
+.theory-highlight{background:var(--acg);border-left:3px solid var(--ac);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px;line-height:1.6}
+
+/* ===== EXERCISE BLOCK ===== */
+.exercise-card{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:28px;margin-bottom:8px;position:relative;overflow:hidden}
+.exercise-card .en{font-size:13px;color:var(--tx3);margin-top:4px;font-style:italic}
+.exercise-q{font-size:15px;line-height:1.7;margin-bottom:20px;font-weight:500}
+.exercise-label{font-size:11px;color:var(--ac);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+
+/* Options */
+.options-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.opt-btn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:2px solid var(--bd);border-radius:12px;background:var(--bg2);color:var(--tx);cursor:pointer;transition:all .18s ease;font-size:14px;line-height:1.5;text-align:left;width:100%;font-family:var(--font-b)}
+.opt-btn:hover:not(.locked){border-color:var(--ac);background:var(--acg)}
+.opt-btn.selected{border-color:var(--ac);background:var(--acg)}
+.opt-btn.correct{border-color:var(--ok)!important;background:var(--okg)!important}
+.opt-btn.wrong{border-color:var(--er)!important;background:var(--erg)!important}
+.opt-btn.locked{cursor:default;opacity:.85}
+.opt-btn .opt-letter{width:28px;height:28px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0;transition:all .18s ease;border:1px solid var(--bd)}
+.opt-btn.selected .opt-letter{background:var(--ac);color:#fff;border-color:var(--ac)}
+.opt-btn.correct .opt-letter{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt-btn.wrong .opt-letter{background:var(--er);color:#fff;border-color:var(--er)}
+.opt-btn .opt-text{flex:1}
+.opt-btn .opt-icon{font-size:14px;opacity:0;transition:opacity .2s ease}
+.opt-btn.correct .opt-icon,.opt-btn.wrong .opt-icon{opacity:1}
+
+/* Checkbox */
+.cb-btn .opt-letter{border-radius:6px;width:24px;height:24px;font-size:12px}
+.cb-btn.selected .opt-letter{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+/* Input */
+.input-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.input-field{padding:11px 16px;border:2px solid var(--bd);border-radius:10px;background:var(--bg2);color:var(--tx);font-size:15px;font-family:var(--font-b);width:200px;transition:border-color .2s ease;outline:none}
+.input-field:focus{border-color:var(--ac)}
+.input-field.correct{border-color:var(--ok)!important}
+.input-field.wrong{border-color:var(--er)!important}
+.input-hint{font-size:12px;color:var(--tx3)}
+
+/* TF buttons */
+.tf-row{display:flex;gap:12px;margin-bottom:20px}
+.tf-btn{padding:11px 28px;border:2px solid var(--bd);border-radius:10px;background:var(--bg2);color:var(--tx);cursor:pointer;font-size:14px;font-weight:500;font-family:var(--font-b);transition:all .18s ease}
+.tf-btn:hover:not(.locked){border-color:var(--ac)}
+.tf-btn.selected{border-color:var(--ac);background:var(--acg)}
+.tf-btn.correct{border-color:var(--ok)!important;background:var(--okg)!important}
+.tf-btn.wrong{border-color:var(--er)!important;background:var(--erg)!important}
+.tf-btn.locked{cursor:default}
+
+/* Check button */
+.check-btn{padding:10px 28px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);transition:all .18s ease}
+.check-btn:hover:not(:disabled){background:var(--ac2);transform:translateY(-1px)}
+.check-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* Explanation */
+.explanation{margin-top:16px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;transition:all .3s ease}
+.exp-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg2);cursor:pointer;font-size:13px;font-weight:600;color:var(--tx2);user-select:none;transition:color .15s ease}
+.exp-header:hover{color:var(--tx)}
+.exp-header i{transition:transform .3s ease;font-size:11px}
+.exp-header.open i{transform:rotate(180deg)}
+.exp-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 16px}
+.exp-body.open{max-height:600px;padding:14px 16px}
+.exp-body p{font-size:13.5px;line-height:1.7;color:var(--tx)}
+.exp-body .en{font-size:12px;color:var(--tx3);margin-top:4px;font-style:italic}
+.exp-correct{color:var(--ok);font-weight:600;font-size:13px;margin-bottom:8px}
+.exp-wrong{color:var(--er);font-weight:600;font-size:13px;margin-bottom:8px}
+
+/* Feedback overlay */
+.fb-badge{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;animation:popIn .3s ease both}
+.fb-badge.ok{background:var(--okg);color:var(--ok);border:2px solid var(--ok)}
+.fb-badge.er{background:var(--erg);color:var(--er);border:2px solid var(--er)}
+@keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
+/* Confetti */
+.confetti-dot{position:absolute;top:10px;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:cFall 1s ease-out forwards}
+@keyframes cFall{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(80px) scale(0);opacity:0}}
+.shake{animation:shake .4s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* ===== NAV BAR ===== */
+#main-nav{flex-shrink:0;padding:14px 32px;border-top:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav-btn{padding:9px 20px;border-radius:10px;border:2px solid var(--bd);background:var(--bg3);color:var(--tx);cursor:pointer;font-size:13px;font-weight:500;font-family:var(--font-b);transition:all .18s ease;display:flex;align-items:center;gap:6px}
+.nav-btn:hover{border-color:var(--ac);color:var(--ac)}
+.nav-btn.primary{background:var(--ac);border-color:var(--ac);color:#fff}
+.nav-btn.primary:hover{background:var(--ac2)}
+.nav-btn:disabled{opacity:.35;cursor:not-allowed}
+.nav-btn:disabled:hover{border-color:var(--bd);color:var(--tx)}
+
+/* ===== HOME ===== */
+.home-card{background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:40px;text-align:center;max-width:600px;margin:0 auto}
+.home-card h1{font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--ac);margin-bottom:4px}
+.home-card .topic-id{font-size:15px;color:var(--tx);font-weight:500;margin-bottom:2px}
+.home-card .topic-en{font-size:13px;color:var(--tx3);font-style:italic;margin-bottom:28px}
+.home-rules{text-align:left;margin-bottom:28px}
+.home-rules h3{font-family:var(--font-d);font-size:14px;color:var(--tx2);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.home-rules li{font-size:14px;line-height:1.8;color:var(--tx);list-style:none;padding-left:24px;position:relative;margin-bottom:4px}
+.home-rules li::before{content:'';position:absolute;left:0;top:10px;width:8px;height:8px;border-radius:50%;background:var(--ac)}
+.reset-all-btn{padding:12px 32px;background:transparent;border:2px solid var(--er);color:var(--er);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);transition:all .18s ease}
+.reset-all-btn:hover{background:var(--erg)}
+
+/* ===== ASSIGNMENT SUMMARY ===== */
+.summary-card{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:36px;text-align:center;max-width:500px;margin:0 auto}
+.summary-score{font-family:var(--font-d);font-size:56px;font-weight:700;color:var(--ac);line-height:1}
+.summary-score span{font-size:24px;color:var(--tx2);font-weight:400}
+.summary-label{font-size:14px;color:var(--tx2);margin-top:4px;margin-bottom:20px}
+.summary-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:24px}
+.sg-item{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid var(--bd);background:var(--bg2);color:var(--tx2);transition:all .2s ease}
+.sg-item.ok{border-color:var(--ok);background:var(--okg);color:var(--ok)}
+.sg-item.er{border-color:var(--er);background:var(--erg);color:var(--er)}
+.sg-item.na{border-color:var(--bd);color:var(--tx3)}
+.print-btn{padding:12px 32px;background:var(--ac);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);transition:all .18s ease;display:inline-flex;align-items:center;gap:8px}
+.print-btn:hover{background:var(--ac2);transform:translateY(-1px)}
+
+/* ===== REFLECTION ===== */
+.reflect-card{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:36px;max-width:600px;margin:0 auto;text-align:center}
+.reflect-card h2{font-family:var(--font-d);font-size:22px;font-weight:600;color:var(--ac);margin-bottom:16px}
+.reflect-card p{font-size:14.5px;line-height:1.7;color:var(--tx);margin-bottom:8px}
+.reflect-card .en{font-size:13px;color:var(--tx3);font-style:italic;margin-bottom:20px}
+.lms-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;background:var(--ok);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-b);transition:all .18s ease;text-decoration:none}
+.lms-btn:hover{background:#2ea043;transform:translateY(-2px);box-shadow:0 6px 20px rgba(63,185,80,.25)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .menu-toggle{display:flex!important}
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  .side-overlay.show{display:block}
+  #main{margin-left:0}
+  #main-body{padding:20px 16px}
+  #main-header{padding:14px 16px 14px 56px}
+  #main-nav{padding:12px 16px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+<div class="side-overlay" id="sideOverlay" onclick="toggleSidebar()"></div>
+
+<nav id="sidebar">
+  <div class="side-logo">
+    <h2><i class="fa-solid fa-graduation-cap" style="margin-right:6px"></i> MATH TUTORING</h2>
+    <p>by Deni</p>
+  </div>
+  <div class="side-progress">
+    <span>Kemajuan Keseluruhan</span>
+    <div class="side-progress-bar"><div class="side-progress-fill" id="sideProgressFill"></div></div>
+  </div>
+  <div class="side-nav" id="sideNav"></div>
+</nav>
+
+<main id="main">
+  <header id="main-header">
+    <h1 id="headerTitle">MATH TUTORING by Deni</h1>
+    <div class="header-progress">
+      <span id="headerProgressText">0/0</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="headerProgressFill"></div></div>
+    </div>
+  </header>
+  <div id="main-body"><div id="block-container"></div></div>
+  <div id="main-nav">
+    <button class="nav-btn" id="btnPrev" onclick="navigate('prev')"><i class="fa-solid fa-arrow-left"></i> Sebelumnya</button>
+    <button class="nav-btn" id="btnReset" onclick="resetExercise()" style="border-color:var(--er);color:var(--er)"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+    <button class="nav-btn primary" id="btnNext" onclick="navigate('next')">Selanjutnya <i class="fa-solid fa-arrow-right"></i></button>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+let curSec = 0, curBlk = 0;
+const exState = {};
+
+/* ============================================================
+   UTILITAS
+   ============================================================ */
+function pm(html) {
+  // Proses $$...$$ dulu, lalu $...$   
+  html = html.replace(/\$\$([\s\S]*?)\$\$/g, (m, t) => {
+    try { return katex.renderToString(t.trim(), {displayMode:true,throwOnError:false}); } catch(e){return m;}
+  });
+  html = html.replace(/\$([^\$\n]+?)\$/g, (m, t) => {
+    try { return katex.renderToString(t.trim(), {displayMode:false,throwOnError:false}); } catch(e){return m;}
+  });
+  return html;
+}
+function shuffle(a) {
+  const s=[...a]; for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]];} return s;
+}
+function norm(s){ return String(s).trim().replace(/\s/g,'').replace(/,/g,'.').toLowerCase(); }
+function arrEq(a,b){ if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length)return false; const sa=[...a].sort(),sb=[...b].sort(); return sa.every((v,i)=>norm(v)===norm(sb[i])); }
+function ek(si,bi){ return `s${si}-b${bi}`; }
+
+/* ============================================================
+   DATA - TOPIC
+   ============================================================ */
+const topicInfo = {
+  id: 'Bilangan Bulat & Operasinya',
+  en: 'Integers & Their Operations'
+};
+
+/* ============================================================
+   DATA - SEMUA SECTION
+   ============================================================ */
+const sections = [
+
+/* ==================== HOME ==================== */
+{
+  id:'home', type:'home', icon:'fa-house', title:'Home', titleEn:'Home',
+  blocks:[]
+},
+
+/* ==================== SECTION 1: SPIRAL REVIEW ==================== */
+{
+  id:'sec1', type:'lesson', icon:'fa-bolt', title:'Spiral Review Warm-up', titleEn:'Spiral Review Warm-up', time:'00:00 - 00:10',
+  blocks:[
+
+    /* --- Theory 1 --- */
+    {type:'theory', content:`
+      <h3>Review: Perkalian Desimal</h3>
+      <p>Saat mengalikan dua bilangan desimal, kita kalikan angka-angkanya seperti biasa, lalu menghitung total jumlah angka di belakang koma pada kedua faktor.</p>
+      <div class="theory-highlight">
+        <strong>Aturan:</strong> Jumlah angka di belakang koma hasil perkalian = jumlah angka di belakang koma faktor pertama + jumlah angka di belakang koma faktor kedua.
+      </div>
+      <p><strong>Contoh:</strong> $0,12 \\times 0,4$</p>
+      <p>$12 \\times 4 = 48$. Faktor pertama punya $2$ angka di belakang koma, faktor kedua punya $1$ angka. Total $= 2 + 1 = 3$ angka di belakang koma.</p>
+      <p>Jadi $0,12 \\times 0,4 = 0,048$</p>
+      <svg viewBox="0 0 360 90" width="360" height="90">
+        <rect x="10" y="10" width="120" height="70" rx="12" fill="#1C2128" stroke="#30363D" stroke-width="1.5"/>
+        <text x="70" y="38" text-anchor="middle" fill="#F0883E" font-family="Space Grotesk" font-size="18" font-weight="600">0,12</text>
+        <text x="70" y="62" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="11">2 angka di belakang koma</text>
+        <text x="155" y="48" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">×</text>
+        <rect x="180" y="10" width="80" height="70" rx="12" fill="#1C2128" stroke="#30363D" stroke-width="1.5"/>
+        <text x="220" y="38" text-anchor="middle" fill="#F0883E" font-family="Space Grotesk" font-size="18" font-weight="600">0,4</text>
+        <text x="220" y="62" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="11">1 angka di belakang koma</text>
+        <text x="285" y="48" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">=</text>
+        <rect x="300" y="10" width="50" height="70" rx="12" fill="rgba(63,185,80,.1)" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="325" y="50" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="16" font-weight="700">0,048</text>
+      </svg>
+    `, contentEn:`
+      When multiplying two decimals, multiply the numbers normally, then count the total decimal places in both factors.
+      <br><strong>Rule:</strong> Decimal places in product = decimal places in first factor + decimal places in second factor.
+      <br><strong>Example:</strong> $0.12 \\times 0.4 = 0.048$ (2 + 1 = 3 decimal places).
+    `},
+
+    /* --- Exercises 1-3 --- */
+    {type:'exercise', typeEx:'mc', question:'Berapakah hasil dari $0,12 \\times 0,4$?', questionEn:'What is the result of $0,12 \\times 0,4$?',
+      options:['0,048','0,48','0,0048','4,8'], answer:'0,048',
+      explanation:'$12 \\times 4 = 48$. Total angka di belakang koma = $2 + 1 = 3$. Jadi hasilnya $0,048$.',
+      explanationEn:'$12 \\times 4 = 48$. Total decimal places = $2 + 1 = 3$. So the result is $0,048$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $2,5 \\times 0,3 = \\ldots$', questionEn:'Calculate $2,5 \\times 0,3 = \\ldots$',
+      answer:'0,75', hint:'Gunakan aturan jumlah angka di belakang koma.',
+      explanation:'$25 \\times 3 = 75$. Total angka di belakang koma = $1 + 1 = 2$. Jadi $2,5 \\times 0,3 = 0,75$.',
+      explanationEn:'$25 \\times 3 = 75$. Total decimal places = $1 + 1 = 2$. So $2,5 \\times 0,3 = 0,75$.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah pernyataan yang <strong>benar</strong> tentang perkalian desimal?', questionEn:'Which statement about decimal multiplication is <strong>correct</strong>?',
+      options:['$0,5 \\times 0,5 = 0,25$','$0,5 \\times 0,5 = 2,5$','$0,5 \\times 0,5 = 0,025$','$0,5 \\times 0,5 = 25$'], answer:'$0,5 \\times 0,5 = 0,25$',
+      explanation:'$5 \\times 5 = 25$. Total angka di belakang koma = $1 + 1 = 2$. Jadi $0,5 \\times 0,5 = 0,25$.',
+      explanationEn:'$5 \\times 5 = 25$. Total decimal places = $1 + 1 = 2$. So $0,5 \\times 0,5 = 0,25$.'},
+
+    /* --- Theory 2 --- */
+    {type:'theory', content:`
+      <h3>Review: Pembagian Desimal</h3>
+      <p>Pembagian desimal bisa dilakukan dengan mengubah pembagi menjadi bilangan bulat. Caranya: kalikan pembagi dan dividend dengan $10$, $100$, atau $1000$ sampai pembagi tidak memiliki koma.</p>
+      <div class="theory-highlight">
+        <strong>Contoh:</strong> $2,5 : 0,05$ → Kalikan keduanya dengan $100$: $250 : 5 = 50$       </div>
+      <p>Jadi $2,5 : 0,05 = 50$. Kuncinya adalah membuat pembagi menjadi bilangan bulat terlebih dahulu.</p>
+    `, contentEn:`
+      Decimal division can be done by making the divisor a whole number. Multiply both divisor and dividend by 10, 100, or 1000 until the divisor has no decimal point.
+      <br><strong>Example:</strong> $2.5 \\div 0.05$ → Multiply both by $100$: $250 \\div 5 = 50$.
+    `},
+
+    /* --- Exercises 4-6 --- */
+    {type:'exercise', typeEx:'mc', question:'Berapakah $2,5 : 0,05$?', questionEn:'What is $2,5 : 0,05$?',
+      options:['50','5','0,5','500'], answer:'50',
+      explanation:'Kalikan pembagi dan dividend dengan $100$: $250 : 5 = 50$. Jadi $2,5 : 0,05 = 50$.',
+      explanationEn:'Multiply divisor and dividend by $100$: $250 \\div 5 = 50$. So $2,5 : 0,05 = 50$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $1,44 : 0,12 = \\ldots$', questionEn:'Calculate $1,44 : 0,12 = \\ldots$',
+      answer:'12', hint:'Kalikan pembagi dan dividend dengan 100.',
+      explanation:'Kalikan keduanya dengan $100$: $144 : 12 = 12$. Jadi $1,44 : 0,12 = 12$.',
+      explanationEn:'Multiply both by $100$: $144 \\div 12 = 12$. So $1,44 : 0,12 = 12$.'},
+    {type:'exercise', typeEx:'mc', question:'Jika $a : 0,3 = 2,4$, maka nilai $a$ adalah $\\ldots$', questionEn:'If $a : 0,3 = 2,4$, then the value of $a$ is $\\ldots$',
+      options:['$0,72$','$7,2$','$0,08$','$8$'], answer:'$0,72$',
+      explanation:'$a = 2,4 \\times 0,3 = 0,72$. Kita bisa cek: $0,72 : 0,3 = 2,4$ ✓',
+      explanationEn:'$a = 2.4 \\times 0.3 = 0.72$. We can verify: $0.72 \\div 0.3 = 2.4$ ✓'},
+
+    /* --- Theory 3 --- */
+    {type:'theory', content:`
+      <h3>Review: Pengukuran & Konversi Pecahan ke Desimal</h3>
+      <p>Dalam konteks pengukuran, kita sering perlu mengubah pecahan biasa menjadi desimal. Caranya adalah membagi pembilang dengan penyebut.</p>
+      <div class="theory-highlight">
+        <strong>Contoh:</strong> $\\frac{3}{4} = 3 : 4 = 0,75$       </div>
+      <p>Pecahan yang penyebutnya $2, 4, 5, 8, 10, 20, 25, 50, 100$ akan selalu menghasilkan desimal berhingga.</p>
+      <p><strong>Konteks pengukuran:</strong> Jika sebuah kabel panjangnya $12,5$ meter dipotong menjadi $5$ bagian sama rata, maka panjang tiap bagian = $12,5 : 5 = 2,5$ meter.</p>
+      <svg viewBox="0 0 400 60" width="400" height="60">
+        <line x1="20" y1="30" x2="380" y2="30" stroke="#F0883E" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="20" y1="22" x2="20" y2="38" stroke="#F0883E" stroke-width="2"/>
+        <line x1="96" y1="22" x2="96" y2="38" stroke="#3FB950" stroke-width="2"/>
+        <line x1="172" y1="22" x2="172" y2="38" stroke="#3FB950" stroke-width="2"/>
+        <line x1="248" y1="22" x2="248" y2="38" stroke="#3FB950" stroke-width="2"/>
+        <line x1="324" y1="22" x2="324" y2="38" stroke="#3FB950" stroke-width="2"/>
+        <line x1="380" y1="22" x2="380" y2="38" stroke="#F0883E" stroke-width="2"/>
+        <text x="20" y="52" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">0</text>
+        <text x="96" y="52" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10">2,5</text>
+        <text x="172" y="52" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10">5,0</text>
+        <text x="248" y="52" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10">7,5</text>
+        <text x="324" y="52" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10">10,0</text>
+        <text x="380" y="52" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">12,5m</text>
+      </svg>
+    `, contentEn:`
+      In measurement contexts, we often need to convert fractions to decimals by dividing numerator by denominator.
+      <br><strong>Example:</strong> $\\frac{3}{4} = 3 \\div 4 = 0.75$       <br>Fractions with denominators of 2, 4, 5, 8, 10, etc. always produce terminating decimals.
+    `},
+
+    /* --- Exercises 7-10 --- */
+    {type:'exercise', typeEx:'mc', question:'Ubah $\\frac{3}{4}$ ke dalam bentuk desimal.', questionEn:'Convert $\\frac{3}{4}$ to decimal form.',
+      options:['$0,75$','$0,34$','$0,25$','$0,5$'], answer:'$0,75$',
+      explanation:'$3 : 4 = 0,75$. Jadi $\\frac{3}{4} = 0,75$.',
+      explanationEn:'$3 \\div 4 = 0.75$. So $\\frac{3}{4} = 0.75$.'},
+    {type:'exercise', typeEx:'mc', question:'Sebuah kabel panjangnya $12,5$ meter dipotong menjadi $5$ bagian sama rata. Berapa panjang tiap bagian?', questionEn:'A cable $12,5$ meters long is cut into $5$ equal parts. How long is each part?',
+      options:['$2,5$ m','$2,05$ m','$0,25$ m','$25$ m'], answer:'$2,5$ m',
+      explanation:'$12,5 : 5 = 2,5$ meter. Jadi tiap bagian panjangnya $2,5$ meter.',
+      explanationEn:'$12.5 \\div 5 = 2.5$ meters. So each part is $2,5$ meters long.'},
+    {type:'exercise', typeEx:'input', question:'Ubah $\\frac{2}{5}$ ke dalam bentuk desimal.', questionEn:'Convert $\\frac{2}{5}$ to decimal form.',
+      answer:'0,4', hint:'Bagi pembilang dengan penyebut.',
+      explanation:'$2 : 5 = 0,4$. Jadi $\\frac{2}{5} = 0,4$.',
+      explanationEn:'$2 \\div 5 = 0.4$. So $\\frac{2}{5} = 0.4$.'},
+    {type:'exercise', typeEx:'tf', question:'$\\frac{7}{8}$ sama dengan $0,875$ dalam bentuk desimal.', questionEn:'$\\frac{7}{8}$ equals $0,875$ in decimal form.',
+      answer:'Benar',
+      explanation:'$7 : 8 = 0,875$. Pernyataan ini benar.',
+      explanationEn:'$7 \\div 8 = 0.875$. This statement is true.'}
+  ]
+},
+
+/* ==================== SECTION 2: INTRODUCTION ==================== */
+{
+  id:'sec2', type:'lesson', icon:'fa-globe', title:'Introduction & Real-World Connection', titleEn:'Introduction & Real-World Connection', time:'00:10 - 00:15',
+  blocks:[
+
+    /* --- Theory 1 --- */
+    {type:'theory', content:`
+      <h3>Apa Itu Bilangan Bulat Negatif?</h3>
+      <p>Bilangan bulat terdiri dari bilangan bulat positif ($1, 2, 3, \\ldots$), nol ($0$), dan bilangan bulat negatif ($-1, -2, -3, \\ldots$). Bilangan bulat negatif digunakan untuk menggambarkan situasi yang "kurang dari nol" dalam kehidupan nyata.</p>
+      <svg viewBox="0 0 440 80" width="440" height="80">
+        <defs><linearGradient id="gNeg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F85149" stop-opacity="0.3"/><stop offset="100%" stop-color="#F85149" stop-opacity="0"/></linearGradient>
+        <linearGradient id="gPos" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3FB950" stop-opacity="0"/><stop offset="100%" stop-color="#3FB950" stop-opacity="0.3"/></linearGradient></defs>
+        <rect x="30" y="25" width="180" height="30" rx="4" fill="url(#gNeg)"/>
+        <rect x="230" y="25" width="180" height="30" rx="4" fill="url(#gPos)"/>
+        <line x1="30" y1="40" x2="410" y2="40" stroke="#E6EDF3" stroke-width="2" stroke-linecap="round"/>
+        ${[...Array(9)].map((_,i)=>{
+          const x=30+i*47.5, v=i-4;
+          return `<line x1="${x}" y1="33" x2="${x}" y2="47" stroke="#E6EDF3" stroke-width="1.5"/>
+          <text x="${x}" y="65" text-anchor="middle" fill="${v<0?'#F85149':v===0?'#F0883E':'#3FB950'}" font-family="Space Grotesk" font-size="13" font-weight="600">${v}</text>`;
+        }).join('')}
+        <circle cx="220" cy="40" r="5" fill="#F0883E"/>
+        <text x="30" y="18" fill="#F85149" font-family="DM Sans" font-size="10" font-weight="600">NEGATIF</text>
+        <text x="390" y="18" fill="#3FB950" font-family="DM Sans" font-size="10" font-weight="600" text-anchor="end">POSITIF</text>
+      </svg>
+      <p>Perhatikan garis bilangan di atas: semakin ke kiri, nilainya semakin kecil. Bilangan negatif selalu berada di kiri dari nol.</p>
+    `, contentEn:`
+      Integers consist of positive integers ($1, 2, 3, \\ldots$), zero ($0$), and negative integers ($-1, -2, -3, \\ldots$). Negative integers represent situations "below zero" in real life.
+      <br>On the number line: the further left, the smaller the value. Negative numbers are always to the left of zero.
+    `},
+
+    /* --- Exercises 1-3 --- */
+    {type:'exercise', typeEx:'mc', question:'Manakah di bawah ini yang merupakan bilangan bulat negatif?', questionEn:'Which of the following is a negative integer?',
+      options:['$-7$','$0$','$3,5$','$\\frac{1}{2}$'], answer:'$-7$',
+      explanation:'$-7$ adalah bilangan bulat negatif. $0$ bukan positif maupun negatif. $3,5$ dan $\\frac{1}{2}$ bukan bilangan bulat (karena memiliki desimal/pecahan).',
+      explanationEn:'$-7$ is a negative integer. $0$ is neither positive nor negative. $3.5$ and $\\frac{1}{2}$ are not integers (they have decimal/fraction parts).'},
+    {type:'exercise', typeEx:'cb', question:'Pilih <strong>semua</strong> bilangan bulat negatif di bawah ini.', questionEn:'Select <strong>all</strong> negative integers below.',
+      options:['$-12$','$0$','$-3$','$5,2$','$-100$'], answer:['$-12$','$-3$','$-100$'],
+      explanation:'$-12$, $-3$, dan $-100$ adalah bilangan bulat negatif. $0$ bukan negatif, dan $5,2$ bukan bilangan bulat.',
+      explanationEn:'$-12$, $-3$, and $-100$ are negative integers. $0$ is not negative, and $5.2$ is not an integer.'},
+    {type:'exercise', typeEx:'mc', question:'Bilangan bulat negatif selalu berada di sisi mana pada garis bilangan?', questionEn:'Which side of the number line are negative integers always on?',
+      options:['Kiri dari nol','Kanan dari nol','Di atas nol','Tidak ada yang benar'], answer:'Kiri dari nol',
+      explanation:'Pada garis bilangan, bilangan negatif selalu berada di sebelah kiri dari nol. Semakin ke kiri, nilainya semakin kecil.',
+      explanationEn:'On the number line, negative integers are always to the left of zero. The further left, the smaller the value.'},
+
+    /* --- Theory 2 --- */
+    {type:'theory', content:`
+      <h3>Suhu Ekstrem di Dunia Nyata</h3>
+      <p>Di stasiun penelitian Antartika, suhu bisa mencapai $-20°C$ atau bahkan lebih dingin. Angka negatif di sini menunjukkan suhu di bawah titik beku air ($0°C$).</p>
+      <p>Jika suhu $-20°C$ turun lagi $15$ derajat, kita menghitung: $-20 + (-15) = -35°C$. Turunnya suhu ditandai dengan penjumlahan bilangan negatif.</p>
+      <svg viewBox="0 0 60 200" width="60" height="200" style="float:right;margin:0 0 10px 20px">
+        <rect x="18" y="10" width="24" height="150" rx="12" fill="#1C2128" stroke="#30363D" stroke-width="1.5"/>
+        <circle cx="30" cy="175" r="18" fill="#1C2128" stroke="#30363D" stroke-width="1.5"/>
+        <circle cx="30" cy="175" r="12" fill="#F85149" opacity="0.8"/>
+        <rect x="24" y="80" width="12" height="95" rx="6" fill="#F85149" opacity="0.6"/>
+        ${[-20,-10,0,10,20,30].map((t,i)=>{
+          const y=155-i*24;
+          return `<line x1="14" y1="${y}" x2="18" y2="${y}" stroke="#8B949E" stroke-width="1"/>
+          <text x="10" y="${y+4}" text-anchor="end" fill="${t<0?'#F85149':'#8B949E'}" font-family="DM Sans" font-size="9">${t}°</text>`;
+        }).join('')}
+        <text x="30" y="198" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="8">°C</text>
+      </svg>
+      <div class="theory-highlight">
+        <strong>Kunci:</strong> "Turun $n$ derajat" = tambahkan $-n$. "Naik $n$ derajat" = tambahkan $+n$.
+      </div>
+    `, contentEn:`
+      In Antarctic research stations, temperatures can reach $-20°C$ or lower. Negative numbers here indicate temperatures below the freezing point of water ($0°C$).
+      <br><strong>Key:</strong> "Drops by $n$ degrees" = add $-n$. "Rises by $n$ degrees" = add $+n$.
+    `},
+
+    /* --- Exercises 4-6 --- */
+    {type:'exercise', typeEx:'mc', question:'Suhu di stasiun Antartika adalah $-20°C$. Suhu turun $15$ derajat lagi. Berapa suhu sekarang?', questionEn:'The temperature at an Antarctic station is $-20°C$. It drops another $15$ degrees. What is the temperature now?',
+      options:['$-35°C$','$-5°C$','$35°C$','$-15°C$'], answer:'$-35°C$',
+      explanation:'Turun $15$ derajat artinya $-20 + (-15) = -35°C$. Suhu semakin dingin (lebih negatif).',
+      explanationEn:'Dropping $15$ degrees means $-20 + (-15) = -35°C$. The temperature gets colder (more negative).'},
+    {type:'exercise', typeEx:'input', question:'Suhu pagi $-8°C$, siang hari suhunya menjadi $4°C$. Berapa selisih kenaikan suhunya?', questionEn:'Morning temperature is $-8°C$, daytime temperature reaches $4°C$. What is the temperature increase?',
+      answer:'12', hint:'Hitung jarak dari -8 ke 4 pada garis bilangan.',
+      explanation:'Selisih kenaikan = $4 - (-8) = 4 + 8 = 12$ derajat. Suhu naik $12$ derajat.',
+      explanationEn:'Temperature increase = $4 - (-8) = 4 + 8 = 12$ degrees. The temperature rose by $12$ degrees.'},
+    {type:'exercise', typeEx:'mc', question:'Suhu di puncak gunung $-5°C$. Setiap jam suhu turun $3°C$. Setelah $4$ jam, suhu menjadi $\\ldots$', questionEn:'Mountain peak temperature is $-5°C$. It drops $3°C$ per hour. After $4$ hours, the temperature is $\\ldots$',
+      options:['$-17°C$','$-7°C$','$-12°C$','$-20°C$'], answer:'$-17°C$',
+      explanation:'Total penurunan = $4 \\times 3 = 12$ derajat. Suhu akhir = $-5 + (-12) = -17°C$.',
+      explanationEn:'Total drop = $4 \\times 3 = 12$ degrees. Final temperature = $-5 + (-12) = -17°C$.'},
+
+    /* --- Theory 3 --- */
+    {type:'theory', content:`
+      <h3>Utang-Piutang: Bilangan Negatif dalam Keuangan</h3>
+      <p>Dalam keuangan, utang dilambangkan dengan bilangan negatif. Jika seseorang punya utang Rp50.000.000 dan mendapat keuntungan Rp30.000.000, kondisinya dihitung: $-50.000.000 + 30.000.000 = -20.000.000$ (masih utang Rp20 juta).</p>
+      <div class="theory-highlight">
+        <strong>Analogi penting:</strong> "Menghapus utang" (negatif) dari "utang" (negatif) = hasil positif. Ini seperti $(-2) \\times (-3) = 6$. Kita akan pelajari lebih lanjut di section berikutnya!
+      </div>
+      <svg viewBox="0 0 320 90" width="320" height="90">
+        <rect x="10" y="10" width="90" height="70" rx="12" fill="rgba(248,81,73,.1)" stroke="#F85149" stroke-width="1.5"/>
+        <text x="55" y="35" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="11" font-weight="600">UTANG</text>
+        <text x="55" y="58" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="18" font-weight="700">-50 jt</text>
+        <text x="120" y="48" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">+</text>
+        <rect x="140" y="10" width="90" height="70" rx="12" fill="rgba(63,185,80,.1)" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="185" y="35" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="11" font-weight="600">UNTUNG</text>
+        <text x="185" y="58" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="18" font-weight="700">+30 jt</text>
+        <text x="250" y="48" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">=</text>
+        <rect x="265" y="10" width="50" height="70" rx="12" fill="rgba(248,81,73,.08)" stroke="#F85149" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="290" y="35" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="9" font-weight="600">UTANG</text>
+        <text x="290" y="58" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="15" font-weight="700">-20 jt</text>
+      </svg>
+    `, contentEn:`
+      In finance, debt is represented by negative numbers. If someone has a debt of Rp50,000,000 and earns Rp30,000,000, their condition is: $-50,000,000 + 30,000,000 = -20,000,000$ (still Rp20 million in debt).
+      <br><strong>Key analogy:</strong> "Canceling a debt" (negative) from "debt" (negative) = positive result. Like $(-2) \\times (-3) = 6$.
+    `},
+
+    /* --- Exercises 7-10 --- */
+    {type:'exercise', typeEx:'mc', question:'Seorang pengusaha punya utang Rp50.000.000 dan baru mendapat keuntungan Rp30.000.000. Kondisi keuangannya sekarang adalah $\\ldots$', questionEn:'A businessperson has a debt of Rp50,000,000 and just earned a profit of Rp30,000,000. Their financial condition is now $\\ldots$',
+      options:['Masih utang Rp20.000.000','Sudah untung Rp20.000.000','Lunas seluruh utang','Utang bertambah Rp80.000.000'], answer:'Masih utang Rp20.000.000',
+      explanation:'$-50.000.000 + 30.000.000 = -20.000.000$. Masih negatif, artinya masih punya utang Rp20 juta.',
+      explanationEn:'$-50,000,000 + 30,000,000 = -20,000,000$. Still negative, meaning still Rp20 million in debt.'},
+    {type:'exercise', typeEx:'input', question:'Saldo rekening $-25.000$. Setor Rp40.000. Berapa saldo sekarang?', questionEn:'Account balance is $-25.000$. Deposit Rp40.000. What is the balance now?',
+      answer:'15.000', hint:'Hitung -25.000 + 40.000.',
+      explanation:'$-25.000 + 40.000 = 15.000$. Saldo sekarang positif Rp15.000.',
+      explanationEn:'$-25,000 + 40,000 = 15,000$. The balance is now positive Rp15,000.'},
+    {type:'exercise', typeEx:'mc', question:'Punya utang Rp100.000, bayar Rp60.000, lalu pinjam lagi Rp30.000. Berapa total utang sekarang?', questionEn:'You have a debt of Rp100.000, pay Rp60.000, then borrow Rp30.000 more. What is the total debt now?',
+      options:['Rp70.000','Rp10.000','Rp130.000','Rp40.000'], answer:'Rp70.000',
+      explanation:'$-100.000 + 60.000 = -40.000$ (sisa utang setelah bayar). Lalu $-40.000 + (-30.000) = -70.000$. Total utang Rp70.000.',
+      explanationEn:'$-100,000 + 60,000 = -40,000$ (remaining debt after payment). Then $-40,000 + (-30,000) = -70,000$. Total debt Rp70,000.'},
+    {type:'exercise', typeEx:'tf', question:'Jika seseorang memiliki saldo Rp50.000 lalu berbelanja Rp75.000, maka saldonya menjadi Rp25.000.', questionEn:'If someone has a balance of Rp50.000 and then spends Rp75.000, their balance becomes Rp25.000.',
+      answer:'Salah',
+      explanation:'$50.000 - 75.000 = -25.000$, bukan $+25.000$. Saldo menjadi negatif Rp25.000 (utang).',
+      explanationEn:'$50,000 - 75,000 = -25,000$, not $+25,000$. The balance becomes negative Rp25,000 (debt).'}
+  ]
+},
+
+
+/* ==================== SECTION 3: REVIEW OF PRIOR KNOWLEDGE ==================== */
+{
+  id:'sec3', type:'lesson', icon:'fa-ruler-horizontal', title:'Review of Prior Knowledge', titleEn:'Review of Prior Knowledge', time:'00:15 - 00:20',
+  blocks:[
+
+    {type:'theory', content:`
+      <h3>Garis Bilangan: Peta Dunia Bilangan Bulat</h3>
+      <p>Garis bilangan adalah garis horizontal yang menunjukkan posisi relatif setiap bilangan bulat. Angka $0$ ada di tengah, bilangan positif di kanan, dan bilangan negatif di kiri.</p>
+      <svg viewBox="0 0 480 100" width="480" height="100">
+        <defs>
+          <marker id="arw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#8B949E"/></marker>
+        </defs>
+        <line x1="20" y1="50" x2="460" y2="50" stroke="#8B949E" stroke-width="1.5" marker-end="url(#arw)"/>
+        ${[-5,-4,-3,-2,-1,0,1,2,3,4,5].map((v,i)=>{
+          const x=50+i*40;
+          const col=v<0?'#F85149':v===0?'#F0883E':'#3FB950';
+          return `<line x1="${x}" y1="42" x2="${x}" y2="58" stroke="${col}" stroke-width="2"/>
+          <text x="${x}" y="75" text-anchor="middle" fill="${col}" font-family="Space Grotesk" font-size="14" font-weight="600">${v}</text>`;
+        }).join('')}
+        <text x="470" y="54" fill="#8B949E" font-family="DM Sans" font-size="10">+∞</text>
+        <path d="M 150 35 Q 200 20 250 35" fill="none" stroke="#F85149" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="200" y="16" text-anchor="middle" fill="#F85149" font-family="DM Sans" font-size="10" font-weight="600">semakin KECIL</text>
+        <path d="M 250 35 Q 300 20 350 35" fill="none" stroke="#3FB950" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="300" y="16" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10" font-weight="600">semakin BESAR</text>
+        <circle cx="90" cy="50" r="6" fill="none" stroke="#F0883E" stroke-width="2"/>
+        <text x="90" y="95" text-anchor="middle" fill="#F0883E" font-family="DM Sans" font-size="9">contoh: -5</text>
+      </svg>
+      <p>Bergerak ke <strong>kanan</strong> = menambah (nilai bertambah besar). Bergerak ke <strong>kiri</strong> = mengurangi (nilai bertambah kecil/bertambah negatif).</p>
+    `, contentEn:`
+      The number line is a horizontal line showing the relative position of each integer. $0$ is in the center, positive numbers are on the right, and negative numbers are on the left.
+      <br>Moving <strong>right</strong> = adding (value increases). Moving <strong>left</strong> = subtracting (value decreases).
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Pada garis bilangan, bilangan $-3$ terletak di sebelah mana dari $1$?', questionEn:'On the number line, where is $-3$ located relative to $1$?',
+      options:['Di sebelah kiri','Di sebelah kanan','Tepat di atasnya','Tidak bisa ditentukan'], answer:'Di sebelah kiri',
+      explanation:'$-3 < 1$, sehingga pada garis bilangan, $-3$ berada di sebelah kiri dari $1$.',
+      explanationEn:'$-3 < 1$, so on the number line, $-3$ is to the left of $1$.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah urutan bilangan dari yang <strong>terkecil</strong> ke <strong>terbesar</strong> yang benar?', questionEn:'Which is the correct order from <strong>smallest</strong> to <strong>largest</strong>?',
+      options:['$-7, -2, 0, 5$','$5, 0, -2, -7$','$-2, -7, 0, 5$','$0, -2, 5, -7$'], answer:'$-7, -2, 0, 5$',
+      explanation:'Pada garis bilangan, dari kiri ke kanan: $-7$ paling kiri (terkecil), lalu $-2$, lalu $0$, lalu $5$ (terbesar).',
+      explanationEn:'On the number line, from left to right: $-7$ is leftmost (smallest), then $-2$, then $0$, then $5$ (largest).'},
+    {type:'exercise', typeEx:'tf', question:'Bilangan $-1$ lebih besar dari bilangan $-10$.', questionEn:'The number $-1$ is greater than $-10$.',
+      answer:'Benar',
+      explanation:'Benar. Pada garis bilangan, $-1$ berada di kanan $-10$. Semakin dekat dengan nol, semakin besar nilainya. $-1 > -10$.',
+      explanationEn:'Correct. On the number line, $-1$ is to the right of $-10$. The closer to zero, the larger the value. $-1 > -10$.'},
+
+    {type:'theory', content:`
+      <h3>Membandingkan Bilangan Bulat Negatif</h3>
+      <p>Aturan penting yang sering membingungkan: di antara dua bilangan negatif, bilangan yang <strong>angkanya lebih kecil</strong> justru <strong>nilainya lebih besar</strong>.</p>
+      <div class="theory-highlight">
+        <strong>Contoh:</strong> $-3 > -8$ karena $-3$ lebih dekat ke $0$ daripada $-8$.<br>
+        $-100 < -1$ karena $-100$ lebih jauh dari $0$.
+      </div>
+      <p>Cara mudahnya: bayangkan suhu. Suhu $-3°C$ lebih hangat (lebih besar) daripada suhu $-8°C$.</p>
+    `, contentEn:`
+      Important rule that often confuses: between two negative numbers, the one with the <strong>smaller absolute value</strong> is actually <strong>larger</strong>.
+      <br><strong>Example:</strong> $-3 > -8$ because $-3$ is closer to $0$ than $-8$.
+      <br>Easy way: think of temperature. $-3°C$ is warmer (larger) than $-8°C$.
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Manakah yang <strong>lebih besar</strong>?', questionEn:'Which is <strong>larger</strong>?',
+      options:['$-12$','$-5$','$-20$','$-100$'], answer:'$-5$',
+      explanation:'Di antara bilangan negatif, yang paling dekat dengan nol adalah yang terbesar. $-5 > -12 > -20 > -100$.',
+      explanationEn:'Among negative numbers, the one closest to zero is the largest. $-5 > -12 > -20 > -100$.'},
+    {type:'exercise', typeEx:'mc', question:'Isilah titik-titik: $-15 \\ldots -9$ (gunakan tanda $>$ atau $<$)', questionEn:'Fill in the blank: $-15 \\ldots -9$ (use $>$ or $<$)',
+      options:['$<$','$>$','$=$','Tidak bisa dibandingkan'], answer:'$<$',
+      explanation:'$-15$ lebih jauh dari nol dibanding $-9$, jadi $-15 < -9$.',
+      explanationEn:'$-15$ is further from zero than $-9$, so $-15 < -9$.'},
+    {type:'exercise', typeEx:'cb', question:'Pilih semua pernyataan yang <strong>benar</strong>.', questionEn:'Select all <strong>true</strong> statements.',
+      options:['$-6 > -10$','$-1 < -50$','$0 > -3$','$-100 > -99$','$-4 < -2$'], answer:['$-6 > -10$','$0 > -3$','$-4 < -2$'],
+      explanation:'$-6 > -10$ ✓ (lebih dekat ke nol). $-1 < -50$ ✗ ($-1 > -50$). $0 > -3$ ✓. $-100 > -99$ ✗ ($-100 < -99$). $-4 < -2$ ✓ ($-4$ lebih jauh dari nol).',
+      explanationEn:'$-6 > -10$ ✓ (closer to zero). $-1 < -50$ ✗ ($-1 > -50$). $0 > -3$ ✓. $-100 > -99$ ✗ ($-100 < -99$). $-4 < -2$ ✓ ($-4$ is further from zero).'},
+
+    {type:'theory', content:`
+      <h3>Penjumlahan & Pengurangan Dasar pada Garis Bilangan</h3>
+      <p>Kita bisa memvisualisasikan penjumlahan dan pengurangan sebagai pergerakan pada garis bilangan:</p>
+      <ul>
+        <li><strong>$a + b$ positif</strong> → bergerak ke <strong>kanan</strong> sebesar $b$ langkah dari $a$</li>
+        <li><strong>$a + b$ negatif</strong> → bergerak ke <strong>kiri</strong> sebesar $|b|$ langkah dari $a$</li>
+        <li><strong>$a - b$</strong> → sama seperti $a + (-b)$, yaitu kebalikan arah $b$</li>
+      </ul>
+      <div class="theory-highlight">
+        <strong>Contoh:</strong> $-5 - 3$ artinya dari $-5$, bergerak $3$ langkah ke kiri → sampai di $-8$.<br>
+        $-5 + 8$ artinya dari $-5$, bergerak $8$ langkah ke kanan → sampai di $3$.
+      </div>
+      <svg viewBox="0 0 400 60" width="400" height="60">
+        <line x1="20" y1="30" x2="380" y2="30" stroke="#8B949E" stroke-width="1.5"/>
+        ${[-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3].map((v,i)=>{
+          const x=40+i*28;
+          const col=(v===-5||v===-8)?'#F0883E':v<0?'#F85149':v===0?'#F0883E':'#3FB950';
+          const hl=(v===-5||v===-8);
+          return `<line x1="${x}" y1="24" x2="${x}" y2="36" stroke="${col}" stroke-width="${hl?2.5:1}"/>
+          <text x="${x}" y="50" text-anchor="middle" fill="${col}" font-family="Space Grotesk" font-size="${hl?12:10}" font-weight="${hl?700:400}">${v}</text>`;
+        }).join('')}
+        <path d="M 100 22 L 44 22" fill="none" stroke="#F0883E" stroke-width="1.5" marker-end="url(#arw)" stroke-dasharray="3,3"/>
+        <text x="72" y="16" text-anchor="middle" fill="#F0883E" font-family="DM Sans" font-size="9" font-weight="600">-5 − 3 = -8</text>
+      </svg>
+    `, contentEn:`
+      We can visualize addition and subtraction as movements on the number line:
+      <br>• $a + b$ positive → move <strong>right</strong> by $b$ steps from $a$       <br>• $a + b$ negative → move <strong>left</strong> by $|b|$ steps from $a$       <br>• $a - b$ → same as $a + (-b)$, opposite direction of $b$       <br><strong>Example:</strong> $-5 - 3$ means from $-5$, move $3$ steps left → arrive at $-8$.
+    `},
+
+    {type:'exercise', typeEx:'input', question:'Hitunglah $-5 - 3 = \\ldots$', questionEn:'Calculate $-5 - 3 = \\ldots$',
+      answer:'-8', hint:'Dari -5, bergerak 3 langkah ke kiri.',
+      explanation:'$-5 - 3 = -5 + (-3) = -8$. Dari $-5$ pada garis bilangan, bergerak $3$ langkah ke kiri sampai di $-8$.',
+      explanationEn:'$-5 - 3 = -5 + (-3) = -8$. From $-5$ on the number line, move $3$ steps left to reach $-8$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $-5 + 8 = \\ldots$', questionEn:'Calculate $-5 + 8 = \\ldots$',
+      answer:'3', hint:'Dari -5, bergerak 8 langkah ke kanan.',
+      explanation:'$-5 + 8 = 3$. Dari $-5$ pada garis bilangan, bergerak $8$ langkah ke kanan, melewati $0$, sampai di $3$.',
+      explanationEn:'$-5 + 8 = 3$. From $-5$ on the number line, move $8$ steps right, passing $0$, to reach $3$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $7 + (-12)$ adalah $\\ldots$', questionEn:'The result of $7 + (-12)$ is $\\ldots$',
+      options:['$-5$','$5$','$-19$','$19$'], answer:'$-5$',
+      explanation:'$7 + (-12) = 7 - 12 = -5$. Kita bisa bayangkan: dari $7$ bergerak $12$ langkah ke kiri, melewati $0$, sampai di $-5$.',
+      explanationEn:'$7 + (-12) = 7 - 12 = -5$. Imagine: from $7$ move $12$ steps left, passing $0$, to reach $-5$.'},
+    {type:'exercise', typeEx:'mc', question:'Jika kita berada di $-3$ lalu bergerak $10$ langkah ke kanan, kita sampai di $\\ldots$', questionEn:'If we are at $-3$ and move $10$ steps right, we arrive at $\\ldots$',
+      options:['$7$','$-13$','$13$','$-7$'], answer:'$7$',
+      explanation:'$-3 + 10 = 7$. Bergerak ke kanan berarti menambah. Dari $-3$ tambah $10$ = $7$.',
+      explanationEn:'$-3 + 10 = 7$. Moving right means adding. From $-3$ add $10$ = $7$.'}
+  ]
+},
+
+/* ==================== SECTION 4: PROBLEM INTRODUCTION ==================== */
+{
+  id:'sec4', type:'lesson', icon:'fa-xmark', title:'Problem Introduction', titleEn:'Problem Introduction', time:'00:20 - 00:30',
+  blocks:[
+
+    {type:'theory', content:`
+      <h3>Aturan Tanda Perkalian: Pertempuran Tanda</h3>
+      <p>Saat mengalikan dua bilangan bulat, tanda hasilnya bergantung pada tanda kedua bilangan tersebut. Ingat aturan ini:</p>
+      <svg viewBox="0 0 400 160" width="400" height="160">
+        <rect x="10" y="10" width="185" height="62" rx="10" fill="rgba(63,185,80,.08)" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="102" y="35" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="14" font-weight="700">Positif × Positif</text>
+        <text x="102" y="58" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="13">= <tspan fill="#3FB950" font-weight="600">Positif</tspan></text>
+        <text x="102" y="73" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">Contoh: 3 × 4 = 12</text>
+
+        <rect x="205" y="10" width="185" height="62" rx="10" fill="rgba(248,81,73,.08)" stroke="#F85149" stroke-width="1.5"/>
+        <text x="297" y="35" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="14" font-weight="700">Positif × Negatif</text>
+        <text x="297" y="58" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="13">= <tspan fill="#F85149" font-weight="600">Negatif</tspan></text>
+        <text x="297" y="73" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">Contoh: 3 × (−4) = −12</text>
+
+        <rect x="10" y="88" width="185" height="62" rx="10" fill="rgba(248,81,73,.08)" stroke="#F85149" stroke-width="1.5"/>
+        <text x="102" y="113" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="14" font-weight="700">Negatif × Positif</text>
+        <text x="102" y="136" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="13">= <tspan fill="#F85149" font-weight="600">Negatif</tspan></text>
+        <text x="102" y="151" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">Contoh: (−3) × 4 = −12</text>
+
+        <rect x="205" y="88" width="185" height="62" rx="10" fill="rgba(63,185,80,.08)" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="297" y="113" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="14" font-weight="700">Negatif × Negatif</text>
+        <text x="297" y="136" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="13">= <tspan fill="#3FB950" font-weight="600">Positif</tspan></text>
+        <text x="297" y="151" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="10">Contoh: (−3) × (−4) = 12</text>
+      </svg>
+      <div class="theory-highlight">
+        <strong>Ingat singkatnya:</strong> Tanda sama → hasil positif. Tanda beda → hasil negatif.
+      </div>
+    `, contentEn:`
+      When multiplying two integers, the sign of the result depends on the signs of both numbers:
+      <br>• Same signs → Positive result
+      <br>• Different signs → Negative result
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Berapakah $(-12) \\times 3$?', questionEn:'What is $(-12) \\times 3$?',
+      options:['$-36$','$36$','$-15$','$15$'], answer:'$-36$',
+      explanation:'Negatif × Positif = Negatif. $12 \\times 3 = 36$, jadi $(-12) \\times 3 = -36$.',
+      explanationEn:'Negative × Positive = Negative. $12 \\times 3 = 36$, so $(-12) \\times 3 = -36$.'},
+    {type:'exercise', typeEx:'mc', question:'Berapakah $(-8) \\times (-5)$?', questionEn:'What is $(-8) \\times (-5)$?',
+      options:['$40$','$-40$','$-13$','$13$'], answer:'$40$',
+      explanation:'Negatif × Negatif = Positif. $8 \\times 5 = 40$, jadi $(-8) \\times (-5) = 40$.',
+      explanationEn:'Negative × Negative = Positive. $8 \\times 5 = 40$, so $(-8) \\times (-5) = 40$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $7 \\times (-6) = \\ldots$', questionEn:'Calculate $7 \\times (-6) = \\ldots$',
+      answer:'-42', hint:'Positif × Negatif = ?',
+      explanation:'Positif × Negatif = Negatif. $7 \\times 6 = 42$, jadi $7 \\times (-6) = -42$.',
+      explanationEn:'Positive × Negative = Negative. $7 \\times 6 = 42$, so $7 \\times (-6) = -42$.'},
+
+    {type:'theory', content:`
+      <h3>Aturan Tanda Pembagian</h3>
+      <p>Aturan tanda pada pembagian <strong>persis sama</strong> dengan perkalian. Ini karena pembagian adalah kebalikan dari perkalian.</p>
+      <div class="theory-highlight">
+        <ul>
+          <li>Positif $\\div$ Positif = Positif → $12 \\div 3 = 4$</li>
+          <li>Positif $\\div$ Negatif = Negatif → $12 \\div (-3) = -4$</li>
+          <li>Negatif $\\div$ Positif = Negatif → $(-12) \\div 3 = -4$</li>
+          <li>Negatif $\\div$ Negatif = Positif → $(-12) \\div (-3) = 4$</li>
+        </ul>
+      </div>
+      <p>Jadi aturan emasnya tetap: <strong>tanda sama → positif, tanda beda → negatif</strong>.</p>
+    `, contentEn:`
+      The sign rules for division are <strong>exactly the same</strong> as multiplication. This is because division is the inverse of multiplication.
+      <br>Golden rule remains: <strong>same signs → positive, different signs → negative</strong>.
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Berapakah $(-20) \\div (-4)$?', questionEn:'What is $(-20) \\div (-4)$?',
+      options:['$5$','$-5$','$80$','$-80$'], answer:'$5$',
+      explanation:'Negatif $\\div$ Negatif = Positif. $20 \\div 4 = 5$, jadi $(-20) \\div (-4) = 5$.',
+      explanationEn:'Negative $\\div$ Negative = Positive. $20 \\div 4 = 5$, so $(-20) \\div (-4) = 5$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $48 \\div (-6) = \\ldots$', questionEn:'Calculate $48 \\div (-6) = \\ldots$',
+      answer:'-8', hint:'Positif ÷ Negatif = ?',
+      explanation:'Positif $\\div$ Negatif = Negatif. $48 \\div 6 = 8$, jadi $48 \\div (-6) = -8$.',
+      explanationEn:'Positive $\\div$ Negative = Negative. $48 \\div 6 = 8$, so $48 \\div (-6) = -8$.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah yang menghasilkan bilangan <strong>positif</strong>?', questionEn:'Which one produces a <strong>positive</strong> number?',
+      options:['$(-9) \\div 3$','$(-9) \\times 2$','$(-9) \\div (-3)$','$9 \\div (-3)$'], answer:'$(-9) \\div (-3)$',
+      explanation:'Hanya $(-9) \\div (-3) = 3$ yang positif, karena kedua bilangan sama-sama negatif. Pilihan lain hasilnya negatif.',
+      explanationEn:'Only $(-9) \\div (-3) = 3$ is positive, because both numbers are negative. The other options produce negative results.'},
+
+    {type:'theory', content:`
+      <h3>Analogi Utang: Mengapa Negatif × Negatif = Positif?</h3>
+      <p>Bayangkan "negatif pertama" sebagai tindakan <strong>menghapus</strong>, dan "negatif kedua" sebagai <strong>utang</strong>.</p>
+      <p>Menghapus (negatif) sebuah utang (negatif) = hal yang <strong>positif</strong>!</p>
+      <svg viewBox="0 0 380 100" width="380" height="100">
+        <rect x="10" y="10" width="100" height="80" rx="12" fill="rgba(248,81,73,.1)" stroke="#F85149" stroke-width="1.5"/>
+        <text x="60" y="32" text-anchor="middle" fill="#F85149" font-family="DM Sans" font-size="10" font-weight="600">TINDAKAN</text>
+        <text x="60" y="55" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="22" font-weight="700">−3</text>
+        <text x="60" y="78" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="9">"hapus 3 kali"</text>
+        <text x="130" y="55" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">×</text>
+        <rect x="150" y="10" width="100" height="80" rx="12" fill="rgba(248,81,73,.1)" stroke="#F85149" stroke-width="1.5"/>
+        <text x="200" y="32" text-anchor="middle" fill="#F85149" font-family="DM Sans" font-size="10" font-weight="600">OBJEK</text>
+        <text x="200" y="55" text-anchor="middle" fill="#F85149" font-family="Space Grotesk" font-size="22" font-weight="700">−2</text>
+        <text x="200" y="78" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="9">"utang 2 juta"</text>
+        <text x="275" y="55" text-anchor="middle" fill="#E6EDF3" font-family="Space Grotesk" font-size="24" font-weight="700">=</text>
+        <rect x="295" y="10" width="80" height="80" rx="12" fill="rgba(63,185,80,.1)" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="335" y="32" text-anchor="middle" fill="#3FB950" font-family="DM Sans" font-size="10" font-weight="600">HASIL</text>
+        <text x="335" y="55" text-anchor="middle" fill="#3FB950" font-family="Space Grotesk" font-size="22" font-weight="700">+6</text>
+        <text x="335" y="78" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="9">"untung 6 juta"</text>
+      </svg>
+      <div class="theory-highlight">
+        <strong>Penjelasan logis:</strong> "Menghapus 3 utang sebesar 2 juta each" = menghilangkan total 6 juta utang = keuntungan 6 juta. Jadi $(-3) \\times (-2) = +6$.
+      </div>
+    `, contentEn:`
+      Imagine the "first negative" as the action of <strong>canceling</strong>, and the "second negative" as <strong>debt</strong>.
+      <br>Canceling (negative) a debt (negative) = something <strong>positive</strong>!
+      <br><strong>Logical explanation:</strong> "Canceling 3 debts of 2 million each" = removing 6 million total debt = gain of 6 million. So $(-3) \\times (-2) = +6$.
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Jika "menghapus 4 utang masing-masing 5 juta" direpresentasikan dalam operasi matematika, hasilnya adalah $\\ldots$', questionEn:'If "canceling 4 debts of 5 million each" is represented mathematically, the result is $\\ldots$',
+      options:['$+20$ juta','$-20$ juta','$-9$ juta','$+1$ juta'], answer:'$+20$ juta',
+      explanation:'$(-4) \\times (-5) = +20$. Menghapus (negatif) utang (negatif) = positif. Hasilnya keuntungan 20 juta.',
+      explanationEn:'$(-4) \\times (-5) = +20$. Canceling (negative) debt (negative) = positive. The result is a gain of 20 million.'},
+    {type:'exercise', typeEx:'tf', question:'$(-7) \\times (-3) = -21$', questionEn:'$(-7) \\times (-3) = -21$',
+      answer:'Salah',
+      explanation:'Salah. Negatif × Negatif = Positif. $(-7) \\times (-3) = 21$, bukan $-21$.',
+      explanationEn:'Incorrect. Negative × Negative = Positive. $(-7) \\times (-3) = 21$, not $-21$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-15) \\div (-3) = \\ldots$', questionEn:'Calculate $(-15) \\div (-3) = \\ldots$',
+      answer:'5', hint:'Negatif ÷ Negatif = ?',
+      explanation:'Negatif $\\div$ Negatif = Positif. $15 \\div 3 = 5$, jadi $(-15) \\div (-3) = 5$.',
+      explanationEn:'Negative $\\div$ Negative = Positive. $15 \\div 3 = 5$, so $(-15) \\div (-3) = 5$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $(-100) \\div 25$ adalah $\\ldots$', questionEn:'The result of $(-100) \\div 25$ is $\\ldots$',
+      options:['$-4$','$4$','$-75$','$-125$'], answer:'$-4$',
+      explanation:'Negatif $\\div$ Positif = Negatif. $100 \\div 25 = 4$, jadi $(-100) \\div 25 = -4$.',
+      explanationEn:'Negative $\\div$ Positive = Negative. $100 \\div 25 = 4$, so $(-100) \\div 25 = -4$.'}
+  ]
+},
+
+/* ==================== SECTION 5: GUIDED PRACTICE ==================== */
+{
+  id:'sec5', type:'lesson', icon:'fa-compass', title:'Guided Practice', titleEn:'Guided Practice', time:'00:30 - 00:45',
+  blocks:[
+
+    {type:'theory', content:`
+      <h3>Soal Cerita: Kapal Selam</h3>
+      <p>Mari kita selesaikan soal langkah demi langkah:</p>
+      <div class="theory-highlight">
+        <strong>Soal:</strong> Sebuah kapal selam berada di kedalaman $-150$ meter. Ia naik $75$ meter, lalu turun lagi $100$ meter. Di mana posisi akhirnya?
+      </div>
+      <p><strong>Langkah 1:</strong> Posisi awal = $-150$ m</p>
+      <p><strong>Langkah 2:</strong> Naik $75$ m → $-150 + 75 = -75$ m</p>
+      <p><strong>Langkah 3:</strong> Turun $100$ m → $-75 + (-100) = -175$ m</p>
+      <p>Jadi posisi akhir kapal selam adalah $-175$ meter.</p>
+      <svg viewBox="0 0 120 260" width="120" height="260" style="float:right;margin:0 0 10px 16px">
+        <rect x="15" y="10" width="90" height="240" rx="6" fill="none" stroke="#30363D" stroke-width="1"/>
+        <line x1="15" y1="50" x2="105" y2="50" stroke="#8B949E" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="108" y="54" fill="#8B949E" font-family="DM Sans" font-size="8">0 m</text>
+        <line x1="15" y1="125" x2="105" y2="125" stroke="#8B949E" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="108" y="129" fill="#8B949E" font-family="DM Sans" font-size="8">-75 m</text>
+        <text x="108" y="204" fill="#F0883E" font-family="DM Sans" font-size="8">-150 m</text>
+        <text x="108" y="229" fill="#F85149" font-family="DM Sans" font-size="8">-175 m</text>
+        <!-- Submarine path -->
+        <circle cx="60" cy="200" r="8" fill="#F0883E" opacity="0.8"/>
+        <path d="M 60 200 L 60 125" fill="none" stroke="#3FB950" stroke-width="2" marker-end="url(#arw)"/>
+        <text x="48" y="165" fill="#3FB950" font-family="DM Sans" font-size="8" transform="rotate(-90,48,165)">naik 75</text>
+        <circle cx="60" cy="125" r="6" fill="#3FB950" opacity="0.6"/>
+        <path d="M 60 125 L 60 225" fill="none" stroke="#F85149" stroke-width="2" marker-end="url(#arw)"/>
+        <text x="72" y="180" fill="#F85149" font-family="DM Sans" font-size="8" transform="rotate(-90,72,180)">turun 100</text>
+        <circle cx="60" cy="225" r="8" fill="#F85149" opacity="0.8"/>
+        <text x="60" y="228" text-anchor="middle" fill="#fff" font-family="DM Sans" font-size="6" font-weight="700">⚓</text>
+      </svg>
+    `, contentEn:`
+      Let's solve a word problem step by step:
+      <br><strong>Problem:</strong> A submarine is at a depth of $-150$ meters. It rises $75$ meters, then descends $100$ meters. What is its final position?
+      <br><strong>Step 1:</strong> Initial position = $-150$ m
+      <br><strong>Step 2:</strong> Rise $75$ m → $-150 + 75 = -75$ m
+      <br><strong>Step 3:</strong> Descend $100$ m → $-75 + (-100) = -175$ m
+      <br>Final position: $-175$ meters.
+    `},
+
+    {type:'exercise', typeEx:'input', question:'Sebuah kapal selam berada di kedalaman $-150$ m. Ia naik $75$ m. Berapa posisinya sekarang?', questionEn:'A submarine is at $-150$ m depth. It rises $75$ m. What is its position now?',
+      answer:'-75', hint:'Hitung -150 + 75.',
+      explanation:'$-150 + 75 = -75$. Kapal selam sekarang berada di kedalaman $-75$ meter.',
+      explanationEn:'$-150 + 75 = -75$. The submarine is now at a depth of $-75$ meters.'},
+    {type:'exercise', typeEx:'input', question:'Dari kedalaman $-75$ m, kapal selam turun lagi $100$ m. Berapa posisi akhirnya?', questionEn:'From $-75$ m depth, the submarine descends another $100$ m. What is the final position?',
+      answer:'-175', hint:'Hitung -75 + (-100).',
+      explanation:'$-75 + (-100) = -175$. Posisi akhir kapal selam adalah $-175$ meter.',
+      explanationEn:'$-75 + (-100) = -175$. The submarine\'s final position is $-175$ meters.'},
+    {type:'exercise', typeEx:'mc', question:'Sebuah penyelam berada di $-40$ m. Ia naik $25$ m, lalu turun $30$ m. Posisi akhirnya adalah $\\ldots$', questionEn:'A diver is at $-40$ m. He rises $25$ m, then descends $30$ m. His final position is $\\ldots$',
+      options:['$-45$ m','$-15$ m','$-55$ m','$5$ m'], answer:'$-45$ m',
+      explanation:'$-40 + 25 = -15$, lalu $-15 + (-30) = -45$ m. Posisi akhirnya $-45$ meter.',
+      explanationEn:'$-40 + 25 = -15$, then $-15 + (-30) = -45$ m. Final position is $-45$ meters.'},
+
+    {type:'theory', content:`
+      <h3>Soal Cerita: Suhu yang Berubah Tiap Jam</h3>
+      <p>Suhu bisa berubah secara berulang setiap jam. Kita gunakan perkalian untuk menghitung total perubahan, lalu penjumlahan untuk mencari suhu akhir.</p>
+      <div class="theory-highlight">
+        <strong>Soal:</strong> Suhu di puncak gunung $-5°C$. Suhu turun $3°C$ setiap jam. Berapa suhu setelah $4$ jam?
+      </div>
+      <p><strong>Langkah 1:</strong> Total penurunan = $4 \\times (-3) = -12°C$</p>
+      <p><strong>Langkah 2:</strong> Suhu akhir = $-5 + (-12) = -17°C$</p>
+      <svg viewBox="0 0 320 80" width="320" height="80">
+        ${[-5,-8,-11,-14,-17].map((t,i)=>{
+          const x=30+i*70;
+          return `<rect x="${x}" y="10" width="50" height="55" rx="8" fill="${i===0?'rgba(240,136,62,.1)':i===4?'rgba(248,81,73,.1)':'rgba(139,148,158,.05)'}" stroke="${i===0?'#F0883E':i===4?'#F85149':'#30363D'}" stroke-width="1.5"/>
+          <text x="${x+25}" y="30" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="8">Jam ${i}</text>
+          <text x="${x+25}" y="52" text-anchor="middle" fill="${t<0?'#F85149':'#3FB950'}" font-family="Space Grotesk" font-size="16" font-weight="700">${t}°</text>`;
+        }).join('')}
+        ${[0,1,2,3].map(i=>{
+          const x=80+i*70;
+          return `<text x="${x}" y="78" text-anchor="middle" fill="#F85149" font-family="DM Sans" font-size="8">−3°</text>`;
+        }).join('')}
+      </svg>
+    `, contentEn:`
+      Temperature can change repeatedly every hour. We use multiplication to calculate total change, then addition to find the final temperature.
+      <br><strong>Problem:</strong> Mountain peak temperature is $-5°C$. It drops $3°C$ per hour. What's the temperature after $4$ hours?
+      <br><strong>Step 1:</strong> Total drop = $4 \\times (-3) = -12°C$       <br><strong>Step 2:</strong> Final temperature = $-5 + (-12) = -17°C$     `},
+
+    {type:'exercise', typeEx:'input', question:'Suhu awal $-5°C$, turun $3°C$ per jam selama $4$ jam. Berapa total penurunan suhunya?', questionEn:'Initial temperature $-5°C$, drops $3°C$ per hour for $4$ hours. What is the total temperature drop?',
+      answer:'-12', hint:'Gunakan perkalian: 4 × (-3).',
+      explanation:'Total penurunan = $4 \\times (-3) = -12°C$. Perubahan suhunya adalah $-12$ derajat.',
+      explanationEn:'Total drop = $4 \\times (-3) = -12°C$. The temperature change is $-12$ degrees.'},
+    {type:'exercise', typeEx:'input', question:'Jika total penurunan $-12°C$ dan suhu awal $-5°C$, berapa suhu akhirnya?', questionEn:'If total drop is $-12°C$ and initial temperature is $-5°C$, what is the final temperature?',
+      answer:'-17', hint:'Hitung -5 + (-12).',
+      explanation:'Suhu akhir = $-5 + (-12) = -17°C$.',
+      explanationEn:'Final temperature = $-5 + (-12) = -17°C$.'},
+    {type:'exercise', typeEx:'mc', question:'Suhu $-10°C$ naik $2°C$ setiap jam selama $5$ jam. Suhu akhirnya adalah $\\ldots$', questionEn:'Temperature $-10°C$ rises $2°C$ per hour for $5$ hours. The final temperature is $\\ldots$',
+      options:['$0°C$','$-20°C$','$10°C$','$-5°C$'], answer:'$0°C$',
+      explanation:'Total kenaikan = $5 \\times 2 = 10°C$. Suhu akhir = $-10 + 10 = 0°C$.',
+      explanationEn:'Total rise = $5 \\times 2 = 10°C$. Final temperature = $-10 + 10 = 0°C$.'},
+
+    {type:'theory', content:`
+      <h3>Operasi Campuran Sederhana (Order of Operations)</h3>
+      <p>Saat menemui soal dengan lebih dari satu operasi, ikuti urutan:</p>
+      <div class="theory-highlight">
+        <strong>Urutan Kerja:</strong><br>
+        1. Kurung <code>( )</code> dikerjakan paling dahulu<br>
+        2. Perkalian <code>×</code> dan Pembagian <code>÷</code> (dari kiri ke kanan)<br>
+        3. Penjumlahan <code>+</code> dan Pengurangan <code>−</code> (dari kiri ke kanan)
+      </div>
+      <p><strong>Contoh:</strong> $(-5) + 3 \\times (-2)$</p>
+      <p>Langkah 1: Perkalian dulu → $3 \\times (-2) = -6$</p>
+      <p>Langkah 2: Penjumlahan → $(-5) + (-6) = -11$</p>
+      <p>Jangan tergoda menjumlahkan dulu! Perkalian selalu didahulukan.</p>
+    `, contentEn:`
+      When encountering problems with multiple operations, follow this order:
+      <br>1. Parentheses <code>( )</code> first
+      <br>2. Multiplication <code>×</code> and Division <code>÷</code> (left to right)
+      <br>3. Addition <code>+</code> and Subtraction <code>−</code> (left to right)
+      <br><strong>Example:</strong> $(-5) + 3 \\times (-2)$ → Step 1: $3 \\times (-2) = -6$ → Step 2: $(-5) + (-6) = -11$     `},
+
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-5) + 3 \\times (-2) = \\ldots$', questionEn:'Calculate $(-5) + 3 \\times (-2) = \\ldots$',
+      answer:'-11', hint:'Perkalian dulu, baru penjumlahan.',
+      explanation:'Perkalian dulu: $3 \\times (-2) = -6$. Lalu penjumlahan: $-5 + (-6) = -11$.',
+      explanationEn:'Multiplication first: $3 \\times (-2) = -6$. Then addition: $-5 + (-6) = -11$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $(-4) \\times 5 + 10$ adalah $\\ldots$', questionEn:'The result of $(-4) \\times 5 + 10$ is $\\ldots$',
+      options:['$-10$','$-30$','$10$','$30$'], answer:'$-10$',
+      explanation:'Perkalian dulu: $(-4) \\times 5 = -20$. Lalu penjumlahan: $-20 + 10 = -10$.',
+      explanationEn:'Multiplication first: $(-4) \\times 5 = -20$. Then addition: $-20 + 10 = -10$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $[(-48) \\div 6] - [(-5) \\times (-3)] = \\ldots$', questionEn:'Calculate $[(-48) \\div 6] - [(-5) \\times (-3)] = \\ldots$',
+      answer:'-23', hint:'Kerjakan masing-masing kurung dulu.',
+      explanation:'Kurung pertama: $(-48) \\div 6 = -8$. Kurung kedua: $(-5) \\times (-3) = 15$. Lalu: $-8 - 15 = -23$.',
+	  explanationEn:'First bracket: $(-48) \\div 6 = -8$. Second bracket: $(-5) \\times (-3) = 15$. Then: $-8 - 15 = -23$.',},
+    {type:'exercise', typeEx:'mc', question:'Manakah langkah penyelesaian yang <strong>benar</strong> untuk $(-25) + (10 \\times -2)$?', questionEn:'Which solution step is <strong>correct</strong> for $(-25) + (10 \\times -2)$?',
+      options:[
+        '$(-25) + (-20) = -45$',
+        '$(-15) \\times (-2) = 30$',
+        '$(-25) + 10 = -15$, lalu $-15 \\times -2 = 30$',
+        '$(-25) + 20 = -5$'
+      ], answer:'$(-25) + (-20) = -45$',
+      explanation:'Kurung dikerjakan dahulu: $10 \\times (-2) = -20$. Lalu penjumlahan: $(-25) + (-20) = -45$. Opsi lain salah karena tidak mengikuti urutan operasi.',
+      explanationEn:'Parentheses first: $10 \\times (-2) = -20$. Then addition: $(-25) + (-20) = -45$. Other options are wrong because they don\'t follow the order of operations.'}
+  ]
+},
+
+
+/* ==================== SECTION 6: INDEPENDENT PRACTICE ==================== */
+{
+  id:'sec6', type:'lesson', icon:'fa-brain', title:'Independent Practice', titleEn:'Independent Practice', time:'00:50 - 01:00',
+  blocks:[
+
+    {type:'theory', content:`
+      <h3>Strategi Menyelesaikan Soal Kompleks</h3>
+      <p>Saat menghadapi soal operasi campuran bilangan bulat, gunakan strategi berikut:</p>
+      <svg viewBox="0 0 400 120" width="400" height="120">
+        ${[{n:'1',t:'Identifikasi',d:'Tandai semua operasi yang ada',c:'#F0883E'},
+           {n:'2',t:'Ukur Prioritas',d:'Kurung → Kali/Bagi → Tambah/Kurang',c:'#58A6FF'},
+           {n:'3',t:'Kerjakan Bertahap',d:'Selesaikan satu langkah per waktu',c:'#3FB950'},
+           {n:'4',t:'Periksa Tanda',d:'Pastikan aturan tanda sudah benar',c:'#D2A8FF'}
+        ].map((s,i)=>{
+          const x=20+i*95;
+          return `<rect x="${x}" y="10" width="85" height="100" rx="10" fill="rgba(${i===0?'240,136,62':i===1?'88,166,255':i===2?'63,185,80':'210,168,255'},.08)" stroke="${s.c}" stroke-width="1.5"/>
+          <circle cx="${x+42}" cy="35" r="14" fill="${s.c}" opacity="0.2"/>
+          <text x="${x+42}" y="40" text-anchor="middle" fill="${s.c}" font-family="Space Grotesk" font-size="16" font-weight="700">${s.n}</text>
+          <text x="${x+42}" y="65" text-anchor="middle" fill="#E6EDF3" font-family="DM Sans" font-size="10" font-weight="600">${s.t}</text>
+          <text x="${x+42}" y="82" text-anchor="middle" fill="#8B949E" font-family="DM Sans" font-size="8">${s.d}</text>`;
+        }).join('')}
+      </svg>
+      <div class="theory-highlight">
+        <strong>Tips:</strong> Tulis setiap langkah di kertas. Jangan mencoba menghitung semuanya dalam kepala sekaligus — satu kesalahan tanda bisa merusak seluruh jawaban!
+      </div>
+    `, contentEn:`
+      When facing mixed integer operation problems, use this strategy:
+      <br>1. Identify all operations → 2. Prioritize (Parentheses → Multiply/Divide → Add/Subtract) → 3. Solve step by step → 4. Check signs
+      <br><strong>Tip:</strong> Write each step on paper. Don't try to calculate everything in your head at once!
+    `},
+
+    {type:'exercise', typeEx:'mc', question:'Dalam soal $(-25) + (10 \\times -2)$, operasi mana yang dikerjakan pertama?', questionEn:'In $(-25) + (10 \\times -2)$, which operation is done first?',
+      options:['$(-25) + 10$','$10 \\times -2$','$(-25) + (-2)$','Keduanya sekaligus'], answer:'$10 \\times -2$',
+      explanation:'Perkalian dalam kurung dikerjakan pertama: $10 \\times (-2) = -20$. Baru kemudian penjumlahan: $(-25) + (-20) = -45$.',
+      explanationEn:'Multiplication in parentheses is done first: $10 \\times (-2) = -20$. Then addition: $(-25) + (-20) = -45$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-3) \\times 8 + (-12) \\div 4 = \\ldots$', questionEn:'Calculate $(-3) \\times 8 + (-12) \\div 4 = \\ldots$',
+      answer:'-27', hint:'Kerjakan perkalian dan pembagian terlebih dahulu.',
+      explanation:'Perkalian: $(-3) \\times 8 = -24$. Pembagian: $(-12) \\div 4 = -3$. Lalu penjumlahan: $-24 + (-3) = -27$.',
+      explanationEn:'Multiplication: $(-3) \\times 8 = -24$. Division: $(-12) \\div 4 = -3$. Then addition: $-24 + (-3) = -27$.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah urutan pengerjaan yang <strong>benar</strong> untuk $(-6) + (-2) \\times 5 - (-3)$?', questionEn:'Which is the <strong>correct</strong> order of operations for $(-6) + (-2) \\times 5 - (-3)$?',
+      options:[
+        '$(-2) \\times 5$ dulu → $(-6)+(-10)$ → $-16-(-3)$',
+        '$(-6)+(-2)$ dulu → $(-8) \\times 5$ → $-40-(-3)$',
+        '$(-6)+(-2) \\times 5$ sekaligus → kurangi $(-3)$',
+        '$(-2) \\times 5 - (-3)$ dulu → tambahkan $(-6)$'
+      ], answer:'$(-2) \\times 5$ dulu → $(-6)+(-10)$ → $-16-(-3)$',
+      explanation:'Benar! Perkalian dulu: $(-2)\\times 5 = -10$. Lalu dari kiri ke kanan: $(-6)+(-10)=-16$. Terakhir: $-16-(-3)=-16+3=-13$.',
+      explanationEn:'Correct! Multiplication first: $(-2)\\times 5 = -10$. Then left to right: $(-6)+(-10)=-16$. Finally: $-16-(-3)=-16+3=-13$.'},
+
+    {type:'theory', content:`
+      <h3>Kesalahan Umum yang Harus Dihindari</h3>
+      <p>Banyak siswa melakukan kesalahan berikut saat mengerjakan operasi bilangan bulat:</p>
+      <ul>
+        <li><strong>Kesalahan 1:</strong> Lupa aturan tanda beda → negatif. Contoh: $(-3) \\times 4$ dijawab $12$ (seharusnya $-12$)</li>
+        <li><strong>Kesalahan 2:</strong> Mengubah $-a - b$ menjadi $-(a - b)$ padahal seharusnya $-(a + b)$</li>
+        <li><strong>Kesalahan 3:</strong> Mengerjakan penjumlahan sebelum perkalian</li>
+        <li><strong>Kesalahan 4:</strong> Menyederhanakan $-(-a)$ menjadi $-a$ padahal seharusnya $+a$</li>
+      </ul>
+      <div class="theory-highlight">
+        <strong>Contoh Kesalahan 2:</strong> $-15 - 27$ bukan $-(15 - 27) = 12$, melainkan $-(15 + 27) = -42$.
+      </div>
+    `, contentEn:`
+      Common mistakes to avoid:
+      <br>1. Forgetting different signs → negative. Example: $(-3) \\times 4$ answered as $12$ (should be $-12$)
+      <br>2. Converting $-a - b$ to $-(a - b)$ when it should be $-(a + b)$       <br>3. Doing addition before multiplication
+      <br>4. Simplifying $-(-a)$ to $-a$ when it should be $+a$     `},
+
+    {type:'exercise', typeEx:'tf', question:'$-15 - 27 = -(15 - 27) = 12$', questionEn:'$-15 - 27 = -(15 - 27) = 12$',
+      answer:'Salah',
+      explanation:'Salah! $-15 - 27 = -(15 + 27) = -42$, bukan $-(15 - 27) = 12$. Mengurangi bilangan positif sama dengan menambahkan negatif.',
+      explanationEn:'Incorrect! $-15 - 27 = -(15 + 27) = -42$, not $-(15 - 27) = 12$. Subtracting a positive is the same as adding a negative.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah yang <strong>salah</strong>?', questionEn:'Which one is <strong>incorrect</strong>?',
+      options:[
+        '$-(-8) = 8$',
+        '$-3 \\times (-4) = -12$',
+        '$-20 \\div 5 = -4$',
+        '$0 \\times (-7) = 0$'
+      ], answer:'$-3 \\times (-4) = -12$',
+      explanation:'$-3 \\times (-4) = 12$ (positif), bukan $-12$. Tiga pilihan lain semuanya benar.',
+      explanationEn:'$-3 \\times (-4) = 12$ (positive), not $-12$. The other three options are all correct.'},
+    {type:'exercise', typeEx:'cb', question:'Pilih semua kesalahan yang <strong>sering</strong> dilakukan siswa.', questionEn:'Select all <strong>common</strong> student mistakes.',
+      options:[
+        'Menjawab $(-2)\\times(-3)=-6$',
+        'Menjawab $-(-10)=-10$',
+        'Mengerjakan $3+4\\times(-2)$ sebagai $7\\times(-2)=-14$',
+        'Menjawab $(-6)\\div 2 = 3$'
+      ],
+      answer:[
+        'Menjawab $(-2)\\times(-3)=-6$',
+        'Menjawab $-(-10)=-10$',
+        'Mengerjakan $3+4\\times(-2)$ sebagai $7\\times(-2)=-14$'
+      ],
+      explanation:'$(-2)\\times(-3)=6$ (bukan $-6$) ✗. $-(-10)=+10$ (bukan $-10$) ✗. $3+4\\times(-2)=3+(-8)=-5$, bukan $7\\times(-2)=-14$ ✗. Opsi ke-4 memang salah ($-6\\div2=-3$), tapi bukan merupakan kesalahan umum yang dimaksud.',
+      explanationEn:'$(-2)\\times(-3)=6$ (not $-6$) ✗. $-(-10)=+10$ (not $-10$) ✗. $3+4\\times(-2)=3+(-8)=-5$, not $7\\times(-2)=-14$ ✗. Option 4 is indeed wrong ($-6\\div2=-3$), but not the common mistake intended.',},
+
+    {type:'theory', content:`
+      <h3>Aplikasi Dunia Nyata yang Lebih Kompleks</h3>
+      <p>Dalam kehidupan nyata, kita sering menghadapi situasi yang melibatkan <strong>beberapa operasi sekaligus</strong>. Misalnya:</p>
+      <div class="theory-highlight">
+        <strong>Contoh:</strong> Sebuah perusahaan mengalami kerugian Rp2.000.000 per bulan selama setengah tahun (6 bulan). Berapa total kerugiannya?<br><br>
+        Total = $6 \\times (-2.000.000) = -12.000.000$<br>
+        Artinya perusahaan rugi total Rp12.000.000.
+      </div>
+      <p>Perhatikan bahwa "rugi" diubah menjadi bilangan negatif, lalu dikalikan dengan jumlah bulan. Ini menunjukkan bagaimana perkalian bilangan bulat negatif bekerja dalam konteks nyata.</p>
+    `, contentEn:`
+      In real life, we often face situations involving <strong>multiple operations at once</strong>. For example:
+      <br>A company loses Rp2,000,000 per month for half a year (6 months). Total loss = $6 \\times (-2,000,000) = -12,000,000$.
+      <br>"Loss" is converted to a negative number, then multiplied by the number of months.
+    `},
+
+    {type:'exercise', typeEx:'input', question:'Sebuah perusahaan rugi Rp2.000.000 per bulan selama 6 bulan. Berapa total kerugiannya (tulis angka negatif)?', questionEn:'A company loses Rp2,000,000 per month for 6 months. What is the total loss (write as negative number)?',
+      answer:'-12.000.000', hint:'6 × (-2.000.000)',
+      explanation:'$6 \\times (-2.000.000) = -12.000.000$. Total kerugian perusahaan adalah Rp12.000.000.',
+      explanationEn:'$6 \\times (-2,000,000) = -12,000,000$. The company\'s total loss is Rp12,000,000.'},
+    {type:'exercise', typeEx:'mc', question:'Seorang penyelam berada di kedalaman $-20$ m. Ia menyelam lagi $3$ kali lebih dalam dari posisinya sekarang. Kedalaman akhirnya adalah $\\ldots$', questionEn:'A diver is at $-20$ m depth. He dives $3$ times deeper than his current position. His final depth is $\\ldots$',
+      options:['$-60$ m','$-23$ m','$-17$ m','$-80$ m'], answer:'$-60$ m',
+      explanation:'"3 kali lebih dalam" berarti kedalaman menjadi $3 \\times$ kedalaman awal = $3 \\times (-20) = -60$ m.',
+      explanationEn:'"3 times deeper" means the depth becomes $3 \\times$ initial depth = $3 \\times (-20) = -60$ m.',},
+    {type:'exercise', typeEx:'mc', question:'Seekor katak melompat ke kanan $5$ langkah, lalu ke kiri $12$ langkah, dan ke kanan lagi $3$ langkah. Jika tiap langkah $15$ cm, posisi katak terhadap titik awal adalah $\\ldots$', questionEn:'A frog jumps right $5$ steps, left $12$ steps, then right $3$ steps. If each step is $15$ cm, the frog\'s position relative to start is $\\ldots$',
+      options:['$60$ cm ke kiri','$40$ cm ke kiri','$60$ cm ke kanan','$20$ cm ke kiri'], answer:'$60$ cm ke kiri',
+      explanation:'Total langkah = $5 - 12 + 3 = -4$ langkah. Posisi = $-4 \\times 15 = -60$ cm. Negatif artinya ke kiri, yaitu $60$ cm ke kiri dari titik awal.',
+      explanationEn:'Total steps = $5 - 12 + 3 = -4$ steps. Position = $-4 \\times 15 = -60$ cm. Negative means left, i.e., $60$ cm to the left of the starting point.'},
+    {type:'exercise', typeEx:'input', question:'Dalam ujian, jawaban benar bernilai $4$, salah bernilai $-2$, dan tidak dijawab bernilai $-1$. Dari $50$ soal, seorang siswa menjawab $35$ benar dan $10$ salah. Berapa total nilainya?', questionEn:'In an exam, correct = $4$, wrong = $-2$, unanswered = $-1$. Out of $50$ questions, a student answers $35$ correct and $10$ wrong. What is the total score?',
+      answer:'115', hint:'Hitung: (35×4) + (10×(-2)) + (5×(-1))',
+      explanation:'Benar: $35 \\times 4 = 140$. Salah: $10 \\times (-2) = -20$. Tidak dijawab: $5 \\times (-1) = -5$. Total = $140 + (-20) + (-5) = 115$.',
+      explanationEn:'Correct: $35 \\times 4 = 140$. Wrong: $10 \\times (-2) = -20$. Unanswered: $5 \\times (-1) = -5$. Total = $140 + (-20) + (-5) = 115$.'}
+  ]
+},
+
+/* ==================== ASSIGNMENT 1 ==================== */
+{
+  id:'asgn1', type:'assignment', assignNum:1, icon:'fa-clipboard-check', title:'Assignment 1', titleEn:'Assignment 1', time:'',
+  blocks:[
+    {type:'exercise', typeEx:'mc', question:'Hitunglah $-15 + (-27) - (-10)$', questionEn:'Calculate $-15 + (-27) - (-10)$',
+      options:['$-32$','$-52$','$2$','$-22$'], answer:'$-32$',
+      explanation:'$-15 + (-27) = -42$. Lalu $-42 - (-10) = -42 + 10 = -32$.',
+      explanationEn:'$-15 + (-27) = -42$. Then $-42 - (-10) = -42 + 10 = -32$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $23 + (-35) = \\ldots$', questionEn:'Calculate $23 + (-35) = \\ldots$',
+      answer:'-12', hint:'23 - 35 = ?',
+      explanation:'$23 + (-35) = 23 - 35 = -12$.',
+      explanationEn:'$23 + (-35) = 23 - 35 = -12$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $-18 - (-25) + (-7)$ adalah $\\ldots$', questionEn:'The result of $-18 - (-25) + (-7)$ is $\\ldots$',
+      options:['$0$','$-50$','$-14$','$36$'], answer:'$0$',
+      explanation:'$-18 - (-25) = -18 + 25 = 7$. Lalu $7 + (-7) = 0$.',
+      explanationEn:'$-18 - (-25) = -18 + 25 = 7$. Then $7 + (-7) = 0$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $-100 + 45 + (-30) = \\ldots$', questionEn:'Calculate $-100 + 45 + (-30) = \\ldots$',
+      answer:'-85', hint:'Jumlahkan satu per satu.',
+      explanation:'$-100 + 45 = -55$. Lalu $-55 + (-30) = -85$.',
+      explanationEn:'$-100 + 45 = -55$. Then $-55 + (-30) = -85$.'},
+    {type:'exercise', typeEx:'tf', question:'$-8 + 8 = 0$ merupakan sifat bilangan kebalikan aditif.', questionEn:'$-8 + 8 = 0$ demonstrates the additive inverse property.',
+      answer:'Benar',
+      explanation:'Benar. $a + (-a) = 0$ adalah sifat kebalikan aditif. $-8$ dan $8$ saling kebalikan aditif.',
+      explanationEn:'Correct. $a + (-a) = 0$ is the additive inverse property. $-8$ and $8$ are additive inverses.'},
+    {type:'exercise', typeEx:'mc', question:'Selisih antara $-12$ dan $5$ adalah $\\ldots$', questionEn:'The difference between $-12$ and $5$ is $\\ldots$',
+      options:['$-17$','$17$','$-7$','$7$'], answer:'$-17$',
+      explanation:'Selisih = $-12 - 5 = -17$. Atau bisa dilihat sebagai jarak pada garis bilangan: dari $-12$ ke $5$ adalah $17$, tapi arahnya $-12$ dikurangi $5$ = $-17$.',
+      explanationEn:'Difference = $-12 - 5 = -17$.'},
+    {type:'exercise', typeEx:'cb', question:'Pilih semua pasangan yang jumlahnya sama dengan $-10$.', questionEn:'Select all pairs that sum to $-10$.',
+      options:['$-3$ dan $-7$','$-15$ dan $5$','$-12$ dan $2$','$4$ dan $-14$','$-8$ dan $5$'],
+      answer:['$-3$ dan $-7$','$-15$ dan $5$','$4$ dan $-14$'],
+      explanation:'$-3+(-7)=-10$ ✓. $-15+5=-10$ ✓. $-12+2=-10$ (benar tapi bukan jawaban yang dipilih). $4+(-14)=-10$ ✓. $-8+5=-3$ ✗.',
+      explanationEn:'$-3+(-7)=-10$ ✓. $-15+5=-10$ ✓. $-12+2=-10$ (correct but not selected). $4+(-14)=-10$ ✓. $-8+5=-3$ ✗.',},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $-3 + (-3) + (-3) + (-3) + (-3) = \\ldots$', questionEn:'Calculate $-3 + (-3) + (-3) + (-3) + (-3) = \\ldots$',
+      answer:'-15', hint:'Ini sama dengan 5 × (-3).',
+      explanation:'$-3$ ditambahkan $5$ kali = $5 \\times (-3) = -15$. Penjumlahan berulang sama dengan perkalian.',
+      explanationEn:'$-3$ added $5$ times = $5 \\times (-3) = -15$. Repeated addition equals multiplication.'},
+    {type:'exercise', typeEx:'mc', question:'Suhu $-3°C$ naik $8°C$, lalu turun $12°C$. Suhu akhirnya $\\ldots$', questionEn:'Temperature $-3°C$ rises $8°C$, then drops $12°C$. Final temperature $\\ldots$',
+      options:['$-7°C$','$-15°C$','$7°C$','$-11°C$'], answer:'$-7°C$',
+      explanation:'$-3 + 8 = 5$. Lalu $5 + (-12) = -7°C$. Suhu akhir $-7°C$.',
+      explanationEn:'$-3 + 8 = 5$. Then $5 + (-12) = -7°C$. Final temperature is $-7°C$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-45) - 60 - (-15) = \\ldots$', questionEn:'Calculate $(-45) - 60 - (-15) = \\ldots$',
+      answer:'-90', hint:'Kerjakan dari kiri ke kanan.',
+      explanation:'$(-45) - 60 = -105$. Lalu $-105 - (-15) = -105 + 15 = -90$.',
+      explanationEn:'$(-45) - 60 = -105$. Then $-105 - (-15) = -105 + 15 = -90$.'}
+  ]
+},
+
+/* ==================== ASSIGNMENT 2 ==================== */
+{
+  id:'asgn2', type:'assignment', assignNum:2, icon:'fa-clipboard-check', title:'Assignment 2', titleEn:'Assignment 2', time:'',
+  blocks:[
+    {type:'exercise', typeEx:'mc', question:'Berapa hasil dari $12 \\times (-5) \\div 3$?', questionEn:'What is the result of $12 \\times (-5) \\div 3$?',
+      options:['$-20$','$20$','$-180$','$60$'], answer:'$-20$',
+      explanation:'Dari kiri ke kanan: $12 \\times (-5) = -60$. Lalu $-60 \\div 3 = -20$.',
+      explanationEn:'Left to right: $12 \\times (-5) = -60$. Then $-60 \\div 3 = -20$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-9) \\times (-8) = \\ldots$', questionEn:'Calculate $(-9) \\times (-8) = \\ldots$',
+      answer:'72', hint:'Negatif × Negatif = ?',
+      explanation:'Negatif $\\times$ Negatif = Positif. $9 \\times 8 = 72$. Jadi $(-9) \\times (-8) = 72$.',
+      explanationEn:'Negative $\\times$ Negative = Positive. $9 \\times 8 = 72$. So $(-9) \\times (-8) = 72$.'},
+    {type:'exercise', typeEx:'mc', question:'Berapakah $(-144) \\div 12$?', questionEn:'What is $(-144) \\div 12$?',
+      options:['$-12$','$12$','$-132$','$132$'], answer:'$-12$',
+      explanation:'Negatif $\\div$ Positif = Negatif. $144 \\div 12 = 12$. Jadi $(-144) \\div 12 = -12$.',
+      explanationEn:'Negative $\\div$ Positive = Negative. $144 \\div 12 = 12$. So $(-144) \\div 12 = -12$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-7) \\times 4 \\times (-2) = \\ldots$', questionEn:'Calculate $(-7) \\times 4 \\times (-2) = \\ldots$',
+      answer:'56', hint:'Kalikan dua-dua dari kiri.',
+      explanation:'$(-7) \\times 4 = -28$. Lalu $(-28) \\times (-2) = 56$. Dua negatif menghasilkan positif.',
+      explanationEn:'$(-7) \\times 4 = -28$. Then $(-28) \\times (-2) = 56$. Two negatives produce a positive.'},
+    {type:'exercise', typeEx:'tf', question:'$(-3) \\times (-3) \\times (-3) = -27$', questionEn:'$(-3) \\times (-3) \\times (-3) = -27$',
+      answer:'Benar',
+      explanation:'Benar. $(-3)\\times(-3)=9$, lalu $9\\times(-3)=-27$. Tiga bilangan negatif dikalikan hasilnya negatif.',
+      explanationEn:'Correct. $(-3)\\times(-3)=9$, then $9\\times(-3)=-27$. Three negatives multiplied give a negative result.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah yang <strong>hasilnya $24$</strong>?', questionEn:'Which one <strong>equals $24$</strong>?',
+      options:['$(-6) \\times (-4)$','$(-8) \\times 3$','$(-12) \\div (-2)$','$(-2) \\times 12$'],
+      answer:'$(-6) \\times (-4)$',
+      explanation:'$(-6)\\times(-4)=24$ ✓. $(-8)\\times3=-24$ ✗. $(-12)\\div(-2)=6$ ✗. $(-2)\\times12=-24$ ✗.',
+      explanationEn:'$(-6)\\times(-4)=24$ ✓. $(-8)\\times3=-24$ ✗. $(-12)\\div(-2)=6$ ✗. $(-2)\\times12=-24$ ✗.',},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-1000) \\div (-25) = \\ldots$', questionEn:'Calculate $(-1000) \\div (-25) = \\ldots$',
+      answer:'40', hint:'Negatif ÷ Negatif = Positif.',
+      explanation:'$1000 \\div 25 = 40$. Negatif $\\div$ Negatif = Positif. Jadi $(-1000) \\div (-25) = 40$.',
+      explanationEn:'$1000 \\div 25 = 40$. Negative $\\div$ Negative = Positive. So $(-1000) \\div (-25) = 40$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $(-6) \\times 7 \\div (-2)$ adalah $\\ldots$', questionEn:'The result of $(-6) \\times 7 \\div (-2)$ is $\\ldots$',
+      options:['$21$','$-21$','$-42$','$42$'], answer:'$21$',
+      explanation:'$(-6) \\times 7 = -42$. Lalu $-42 \\div (-2) = 21$. Negatif $\\div$ negatif = positif.',
+      explanationEn:'$(-6) \\times 7 = -42$. Then $-42 \\div (-2) = 21$. Negative $\\div$ negative = positive.'},
+    {type:'exercise', typeEx:'cb', question:'Pilih semua yang <strong>hasilnya $-12$</strong>.', questionEn:'Select all that <strong>equal $-12$</strong>.',
+      options:['$(-3) \\times 4$','$(-2) \\times (-6)$','$36 \\div (-3)$','$(-48) \\div 4$','$(-1) \\times 12$'], answer:['$(-3) \\times 4$','$36 \\div (-3)$','$(-48) \\div 4$','$(-1) \\times 12$'],
+      explanation:'$(-3)\\times4=-12$ ✓. $(-2)\\times(-6)=12$ ✗. $36\\div(-3)=-12$ ✓. $(-48)\\div4=-12$ ✓. $(-1)\\times12=-12$ ✓.',
+      explanationEn:'$(-3)\\times4=-12$ ✓. $(-2)\\times(-6)=12$ ✗. $36\\div(-3)=-12$ ✓. $(-48)\\div4=-12$ ✓. $(-1)\\times12=-12$ ✓.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-15) \\times (-4) \\div (-3) = \\ldots$', questionEn:'Calculate $(-15) \\times (-4) \\div (-3) = \\ldots$',
+      answer:'-20', hint:'Kerjakan dari kiri ke kanan.',
+      explanation:'$(-15)\\times(-4)=60$. Lalu $60\\div(-3)=-20$. Positif $\\div$ negatif = negatif.',
+      explanationEn:'$(-15)\\times(-4)=60$. Then $60\\div(-3)=-20$. Positive $\\div$ negative = negative.'}
+  ]
+},
+
+/* ==================== ASSIGNMENT 3 ==================== */
+{
+  id:'asgn3', type:'assignment', assignNum:3, icon:'fa-clipboard-check', title:'Assignment 3', titleEn:'Assignment 3', time:'',
+  blocks:[
+    {type:'exercise', typeEx:'mc', question:'Sebuah perusahaan rugi Rp2.000.000 per bulan selama setengah tahun. Total kerugiannya adalah $\\ldots$', questionEn:'A company loses Rp2,000,000 per month for half a year. Total loss is $\\ldots$',
+      options:['Rp12.000.000','Rp10.000.000','Rp24.000.000','Rp8.000.000'], answer:'Rp12.000.000',
+      explanation:'Setengah tahun = $6$ bulan. Total = $6 \\times (-2.000.000) = -12.000.000$. Kerugian total Rp12.000.000.',
+      explanationEn:'Half a year = $6$ months. Total = $6 \\times (-2,000,000) = -12,000,000$. Total loss Rp12,000,000.'},
+    {type:'exercise', typeEx:'input', question:'Seorang penyelam di $-20$ m menyelam $3$ kali lebih dalam. Berapa kedalaman sekarang?', questionEn:'A diver at $-20$ m dives $3$ times deeper. What is the depth now?',
+      answer:'-60', hint:'3 × (-20)',
+      explanation:'$3 \\times (-20) = -60$ meter. Kedalaman sekarang $-60$ meter.',
+      explanationEn:'$3 \\times (-20) = -60$ meters. Current depth is $-60$ meters.'},
+    {type:'exercise', typeEx:'mc', question:'Katak: $5$ langkah kanan, $12$ langkah kiri, $3$ langkah kanan. Tiap langkah $15$ cm. Posisi akhir $\\ldots$', questionEn:'Frog: $5$ steps right, $12$ steps left, $3$ steps right. Each step $15$ cm. Final position $\\ldots$',
+      options:['$60$ cm ke kiri','$30$ cm ke kanan','$30$ cm ke kiri','$60$ cm ke kanan'], answer:'$60$ cm ke kiri',
+      explanation:'$(5-12+3)\\times15 = (-4)\\times15 = -60$ cm. Negatif = ke kiri. Jadi $60$ cm ke kiri.',
+      explanationEn:'$(5-12+3)\\times15 = (-4)\\times15 = -60$ cm. Negative = left. So $60$ cm to the left.'},
+    {type:'exercise', typeEx:'input', question:'Saldo $-75.000$, lalu menyetor $3$ kali masing-masing Rp25.000. Berapa saldo akhir?', questionEn:'Balance $-75.000$, then deposit $3$ times Rp25.000 each. What is the final balance?',
+      answer:'0', hint:'Hitung -75.000 + (3 × 25.000).',
+      explanation:'$3 \\times 25.000 = 75.000$. Saldo akhir = $-75.000 + 75.000 = 0$.',
+      explanationEn:'$3 \\times 25,000 = 75,000$. Final balance = $-75,000 + 75,000 = 0$.'},
+    {type:'exercise', typeEx:'mc', question:'Suhu $-12°C$ naik $5°C$ per jam selama $3$ jam. Suhu akhirnya $\\ldots$', questionEn:'Temperature $-12°C$ rises $5°C$ per hour for $3$ hours. Final temperature $\\ldots$',
+      options:['$3°C$','$-27°C$','$15°C$','$-3°C$'], answer:'$3°C$',
+      explanation:'Total kenaikan = $3 \\times 5 = 15°C$. Suhu akhir = $-12 + 15 = 3°C$.',
+      explanationEn:'Total rise = $3 \\times 5 = 15°C$. Final temperature = $-12 + 15 = 3°C$.'},
+    {type:'exercise', typeEx:'input', question:'Tangki air kosong (dianggap $-200$ liter dari kapasitas penuh). Diisi $50$ liter per menit selama $7$ menit. Berapa isi tangki sekarang?', questionEn:'Empty tank (considered $-200$ liters from full capacity). Filled $50$ liters per minute for $7$ minutes. Current content?',
+      answer:'150', hint:'Hitung -200 + (7 × 50).',
+      explanation:'$7 \\times 50 = 350$ liter masuk. $-200 + 350 = 150$ liter. Tangki berisi $150$ liter.',
+      explanationEn:'$7 \\times 50 = 350$ liters in. $-200 + 350 = 150$ liters. Tank contains $150$ liters.'},
+    {type:'exercise', typeEx:'mc', question:'Elevator di lantai $-3$ (basement 3). Naik $5$ lantai, turun $2$ lantai. Sekarang di lantai $\\ldots$', questionEn:'Elevator at floor $-3$ (basement 3). Rises $5$ floors, descends $2$ floors. Now at floor $\\ldots$',
+      options:['Lantai $0$','Lantai $4$','Lantai $-6$','Lantai $-1$'], answer:'Lantai $0$',
+      explanation:'$-3 + 5 = 2$. Lalu $2 - 2 = 0$. Elevator sekarang di lantai $0$ (lantai dasar).',
+      explanationEn:'$-3 + 5 = 2$. Then $2 - 2 = 0$. The elevator is now at floor $0$ (ground floor).'},
+    {type:'exercise', typeEx:'input', question:'Punya utang Rp500.000. Bayar $3$ kali masing-masing Rp120.000. Sisa utang?', questionEn:'Debt of Rp500,000. Pay $3$ times Rp120,000 each. Remaining debt?',
+      answer:'140.000', hint:'Hitung -500.000 + (3 × 120.000).',
+      explanation:'Total bayar = $3 \\times 120.000 = 360.000$. Sisa utang = $-500.000 + 360.000 = -140.000$. Masih utang Rp140.000.',
+      explanationEn:'Total paid = $3 \\times 120,000 = 360,000$. Remaining debt = $-500,000 + 360,000 = -140,000$. Still Rp140,000 in debt.'},
+    {type:'exercise', typeEx:'tf', question:'Jika suhu turun dari $-5°C$ menjadi $-20°C$, maka perubahannya adalah $-15°C$.', questionEn:'If temperature drops from $-5°C$ to $-20°C$, the change is $-15°C$.',
+      answer:'Benar',
+      explanation:'Benar. Perubahan = suhu akhir - suhu awal = $-20 - (-5) = -20 + 5 = -15°C$. Negatif berarti turun.',
+      explanationEn:'Correct. Change = final - initial = $-20 - (-5) = -20 + 5 = -15°C$. Negative means decrease.'},
+    {type:'exercise', typeEx:'mc', question:'Pesawat di ketinggian $-500$ m (di bawah permukaan laut). Naik $200$ m per menit. Setelah $3$ menit, ketinggiannya $\\ldots$', questionEn:'A plane at $-500$ m (below sea level). Rises $200$ m per minute. After $3$ minutes, altitude $\\ldots$',
+      options:['$100$ m di atas laut','$-100$ m','$300$ m di atas laut','$-100$ m di bawah laut'], answer:'$100$ m di atas laut',
+      explanation:'Total naik = $3 \\times 200 = 600$ m. Ketinggian = $-500 + 600 = 100$ m. Positif artinya $100$ m di atas permukaan laut.',
+      explanationEn:'Total rise = $3 \\times 200 = 600$ m. Altitude = $-500 + 600 = 100$ m. Positive means $100$ m above sea level.'}
+  ]
+},
+
+/* ==================== ASSIGNMENT 4 ==================== */
+{
+  id:'asgn4', type:'assignment', assignNum:4, icon:'fa-clipboard-check', title:'Assignment 4', titleEn:'Assignment 4', time:'',
+  blocks:[
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-4) \\times 15 + [(-20) \\div (-4)] - 12 = \\ldots$', questionEn:'Calculate $(-4) \\times 15 + [(-20) \\div (-4)] - 12 = \\ldots$',
+      answer:'-67', hint:'Kerjakan perkalian dan pembagian dalam kurung dulu.',
+      explanation:'$(-4)\\times15=-60$. $(-20)\\div(-4)=5$. Lalu $-60+5-12=-67$.',
+      explanationEn:'$(-4)\\times15=-60$. $(-20)\\div(-4)=5$. Then $-60+5-12=-67$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $(-3 + 7) \\times (-2)$ adalah $\\ldots$', questionEn:'The result of $(-3 + 7) \\times (-2)$ is $\\ldots$',
+      options:['$-8$','$8$','$-20$','$20$'], answer:'$-8$',
+      explanation:'Kurung dulu: $-3 + 7 = 4$. Lalu $4 \\times (-2) = -8$.',
+      explanationEn:'Parentheses first: $-3 + 7 = 4$. Then $4 \\times (-2) = -8$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $[(-48) \\div 6] - [(-5) \\times (-3)] = \\ldots$', questionEn:'Calculate $[(-48) \\div 6] - [(-5) \\times (-3)] = \\ldots$',
+      answer:'-23', hint:'Kerjakan masing-masing kurung.',
+      explanation:'$(-48)\\div6=-8$. $(-5)\\times(-3)=15$. Lalu $-8-15=-23$.',
+      explanationEn:'$(-48)\\div6=-8$. $(-5)\\times(-3)=15$. Then $-8-15=-23$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $(-2)^3 + 5 \\times (-3)$ adalah $\\ldots$', questionEn:'The result of $(-2)^3 + 5 \\times (-3)$ is $\\ldots$',
+      options:['$-23$','$7$','$-7$','$23$'], answer:'$-23$',
+      explanation:'$(-2)^3 = -8$. $5\\times(-3)=-15$. Lalu $-8+(-15)=-23$.',
+      explanationEn:'$(-2)^3 = -8$. $5\\times(-3)=-15$. Then $-8+(-15)=-23$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-10 + 4) \\times (-3) \\div 2 = \\ldots$', questionEn:'Calculate $(-10 + 4) \\times (-3) \\div 2 = \\ldots$',
+      answer:'9', hint:'Kurung → kali → bagi.',
+      explanation:'$-10+4=-6$. $(-6)\\times(-3)=18$. $18\\div2=9$.',
+      explanationEn:'$-10+4=-6$. $(-6)\\times(-3)=18$. $18\\div2=9$.'},
+    {type:'exercise', typeEx:'mc', question:'Hasil dari $8 - 3 \\times (-4) + (-2)^2$ adalah $\\ldots$', questionEn:'The result of $8 - 3 \\times (-4) + (-2)^2$ is $\\ldots$',
+      options:['$24$','$-6$','$18$','$10$'],
+      answer:'$24$',
+      explanation:'$3\\times(-4)=-12$. $(-2)^2=4$. Lalu $8-(-12)+4=8+12+4=24$.',
+      explanationEn:'$3\\times(-4)=-12$. $(-2)^2=4$. Then $8-(-12)+4=8+12+4=24$.',},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-3) \\times [(-2) + 5] - [(-12) \\div 4] = \\ldots$', questionEn:'Calculate $(-3) \\times [(-2) + 5] - [(-12) \\div 4] = \\ldots$',
+      answer:'-6',
+      hint:'Kerjakan kurung dalam dulu.',
+      explanation:'$(-2)+5=3$. $(-3)\\times3=-9$. $(-12)\\div4=-3$. Lalu $-9-(-3)=-9+3=-6$.',
+      explanationEn:'$(-2)+5=3$. $(-3)\\times3=-9$. $(-12)\\div4=-3$. Then $-9-(-3)=-9+3=-6$.',},
+    {type:'exercise', typeEx:'cb', question:'Pilih semua ekspresi yang <strong>hasilnya $-6$</strong>.', questionEn:'Select all expressions that <strong>equal $-6$</strong>.',
+      options:['$(-2) \\times 3$','$(-12) \\div (-2)$','$10 + (-16)$','$(-3) \\times (-2)$','$(-18) \\div 3$'], answer:['$(-2) \\times 3$','$10 + (-16)$','$(-18) \\div 3$'],
+      explanation:'$(-2)\\times3=-6$ ✓. $(-12)\\div(-2)=6$ ✗. $10+(-16)=-6$ ✓. $(-3)\\times(-2)=6$ ✗. $(-18)\\div3=-6$ ✓.',
+      explanationEn:'$(-2)\\times3=-6$ ✓. $(-12)\\div(-2)=6$ ✗. $10+(-16)=-6$ ✓. $(-3)\\times(-2)=6$ ✗. $(-18)\\div3=-6$ ✓.'},
+    {type:'exercise', typeEx:'mc', question:'$(-1) \\times (-2) \\times (-3) \\times (-4) = \\ldots$', questionEn:'$(-1) \\times (-2) \\times (-3) \\times (-4) = \\ldots$',
+      options:['$24$','$-24$','$10$','$-10$'], answer:'$24$',
+      explanation:'Empat bilangan negatif dikalikan: genap jumlah negatif → hasil positif. $1\\times2\\times3\\times4=24$. Jadi hasilnya $24$.',
+      explanationEn:'Four negatives multiplied: even number of negatives → positive result. $1\\times2\\times3\\times4=24$. So the result is $24$.'},
+    {type:'exercise', typeEx:'input',
+  	  question:'Hitunglah $\\{(-25) + 5 \\times (-3)\\} \\div \\{(-5) + 1\\} = \\ldots$',
+      questionEn:'Calculate $\\{(-25) + 5 \\times (-3)\\} \\div \\{(-5) + 1\\} = \\ldots$',
+      answer:'10',
+      hint:'Kerjakan masing-masing kurung kurawal.',
+      explanation:'Kurung pertama: $5\\times(-3)=-15$, lalu $-25+(-15)=-40$. Kurung kedua: $-5+1=-4$. Lalu $-40\\div(-4)=10$.',
+      explanationEn:'First bracket: $5\\times(-3)=-15$, then $-25+(-15)=-40$. Second bracket: $-5+1=-4$. Then $-40\\div(-4)=10$.',}
+  ]
+},
+
+/* ==================== ASSIGNMENT 5 ==================== */
+{
+  id:'asgn5', type:'assignment', assignNum:5, icon:'fa-clipboard-check', title:'Assignment 5', titleEn:'Assignment 5', time:'',
+  blocks:[
+    {type:'exercise', typeEx:'mc', question:'Hitunglah $-15 + (-27) - (-10)$', questionEn:'Calculate $-15 + (-27) - (-10)$',
+      options:['$-32$','$-52$','$2$','$-22$'], answer:'$-32$',
+      explanation:'$-15+(-27)=-42$. $-42-(-10)=-42+10=-32$.',
+      explanationEn:'$-15+(-27)=-42$. $-42-(-10)=-42+10=-32$.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(1,25 \\times 0,8) \\div 0,5 = \\ldots$', questionEn:'Calculate $(1,25 \\times 0,8) \\div 0,5 = \\ldots$',
+      answer:'2', hint:'Kerjakan perkalian dalam kurung dulu.',
+      explanation:'$1,25\\times0,8=1,00$. Lalu $1,00\\div0,5=2$.',
+      explanationEn:'$1.25\\times0.8=1.00$. Then $1.00\\div0.5=2$.'},
+    {type:'exercise', typeEx:'mc', question:'Dalam ujian: benar $= 4$, salah $= -2$, tidak dijawab $= -1$. Dari $50$ soal, siswa menjawab $35$ benar dan $10$ salah. Total nilai $\\ldots$', questionEn:'Exam: correct $= 4$, wrong $= -2$, unanswered $= -1$. Out of $50$ questions, student answers $35$ correct and $10$ wrong. Total score $\\ldots$',
+      options:['$115$','$125$','$105$','$140$'], answer:'$115$',
+      explanation:'Benar: $35\\times4=140$. Salah: $10\\times(-2)=-20$. Tidak: $5\\times(-1)=-5$. Total $=140-20-5=115$.',
+      explanationEn:'Correct: $35\\times4=140$. Wrong: $10\\times(-2)=-20$. Unanswered: $5\\times(-1)=-5$. Total $=140-20-5=115$.'},
+    {type:'exercise', typeEx:'input', question:'Tentukan nilai $n$ jika $n \\div (-4) + 15 = 10$', questionEn:'Find $n$ if $n \\div (-4) + 15 = 10$',
+      answer:'20', hint:'Pindahkan 15 ke ruas kanan terlebih dahulu.',
+      explanation:'$n\\div(-4)=10-15=-5$. Lalu $n=-5\\times(-4)=20$.',
+      explanationEn:'$n\\div(-4)=10-15=-5$. Then $n=-5\\times(-4)=20$.'},
+    {type:'exercise', typeEx:'mc', question:'Sebuah tangki berisi $15,75$ liter air. Jika digunakan untuk mengisi $7$ botol secara merata, berapa liter isi tiap botol?', questionEn:'A tank contains $15,75$ liters of water. If used to fill $7$ bottles equally, how many liters per bottle?',
+      options:['$2,25$ liter','$2,52$ liter','$1,75$ liter','$3,15$ liter'], answer:'$2,25$ liter',
+      explanation:'$15,75\\div7=2,25$ liter. Tiap botol berisi $2,25$ liter.',
+      explanationEn:'$15.75\\div7=2.25$ liters. Each bottle contains $2.25$ liters.'},
+    {type:'exercise', typeEx:'input', question:'Hitunglah $(-4) \\times 15 + [(-20) \\div (-4)] - 12 = \\ldots$', questionEn:'Calculate $(-4) \\times 15 + [(-20) \\div (-4)] - 12 = \\ldots$',
+      answer:'-67', hint:'Kurung → kali/bagi → tambah/kurang.',
+      explanation:'$(-4)\\times15=-60$. $(-20)\\div(-4)=5$. $-60+5-12=-67$.',
+      explanationEn:'$(-4)\\times15=-60$. $(-20)\\div(-4)=5$. $-60+5-12=-67$.'},
+    {type:'exercise', typeEx:'tf', question:'$(-7)^2 = -49$', questionEn:'$(-7)^2 = -49$',
+      answer:'Salah',
+      explanation:'Salah! $(-7)^2 = (-7)\\times(-7) = 49$ (positif). Jangan sampai tertukar dengan $-(7^2)=-49$.',
+      explanationEn:'Incorrect! $(-7)^2 = (-7)\\times(-7) = 49$ (positive). Don\'t confuse it with $-(7^2)=-49$.'},
+    {type:'exercise', typeEx:'mc', question:'Katak: $5$ langkah kanan, $12$ langkah kiri, $3$ langkah kanan. Tiap langkah $15$ cm. Posisi katak $\\ldots$', questionEn:'Frog: $5$ right, $12$ left, $3$ right. Each step $15$ cm. Frog position $\\ldots$',
+      options:['$60$ cm ke kiri','$30$ cm ke kiri','$60$ cm ke kanan','$30$ cm ke kanan'], answer:'$60$ cm ke kiri',
+      explanation:'$(5-12+3)\\times15=(-4)\\times15=-60$ cm. Negatif = ke kiri = $60$ cm ke kiri.',
+      explanationEn:'$(5-12+3)\\times15=(-4)\\times15=-60$ cm. Negative = left = $60$ cm to the left.'},
+    {type:'exercise', typeEx:'input', question:'Perusahaan rugi Rp2.000.000 per bulan selama $6$ bulan. Total kerugian (angka negatif)?', questionEn:'Company loses Rp2,000,000/month for $6$ months. Total loss (negative number)?',
+      answer:'-12.000.000', hint:'6 × (-2.000.000)',
+      explanation:'$6\\times(-2.000.000)=-12.000.000$.',
+      explanationEn:'$6\\times(-2,000,000)=-12,000,000$.'},
+    {type:'exercise', typeEx:'mc', question:'Manakah bilangan yang <strong>paling kecil</strong>?', questionEn:'Which number is the <strong>smallest</strong>?',
+      options:['$-0,5$','$-3$','$0$','$-1$','$2$'], answer:'$-3$',
+      explanation:'Urutan dari terkecil: $-3 < -1 < -0,5 < 0 < 2$. Bilangan $-3$ paling kecil karena paling jauh di kiri pada garis bilangan.',
+      explanationEn:'Order from smallest: $-3 < -1 < -0.5 < 0 < 2$. The number $-3$ is smallest because it\'s furthest left on the number line.'}
+  ]
+},
+
+/* ==================== CONSOLIDATION & REFLECTION ==================== */
+{
+  id:'reflect', type:'reflection', icon:'fa-flag-checkered', title:'Consolidation & Reflection', titleEn:'Consolidation & Reflection', time:'01:00 - 01:05',
+  content:`
+    <p>Selamat! Kamu telah menyelesaikan seluruh materi <strong>Bilangan Bulat & Operasinya</strong> hari ini.</p>
+    <br>
+    <p>Mari kita ingat kembali poin-poin penting yang sudah dipelajari:</p>
+    <ul style="text-align:left;display:inline-block;max-width:480px;margin:12px 0">
+      <li style="margin-bottom:6px">Garis bilangan: bergerak <strong>kanan</strong> = bertambah, <strong>kiri</strong> = berkurang</li>
+      <li style="margin-bottom:6px">Tanda sama → positif, tanda beda → negatif (perkalian & pembagian)</li>
+      <li style="margin-bottom:6px">Musuh dari musuhmu adalah temanmu: <strong>Negatif × Negatif = Positif</strong></li>
+      <li style="margin-bottom:6px">Urutan operasi: Kurung → Kali/Bagi → Tambah/Kurang</li>
+      <li style="margin-bottom:6px">Bilangan negatif digunakan untuk suhu di bawah nol, utang, dan kedalaman di bawah permukaan laut</li>
+    </ul>
+    <br>
+    <p>Terus berlatih melalui tugas-tugas di platform LMS untuk memperkuat pemahamanmu!</p>
+  `,
+  contentEn:`
+    Congratulations! You have completed the entire <strong>Integers & Their Operations</strong> material today.
+    <br>Key points to remember:
+    <br>• Number line: right = increase, left = decrease
+    <br>• Same signs → positive, different signs → negative (multiplication & division)
+    <br>• The enemy of your enemy is your friend: <strong>Negative × Negative = Positive</strong>
+    <br>• Order of operations: Parentheses → Multiply/Divide → Add/Subtract
+    <br>• Negative numbers are used for temperatures below zero, debt, and depths below sea level
+    <br>Keep practicing through assignments on the LMS platform!
+  `,
+  blocks:[]
+}
+
+
+]; // akhir sections
+
+/* ============================================================
+   SIDEBAR RENDERING
+   ============================================================ */
+function renderSidebar(){
+  const nav=document.getElementById('sideNav');
+  let html='';
+  sections.forEach((s,i)=>{
+    if(s.type==='home'){
+      html+=`<div class="side-item${curSec===i?' active':''}" onclick="goTo(${i})">
+        <div class="si-icon"><i class="fa-solid ${s.icon}"></i></div>
+        <div class="si-text"><div class="si-title">${s.title}</div></div>
+      </div>`;
+    } else if(s.type==='assignment'){
+      html+=`<div class="side-item${curSec===i?' active':''}" onclick="goTo(${i})">
+        <div class="si-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+        <div class="si-text"><div class="si-title">Assignment ${s.assignNum}</div></div>
+        <span class="si-badge">${s.assignNum}</span>
+        <i class="fa-solid fa-circle-check si-check" id="sc-${i}"></i>
+      </div>`;
+    } else if(s.type==='lesson'){
+      html+=`<div class="side-item${curSec===i?' active':''}" onclick="goTo(${i})">
+        <div class="si-icon"><i class="fa-solid ${s.icon}"></i></div>
+        <div class="si-text"><div class="si-title">${s.title}</div>${s.time?`<div class="si-time">${s.time}</div>`:''}</div>
+        <i class="fa-solid fa-circle-check si-check" id="sc-${i}"></i>
+      </div>`;
+    } else if(s.type==='reflection'){
+      html+=`<div class="side-item${curSec===i?' active':''}" onclick="goTo(${i})">
+        <div class="si-icon"><i class="fa-solid fa-flag-checkered"></i></div>
+        <div class="si-text"><div class="si-title">${s.title}</div></div>
+      </div>`;
+    }
+  });
+  nav.innerHTML=html;
+  updateSideChecks();
+  updateSideProgress();
+}
+
+function updateSideChecks(){
+  sections.forEach((s,i)=>{
+    const el=document.getElementById('sc-'+i);
+    if(!el)return;
+    const prog=getSecProgress(i);
+    el.classList.toggle('visible',prog.done===prog.total&&prog.total>0);
+  });
+}
+
+function updateSideProgress(){
+  let total=0,done=0;
+  sections.forEach((s,i)=>{
+    const p=getSecProgress(i);
+    total+=p.total; done+=p.done;
+  });
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('sideProgressFill').style.width=pct+'%';
+}
+
+function getSecProgress(si){
+  const s=sections[si];
+  if(!s.blocks||s.type==='home'||s.type==='reflection')return{total:0,done:0};
+  const exs=s.blocks.filter(b=>b.type==='exercise');
+  let done=0;
+  exs.forEach((_,bi)=>{
+    const bIdx=s.blocks.indexOf(_);
+    const st=exState[ek(si,bIdx)];
+    if(st&&st.answered)done++;
+  });
+  return{total:exs.length,done};
+}
+
+/* ============================================================
+   HEADER UPDATE
+   ============================================================ */
+function updateHeader(){
+  const s=sections[curSec];
+  let title='';
+  if(s.type==='home')title='MATH TUTORING by Deni';
+  else if(s.type==='assignment')title='Assignment '+s.assignNum;
+  else title=s.title;
+  document.getElementById('headerTitle').textContent=title;
+
+  const prog=getSecProgress(curSec);
+  document.getElementById('headerProgressText').textContent=`${prog.done}/${prog.total}`;
+  document.getElementById('headerProgressFill').style.width=(prog.total?Math.round(prog.done/prog.total*100):0)+'%';
+}
+
+/* ============================================================
+   BLOCK RENDERING
+   ============================================================ */
+function getShuffled(si,bi,opts){
+  const key=ek(si,bi);
+  if(exState[key]&&exState[key].shuffled)return exState[key].shuffled;
+  const sh=shuffle(opts);
+  if(!exState[key])exState[key]={};
+  exState[key].shuffled=sh;
+  return sh;
+}
+
+function renderBlock(anim='right'){
+  const s=sections[curSec];
+  const isAssign=s.type==='assignment';
+  const maxBlk=s.blocks.length-1;
+  const effMax=isAssign?maxBlk+1:maxBlk;
+  if(curBlk<0)curBlk=0;
+  if(curBlk>effMax)curBlk=effMax;
+
+  const container=document.getElementById('block-container');
+
+  // Assignment summary
+  if(isAssign&&curBlk>maxBlk){
+    container.innerHTML=renderAssignSummary(curSec);
+    container.firstElementChild&&container.firstElementChild.classList.add('block-enter-fade');
+    updateHeader();renderSidebar();updateNavBtns();
+    return;
+  }
+  // Home
+  if(s.type==='home'){
+    container.innerHTML=renderHome();
+    container.firstElementChild&&container.firstElementChild.classList.add('block-enter-fade');
+    updateHeader();renderSidebar();updateNavBtns();
+    return;
+  }
+  // Reflection
+  if(s.type==='reflection'){
+    container.innerHTML=renderReflection(s);
+    container.firstElementChild&&container.firstElementChild.classList.add('block-enter-fade');
+    updateHeader();renderSidebar();updateNavBtns();
+    return;
+  }
+
+  const blk=s.blocks[curBlk];
+  if(!blk){container.innerHTML='<p>Block tidak ditemukan.</p>';return;}
+
+  let html='';
+  if(blk.type==='theory'){
+    html=renderTheory(blk);
+  } else if(blk.type==='exercise'){
+    html=renderExercise(curSec,curBlk,blk);
+  }
+
+  container.innerHTML=html;
+  const el=container.firstElementChild;
+  if(el){
+    el.classList.remove('block-enter-right','block-enter-left','block-enter-fade');
+    void el.offsetWidth;
+    el.classList.add(anim==='left'?'block-enter-left':anim==='fade'?'block-enter-fade':'block-enter-right');
+  }
+  updateHeader();renderSidebar();updateNavBtns();
+}
+
+function renderHome(){
+  return `<div class="home-card">
+    <h1>MATH TUTORING</h1>
+    <p style="font-size:13px;color:var(--tx3);margin-bottom:20px">by Deni</p>
+    <div class="topic-id">${topicInfo.id}</div>
+    <div class="topic-en">${topicInfo.en}</div>
+    <ul class="home-rules">
+      <h3><i class="fa-solid fa-list-check" style="margin-right:6px"></i> Petunjuk Pembelajaran</h3>
+      <li>Berbicara secara bergantian</li>
+      <li>Meminta izin jika ingin meninggalkan kelas</li>
+      <li>Menyalakan kamera dan microphone jika diperlukan</li>
+    </ul>
+    <button class="reset-all-btn" onclick="resetAll()"><i class="fa-solid fa-rotate-left" style="margin-right:6px"></i> Reset Semua Kemajuan</button>
+  </div>`;
+}
+
+function renderReflection(s){
+  return `<div class="reflect-card">
+    <h2><i class="fa-solid fa-trophy" style="margin-right:8px"></i> ${pm(s.title||'Consolidation & Reflection')}</h2>
+    <p>${pm(s.content||'')}</p>
+    <p class="en">${s.contentEn||''}</p>
+    <div style="margin-top:28px">
+      <a href="https://learn.algonova.id/login" target="_blank" class="lms-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka LMS Algonova</a>
+    </div>
+  </div>`;
+}
+
+function renderTheory(blk){
+  return `<div class="theory-card">
+    ${pm(blk.content)}
+    ${blk.contentEn?`<div class="en">${pm(blk.contentEn)}</div>`:''}
+  </div>`;
+}
+
+function renderExercise(si,bi,ex){
+  const key=ek(si,bi);
+  const st=exState[key];
+  const answered=st&&st.answered;
+  const correct=st&&st.correct;
+  const userAns=st?st.userAnswer:null;
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  let body='';
+  if(ex.typeEx==='mc'){
+    const opts=getShuffled(si,bi,ex.options);
+    body='<div class="options-list">';
+    opts.forEach((o,i)=>{
+      const isSel=answered&&norm(userAns)===norm(o);
+      const isCor=answered&&norm(o)===norm(ex.answer);
+      let cls='opt-btn';
+      if(answered){cls+=' locked'; if(isSel&&isCor)cls+=' correct'; else if(isSel&&!isCor)cls+=' wrong'; else if(isCor)cls+=' correct';}
+      else if(!answered&&userAns===o)cls+=' selected'; // selected sebelum check
+      const icon=answered?(isCor?'<i class="fa-solid fa-check opt-icon" style="color:var(--ok)"></i>':isSel?'<i class="fa-solid fa-xmark opt-icon" style="color:var(--er)"></i>':''):'';
+      body+=`<button class="${cls}" onclick="selectOpt('${key}','${esc(o.replace(/'/g,"\\'"))}',${si},${bi})" ${answered?'disabled':''}>
+        <span class="opt-letter">${letters[i]}</span>
+        <span class="opt-text">${pm(o)}</span>
+        ${icon}
+      </button>`;
+    });
+    body+='</div>';
+  } else if(ex.typeEx==='cb'){
+    const opts=getShuffled(si,bi,ex.options);
+    const selArr=Array.isArray(userAns)?userAns:[];
+    body='<div class="options-list">';
+    opts.forEach((o,i)=>{
+      const isSel=selArr.some(s=>norm(s)===norm(o));
+      const isCor=answered&&ex.answer.some(a=>norm(a)===norm(o));
+      let cls='opt-btn cb-btn';
+      if(answered){cls+=' locked'; if(isSel&&isCor)cls+=' correct'; else if(isSel&&!isCor)cls+=' wrong'; else if(isCor)cls+=' correct';}
+      else if(isSel)cls+=' selected';
+      const icon=answered?(isCor?'<i class="fa-solid fa-check opt-icon" style="color:var(--ok)"></i>':isSel?'<i class="fa-solid fa-xmark opt-icon" style="color:var(--er)"></i>':''):'';
+      body+=`<button class="${cls}" onclick="toggleCb('${key}','${esc(o.replace(/'/g,"\\'"))}',${si},${bi})" ${answered?'disabled':''}>
+        <span class="opt-letter">${isSel?'<i class=&quot;fa-solid fa-check&quot; style=&quot;font-size:10px&quot;></i>':letters[i]}</span>
+        <span class="opt-text">${pm(o)}</span>
+        ${icon}
+      </button>`;
+    });
+    body+='</div>';
+	} else if(ex.typeEx==='input'){
+		let cls='input-field';
+		if(answered){cls+=correct?' correct':' wrong';}
+		body+=`<div class="input-row">
+		  <input type="text" class="${cls}" id="inp-${key}" value="${userAns||''}" placeholder="Ketik jawaban..." ${answered?'readonly':''} oninput="saveInput('${key}')" onkeydown="if(event.key==='Enter')checkAns(${si},${bi})">
+		  ${ex.hint&&!answered?`<span class="input-hint"><i class="fa-solid fa-lightbulb" style="margin-right:4px"></i>${ex.hint}</span>`:''}
+		</div>`;
+	} else if(ex.typeEx==='tf'){
+    ['Benar','Salah'].forEach(v=>{
+      const isSel=answered?norm(userAns)===norm(v):userAns===v;
+      let cls='tf-btn';
+      if(answered){cls+=' locked'; if(isSel&&correct)cls+=' correct'; else if(isSel&&!correct)cls+=' wrong';}
+      else if(isSel)cls+=' selected';
+      body+=`<button class="${cls}" onclick="selectTf('${key}','${v}',${si},${bi})" ${answered?'disabled':''}>${v}</button>`;
+    });
+  }
+
+  // Check button
+  if(!answered){
+    body+=`<button class="check-btn" onclick="checkAns(${si},${bi})"><i class="fa-solid fa-circle-check" style="margin-right:6px"></i> Periksa Jawaban</button>`;
+  }
+
+  // Feedback badge
+  let badge='';
+  if(answered){
+    badge=correct
+      ?`<div class="fb-badge ok"><i class="fa-solid fa-check"></i></div>`
+      :`<div class="fb-badge er"><i class="fa-solid fa-xmark"></i></div>`;
+  }
+
+  // Explanation
+  let expl='';
+  if(ex.explanation){
+    const isOpen=answered?'open':'';
+    const fbText=answered?(correct?'<div class="exp-correct"><i class="fa-solid fa-circle-check"></i> Jawaban benar!</div>':'<div class="exp-wrong"><i class="fa-solid fa-circle-xmark"></i> Jawaban salah.</div>'):'';
+    expl=`<div class="explanation">
+      <div class="exp-header${isOpen?' open':''}" onclick="toggleExp(this)">
+        <span><i class="fa-solid fa-book-open" style="margin-right:6px"></i> Penjelasan</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="exp-body${isOpen?' open':''}">
+        ${fbText}
+        <p>${pm(ex.explanation)}</p>
+        ${ex.explanationEn?`<p class="en">${pm(ex.explanationEn)}</p>`:''}
+      </div>
+    </div>`;
+  }
+
+  // Correct answer display (if wrong)
+  let correctDisp='';
+  if(answered&&!correct&&ex.typeEx!=='tf'){
+    const ca=Array.isArray(ex.answer)?ex.answer.join(', '):ex.answer;
+    correctDisp=`<div style="margin-top:12px;font-size:13px;color:var(--ok)"><i class="fa-solid fa-lightbulb" style="margin-right:4px"></i> Jawaban yang benar: <strong>${pm(ca)}</strong></div>`;
+  }
+
+  // Exercise label
+  const secExs=sections[si].blocks.filter(b=>b.type==='exercise');
+  const exNum=secExs.indexOf(ex)+1;
+
+  return `<div class="exercise-card" id="excard-${key}">
+    ${badge}
+    <div class="exercise-label">Latihan ${exNum} dari ${secExs.length}</div>
+    <div class="exercise-q">${pm(ex.question)}</div>
+    <div class="en">${ex.questionEn?pm(ex.questionEn):''}</div>
+    ${body}
+    ${correctDisp}
+    ${expl}
+  </div>`;
+}
+
+function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+
+/* ============================================================
+   ASSIGNMENT SUMMARY
+   ============================================================ */
+function renderAssignSummary(si){
+  const s=sections[si];
+  const exs=s.blocks.filter(b=>b.type==='exercise');
+  let score=0;
+  let grid='';
+  exs.forEach((ex,i)=>{
+    const bIdx=s.blocks.indexOf(ex);
+    const st=exState[ek(si,bIdx)];
+    const ok=st&&st.correct;
+    const ans=st&&st.answered;
+    if(ok)score++;
+    grid+=`<div class="sg-item ${ok?'ok':ans?'er':'na'}">${i+1}</div>`;
+  });
+  return `<div class="summary-card">
+    <div class="summary-score">${score}<span>/${exs.length}</span></div>
+    <div class="summary-label">Skor Assignment ${s.assignNum}</div>
+    <div class="summary-grid">${grid}</div>
+    <button class="print-btn" onclick="printAssign(${si})"><i class="fa-solid fa-print"></i> Print Result</button>
+  </div>`;
+}
+
+/* ============================================================
+   INTERACTIONS
+   ============================================================ */
+function selectOpt(key,val,si,bi){
+  if(exState[key]&&exState[key].answered)return;
+  if(!exState[key])exState[key]={};
+  exState[key].userAnswer=val;
+  var card=document.getElementById('excard-'+key);
+  if(!card)return;
+  var opts=exState[key].shuffled;
+  card.querySelectorAll('.options-list .opt-btn').forEach(function(btn,i){
+    btn.classList.toggle('selected', norm(opts[i])===norm(val));
+  });
+}
+function toggleCb(key,val,si,bi){
+  if(exState[key]&&exState[key].answered)return;
+  if(!exState[key])exState[key]={userAnswer:[]};
+  if(!Array.isArray(exState[key].userAnswer))exState[key].userAnswer=[];
+  var arr=exState[key].userAnswer;
+  var idx=arr.findIndex(function(a){return norm(a)===norm(val);});
+  if(idx>=0)arr.splice(idx,1); else arr.push(val);
+  var card=document.getElementById('excard-'+key);
+  if(!card)return;
+  var opts=exState[key].shuffled;
+  var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  card.querySelectorAll('.options-list .cb-btn').forEach(function(btn,i){
+    var isSel=arr.some(function(a){return norm(a)===norm(opts[i]);});
+    btn.classList.toggle('selected', isSel);
+    btn.querySelector('.opt-letter').innerHTML=isSel
+      ?'<i class="fa-solid fa-check" style="font-size:10px"></i>'
+      :letters[i];
+  });
+}
+function selectTf(key,val,si,bi){
+  if(exState[key]&&exState[key].answered)return;
+  if(!exState[key])exState[key]={};
+  exState[key].userAnswer=val;
+  var card=document.getElementById('excard-'+key);
+  if(!card)return;
+  card.querySelectorAll('.tf-btn').forEach(function(btn){
+    btn.classList.toggle('selected', btn.textContent.trim()===val);
+  });
+}
+
+function checkAns(si,bi){
+  const key=ek(si,bi);
+  const ex=sections[si].blocks[bi];
+  const st=exState[key];
+  if(!st||!st.userAnswer&&st.userAnswer!==0)return;
+  if(st.answered)return;
+
+  let correct=false;
+  const ua=st.userAnswer;
+  if(ex.typeEx==='mc'||ex.typeEx==='tf'){
+    correct=norm(ua)===norm(ex.answer);
+  } else if(ex.typeEx==='input'){
+    correct=norm(ua)===norm(ex.answer);
+  } else if(ex.typeEx==='cb'){
+    correct=arrEq(ua,ex.answer);
+  }
+
+  st.answered=true;
+  st.correct=correct;
+  saveState();
+  renderBlock('fade');
+
+  // Animasi
+  setTimeout(()=>{
+    const card=document.getElementById('excard-'+key);
+    if(!card)return;
+    if(correct)showConfetti(card);
+    else card.classList.add('shake');
+  },50);
+}
+
+function toggleExp(header){
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+function saveInput(key){
+  if(!exState[key])exState[key]={};
+  exState[key].userAnswer=document.getElementById('inp-'+key).value;
+}
+
+/* ============================================================
+   NAVIGASI
+   ============================================================ */
+function navigate(dir){
+  const s=sections[curSec];
+  const maxBlk=s.blocks.length-1;
+  const isAssign=s.type==='assignment';
+  const effMax=isAssign?maxBlk+1:maxBlk;
+
+  if(dir==='next'){
+    if(curBlk<effMax){curBlk++;}
+    else if(curSec<sections.length-1){curSec++;curBlk=0;}
+  } else {
+    if(curBlk>0){curBlk--;}
+    else if(curSec>0){
+      curSec--;
+      const ps=sections[curSec];
+      curBlk=ps.blocks.length-1;
+      if(ps.type==='assignment')curBlk++;
+      if(ps.type==='home'||ps.type==='reflection')curBlk=0;
+    }
+  }
+  renderBlock(dir==='next'?'right':'left');
+  saveState();
+  document.getElementById('main-body').scrollTop=0;
+}
+
+function goTo(si){
+  const dir=si>=curSec?'right':'left';
+  curSec=si;curBlk=0;
+  if(sections[si].type==='home'||sections[si].type==='reflection')curBlk=0;
+  renderBlock(dir);
+  saveState();
+  document.getElementById('main-body').scrollTop=0;
+  // Tutup sidebar di mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sideOverlay').classList.remove('show');
+}
+
+function updateNavBtns(){
+  const s=sections[curSec];
+  const maxBlk=s.blocks.length-1;
+  const isAssign=s.type==='assignment';
+  const effMax=isAssign?maxBlk+1:(s.type==='home'||s.type==='reflection'?0:maxBlk);
+  document.getElementById('btnPrev').disabled=(curSec===0&&curBlk===0);
+  document.getElementById('btnNext').disabled=(curSec===sections.length-1&&curBlk>=effMax);
+}
+
+function resetExercise(){
+  const s=sections[curSec];
+  if(s.type==='home'||s.type==='reflection')return;
+  const key=ek(curSec,curBlk);
+  if(exState[key])delete exState[key];
+  saveState();
+  renderBlock('fade');
+}
+
+function resetAll(){
+  if(!confirm('Yakin ingin menghapus semua kemajuan?'))return;
+  Object.keys(exState).forEach(k=>delete exState[k]);
+  curSec=0;curBlk=0;
+  saveState();
+  renderBlock('fade');
+}
+
+/* ============================================================
+   ANIMASI
+   ============================================================ */
+function showConfetti(container){
+  const colors=['#3FB950','#F0883E','#E6EDF3','#F7D794','#58A6FF'];
+  for(let i=0;i<15;i++){
+    const d=document.createElement('div');
+    d.className='confetti-dot';
+    d.style.left=(20+Math.random()*60)+'%';
+    d.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDelay=(Math.random()*0.3)+'s';
+    d.style.animationDuration=(0.6+Math.random()*0.5)+'s';
+    d.style.width=(4+Math.random()*4)+'px';
+    d.style.height=d.style.width;
+    container.appendChild(d);
+    setTimeout(()=>d.remove(),1500);
+  }
+}
+
+/* ============================================================
+   SIDEBAR TOGGLE (MOBILE)
+   ============================================================ */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sideOverlay').classList.toggle('show');
+}
+
+/* ============================================================
+   PRINT ASSIGNMENT
+   ============================================================ */
+function cleanPrint(text){
+  return text
+    .replace(/\\ldots/g,'...')
+    .replace(/\\times/g,'×')
+    .replace(/\\div/g,'÷')
+    .replace(/\\cdot/g,'·')
+    .replace(/\\pm/g,'±')
+    .replace(/\\neq/g,'≠')
+    .replace(/\\leq/g,'≤')
+    .replace(/\\geq/g,'≥')
+    .replace(/\\left/g,'')
+    .replace(/\\right/g,'')
+    .replace(/\$/g,'');
+}
+   
+function printAssign(si){
+  const s=sections[si];
+  const exs=s.blocks.filter(b=>b.type==='exercise');
+  let score=0, rows='';
+  exs.forEach((ex,i)=>{
+    const bIdx=s.blocks.indexOf(ex);
+    const st=exState[ek(si,bIdx)];
+    const ua=st?st.userAnswer:'-';
+    const ca=Array.isArray(ex.answer)?ex.answer.join(', '):ex.answer;
+    const ok=st&&st.correct;
+    if(ok)score++;
+    const qText=cleanPrint(pm(ex.question).replace(/<[^>]*>/g,'').trim());
+    const uText=Array.isArray(ua)?cleanPrint(ua.join(', ')):cleanPrint(pm(String(ua)));
+    const cText=cleanPrint(pm(ca));
+    rows+=`<tr>
+      <td style="text-align:center">${i+1}</td>
+      <td>${qText}</td>
+      <td style="text-align:center">${uText}</td>
+      <td style="text-align:center">${cText}</td>
+      <td style="text-align:center" class="${ok?'c-ok':'c-er'}">${ok?'&#10003;':'&#10007;'}</td>
+    </tr>`;
+  });
+
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+@page{size:A4;margin:12mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;font-size:9.5pt;color:#000;line-height:1.4}
+h2{font-size:13pt;margin-bottom:4px}
+.meta{margin-bottom:6px;font-size:9pt;line-height:1.6}
+.meta span{text-decoration:underline;display:inline-block;min-width:140px}
+table{width:100%;border-collapse:collapse;margin-top:4px}
+th,td{border:1px solid #333;padding:2.5px 4px;text-align:left;font-size:8.5pt;vertical-align:top}
+th{background:#eee;font-weight:700;text-align:center;font-size:8pt}
+td:nth-child(1),td:nth-child(3),td:nth-child(4),td:nth-child(5){text-align:center}
+.c-ok{color:green;font-weight:700;font-size:11pt}
+.c-er{color:red;font-weight:700;font-size:11pt}
+.footer{margin-top:20px;text-align:right;font-size:10pt}
+.katex{font-size:8.5pt!important}
+</style></head><body>
+<h2>MATH TUTORING by Deni</h2>
+<div class="meta">
+  Name: <span>&nbsp;</span><br>
+  Date: <span>&nbsp;</span><br>
+  Topic: ${topicInfo.id}<br>
+  Assignment Group: ${s.assignNum}<br>
+  Score: <strong>${score}/${exs.length}</strong>
+</div>
+<table>
+  <tr><th style="width:25px">No.</th><th>Question</th><th style="width:80px">Student Answer</th><th style="width:80px">Correct Answer</th><th style="width:35px">Note</th></tr>
+  ${rows}
+</table>
+<div class="footer">Checked by,<br><br><br>Deni</div>
+</body></html>`;
+
+  const w=window.open('','_blank');
+  if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),400);}
+}
+
+/* ============================================================
+   PERSISTENCE
+   ============================================================ */
+function saveState(){
+  try{localStorage.setItem('intLessonState',JSON.stringify({exState,curSec,curBlk}));}catch(e){}
+}
+function loadState(){
+  try{
+    const d=JSON.parse(localStorage.getItem('intLessonState'));
+    if(d){
+      if(d.exState)Object.assign(exState,d.exState);
+      if(typeof d.curSec==='number')curSec=d.curSec;
+      if(typeof d.curBlk==='number')curBlk=d.curBlk;
+    }
+  }catch(e){}
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init(){
+  // Tunggu KaTeX siap
+  if(typeof katex==='undefined'){setTimeout(init,100);return;}
+  loadState();
+  renderSidebar();
+  renderBlock('fade');
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
