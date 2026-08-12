@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematika Interaktif: Perpangkatan & Akar Pangkat Dua</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	
+
+	
+    <style>
+        :root {
+            --primary: #58CC02; --primary-dark: #46a302; --secondary: #1CB0F6; 
+            --error: #FF4B4B; --error-dark: #EA2B2B; --bg: #131F24; --card-bg: #FFFFFF;
+            --text-main: #3C3C3C; --text-light: #777777; --border: #E5E5E5;
+            --correct-bg: #D7FFB8; --incorrect-bg: #FFDFE0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Nunito', sans-serif; background-color: var(--bg); color: var(--text-main); overflow: hidden; height: 100vh; }
+        .app-container { display: flex; height: 100vh; }
+        
+        /* Sidebar Navbar */
+        .sidebar { width: 280px; background-color: #233640; color: white; padding: 20px 0; display: flex; flex-direction: column; overflow-y: auto; border-right: 3px solid #1a2b33; }
+        .sidebar-header { padding: 10px 20px 20px; border-bottom: 1px solid #1a2b33; }
+        .sidebar-header h2 { font-size: 1.1rem; color: var(--secondary); margin-bottom: 5px; }
+        .sidebar-header p { font-size: 0.8rem; color: #89A8B5; }
+        .nav-menu { flex: 1; padding: 10px 0; }
+        .nav-item { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; transition: all 0.2s; border-left: 4px solid transparent; font-size: 0.9rem; }
+        .nav-item:hover { background-color: #2c4350; }
+        .nav-item.active { background-color: #344b56; border-left: 4px solid var(--secondary); font-weight: 700; }
+        .nav-item.completed { border-left: 4px solid var(--primary); }
+        .nav-item i { margin-right: 12px; font-size: 1.1rem; width: 20px; text-align: center; }
+        .nav-progress { height: 4px; background: #344b56; margin-left: 15px; border-radius: 2px; flex: 1; }
+        .nav-progress-fill { height: 100%; background: var(--primary); border-radius: 2px; width: 0%; transition: width 0.3s; }
+        .reset-all-btn { margin: 20px; padding: 10px; background: var(--error-dark); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-family: 'Nunito'; transition: 0.2s; }
+        .reset-all-btn:hover { background: var(--error); transform: translateY(-2px); }
+
+        /* Main Content Area */
+        .main-content { flex: 1; display: flex; flex-direction: column; background: #f7f7f7; overflow: hidden; }
+        .top-bar { background: white; padding: 15px 30px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 10; }
+        .top-bar-title { font-weight: 800; font-size: 1.2rem; color: var(--text-main); }
+        .top-bar-progress { width: 200px; height: 10px; background: #E5E5E5; border-radius: 10px; overflow: hidden; }
+        .top-bar-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; border-radius: 10px; }
+        
+        .content-scroll { flex: 1; overflow-y: auto; padding: 30px; display: flex; justify-content: center; }
+        .card-container { width: 100%; max-width: 700px; }
+        
+        /* Step Card (Duolingo Style) */
+        .step-card { background: var(--card-bg); border-radius: 16px; border: 2px solid var(--border); padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 0 var(--border); transition: all 0.3s; display: none; }
+        .step-card.active { display: block; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .theory-box { background: #E8F7FF; border-left: 4px solid var(--secondary); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .theory-box h3 { color: var(--secondary); margin-bottom: 5px; font-size: 1rem; }
+        .trans { font-size: 0.8rem; color: #6b9dad; font-style: italic; display: block; margin-top: 4px; }
+        .math-display { margin: 15px 0; text-align: center; font-size: 1.2rem; }
+        
+        .question-text { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .option-btn { padding: 12px; border: 2px solid var(--border); border-radius: 12px; background: white; cursor: pointer; font-family: 'Nunito'; font-weight: 600; font-size: 1rem; transition: all 0.2s; box-shadow: 0 2px 0 var(--border); }
+        .option-btn:hover { border-color: var(--secondary); background: #f0fcff; }
+        .option-btn.selected { border-color: var(--secondary); background: #DDF4FF; color: var(--secondary); transform: translateY(-2px); box-shadow: 0 2px 0 var(--secondary); }
+        .option-btn.correct { border-color: var(--primary-dark); background: var(--correct-bg); color: var(--primary-dark); }
+        .option-btn.incorrect { border-color: var(--error-dark); background: var(--incorrect-bg); color: var(--error-dark); }
+        .option-btn:disabled { cursor: not-allowed; transform: none; }
+
+        .input-answer { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Nunito'; font-size: 1rem; font-weight: 600; outline: none; transition: 0.2s; }
+        .input-answer:focus { border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.2); }
+
+        /* Feedback & Collapse */
+        .feedback { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; font-weight: 700; }
+        .feedback.correct-fb { display: block; background: var(--correct-bg); color: var(--primary-dark); border: 1px solid var(--primary-dark); }
+        .feedback.incorrect-fb { display: block; background: var(--incorrect-bg); color: var(--error-dark); border: 1px solid var(--error-dark); }
+        .collapse-btn { background: #f0f0f0; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-family: 'Nunito'; font-weight: 600; margin-top: 8px; width: 100%; text-align: left; }
+        .collapse-content { display: none; background: #f9f9f9; padding: 12px; border-radius: 8px; margin-top: 5px; font-size: 0.9rem; border: 1px solid var(--border); }
+        .collapse-content.show { display: block; animation: slideIn 0.3s; }
+
+        /* Bottom Bar */
+        .bottom-bar { background: white; padding: 15px 30px; border-top: 2px solid var(--border); display: flex; justify-content: space-between; z-index: 10; }
+        .nav-btn { padding: 12px 24px; border-radius: 12px; font-family: 'Nunito'; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-prev { background: #f0f0f0; color: var(--text-main); border: 2px solid var(--border); }
+        .btn-prev:hover { background: #e0e0e0; }
+        .btn-next { background: var(--primary); color: white; border: 2px solid var(--primary-dark); box-shadow: 0 4px 0 var(--primary-dark); }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--primary-dark); }
+        .btn-next:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--primary-dark); }
+        .btn-check { background: var(--secondary); color: white; border: 2px solid #1899d6; box-shadow: 0 4px 0 #1899d6; }
+        .btn-check:hover { transform: translateY(-2px); }
+        .btn-check:active { transform: translateY(2px); box-shadow: 0 1px 0 #1899d6; }
+
+        /* SVG Illustrations */
+        .svg-illust { width: 100px; height: 100px; margin: 0 auto 15px; display: block; }
+
+        /* Print Style */
+        @media print {
+            body, .app-container { height: auto; overflow: visible; background: white; }
+            
+            /* 1. SEMBUNYIKAN semua elemen interaktif dan KONTEN PELAJARAN */
+            .sidebar, .top-bar, .bottom-bar, .btn-check, .nav-btn, .collapse-btn, .option-btn, .input-answer, .card-container { display: none !important; }
+            
+            /* 2. Pastikan area scroll tidak menghalangi formulir cetak */
+            .main-content { width: 100%; }
+            .content-scroll { padding: 0; display: block !important; }
+            
+            /* 3. TAMPILKAN HANYA formulir cetak */
+            .print-report { display: block !important; width: 100%; margin-top: 20px; }
+            
+            /* 4. Styling khusus agar tabel cetak rapi di kertas A4 */
+            .print-report h1 { font-size: 18pt; }
+            .print-report h3 { font-size: 14pt; }
+            .print-report table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+            .print-report th, .print-report td { border: 1px solid #000; padding: 6px; text-align: left; }
+            .print-report th { background-color: #f0f0f0; }
+        }
+        .print-report { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>MATH TUTORING by Deni</h2>
+            <p>Perpangkatan & Akar Pangkat Dua</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <!-- JS will populate nav items -->
+        </div>
+        <button class="reset-all-btn" onclick="resetAll()"><i class="fas fa-redo"></i> Reset Semua Progres</button>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="top-bar-title" id="topTitle">Memuat...</div>
+            <div class="top-bar-progress"><div class="top-bar-progress-fill" id="topProgress"></div></div>
+        </div>
+        
+        <div class="content-scroll">
+            <div class="card-container" id="cardContainer">
+                <!-- STEPS CONTENT START HERE -->
+                
+                <!-- HOME SECTION (0) -->
+                <div class="step-card" id="step-home">
+                    <svg class="svg-illust" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#58CC02"/><text x="50" y="55" font-family="Nunito" font-size="30" fill="white" text-anchor="middle" font-weight="800">M</text></svg>
+                    <h2 style="text-align:center; margin-bottom:10px;">MATH TUTORING by Deni</h2>
+                    <div class="theory-box">
+                        <h3>Topik: Perpangkatan & Akar Pangkat Dua <span class="trans">Topic: Exponents & Square Roots</span></h3>
+                    </div>
+                    <div style="margin-top:15px; line-height:1.6;">
+                        <p><i class="fas fa-comments" style="color:var(--secondary)"></i> 1. Berbicara secara bergantian <span class="trans">Take turns speaking</span></p>
+                        <p><i class="fas fa-hand" style="color:var(--secondary)"></i> 2. Meminta izin jika ingin meninggalkan kelas <span class="trans">Ask permission if you need to leave</span></p>
+                        <p><i class="fas fa-video" style="color:var(--secondary)"></i> 3. Menyalakan kamera dan microphone jika diperlukan <span class="trans">Turn on camera and mic if needed</span></p>
+                    </div>
+                </div>
+
+                <!-- SECTION 1: Spiral Review Warm-up (1.1 to 1.10) -->
+                <!-- 1.1 Theory -->
+                <div class="step-card" id="step-1-1" data-section="1">
+                    <div class="theory-box">
+                        <h3><i class="fas fa-fire"></i> Spiral Review Warm-up (00:00-00:10) <span class="trans">Warm-up Review</span></h3>
+                        <p>Sebelum masuk ke materi baru, mari kita panaskan otak dengan tantangan perkalian desimal! <span class="trans">Before new material, let's warm up with decimal multiplication challenges!</span></p>
+                    </div>
+                    <div class="math-display">\[0,5 \times 0,2 = \dots\]</div>
+                    <p>Ingat kembali aturan perkalian desimal: jumlahkan tempat desimalnya! <span class="trans">Remember the decimal rule: add up the decimal places!</span></p>
+                </div>
+
+                <!-- 1.2 Exercise -->
+                <div class="step-card" id="step-1-2" data-section="1" data-type="exercise" data-answer="0,1">
+                    <div class="question-text">Hasil dari \( 0,5 \times 0,2 \) adalah... <span class="trans">The result of...</span></div>
+                    <div class="options-grid" id="opts-1-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-2">0,5 memiliki 1 desimal, 0,2 memiliki 1 desimal. Total 2 desimal. \( 5 \times 2 = 10 \). Majukan 2 langkah: 0,10 atau 0,1.</div>
+                </div>
+
+                <!-- 1.3 Exercise -->
+                <div class="step-card" id="step-1-3" data-section="1" data-type="exercise" data-answer="4">
+                    <div class="question-text">Jika \( 1,2 \) dibagi \( 0,3 \), berapa hasilnya? <span class="trans">If 1.2 is divided by 0.3, what is the result?</span></div>
+                    <div class="options-grid" id="opts-1-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-3">\( 1,2 \div 0,3 = 12 \div 3 = 4 \). Kalikan pembilang dan penyebut dengan 10 untuk menghilangkan desimal.</div>
+                </div>
+
+                <!-- 1.4 Exercise -->
+                <div class="step-card" id="step-1-4" data-section="1" data-type="exercise" data-answer="12,6">
+                    <div class="question-text">Sebuah kabel panjangnya 12,55 meter. Bulatkan ke satu tempat desimal! <span class="trans">Round to one decimal place!</span></div>
+                    <input type="text" class="input-answer" id="input-1-4" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-4">Angka kedua di belakang koma adalah 5, maka angka sebelumnya (5) dibulatkan menjadi 6. Hasilnya 12,6.</div>
+                </div>
+
+                <!-- 1.5 Theory -->
+                <div class="step-card" id="step-1-5" data-section="1">
+                    <svg class="svg-illust" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#FFC300" stroke="#C8960C" stroke-width="3"/><text x="50" y="55" font-family="Nunito" font-size="20" fill="#C8960C" text-anchor="middle" font-weight="800">SAMA</text></svg>
+                    <div class="theory-box">
+                        <h3>Perbandingan Desimal dan Pecahan <span class="trans">Decimals vs Fractions</span></h3>
+                        <p>Apakah \( 0,75 \) sama dengan \( \frac{3}{4} \)? Mari kita ubah pecahan ke desimal! <span class="trans">Let's convert the fraction to a decimal!</span></p>
+                    </div>
+                    <div class="math-display">\[\frac{3}{4} = 3 \div 4 = 0,75\]</div>
+                </div>
+
+                <!-- 1.6 Exercise -->
+                <div class="step-card" id="step-1-6" data-section="1" data-type="exercise" data-answer="sama dengan">
+                    <div class="question-text">Manakah yang lebih besar: \( 0,75 \) atau \( \frac{3}{4} \)? <span class="trans">Which is bigger?</span></div>
+                    <div class="options-grid" id="opts-1-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-6">Nilainya sama besar. \( \frac{3}{4} \) jika dibagi menghasilkan tepat \( 0,75 \).</div>
+                </div>
+
+                <!-- 1.7 Exercise -->
+                <div class="step-card" id="step-1-7" data-section="1" data-type="exercise" data-answer="0,6">
+                    <div class="question-text">Ubahlah pecahan \( \frac{3}{5} \) menjadi bilangan desimal! <span class="trans">Convert the fraction to a decimal!</span></div>
+                    <input type="text" class="input-answer" id="input-1-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-7">\( 3 \div 5 = 0,6 \). Cara cepat: kalikan pembilang dan penyebut dengan 2, jadi \( \frac{6}{10} = 0,6 \).</div>
+                </div>
+
+                <!-- 1.8 Exercise -->
+                <div class="step-card" id="step-1-8" data-section="1" data-type="exercise" data-answer="0,25">
+                    <div class="question-text">Berapa hasil dari \( 1,5 \times \frac{1}{6} \)? <span class="trans">What is the result?</span></div>
+                    <div class="options-grid" id="opts-1-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-8">\( 1,5 = \frac{3}{2} \). Maka \( \frac{3}{2} \times \frac{1}{6} = \frac{3}{12} = \frac{1}{4} = 0,25 \).</div>
+                </div>
+
+                <!-- 1.9 Theory -->
+                <div class="step-card" id="step-1-9" data-section="1">
+                    <div class="theory-box">
+                        <h3>Menuju Konsep Kuadrat <span class="trans">Moving to Square Concepts</span></h3>
+                        <p>Perkalian desimal adalah kunci untuk memahami kuadrat desimal nanti. Jika \( a \times a = a^2 \), maka \( 0,5 \times 0,5 = (0,5)^2 \). <span class="trans">Decimal multiplication is key to understanding decimal squares.</span></p>
+                    </div>
+                </div>
+
+                <!-- 1.10 Exercise -->
+                <div class="step-card" id="step-1-10" data-section="1" data-type="exercise" data-answer="0,36">
+                    <div class="question-text">Berapa hasil dari \( 0,6 \times 0,6 \)? <span class="trans">What is the result?</span></div>
+                    <input type="text" class="input-answer" id="input-1-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('1-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-1-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-1-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-1-10">\( 6 \times 6 = 36 \). Karena total ada 2 desimal (1 dari 0,6 dan 1 dari 0,6), hasilnya 0,36.</div>
+                </div>
+
+                <!-- SECTION 2: Introduction & Real-World Connection (2.1 to 2.10) -->
+                <!-- 2.1 Theory -->
+                <div class="step-card" id="step-2-1" data-section="2">
+					<svg class="svg-illust" viewBox="0 0 100 100">
+						<defs>
+							<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+								<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--text-main)" />
+							</marker>
+						</defs>
+						<rect x="10" y="30" width="40" height="40" fill="#E8F7FF" stroke="var(--secondary)" stroke-width="3"/>
+						<text x="30" y="55" font-family="Nunito" font-size="14" fill="var(--secondary)" text-anchor="middle" font-weight="800">25</text>
+						<line x1="55" y1="50" x2="75" y2="50" stroke="var(--text-main)" stroke-width="2" marker-end="url(#arrow)"/>
+						<text x="85" y="55" font-family="Nunito" font-size="14" fill="var(--text-main)" text-anchor="middle" font-weight="800">5</text>
+					</svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-globe"></i> Introduction & Real-World Connection <span class="trans">Pengantar & Koneksi Dunia Nyata</span></h3>
+                        <p>Pernahkah kamu membayangkan bagaimana arsitek menentukan ukuran lantai sebuah ruangan jika mereka hanya tahu luasnya? <span class="trans">How do architects determine floor size if they only know the area?</span></p>
+                    </div>
+                    <div class="math-display">\[\text{Luas} = \text{sisi} \times \text{sisi} \rightarrow \text{sisi} = \sqrt{\text{Luas}}\]</div>
+                </div>
+
+                <!-- 2.2 Exercise -->
+                <div class="step-card" id="step-2-2" data-section="2" data-type="exercise" data-answer="5">
+                    <div class="question-text">Jika sebuah persegi memiliki luas \( 25 \text{ cm}^2 \), berapakah panjang sisinya? <span class="trans">What is the side length?</span></div>
+                    <div class="options-grid" id="opts-2-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-2">Kita cari akar pangkat dua dari 25. Karena \( 5 \times 5 = 25 \), maka sisi = 5 cm.</div>
+                </div>
+
+                <!-- 2.3 Exercise -->
+                <div class="step-card" id="step-2-3" data-section="2" data-type="exercise" data-answer="3">
+                    <div class="question-text">Sebuah taman berbentuk persegi dengan luas \( 9 \text{ m}^2 \). Berapa meter panjang sisinya? <span class="trans">How long is the side?</span></div>
+                    <div class="options-grid" id="opts-2-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-3">Akar dari 9 adalah 3, karena \( 3 \times 3 = 9 \). Jadi panjang sisi taman 3 meter.</div>
+                </div>
+
+                <!-- 2.4 Exercise -->
+                <div class="step-card" id="step-2-4" data-section="2" data-type="exercise" data-answer="1">
+                    <div class="question-text">Berapa nilai dari \( \sqrt{1} \)? <span class="trans">What is the value?</span></div>
+                    <div class="options-grid" id="opts-2-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-4">Akar pangkat dua dari 1 selalu 1, karena \( 1 \times 1 = 1 \).</div>
+                </div>
+
+                <!-- 2.5 Theory -->
+                <div class="step-card" id="step-2-5" data-section="2">
+                    <div class="theory-box">
+                        <h3>Invers dari Kuadrat <span class="trans">Inverse of Square</span></h3>
+                        <p>Programmer grafis menggunakan akar pangkat dua untuk menghitung jarak antar titik. Akar adalah operasi kebalikan (invers) dari kuadrat. <span class="trans">Root is the inverse operation of square.</span></p>
+                    </div>
+                    <div class="math-display">\[\text{jika } x^2 = y, \text{ maka } x = \sqrt{y}\]</div>
+                </div>
+
+                <!-- 2.6 Exercise -->
+                <div class="step-card" id="step-2-6" data-section="2" data-type="exercise" data-answer="4">
+                    <div class="question-text">Jika \( x^2 = 16 \), berapakah nilai \( x \)? <span class="trans">What is the value of x?</span></div>
+                    <div class="options-grid" id="opts-2-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-6">Karena \( 4 \times 4 = 16 \), maka \( x = 4 \). (Kita mengambil nilai positif untuk konteks panjang).</div>
+                </div>
+
+                <!-- 2.7 Exercise -->
+                <div class="step-card" id="step-2-7" data-section="2" data-type="exercise" data-answer="7">
+                    <div class="question-text">Tentukan nilai \( x \) jika \( x^2 = 49 \). <span class="trans">Find the value of x.</span></div>
+                    <div class="options-grid" id="opts-2-7"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-7">Bilangan yang jika dikalikan dirinya sendiri hasilnya 49 adalah 7 (\( 7 \times 7 = 49 \)).</div>
+                </div>
+
+                <!-- 2.8 Exercise -->
+                <div class="step-card" id="step-2-8" data-section="2" data-type="exercise" data-answer="10">
+                    <div class="question-text">Jika luas persegi adalah 100, sisi persegi tersebut adalah... <span class="trans">The side is...</span></div>
+                    <div class="options-grid" id="opts-2-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-8">Akar dari 100 adalah 10, karena \( 10 \times 10 = 100 \).</div>
+                </div>
+
+                <!-- 2.9 Theory -->
+                <div class="step-card" id="step-2-9" data-section="2">
+                    <div class="theory-box">
+                        <h3>Notasi Akar Pangkat Dua <span class="trans">Square Root Notation</span></h3>
+                        <p>Simbol \( \sqrt{\phantom{x}} \) disebut tanda akar (radical sign). Mencari \( \sqrt{36} \) artinya mencari bilangan yang jika dikuadratkan hasilnya 36. <span class="trans">Finding the number that when squared results in 36.</span></p>
+                    </div>
+                </div>
+
+                <!-- 2.10 Exercise -->
+                <div class="step-card" id="step-2-10" data-section="2" data-type="exercise" data-answer="6">
+                    <div class="question-text">Berapa nilai dari \( \sqrt{36} \)? <span class="trans">What is the value?</span></div>
+                    <input type="text" class="input-answer" id="input-2-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-10">Karena \( 6 \times 6 = 36 \), maka \( \sqrt{36} = 6 \).</div>
+                </div>
+
+                <!-- 2.11 Exercise -->
+                <div class="step-card" id="step-2-11" data-section="2" data-type="exercise" data-answer="8">
+                    <div class="question-text">Hitunglah \( \sqrt{64} \). <span class="trans">Calculate the root.</span></div>
+                    <input type="text" class="input-answer" id="input-2-11" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-11')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-11"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-11')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-11">Bilangan yang dikuadratkan menghasilkan 64 adalah 8 (\( 8 \times 8 = 64 \)).</div>
+                </div>
+
+                <!-- 2.12 Exercise -->
+                <div class="step-card" id="step-2-12" data-section="2" data-type="exercise" data-answer="9">
+                    <div class="question-text">Akar pangkat dua dari 81 adalah... <span class="trans">The square root of 81 is...</span></div>
+                    <input type="text" class="input-answer" id="input-2-12" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-12')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-12"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-12')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-12">\( 9 \times 9 = 81 \), jadi \( \sqrt{81} = 9 \).</div>
+                </div>
+
+                <!-- 2.13 Exercise -->
+                <div class="step-card" id="step-2-13" data-section="2" data-type="exercise" data-answer="Benar">
+                    <div class="question-text">Benar atau Salah: \( \sqrt{25} \times \sqrt{25} = 25 \)? <span class="trans">True or False?</span></div>
+                    <div class="options-grid" id="opts-2-13"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('2-13')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-2-13"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-2-13')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-2-13">Benar. \( \sqrt{25} = 5 \). Jadi \( 5 \times 5 = 25 \). Ini membuktikan bahwa akar adalah invers dari kuadrat.</div>
+                </div>
+
+
+                <!-- SECTION 3: Review of Prior Knowledge (3.1 to 3.10) -->
+                <!-- 3.1 Theory -->
+                <div class="step-card" id="step-3-1" data-section="3">
+                    <svg class="svg-illust" viewBox="0 0 100 100">
+                        <text x="50" y="40" font-family="Nunito" font-size="30" fill="var(--secondary)" text-anchor="middle" font-weight="800">5²</text>
+                        <text x="50" y="70" font-family="Nunito" font-size="20" fill="var(--text-light)" text-anchor="middle">= 25</text>
+                    </svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-book-open"></i> Review of Prior Knowledge <span class="trans">Tinjauan Pengetahuan Sebelumnya</span></h3>
+                        <p>Ingat bahwa 5 dikali 5 adalah 25? Kita menyebutnya 5 kuadrat, ditulis \( 5^2 \). <span class="trans">5 multiplied by 5 is 25. We call it 5 squared.</span></p>
+                    </div>
+                </div>
+
+                <!-- 3.2 Exercise -->
+                <div class="step-card" id="step-3-2" data-section="3" data-type="exercise" data-answer="49">
+                    <div class="question-text">Berapa nilai dari \( 7^2 \)? <span class="trans">What is the value?</span></div>
+                    <div class="options-grid" id="opts-3-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-2">\( 7^2 = 7 \times 7 = 49 \).</div>
+                </div>
+
+                <!-- 3.3 Exercise -->
+                <div class="step-card" id="step-3-3" data-section="3" data-type="exercise" data-answer="100">
+                    <div class="question-text">Hitunglah \( 10^2 \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-3-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-3">\( 10 \times 10 = 100 \). Menambahkan nol satu kali.</div>
+                </div>
+
+                <!-- 3.4 Exercise -->
+                <div class="step-card" id="step-3-4" data-section="3" data-type="exercise" data-answer="144">
+                    <div class="question-text">Berapa hasil kuadrat dari 12? <span class="trans">What is the square of 12?</span></div>
+                    <input type="text" class="input-answer" id="input-3-4" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-4">\( 12 \times 12 = 144 \).</div>
+                </div>
+
+                <!-- 3.5 Theory -->
+                <div class="step-card" id="step-3-5" data-section="3">
+                    <div class="theory-box">
+                        <h3>Kuadrat Desimal <span class="trans">Decimal Squares</span></h3>
+                        <p>Sekarang, bagaimana jika \( 0,5 \) kuadrat? Aturan desimal masih berlaku: jumlahkan tempat desimalnya! <span class="trans">What if 0.5 is squared? Decimal rules still apply: add up the decimal places!</span></p>
+                    </div>
+                    <div class="math-display">\[0,5 \times 0,5 = 0,25 \quad \text{(1 desimal + 1 desimal = 2 desimal)}\]</div>
+                </div>
+
+                <!-- 3.6 Exercise -->
+                <div class="step-card" id="step-3-6" data-section="3" data-type="exercise" data-answer="0,04">
+                    <div class="question-text">Hitunglah \( (0,2)^2 \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-3-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-6">\( 2 \times 2 = 4 \). Total tempat desimal = 2. Jadi hasilnya 0,04.</div>
+                </div>
+
+                <!-- 3.7 Exercise -->
+                <div class="step-card" id="step-3-7" data-section="3" data-type="exercise" data-answer="0,01">
+                    <div class="question-text">Berapa nilai dari \( (0,1)^2 \)? <span class="trans">What is the value?</span></div>
+                    <div class="options-grid" id="opts-3-7"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-7">\( 1 \times 1 = 1 \). Desimal: 1 + 1 = 2 desimal. Hasilnya 0,01.</div>
+                </div>
+
+                <!-- 3.8 Exercise -->
+                <div class="step-card" id="step-3-8" data-section="3" data-type="exercise" data-answer="1,21">
+                    <div class="question-text">Hitunglah \( (1,1)^2 \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-3-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-8">\( 1,1 \times 1,1 = 1 \times 1 + 1 \times 0,1 + 0,1 \times 1 + 0,1 \times 0,1 = 1 + 0,1 + 0,1 + 0,01 = 1,21 \).</div>
+                </div>
+
+                <!-- 3.9 Theory -->
+                <div class="step-card" id="step-3-9" data-section="3">
+                    <div class="theory-box">
+                        <h3>Polanya Desimal <span class="trans">The Decimal Pattern</span></h3>
+                        <p>Perhatikan mengapa jumlah angka di belakang koma bertambah saat dikuadratkan? Karena kita mengalikan desimal dengan desimal! <span class="trans">Why do decimal places increase when squared? Because we multiply decimals by decimals!</span></p>
+                    </div>
+                    <div class="math-display">\[(0,12)^2 = 0,12 \times 0,12 = 0,0144 \quad \text{(2 desimal + 2 desimal = 4 desimal)}\]</div>
+                </div>
+
+                <!-- 3.10 Exercise -->
+                <div class="step-card" id="step-3-10" data-section="3" data-type="exercise" data-answer="2 desimal">
+                    <div class="question-text">Jika kita menghitung \( (0,5)^2 \), berapa banyak angka di belakang koma pada hasil akhirnya? <span class="trans">How many decimal places in the result?</span></div>
+                    <div class="options-grid" id="opts-3-10"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-10">0,5 punya 1 desimal. Dikuadratkan, berarti 1 + 1 = 2 desimal di hasil akhir (0,25).</div>
+                </div>
+
+                <!-- 3.11 Exercise -->
+                <div class="step-card" id="step-3-11" data-section="3" data-type="exercise" data-answer="0,0025">
+                    <div class="question-text">Berapa hasil dari \( (0,05)^2 \)? <span class="trans">What is the result?</span></div>
+                    <div class="options-grid" id="opts-3-11"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-11')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-11"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-11')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-11">\( 5 \times 5 = 25 \). Desimal: 2 + 2 = 4. Hasilnya 0,0025 (perlu tambahan 2 nol didepan).</div>
+                </div>
+
+                <!-- 3.12 Exercise -->
+                <div class="step-card" id="step-3-12" data-section="3" data-type="exercise" data-answer="0,0625">
+                    <div class="question-text">Hitunglah \( (0,25)^2 \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-3-12"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-12')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-12"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-12')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-12">\( 25 \times 25 = 625 \). Desimal: 2 + 2 = 4. Hasilnya 0,0625.</div>
+                </div>
+
+                <!-- 3.13 Exercise -->
+                <div class="step-card" id="step-3-13" data-section="3" data-type="exercise" data-answer="6 desimal">
+                    <div class="question-text">Jika sebuah bilangan memiliki 3 angka di belakang koma, lalu dikuadratkan, berapa angka di belakang koma hasilnya? <span class="trans">If a number has 3 decimal places and is squared, how many decimal places does the result have?</span></div>
+                    <div class="options-grid" id="opts-3-13"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('3-13')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-3-13"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-3-13')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-3-13">3 desimal + 3 desimal = 6 desimal.</div>
+                </div>
+
+
+                <!-- SECTION 4: Problem Introduction (4.1 to 4.10) -->
+                <!-- 4.1 Theory -->
+                <div class="step-card" id="step-4-1" data-section="4">
+                    <svg class="svg-illust" viewBox="0 0 100 100">
+                        <rect x="20" y="20" width="60" height="60" fill="#FFF3E0" stroke="#FFC300" stroke-width="3" stroke-dasharray="5,5"/>
+                        <text x="50" y="55" font-family="Nunito" font-size="18" fill="#C8960C" text-anchor="middle" font-weight="800">50</text>
+                    </svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-circle-question"></i> Problem Introduction <span class="trans">Pengantar Masalah</span></h3>
+                        <p>Tantangan sulitnya: Bagaimana jika luas 50 unit persegi, berapa panjang sisinya? Tidak ada bilangan bulat yang jika dikalikan dirinya sendiri hasilnya 50! <span class="trans">What if the area is 50? No integer multiplied by itself results in 50!</span></p>
+                    </div>
+                </div>
+
+                <!-- 4.2 Exercise -->
+                <div class="step-card" id="step-4-2" data-section="4" data-type="exercise" data-answer="5 dan 6">
+                    <div class="question-text">Akar pangkat dua dari 30 berada di antara bilangan bulat berapa? <span class="trans">Between which integers is the square root of 30?</span></div>
+                    <div class="options-grid" id="opts-4-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-2">Karena \( 5^2 = 25 \) dan \( 6^2 = 36 \), dan 30 ada di antara 25 dan 36, maka \( \sqrt{30} \) ada di antara 5 dan 6.</div>
+                </div>
+
+                <!-- 4.3 Exercise -->
+                <div class="step-card" id="step-4-3" data-section="4" data-type="exercise" data-answer="8 dan 9">
+                    <div class="question-text">Akar dari 75 berada di antara bilangan bulat... <span class="trans">The root of 75 is between...</span></div>
+                    <div class="options-grid" id="opts-4-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-3">\( 8^2 = 64 \) dan \( 9^2 = 81 \). 75 ada di antara 64 dan 81, jadi akarnya antara 8 dan 9.</div>
+                </div>
+
+                <!-- 4.4 Exercise -->
+                <div class="step-card" id="step-4-4" data-section="4" data-type="exercise" data-answer="3 dan 4">
+                    <div class="question-text">Tentukan interval (batas bilangan bulat) untuk \( \sqrt{10} \). <span class="trans">Determine the interval for root 10.</span></div>
+                    <div class="options-grid" id="opts-4-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-4">\( 3^2 = 9 \) dan \( 4^2 = 16 \). 10 ada di antara 9 dan 16, jadi \( \sqrt{10} \) antara 3 dan 4.</div>
+                </div>
+
+                <!-- 4.5 Theory -->
+                <div class="step-card" id="step-4-5" data-section="4">
+                    <div class="theory-box">
+                        <h3>Metode Estimasi (Interval) <span class="trans">Estimation Method (Interval)</span></h3>
+                        <p>Kita tahu \( \sqrt{50} \) ada di antara 7 dan 8. Mari kita tebak: 7,1? Kita uji dengan mengalikan: \( 7,1 \times 7,1 = 50,41 \). Sangat dekat! <span class="trans">Let's guess: 7.1? We test by multiplying: 7.1 x 7.1 = 50.41. Very close!</span></p>
+                    </div>
+                    <div class="math-display">\[7^2 = 49 \quad \text{dan} \quad 8^2 = 64 \quad \rightarrow \quad 7 < \sqrt{50} < 8\]</div>
+                </div>
+
+                <!-- 4.6 Exercise -->
+                <div class="step-card" id="step-4-6" data-section="4" data-type="exercise" data-answer="Lebih dekat ke 5">
+                    <div class="question-text">Untuk \( \sqrt{30} \), apakah nilainya lebih dekat ke 5 atau 6? (Petunjuk: Hitung \( 5,5^2 \)) <span class="trans">Is it closer to 5 or 6?</span></div>
+                    <div class="options-grid" id="opts-4-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-6">\( 5,5^2 = 30,25 \). Karena 30,25 sangat dekat dengan 30, berarti \( \sqrt{30} \) lebih dekat ke 5 (tepatnya sekitar 5,47).</div>
+                </div>
+
+                <!-- 4.7 Exercise -->
+                <div class="step-card" id="step-4-7" data-section="4" data-type="exercise" data-answer="3,1">
+                    <div class="question-text">Estimasikan \( \sqrt{10} \) hingga satu desimal. Antara 3,1 atau 3,2? <span class="trans">Estimate root 10 to one decimal.</span></div>
+                    <div class="options-grid" id="opts-4-7"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-7">\( 3,1^2 = 9,61 \) dan \( 3,2^2 = 10,24 \). Karena 10 lebih dekat ke 9,61, estimasi terbaik adalah 3,1.</div>
+                </div>
+
+                <!-- 4.8 Exercise -->
+                <div class="step-card" id="step-4-8" data-section="4" data-type="exercise" data-answer="1,4">
+                    <div class="question-text">Coba estimasi \( \sqrt{2} \). Kita tahu \( 1^2=1 \) dan \( 2^2=4 \). Manakah tebakan 1 desimal yang paling tepat? <span class="trans">Estimate root 2 to one decimal.</span></div>
+                    <div class="options-grid" id="opts-4-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-8">\( 1,4^2 = 1,96 \) (sangat dekat dengan 2), sedangkan \( 1,5^2 = 2,25 \). Jadi 1,4 adalah estimasi terbaik.</div>
+                </div>
+
+                <!-- 4.9 Theory -->
+                <div class="step-card" id="step-4-9" data-section="4">
+                    <div class="theory-box">
+                        <h3>Mengevaluasi dengan Kalkulator <span class="trans">Evaluating with Calculator</span></h3>
+                        <p>Estimasi manual melatih logika, namun kalkulator memberikan ketepatan tinggi. Selalu verifikasi tebakanmu! \( \sqrt{50} \approx 7,071 \). <span class="trans">Manual estimation trains logic, but calculators give precision. Always verify!</span></p>
+                    </div>
+                </div>
+
+                <!-- 4.10 Exercise -->
+                <div class="step-card" id="step-4-10" data-section="4" data-type="exercise" data-answer="4,5">
+                    <div class="question-text">Tanpa kalkulator, estimasi terbaik untuk \( \sqrt{20} \) adalah... (antara 4,4 atau 4,5) <span class="trans">Best estimate for root 20...</span></div>
+                    <div class="options-grid" id="opts-4-10"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-10">\( 4,4^2 = 19,36 \) dan \( 4,5^2 = 20,25 \). Karena 20 lebih dekat ke 20,25, estimasi terbaik adalah 4,5.</div>
+                </div>
+
+                <!-- 4.11 Exercise -->
+                <div class="step-card" id="step-4-11" data-section="4" data-type="exercise" data-answer="Benar">
+                    <div class="question-text">Benar atau Salah: Hasil dari \( 7,1 \times 7,1 \) adalah lebih besar dari 50. <span class="trans">True or False: 7.1 x 7.1 is greater than 50.</span></div>
+                    <div class="options-grid" id="opts-4-11"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-11')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-11"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-11')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-11">Benar. \( 7,1 \times 7,1 = 50,41 \). 50,41 > 50. Ini berarti \( 7,1 > \sqrt{50} \).</div>
+                </div>
+
+                <!-- 4.12 Exercise -->
+                <div class="step-card" id="step-4-12" data-section="4" data-type="exercise" data-answer="79,21">
+                    <div class="question-text">Untuk memestikan estimasi \( \sqrt{80} \), hitunglah \( 8,9 \times 8,9 \) tanpa kalkulator. Berapa hasilnya? <span class="trans">Calculate 8.9 x 8.9 without a calculator.</span></div>
+                    <input type="text" class="input-answer" id="input-4-12" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-12')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-12"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-12')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-12">\( 8,9^2 = (9 - 0,1)^2 = 81 - 1,8 + 0,01 = 79,21 \). Karena 79,21 sangat dekat 80, akar 80 memang sekitar 8,9.</div>
+                </div>
+
+                <!-- 4.13 Exercise -->
+                <div class="step-card" id="step-4-13" data-section="4" data-type="exercise" data-answer="Untuk mengecek kalkulator">
+                    <div class="question-text">Mengapa penting untuk bisa mengestimasi akar kuadrat secara manual sebelum menggunakan kalkulator? <span class="trans">Why is it important to estimate manually first?</span></div>
+                    <div class="options-grid" id="opts-4-13"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('4-13')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-4-13"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-4-13')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-4-13">Estimasi manual membantu kita mengecek apakah hasil kalkulator masuk akal, menghindari kesalahan menekan tombol, dan melatih intuisi matematika.</div>
+                </div>
+
+                <!-- SECTION 5: Guided Practice (5.1 to 5.10) -->
+                <!-- 5.1 Theory -->
+                <div class="step-card" id="step-5-1" data-section="5">
+                    <svg class="svg-illust" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="30" fill="#E8F7FF" stroke="var(--secondary)" stroke-width="3"/>
+                        <text x="50" y="45" font-family="Nunito" font-size="14" fill="var(--secondary)" text-anchor="middle" font-weight="800">√20</text>
+                        <text x="50" y="60" font-family="Nunito" font-size="10" fill="var(--secondary)" text-anchor="middle">= ?</text>
+                    </svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-hand-holding-heart"></i> Guided Practice: Estimasi Bertahap <span class="trans">Guided Practice: Step-by-step Estimation</span></h3>
+                        <p>Mari cari estimasi dari \( \sqrt{20} \). Langkah 1: Cari bilangan kuadrat sempurna terdekat. \( 4^2 = 16 \) dan \( 5^2 = 25 \). <span class="trans">Let's estimate root 20. Step 1: Find nearest perfect squares.</span></p>
+                    </div>
+                </div>
+
+                <!-- 5.2 Exercise -->
+                <div class="step-card" id="step-5-2" data-section="5" data-type="exercise" data-answer="6 dan 7">
+                    <div class="question-text">Langkah 1 untuk \( \sqrt{40} \): Akar 40 berada di antara bilangan bulat berapa? <span class="trans">Step 1 for root 40: Between which integers?</span></div>
+                    <div class="options-grid" id="opts-5-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-2">\( 6^2 = 36 \) dan \( 7^2 = 49 \). Karena 40 ada di antara 36 dan 49, maka \( \sqrt{40} \) ada di antara 6 dan 7.</div>
+                </div>
+
+                <!-- 5.3 Exercise -->
+                <div class="step-card" id="step-5-3" data-section="5" data-type="exercise" data-answer="7 dan 8">
+                    <div class="question-text">Langkah 1 untuk \( \sqrt{60} \): Akar 60 berada di antara bilangan bulat berapa? <span class="trans">Step 1 for root 60: Between which integers?</span></div>
+                    <div class="options-grid" id="opts-5-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-3">\( 7^2 = 49 \) dan \( 8^2 = 64 \). 60 berada di antara 49 dan 64, maka \( \sqrt{60} \) antara 7 dan 8.</div>
+                </div>
+
+                <!-- 5.4 Exercise -->
+                <div class="step-card" id="step-5-4" data-section="5" data-type="exercise" data-answer="9 dan 10">
+                    <div class="question-text">Akar 90 berada di antara bilangan bulat... <span class="trans">Root 90 is between...</span></div>
+                    <div class="options-grid" id="opts-5-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-4">\( 9^2 = 81 \) dan \( 10^2 = 100 \). Maka \( \sqrt{90} \) antara 9 dan 10.</div>
+                </div>
+
+                <!-- 5.5 Theory -->
+                <div class="step-card" id="step-5-5" data-section="5">
+                    <div class="theory-box">
+                        <h3>Langkah 2: Uji Coba Desimal <span class="trans">Step 2: Decimal Trial</span></h3>
+                        <p>Kembali ke \( \sqrt{20} \). Kita coba 4,4 dan 4,5. \( 4,4^2 = 19,36 \) dan \( 4,5^2 = 20,25 \). Karena 20 lebih dekat ke 20,25, estimasinya 4,5. <span class="trans">We try 4.4 and 4.5. 20 is closer to 20.25, so estimate is 4.5.</span></p>
+                    </div>
+                    <div class="math-display">\[4,4^2 = 19,36 \quad \text{dan} \quad 4,5^2 = 20,25\]</div>
+                </div>
+
+                <!-- 5.6 Exercise -->
+                <div class="step-card" id="step-5-6" data-section="5" data-type="exercise" data-answer="6,3">
+                    <div class="question-text">Untuk \( \sqrt{40} \), manakah estimasi 1 desimal yang lebih tepat? (Petunjuk: \( 6,3^2 = 39,69 \) dan \( 6,4^2 = 40,96 \)) <span class="trans">Which 1-decimal estimate is better?</span></div>
+                    <div class="options-grid" id="opts-5-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-6">40 lebih dekat ke 39,69 (selisih 0,31) dibanding 40,96 (selisih 0,96). Jadi estimasinya 6,3.</div>
+                </div>
+
+                <!-- 5.7 Exercise -->
+                <div class="step-card" id="step-5-7" data-section="5" data-type="exercise" data-answer="7,7">
+                    <div class="question-text">Untuk \( \sqrt{60} \), coba tebak 1 desimal. (\( 7,7^2 = 59,29 \) dan \( 7,8^2 = 60,84 \)) <span class="trans">Guess 1 decimal for root 60.</span></div>
+                    <div class="options-grid" id="opts-5-7"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-7">60 lebih dekat ke 59,29 (selisih 0,71) dibanding 60,84 (selisih 0,84). Estimasi terbaik 7,7.</div>
+                </div>
+
+                <!-- 5.8 Exercise -->
+                <div class="step-card" id="step-5-8" data-section="5" data-type="exercise" data-answer="8,9">
+                    <div class="question-text">Estimasi \( \sqrt{80} \) hingga 1 desimal. (\( 8,9^2 = 79,21 \) dan \( 9,0^2 = 81 \)) <span class="trans">Estimate root 80 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-5-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-8">80 jauh lebih dekat ke 79,21. Jadi estimasi 1 desimal yang tepat adalah 8,9.</div>
+                </div>
+
+                <!-- 5.9 Theory -->
+                <div class="step-card" id="step-5-9" data-section="5">
+                    <div class="theory-box">
+                        <h3>Kuadrat Desimal Spesial <span class="trans">Special Decimal Squares</span></h3>
+                        <p>Perhatikan pola kuadrat desimal setengah: \( (1,5)^2 = 2,25 \), \( (2,5)^2 = 6,25 \), \( (3,5)^2 = 12,25 \). Selalu berakhiran ,25! <span class="trans">Notice the pattern for half decimals: always ends in .25!</span></p>
+                    </div>
+                </div>
+
+                <!-- 5.10 Exercise -->
+                <div class="step-card" id="step-5-10" data-section="5" data-type="exercise" data-answer="12,25">
+                    <div class="question-text">Tanpa kalkulator, berapakah \( (3,5)^2 \)? <span class="trans">Without calculator, what is 3.5 squared?</span></div>
+                    <input type="text" class="input-answer" id="input-5-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-10">Menggunakan pola: \( 3 \times 4 = 12 \), ditambah 0,25 = 12,25. Atau hitung manual: \( 3,5 \times 3,5 = 12,25 \).</div>
+                </div>
+
+                <!-- 5.11 Exercise -->
+                <div class="step-card" id="step-5-11" data-section="5" data-type="exercise" data-answer="0,25">
+                    <div class="question-text">Berapa nilai dari \( (0,5)^2 \)? <span class="trans">What is the value?</span></div>
+                    <div class="options-grid" id="opts-5-11"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-11')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-11"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-11')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-11">\( 0,5 \times 0,5 = 0,25 \).</div>
+                </div>
+
+                <!-- 5.12 Exercise -->
+                <div class="step-card" id="step-5-12" data-section="5" data-type="exercise" data-answer="20,25">
+                    <div class="question-text">Hitunglah \( (4,5)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-5-12" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-12')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-12"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-12')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-12">Pola: \( 4 \times 5 = 20 \), ditambah 0,25 = 20,25.</div>
+                </div>
+
+                <!-- 5.13 Exercise -->
+                <div class="step-card" id="step-5-13" data-section="5" data-type="exercise" data-answer="29,9209">
+                    <div class="question-text">Gunakan kalkulator untuk mengecek: apakah \( \sqrt{30} \) tepat sama dengan 5,47? Hitunglah \( 5,47 \times 5,47 \). <span class="trans">Is root 30 exactly 5.47? Calculate 5.47 x 5.47.</span></div>
+                    <input type="text" class="input-answer" id="input-5-13" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('5-13')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-5-13"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-5-13')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-5-13">\( 5,47^2 = 29,9209 \). Ini sangat dekat dengan 30, membuktikan bahwa estimasi kita akurat, meskipun bukan nilai eksak.</div>
+                </div>
+
+
+                <!-- SECTION 6: Independent Practice (6.1 to 6.10) -->
+                <!-- 6.1 Theory -->
+                <div class="step-card" id="step-6-1" data-section="6">
+                    <svg class="svg-illust" viewBox="0 0 100 100">
+                        <rect x="10" y="30" width="25" height="25" fill="#D7FFB8" stroke="var(--primary)" stroke-width="2"/>
+                        <rect x="40" y="20" width="30" height="30" fill="#FFF3E0" stroke="#FFC300" stroke-width="2"/>
+                        <rect x="75" y="10" width="20" height="20" fill="#E8F7FF" stroke="var(--secondary)" stroke-width="2"/>
+                        <text x="50" y="75" font-family="Nunito" font-size="10" fill="var(--text-main)" text-anchor="middle">Misi Detektif</text>
+                    </svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-person-walking"></i> Independent Practice: Misi Detektif <span class="trans">Independent Practice: Detective Mission</span></h3>
+                        <p>Tugas detektif: Temukan panjang sisi dari 3 persegi dengan luas berbeda: 0,81 cm², 45 cm², dan 150 cm². Tunjukkan langkah estimasimu! <span class="trans">Find the side lengths of 3 squares with different areas.</span></p>
+                    </div>
+                </div>
+
+                <!-- 6.2 Exercise -->
+                <div class="step-card" id="step-6-2" data-section="6" data-type="exercise" data-answer="0,9">
+                    <div class="question-text">Kasus 1: Luas = 0,81 cm². Berapakah panjang sisi persegi tersebut? <span class="trans">Case 1: Area = 0.81 cm². What is the side length?</span></div>
+                    <div class="options-grid" id="opts-6-2"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-2">Kita mencari \( \sqrt{0,81} \). Karena \( 9 \times 9 = 81 \), maka \( 0,9 \times 0,9 = 0,81 \). Panjang sisi = 0,9 cm.</div>
+                </div>
+
+                <!-- 6.3 Exercise -->
+                <div class="step-card" id="step-6-3" data-section="6" data-type="exercise" data-answer="1,2">
+                    <div class="question-text">Jika luas persegi adalah 1,44 cm², berapa panjang sisinya? <span class="trans">If area is 1.44 cm², what is the side length?</span></div>
+                    <div class="options-grid" id="opts-6-3"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-3">\( \sqrt{1,44} \). Karena \( 12 \times 12 = 144 \), maka \( 1,2 \times 1,2 = 1,44 \). Sisi = 1,2 cm.</div>
+                </div>
+
+                <!-- 6.4 Exercise -->
+                <div class="step-card" id="step-6-4" data-section="6" data-type="exercise" data-answer="0,3">
+                    <div class="question-text">Tentukan panjang sisi persegi jika luasnya 0,09 m². <span class="trans">Determine side length if area is 0.09 m².</span></div>
+                    <input type="text" class="input-answer" id="input-6-4" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-4">\( \sqrt{0,09} = 0,3 \), karena \( 0,3 \times 0,3 = 0,09 \).</div>
+                </div>
+
+                <!-- 6.5 Theory -->
+                <div class="step-card" id="step-6-5" data-section="6">
+                    <div class="theory-box">
+                        <h3>Estimasi Area Non-Sempurna <span class="trans">Non-Perfect Area Estimation</span></h3>
+                        <p>Kasus 2: Luas = 45 cm². \( 6^2=36 \) dan \( 7^2=49 \). Kita uji 6,7 dan 6,8. \( 6,7^2 = 44,89 \) (sangat dekat!). Estimasi sisi = 6,7 cm. <span class="trans">Case 2: Area = 45. We test 6.7 and 6.8. 6.7 squared is very close!</span></p>
+                    </div>
+                </div>
+
+                <!-- 6.6 Exercise -->
+                <div class="step-card" id="step-6-6" data-section="6" data-type="exercise" data-answer="6,7">
+                    <div class="question-text">Estimasikan panjang sisi persegi dengan luas 45 cm² hingga 1 desimal. <span class="trans">Estimate side length of square with area 45 cm² to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-6-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-6">\( \sqrt{45} \) berada antara 6 dan 7. \( 6,7^2 = 44,89 \) dan \( 6,8^2 = 46,24 \). 45 lebih dekat ke 44,89. Jadi ~6,7 cm.</div>
+                </div>
+
+                <!-- 6.7 Exercise -->
+                <div class="step-card" id="step-6-7" data-section="6" data-type="exercise" data-answer="5,3">
+                    <div class="question-text">Estimasikan \( \sqrt{28} \) hingga 1 desimal. (\( 5,3^2 = 28,09 \)) <span class="trans">Estimate root 28 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-6-7"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-7">28 berada antara 25 (\( 5^2 \)) dan 36 (\( 6^2 \)). \( 5,3^2 = 28,09 \) sangat dekat dengan 28.</div>
+                </div>
+
+                <!-- 6.8 Exercise -->
+                <div class="step-card" id="step-6-8" data-section="6" data-type="exercise" data-answer="3,9">
+                    <div class="question-text">Estimasikan \( \sqrt{15} \) hingga 1 desimal. (\( 3,9^2 = 15,21 \)) <span class="trans">Estimate root 15 to 1 decimal.</span></div>
+                    <input type="text" class="input-answer" id="input-6-8" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-8">15 berada antara 9 (\( 3^2 \)) dan 16 (\( 4^2 \)). \( 3,9^2 = 15,21 \) paling dekat dengan 15.</div>
+                </div>
+
+                <!-- 6.9 Theory -->
+                <div class="step-card" id="step-6-9" data-section="6">
+                    <div class="theory-box">
+                        <h3>Estimasi Akar Besar <span class="trans">Estimating Large Roots</span></h3>
+                        <p>Kasus 3: Luas = 150 cm². \( 12^2 = 144 \) dan \( 13^2 = 169 \). Coba \( 12,2^2 = 148,84 \) dan \( 12,3^2 = 151,29 \). Estimasi sisi = 12,2 cm. <span class="trans">Case 3: Area = 150. Try 12.2 and 12.3.</span></p>
+                    </div>
+                </div>
+
+                <!-- 6.10 Exercise -->
+                <div class="step-card" id="step-6-10" data-section="6" data-type="exercise" data-answer="12,2">
+                    <div class="question-text">Estimasikan panjang sisi persegi dengan luas 150 cm² hingga 1 desimal. <span class="trans">Estimate side length of square with area 150 cm² to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-6-10"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-10">150 lebih dekat ke 148,84 (\( 12,2^2 \)) dibandingkan 151,29 (\( 12,3^2 \)). Jadi estimasi ~12,2 cm.</div>
+                </div>
+
+                <!-- 6.11 Exercise -->
+                <div class="step-card" id="step-6-11" data-section="6" data-type="exercise" data-answer="14,1">
+                    <div class="question-text">Estimasikan \( \sqrt{200} \) hingga 1 desimal. <span class="trans">Estimate root 200 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-6-11"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-11')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-11"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-11')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-11">\( 14^2 = 196 \) dan \( 15^2 = 225 \). \( 14,1^2 = 198,81 \) dan \( 14,2^2 = 201,64 \). 200 lebih dekat ke 198,81, jadi 14,1.</div>
+                </div>
+
+                <!-- 6.12 Exercise -->
+                <div class="step-card" id="step-6-12" data-section="6" data-type="exercise" data-answer="11,2">
+                    <div class="question-text">Estimasikan \( \sqrt{125} \) hingga 1 desimal. <span class="trans">Estimate root 125 to 1 decimal.</span></div>
+                    <input type="text" class="input-answer" id="input-6-12" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-12')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-12"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-12')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-12">\( 11^2 = 121 \) dan \( 12^2 = 144 \). \( 11,2^2 = 125,44 \), sangat dekat 125. Jadi 11,2.</div>
+                </div>
+
+                <!-- 6.13 Exercise -->
+                <div class="step-card" id="step-6-13" data-section="6" data-type="exercise" data-answer="35,6">
+                    <div class="question-text">Sebuah taman berbentuk persegi memiliki luas 80 m². Estimasilah panjang pagar yang dibutuhkan untuk mengelilingi taman tersebut (Keliling = 4 x sisi, gunakan estimasi 1 desimal). <span class="trans">Square garden area 80 m². Estimate perimeter (4 x side).</span></div>
+                    <input type="text" class="input-answer" id="input-6-13" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('6-13')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-6-13"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-6-13')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-6-13">Sisi \( \approx 8,9 \) m (karena \( 8,9^2 = 79,21 \)). Keliling = \( 4 \times 8,9 = 35,6 \) m.</div>
+                </div>
+
+
+                <!-- ASSIGNMENT 1 (a1.1 to a1.10) -->
+                <div class="step-card" id="step-a1-1" data-section="a1" data-type="exercise" data-answer="11">
+                    <div class="question-text">Assignment 1 - Soal 1: Hitunglah \( \sqrt{121} \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-1" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-1')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-1"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-1')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-1">Bilangan yang dikuadratkan menghasilkan 121 adalah 11.</div>
+                </div>
+                <div class="step-card" id="step-a1-2" data-section="a1" data-type="exercise" data-answer="0,16">
+                    <div class="question-text">Assignment 1 - Soal 2: Hitunglah nilai dari \( (0,4)^2 \). <span class="trans">Calculate the value.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-2" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-2">\( 0,4 \times 0,4 = 0,16 \).</div>
+                </div>
+                <div class="step-card" id="step-a1-3" data-section="a1" data-type="exercise" data-answer="0,8">
+                    <div class="question-text">Assignment 1 - Soal 3: Tentukan akar pangkat dua dari 0,64. <span class="trans">Find the square root of 0.64.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-3" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-3">Karena \( 8 \times 8 = 64 \), maka \( 0,8 \times 0,8 = 0,64 \). Jadi \( \sqrt{0,64} = 0,8 \).</div>
+                </div>
+                <div class="step-card" id="step-a1-4" data-section="a1" data-type="exercise" data-answer="8,4">
+                    <div class="question-text">Assignment 1 - Soal 4: Estimasilah nilai dari \( \sqrt{70} \) hingga satu tempat desimal. <span class="trans">Estimate root 70 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a1-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-4">\( 8^2=64 \) dan \( 9^2=81 \). \( 8,4^2 = 70,56 \) (dekat 70). Jadi estimasi 8,4.</div>
+                </div>
+                <div class="step-card" id="step-a1-5" data-section="a1" data-type="exercise" data-answer="0,04">
+                    <div class="question-text">Assignment 1 - Soal 5: Tentukan nilai \( x \) jika \( x^2 = 0,0016 \). <span class="trans">Find x if x squared is 0.0016.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-5" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-5')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-5"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-5')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-5">Akar dari 16 adalah 4. Desimal: 4 desimal di kuadrat berarti 2 desimal di akar. Jadi 0,04.</div>
+                </div>
+                <div class="step-card" id="step-a1-6" data-section="a1" data-type="exercise" data-answer="0,5">
+                    <div class="question-text">Assignment 1 - Soal 6: Hitunglah \( \sqrt{0,25} \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-a1-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-6">\( 0,5 \times 0,5 = 0,25 \), jadi akarnya adalah 0,5.</div>
+                </div>
+                <div class="step-card" id="step-a1-7" data-section="a1" data-type="exercise" data-answer="1,21">
+                    <div class="question-text">Assignment 1 - Soal 7: Hitunglah \( (1,1)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-7">\( 1,1 \times 1,1 = 1,21 \).</div>
+                </div>
+                <div class="step-card" id="step-a1-8" data-section="a1" data-type="exercise" data-answer="7,1">
+                    <div class="question-text">Assignment 1 - Soal 8: Manakah yang lebih besar: \( \sqrt{50} \) atau 7,1? <span class="trans">Which is larger?</span></div>
+                    <div class="options-grid" id="opts-a1-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-8">\( 7,1^2 = 50,41 \). Karena 50,41 > 50, maka 7,1 lebih besar dari \( \sqrt{50} \).</div>
+                </div>
+                <div class="step-card" id="step-a1-9" data-section="a1" data-type="exercise" data-answer="9,5">
+                    <div class="question-text">Assignment 1 - Soal 9: Estimasilah \( \sqrt{90} \) hingga 1 desimal. <span class="trans">Estimate root 90 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a1-9"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-9')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-9"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-9')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-9">\( 9^2=81 \) dan \( 10^2=100 \). \( 9,5^2 = 90,25 \). Jadi estimasinya ~9,5.</div>
+                </div>
+                <div class="step-card" id="step-a1-10" data-section="a1" data-type="exercise" data-answer="0,0144">
+                    <div class="question-text">Assignment 1 - Soal 10: Hitunglah \( (0,12)^2 \) dan jelaskan mengapa jumlah angka di belakang koma bertambah. <span class="trans">Calculate and explain.</span></div>
+                    <input type="text" class="input-answer" id="input-a1-10" placeholder="Tulis jawaban angka saja...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a1-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a1-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a1-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a1-10">\( 12 \times 12 = 144 \). Desimal: 2 + 2 = 4 desimal. Hasilnya 0,0144. Desimal bertambah karena perkalian desimal menambahkan posisi desimal.</div>
+                </div>
+
+                <!-- ASSIGNMENT 2 (a2.1 to a2.10) -->
+                <div class="step-card" id="step-a2-1" data-section="a2" data-type="exercise" data-answer="12">
+                    <div class="question-text">Assignment 2 - Soal 1: Hitunglah \( \sqrt{144} \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-1" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-1')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-1"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-1')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-1">Bilangan yang dikuadratkan menghasilkan 144 adalah 12.</div>
+                </div>
+                <div class="step-card" id="step-a2-2" data-section="a2" data-type="exercise" data-answer="0,49">
+                    <div class="question-text">Assignment 2 - Soal 2: Hitunglah nilai dari \( (0,7)^2 \). <span class="trans">Calculate the value.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-2" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-2">\( 0,7 \times 0,7 = 0,49 \).</div>
+                </div>
+                <div class="step-card" id="step-a2-3" data-section="a2" data-type="exercise" data-answer="1,3">
+                    <div class="question-text">Assignment 2 - Soal 3: Tentukan akar pangkat dua dari 1,69. <span class="trans">Find the square root of 1.69.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-3" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-3">Karena \( 13 \times 13 = 169 \), maka \( 1,3 \times 1,3 = 1,69 \). Jadi \( \sqrt{1,69} = 1,3 \).</div>
+                </div>
+                <div class="step-card" id="step-a2-4" data-section="a2" data-type="exercise" data-answer="5,9">
+                    <div class="question-text">Assignment 2 - Soal 4: Estimasilah nilai dari \( \sqrt{35} \) hingga satu tempat desimal. <span class="trans">Estimate root 35 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a2-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-4">\( 5^2=25 \) dan \( 6^2=36 \). \( 5,9^2 = 34,81 \) (paling dekat 35). Jadi estimasi 5,9.</div>
+                </div>
+                <div class="step-card" id="step-a2-5" data-section="a2" data-type="exercise" data-answer="0,09">
+                    <div class="question-text">Assignment 2 - Soal 5: Tentukan nilai \( x \) jika \( x^2 = 0,0081 \). <span class="trans">Find x if x squared is 0.0081.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-5" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-5')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-5"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-5')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-5">Akar dari 81 adalah 9. Desimal: 4 desimal di kuadrat berarti 2 desimal di akar. Jadi 0,09.</div>
+                </div>
+                <div class="step-card" id="step-a2-6" data-section="a2" data-type="exercise" data-answer="0,9">
+                    <div class="question-text">Assignment 2 - Soal 6: Hitunglah \( \sqrt{0,81} \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-a2-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-6">\( 0,9 \times 0,9 = 0,81 \), jadi akarnya adalah 0,9.</div>
+                </div>
+                <div class="step-card" id="step-a2-7" data-section="a2" data-type="exercise" data-answer="6,25">
+                    <div class="question-text">Assignment 2 - Soal 7: Hitunglah \( (2,5)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-7">\( 2,5 \times 2,5 = 6,25 \). (Pola: \( 2 \times 3 = 6 \), ditambah 0,25).</div>
+                </div>
+                <div class="step-card" id="step-a2-8" data-section="a2" data-type="exercise" data-answer="Benar">
+                    <div class="question-text">Assignment 2 - Soal 8: Benar atau Salah: \( 8,7^2 > 75 \)? <span class="trans">True or False.</span></div>
+                    <div class="options-grid" id="opts-a2-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-8">\( 8,7 \times 8,7 = 75,69 \). Karena 75,69 > 75, maka pernyataan Benar.</div>
+                </div>
+                <div class="step-card" id="step-a2-9" data-section="a2" data-type="exercise" data-answer="10,5">
+                    <div class="question-text">Assignment 2 - Soal 9: Estimasilah \( \sqrt{110} \) hingga 1 desimal. <span class="trans">Estimate root 110 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a2-9"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-9')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-9"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-9')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-9">\( 10^2=100 \) dan \( 11^2=121 \). \( 10,5^2 = 110,25 \). Jadi estimasinya ~10,5.</div>
+                </div>
+                <div class="step-card" id="step-a2-10" data-section="a2" data-type="exercise" data-answer="0,0025">
+                    <div class="question-text">Assignment 2 - Soal 10: Hitunglah \( (0,05)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a2-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a2-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a2-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a2-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a2-10">\( 5 \times 5 = 25 \). Desimal: 2 + 2 = 4. Hasilnya 0,0025.</div>
+                </div>
+
+                <!-- ASSIGNMENT 3 (a3.1 to a3.10) -->
+                <div class="step-card" id="step-a3-1" data-section="a3" data-type="exercise" data-answer="13">
+                    <div class="question-text">Assignment 3 - Soal 1: Hitunglah \( \sqrt{169} \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-1" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-1')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-1"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-1')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-1">Bilangan yang dikuadratkan menghasilkan 169 adalah 13.</div>
+                </div>
+                <div class="step-card" id="step-a3-2" data-section="a3" data-type="exercise" data-answer="2,25">
+                    <div class="question-text">Assignment 3 - Soal 2: Hitunglah \( (1,5)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-2" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-2">\( 1,5 \times 1,5 = 2,25 \).</div>
+                </div>
+                <div class="step-card" id="step-a3-3" data-section="a3" data-type="exercise" data-answer="1,5">
+                    <div class="question-text">Assignment 3 - Soal 3: Tentukan akar pangkat dua dari 2,25. <span class="trans">Find the square root of 2.25.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-3" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-3">Karena \( 15 \times 15 = 225 \), maka \( 1,5 \times 1,5 = 2,25 \). Jadi \( \sqrt{2,25} = 1,5 \).</div>
+                </div>
+                <div class="step-card" id="step-a3-4" data-section="a3" data-type="exercise" data-answer="9,7">
+                    <div class="question-text">Assignment 3 - Soal 4: Estimasilah nilai dari \( \sqrt{95} \) hingga satu tempat desimal. <span class="trans">Estimate root 95 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a3-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-4">\( 9^2=81 \) dan \( 10^2=100 \). \( 9,7^2 = 94,09 \) dan \( 9,8^2=96,04 \). 95 lebih dekat ke 94,09, jadi 9,7.</div>
+                </div>
+                <div class="step-card" id="step-a3-5" data-section="a3" data-type="exercise" data-answer="0,03">
+                    <div class="question-text">Assignment 3 - Soal 5: Tentukan nilai \( x \) jika \( x^2 = 0,0009 \). <span class="trans">Find x if x squared is 0.0009.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-5" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-5')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-5"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-5')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-5">Akar dari 9 adalah 3. Desimal: 4 desimal di kuadrat berarti 2 desimal di akar. Jadi 0,03.</div>
+                </div>
+                <div class="step-card" id="step-a3-6" data-section="a3" data-type="exercise" data-answer="0,4">
+                    <div class="question-text">Assignment 3 - Soal 6: Hitunglah \( \sqrt{0,16} \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-a3-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-6">\( 0,4 \times 0,4 = 0,16 \), jadi akarnya adalah 0,4.</div>
+                </div>
+                <div class="step-card" id="step-a3-7" data-section="a3" data-type="exercise" data-answer="0,0625">
+                    <div class="question-text">Assignment 3 - Soal 7: Hitunglah \( (0,25)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-7">\( 25 \times 25 = 625 \). Desimal: 2 + 2 = 4. Hasilnya 0,0625.</div>
+                </div>
+                <div class="step-card" id="step-a3-8" data-section="a3" data-type="exercise" data-answer="√10">
+                    <div class="question-text">Assignment 3 - Soal 8: Manakah yang lebih kecil: \( \sqrt{10} \) atau 3,2? <span class="trans">Which is smaller?</span></div>
+                    <div class="options-grid" id="opts-a3-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-8">\( 3,2^2 = 10,24 \). Karena 10,24 > 10, maka 3,2 lebih besar dari \( \sqrt{10} \). Jadi \( \sqrt{10} \) lebih kecil.</div>
+                </div>
+                <div class="step-card" id="step-a3-9" data-section="a3" data-type="exercise" data-answer="7,4">
+                    <div class="question-text">Assignment 3 - Soal 9: Estimasilah \( \sqrt{55} \) hingga 1 desimal. <span class="trans">Estimate root 55 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a3-9"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-9')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-9"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-9')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-9">\( 7^2=49 \) dan \( 8^2=64 \). \( 7,4^2 = 54,76 \) (paling dekat 55). Jadi 7,4.</div>
+                </div>
+                <div class="step-card" id="step-a3-10" data-section="a3" data-type="exercise" data-answer="9,61">
+                    <div class="question-text">Assignment 3 - Soal 10: Hitunglah \( (3,1)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a3-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a3-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a3-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a3-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a3-10">\( 3,1 \times 3,1 = 9,61 \).</div>
+                </div>
+
+                <!-- ASSIGNMENT 4 (a4.1 to a4.10) -->
+                <div class="step-card" id="step-a4-1" data-section="a4" data-type="exercise" data-answer="14">
+                    <div class="question-text">Assignment 4 - Soal 1: Hitunglah \( \sqrt{196} \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-1" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-1')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-1"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-1')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-1">Bilangan yang dikuadratkan menghasilkan 196 adalah 14.</div>
+                </div>
+                <div class="step-card" id="step-a4-2" data-section="a4" data-type="exercise" data-answer="0,81">
+                    <div class="question-text">Assignment 4 - Soal 2: Hitunglah \( (0,9)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-2" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-2">\( 0,9 \times 0,9 = 0,81 \).</div>
+                </div>
+                <div class="step-card" id="step-a4-3" data-section="a4" data-type="exercise" data-answer="0,6">
+                    <div class="question-text">Assignment 4 - Soal 3: Tentukan akar pangkat dua dari 0,36. <span class="trans">Find the square root of 0.36.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-3" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-3">Karena \( 6 \times 6 = 36 \), maka \( 0,6 \times 0,6 = 0,36 \). Jadi \( \sqrt{0,36} = 0,6 \).</div>
+                </div>
+                <div class="step-card" id="step-a4-4" data-section="a4" data-type="exercise" data-answer="8,1">
+                    <div class="question-text">Assignment 4 - Soal 4: Estimasilah nilai dari \( \sqrt{65} \) hingga satu tempat desimal. <span class="trans">Estimate root 65 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a4-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-4">\( 8^2=64 \) dan \( 9^2=81 \). \( 8,1^2 = 65,61 \) (paling dekat 65). Jadi estimasi 8,1.</div>
+                </div>
+                <div class="step-card" id="step-a4-5" data-section="a4" data-type="exercise" data-answer="0,05">
+                    <div class="question-text">Assignment 4 - Soal 5: Tentukan nilai \( x \) jika \( x^2 = 0,0025 \). <span class="trans">Find x if x squared is 0.0025.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-5" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-5')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-5"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-5')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-5">Akar dari 25 adalah 5. Desimal: 4 desimal di kuadrat berarti 2 desimal di akar. Jadi 0,05.</div>
+                </div>
+                <div class="step-card" id="step-a4-6" data-section="a4" data-type="exercise" data-answer="1,1">
+                    <div class="question-text">Assignment 4 - Soal 6: Hitunglah \( \sqrt{1,21} \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-a4-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-6">\( 1,1 \times 1,1 = 1,21 \), jadi akarnya adalah 1,1.</div>
+                </div>
+                <div class="step-card" id="step-a4-7" data-section="a4" data-type="exercise" data-answer="20,25">
+                    <div class="question-text">Assignment 4 - Soal 7: Hitunglah \( (4,5)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-7">\( 4,5 \times 4,5 = 20,25 \). (Pola: \( 4 \times 5 = 20 \), ditambah 0,25).</div>
+                </div>
+                <div class="step-card" id="step-a4-8" data-section="a4" data-type="exercise" data-answer="Benar">
+                    <div class="question-text">Assignment 4 - Soal 8: Benar atau Salah: \( 6,6^2 < 44 \)? <span class="trans">True or False.</span></div>
+                    <div class="options-grid" id="opts-a4-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-8">\( 6,6 \times 6,6 = 43,56 \). Karena 43,56 < 44, maka pernyataan Benar.</div>
+                </div>
+                <div class="step-card" id="step-a4-9" data-section="a4" data-type="exercise" data-answer="11,4">
+                    <div class="question-text">Assignment 4 - Soal 9: Estimasilah \( \sqrt{130} \) hingga 1 desimal. <span class="trans">Estimate root 130 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a4-9"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-9')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-9"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-9')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-9">\( 11^2=121 \) dan \( 12^2=144 \). \( 11,4^2 = 129,96 \). Jadi estimasinya ~11,4.</div>
+                </div>
+                <div class="step-card" id="step-a4-10" data-section="a4" data-type="exercise" data-answer="0,0225">
+                    <div class="question-text">Assignment 4 - Soal 10: Hitunglah \( (0,15)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a4-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a4-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a4-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a4-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a4-10">\( 15 \times 15 = 225 \). Desimal: 2 + 2 = 4. Hasilnya 0,0225.</div>
+                </div>
+
+                <!-- ASSIGNMENT 5 (a5.1 to a5.10) -->
+                <div class="step-card" id="step-a5-1" data-section="a5" data-type="exercise" data-answer="15">
+                    <div class="question-text">Assignment 5 - Soal 1: Hitunglah \( \sqrt{225} \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-1" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-1')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-1"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-1')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-1">Bilangan yang dikuadratkan menghasilkan 225 adalah 15.</div>
+                </div>
+                <div class="step-card" id="step-a5-2" data-section="a5" data-type="exercise" data-answer="1,44">
+                    <div class="question-text">Assignment 5 - Soal 2: Hitunglah \( (1,2)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-2" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-2')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-2"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-2')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-2">\( 1,2 \times 1,2 = 1,44 \).</div>
+                </div>
+                <div class="step-card" id="step-a5-3" data-section="a5" data-type="exercise" data-answer="0,7">
+                    <div class="question-text">Assignment 5 - Soal 3: Tentukan akar pangkat dua dari 0,49. <span class="trans">Find the square root of 0.49.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-3" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-3')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-3"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-3')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-3">Karena \( 7 \times 7 = 49 \), maka \( 0,7 \times 0,7 = 0,49 \). Jadi \( \sqrt{0,49} = 0,7 \).</div>
+                </div>
+                <div class="step-card" id="step-a5-4" data-section="a5" data-type="exercise" data-answer="9,2">
+                    <div class="question-text">Assignment 5 - Soal 4: Estimasilah nilai dari \( \sqrt{85} \) hingga satu tempat desimal. <span class="trans">Estimate root 85 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a5-4"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-4')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-4"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-4')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-4">\( 9^2=81 \) dan \( 10^2=100 \). \( 9,2^2 = 84,64 \) (paling dekat 85). Jadi estimasi 9,2.</div>
+                </div>
+                <div class="step-card" id="step-a5-5" data-section="a5" data-type="exercise" data-answer="0,08">
+                    <div class="question-text">Assignment 5 - Soal 5: Tentukan nilai \( x \) jika \( x^2 = 0,0064 \). <span class="trans">Find x if x squared is 0.0064.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-5" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-5')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-5"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-5')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-5">Akar dari 64 adalah 8. Desimal: 4 desimal di kuadrat berarti 2 desimal di akar. Jadi 0,08.</div>
+                </div>
+                <div class="step-card" id="step-a5-6" data-section="a5" data-type="exercise" data-answer="1,7">
+                    <div class="question-text">Assignment 5 - Soal 6: Hitunglah \( \sqrt{2,89} \). <span class="trans">Calculate.</span></div>
+                    <div class="options-grid" id="opts-a5-6"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-6')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-6"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-6')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-6">\( 1,7 \times 1,7 = 2,89 \), jadi akarnya adalah 1,7.</div>
+                </div>
+                <div class="step-card" id="step-a5-7" data-section="a5" data-type="exercise" data-answer="30,25">
+                    <div class="question-text">Assignment 5 - Soal 7: Hitunglah \( (5,5)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-7" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-7')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-7"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-7')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-7">\( 5,5 \times 5,5 = 30,25 \). (Pola: \( 5 \times 6 = 30 \), ditambah 0,25).</div>
+                </div>
+                <div class="step-card" id="step-a5-8" data-section="a5" data-type="exercise" data-answer="√99">
+                    <div class="question-text">Assignment 5 - Soal 8: Manakah yang lebih besar: \( \sqrt{99} \) atau 9,9? <span class="trans">Which is larger?</span></div>
+                    <div class="options-grid" id="opts-a5-8"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-8')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-8"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-8')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-8">\( 9,9^2 = 98,01 \). Karena 99 > 98,01, maka \( \sqrt{99} \) lebih besar dari 9,9.</div>
+                </div>
+                <div class="step-card" id="step-a5-9" data-section="a5" data-type="exercise" data-answer="12,0">
+                    <div class="question-text">Assignment 5 - Soal 9: Estimasilah \( \sqrt{145} \) hingga 1 desimal. <span class="trans">Estimate root 145 to 1 decimal.</span></div>
+                    <div class="options-grid" id="opts-a5-9"></div>
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-9')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-9"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-9')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-9">\( 12^2=144 \) dan \( 13^2=169 \). \( 12,0^2 = 144 \) dan \( 12,1^2=146,41 \). 145 sangat dekat ke 144, estimasi 12,0.</div>
+                </div>
+                <div class="step-card" id="step-a5-10" data-section="a5" data-type="exercise" data-answer="0,0064">
+                    <div class="question-text">Assignment 5 - Soal 10: Hitunglah \( (0,08)^2 \). <span class="trans">Calculate.</span></div>
+                    <input type="text" class="input-answer" id="input-a5-10" placeholder="Tulis jawaban...">
+                    <button class="nav-btn btn-check" onclick="checkAnswer('a5-10')">Cek Jawaban</button>
+                    <div class="feedback" id="fb-a5-10"></div>
+                    <button class="collapse-btn" onclick="toggleCollapse('exp-a5-10')">Lihat Pembahasan</button>
+                    <div class="collapse-content" id="exp-a5-10">\( 8 \times 8 = 64 \). Desimal: 2 + 2 = 4. Hasilnya 0,0064.</div>
+                </div>
+
+
+                <!-- SECTION END: Consolidation & Reflection -->
+                <div class="step-card" id="step-end-1" data-section="end">
+                    <svg class="svg-illust" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" fill="#D7FFB8" stroke="var(--primary)" stroke-width="4"/>
+                        <text x="50" y="45" font-family="Nunito" font-size="30" fill="var(--primary-dark)" text-anchor="middle" font-weight="800">✓</text>
+                        <text x="50" y="65" font-family="Nunito" font-size="10" fill="var(--primary-dark)" text-anchor="middle">GREAT</text>
+                    </svg>
+                    <div class="theory-box">
+                        <h3><i class="fas fa-flag-checkered"></i> Consolidation & Reflection <span class="trans">Konsolidasi & Refleksi</span></h3>
+                        <p>Luar biasa! Hari ini kamu belajar bahwa akar pangkat dua bukan hanya tentang menghafal, tapi tentang logika estimasi. <span class="trans">Today you learned that square roots aren't just about memorizing, but about estimation logic.</span></p>
+                    </div>
+                    <div style="margin-top:15px; line-height:1.6;">
+                        <p><i class="fas fa-brain" style="color:var(--secondary)"></i> <strong>Apa bagian tersulit hari ini?</strong> <span class="trans">What was the hardest part today?</span></p>
+                        <textarea style="width:100%; height:80px; margin-top:10px; padding:10px; border-radius:10px; border:2px solid var(--border); font-family:Nunito;" placeholder="Tulis refleksimu di sini..."></textarea>
+                    </div>
+                </div>
+                <div class="step-card" id="step-end-2" data-section="end">
+                    <h3>Tugas Latihan & LMS <span class="trans">Homework & LMS</span></h3>
+                    <p style="margin-bottom:20px;">Jangan lupa, tugas latihan sudah tersedia. Silakan login ke platform Algonova untuk mengakses materi dan tugasmu. <span class="trans">Don't forget, homework is available. Please login to Algonova.</span></p>
+                    <a href="https://learn.algonova.id/login" target="_blank" class="nav-btn btn-next" style="display:inline-block; text-decoration:none; margin-bottom:15px; width:100%; text-align:center;">
+                        <i class="fas fa-external-link-alt"></i> Login learn.algonova.id
+                    </a>
+                    <hr style="margin:20px 0; border:1px solid var(--border);">
+                    <h3>Cetak Hasil Assignment <span class="trans">Print Assignment Result</span></h3>
+                    <p style="margin-bottom:15px;">Pilih grup assignment yang ingin dicetak sebagai laporan format A4: <span class="trans">Choose the assignment group to print as an A4 report:</span></p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <button class="nav-btn btn-prev" onclick="printAssignment('a1')">Assignment 1</button>
+                        <button class="nav-btn btn-prev" onclick="printAssignment('a2')">Assignment 2</button>
+                        <button class="nav-btn btn-prev" onclick="printAssignment('a3')">Assignment 3</button>
+                        <button class="nav-btn btn-prev" onclick="printAssignment('a4')">Assignment 4</button>
+                        <button class="nav-btn btn-prev" onclick="printAssignment('a5')" style="grid-column: span 2;">Assignment 5</button>
+                    </div>
+                </div>
+
+            </div> <!-- End of card-container -->
+        </div> <!-- End of content-scroll -->
+
+        <div class="bottom-bar">
+            <button class="nav-btn btn-prev" onclick="navigate(-1)"><i class="fas fa-arrow-left"></i> Kembali</button>
+            <button class="nav-btn btn-next" onclick="navigate(1)">Lanjut <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div> <!-- End of main-content -->
+</div> <!-- End of app-container -->
+
+<!-- Print Layout Template -->
+<div class="print-report" id="printArea">
+    <h1 style="text-align:center; font-family:Nunito; margin-bottom:5px;">MATH TUTORING by Deni</h1>
+    <table style="width:100%; border-collapse:collapse; margin-top:20px; font-family:Nunito; font-size:14px;" border="1">
+        <tr><td style="padding:8px;"><strong>Name</strong></td><td style="padding:8px;">..................................</td><td style="padding:8px;"><strong>Date</strong></td><td style="padding:8px;">..................</td></tr>
+        <tr><td style="padding:8px;"><strong>Topic</strong></td><td style="padding:8px;">Perpangkatan & Akar Pangkat Dua</td><td style="padding:8px;"><strong>Assignment Group</strong></td><td style="padding:8px;" id="printGroup">..................</td></tr>
+    </table>
+    <h3 style="margin-top:20px; font-family:Nunito;">Score: ........ / 10</h3>
+    <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; font-family:Nunito;" border="1">
+        <thead><tr style="background:#f0f0f0;"><th style="padding:5px;">No</th><th style="padding:5px;">Question</th><th style="padding:5px;">Student Answer</th><th style="padding:5px;">Correct Answer</th><th style="padding:5px;">Note (✓/✗)</th></tr></thead>
+        <tbody id="printTableBody"></tbody>
+    </table>
+    <p style="margin-top:40px; font-family:Nunito;">Checked by,<br><br><strong>Deni</strong></p>
+</div>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<script>
+    // Global State
+    let currentStep = 0;
+    let steps = [];
+    let sections = [
+        { id: 'home', title: 'Home', icon: 'fa-house', time: '' },
+        { id: '1', title: 'Spiral Review Warm-up', icon: 'fa-fire', time: '00:00-00:10' },
+        { id: '2', title: 'Intro & Real-World', icon: 'fa-globe', time: '00:10-00:15' },
+        { id: '3', title: 'Review of Prior Knowledge', icon: 'fa-book-open', time: '00:15-00:20' },
+        { id: '4', title: 'Problem Introduction', icon: 'fa-circle-question', time: '00:20-00:30' },
+        { id: '5', title: 'Guided Practice', icon: 'fa-hand-holding-heart', time: '00:30-00:45' },
+        { id: '6', title: 'Independent Practice', icon: 'fa-person-walking', time: '00:50-01:00' },
+        { id: 'a1', title: 'Assignment 1', icon: 'fa-file-pen', time: '' },
+        { id: 'a2', title: 'Assignment 2', icon: 'fa-file-pen', time: '' },
+        { id: 'a3', title: 'Assignment 3', icon: 'fa-file-pen', time: '' },
+        { id: 'a4', title: 'Assignment 4', icon: 'fa-file-pen', time: '' },
+        { id: 'a5', title: 'Assignment 5', icon: 'fa-file-pen', time: '' },
+        { id: 'end', title: 'Consolidation & Reflection', icon: 'fa-flag-checkered', time: '01:00-01:05' }
+    ];
+
+    // Options Data Store
+    const optsData = {
+        '1-2': ['0,1', '0,01', '1,0', '0,5'], '1-3': ['3', '4', '0,4', '36'], '1-6': ['0,75', '3/4', 'sama dengan'], '1-8': ['0,25', '0,15', '1,5', '0,9'],
+        '2-2': ['5', '6', '4', '50'], '2-3': ['3', '9', '6', '1'], '2-4': ['1', '2', '0', '-1'], '2-6': ['4', '8', '16', '2'], '2-7': ['7', '14', '49', '9'], '2-8': ['10', '50', '20', '5'], '2-13': ['Benar', 'Salah', 'Tidak tentu', '25'],
+        '3-2': ['49', '14', '7', '21'], '3-3': ['100', '20', '50', '10'], '3-6': ['0,04', '0,4', '0,02', '0,2'], '3-7': ['0,01', '0,1', '1', '0,001'], '3-8': ['1,21', '1,1', '2,2', '1,01'], '3-10': ['1 desimal', '2 desimal', 'Tidak ada', '3 desimal'], '3-11': ['0,0025', '0,25', '0,025', '0,5'], '3-12': ['0,0625', '0,5', '0,25', '0,125'], '3-13': ['6 desimal', '3 desimal', '9 desimal', 'Tetap 2 desimal'],
+        '4-2': ['5 dan 6', '4 dan 5', '6 dan 7', '3 dan 4'], '4-3': ['8 dan 9', '7 dan 8', '9 dan 10', '6 dan 7'], '4-4': ['3 dan 4', '2 dan 3', '4 dan 5', '1 dan 2'], '4-6': ['Lebih dekat ke 5', 'Lebih dekat ke 6', 'Tepat di tengah', 'Tidak bisa ditebak'], '4-7': ['3,1', '3,2', '3,5', '3,0'], '4-8': ['1,4', '1,5', '1,2', '1,6'], '4-10': ['4,5', '4,4', '4,6', '4,3'], '4-11': ['Benar', 'Salah'], '4-13': ['Untuk mengecek kalkulator', 'Karena kalkulator rusak', 'Karena tidak boleh pakai kalkulator', 'Tidak ada gunanya'],
+        '5-2': ['6 dan 7', '5 dan 6', '7 dan 8', '4 dan 5'], '5-3': ['7 dan 8', '6 dan 7', '8 dan 9', '5 dan 6'], '5-4': ['9 dan 10', '8 dan 9', '10 dan 11', '7 dan 8'], '5-6': ['6,3', '6,4', '6,5', '6,2'], '5-7': ['7,7', '7,8', '7,6', '7,9'], '5-8': ['8,9', '8,8', '9,0', '8,7'], '5-11': ['0,25', '0,5', '0,125', '2,5'],
+        '6-2': ['0,9', '0,81', '9', '0,09'], '6-3': ['1,2', '1,44', '12', '0,12'], '6-6': ['6,7', '6,8', '6,6', '6,9'], '6-7': ['5,3', '5,2', '5,4', '5,1'], '6-10': ['12,2', '12,3', '12,1', '12,4'], '6-11': ['14,1', '14,2', '14,0', '13,9'],
+        'a1-4': ['8,4', '8,3', '8,5', '8,2'], 'a1-6': ['0,5', '0,25', '0,05', '5'], 'a1-8': ['7,1', '√50', 'Sama besar', 'Tidak bisa ditentukan'], 'a1-9': ['9,5', '9,4', '9,6', '9,3'],
+        'a2-4': ['5,9', '5,8', '6,0', '5,7'], 'a2-6': ['0,9', '0,81', '0,09', '9'], 'a2-8': ['Benar', 'Salah'], 'a2-9': ['10,5', '10,4', '10,6', '10,3'],
+        'a3-4': ['9,7', '9,8', '9,6', '9,9'], 'a3-6': ['0,4', '0,16', '0,04', '4'], 'a3-8': ['√10', '3,2', 'Sama kecil', 'Tidak bisa ditentukan'], 'a3-9': ['7,4', '7,5', '7,3', '7,6'],
+        'a4-4': ['8,1', '8,0', '8,2', '7,9'], 'a4-6': ['1,1', '1,21', '0,11', '11'], 'a4-8': ['Benar', 'Salah'], 'a4-9': ['11,4', '11,3', '11,5', '11,2'],
+        'a5-4': ['9,2', '9,1', '9,3', '9,0'], 'a5-6': ['1,7', '1,89', '0,17', '17'], 'a5-8': ['√99', '9,9', 'Sama besar', 'Tidak bisa ditentukan'], 'a5-9': ['12,0', '12,1', '11,9', '12,2']
+    };
+
+    // Initialization
+    window.onload = () => {
+        buildNav();
+        collectSteps();
+        injectPrintButton(); // Suntik tombol print di top bar
+        goToStep(0);
+    };
+
+    function buildNav() {
+        const navMenu = document.getElementById('navMenu');
+        sections.forEach(sec => {
+            let html = `<div class="nav-item" id="nav-${sec.id}" onclick="jumpToSection('${sec.id}')">
+                <i class="fas ${sec.icon}"></i> 
+                <div style="flex:1">
+                    <div>${sec.title}</div>
+                    ${sec.time ? `<div style="font-size:0.7rem; color:#89A8B5">${sec.time}</div>` : ''}
+                </div>
+            </div>`;
+            navMenu.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    function collectSteps() {
+        steps = Array.from(document.querySelectorAll('.step-card'));
+    }
+
+    // Suntik tombol Cetak ke Top Bar secara dinamis
+    function injectPrintButton() {
+        let topBar = document.querySelector('.top-bar');
+        let printBtn = document.createElement('button');
+        printBtn.id = 'topPrintBtn';
+        printBtn.className = 'nav-btn btn-prev';
+        printBtn.style.cssText = 'padding: 8px 15px; font-size: 0.8rem; margin-left: 15px; display: none;';
+        printBtn.innerHTML = '<i class="fas fa-print"></i> Cetak Assignment';
+        topBar.insertBefore(printBtn, document.querySelector('.top-bar-progress'));
+    }
+
+    function jumpToSection(secId) {
+        let targetIndex = steps.findIndex(s => s.id === `step-${secId}` || s.dataset.section === secId);
+        if(targetIndex !== -1) goToStep(targetIndex);
+    }
+
+    function goToStep(index) {
+        if(index < 0 || index >= steps.length) return;
+        currentStep = index;
+        
+        steps.forEach(s => s.classList.remove('active'));
+        steps[currentStep].classList.add('active');
+
+        const card = steps[currentStep];
+        
+        // Jika exercise, pastikan ada tombol reset
+        if(card.dataset.type === 'exercise') {
+            populateOptions(card.id.replace('step-', ''));
+            injectResetButton(card);
+        }
+
+        // Update Top Bar
+        const secId = card.id.includes('home') ? 'home' : card.id.includes('end') ? 'end' : card.dataset.section;
+        const secData = sections.find(s => s.id === secId);
+        document.getElementById('topTitle').innerText = secData ? secData.title : 'Latihan';
+
+        // Update Nav active state
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        let navItem = document.getElementById(`nav-${secId}`);
+        if(navItem) navItem.classList.add('active');
+
+        // Logika Tombol Cetak di Top Bar
+        const assignIds = ['a1', 'a2', 'a3', 'a4', 'a5'];
+        let printBtn = document.getElementById('topPrintBtn');
+        if(assignIds.includes(secId)) {
+            printBtn.style.display = 'inline-block';
+            printBtn.onclick = () => printAssignment(secId);
+        } else {
+            printBtn.style.display = 'none';
+        }
+
+        // Progress
+        let progress = ((currentStep + 1) / steps.length) * 100;
+        document.getElementById('topProgress').style.width = `${progress}%`;
+
+        // Render KaTeX ONLY on active card
+        if(typeof renderMathInElement === 'function') {
+            renderMathInElement(card, {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+        }
+    }
+
+    function navigate(dir) {
+        goToStep(currentStep + dir);
+    }
+
+    function populateOptions(stepId) {
+        const container = document.getElementById(`opts-${stepId}`);
+        if(!container || container.children.length > 0) return;
+        
+        let options = optsData[stepId];
+        if(!options) return;
+
+        options.sort(() => Math.random() - 0.5);
+
+        options.forEach(opt => {
+            let btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(stepId, btn, opt);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectOption(stepId, btn, value) {
+        const container = document.getElementById(`opts-${stepId}`);
+        container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        btn.dataset.val = value;
+    }
+
+    function checkAnswer(stepId) {
+        const card = document.getElementById(`step-${stepId}`);
+        const fb = document.getElementById(`fb-${stepId}`);
+        const correctAns = card.dataset.answer;
+        let userAns = '';
+
+        if(card.querySelector('.options-grid')) {
+            let selected = card.querySelector('.option-btn.selected');
+            if(!selected) { fb.className = 'feedback incorrect-fb'; fb.innerText = "Pilih jawaban dulu!"; return; }
+            userAns = selected.dataset.val;
+            card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+        } else {
+            let inputEl = document.getElementById(`input-${stepId}`);
+            if(!inputEl) return;
+            userAns = inputEl.value.trim().replace('.', ',');
+        }
+
+        let isCorrect = userAns === correctAns;
+        
+        if(isCorrect) {
+            fb.className = 'feedback correct-fb'; fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! Hebat!';
+            if(card.querySelector('.options-grid')) {
+                card.querySelector('.option-btn.selected').classList.add('correct');
+            }
+        } else {
+            fb.className = 'feedback incorrect-fb'; fb.innerHTML = `<i class="fas fa-times-circle"></i> Kurang tepat. Jawaban: ${correctAns}`;
+            if(card.querySelector('.options-grid')) {
+                let correctBtn = Array.from(card.querySelectorAll('.option-btn')).find(b => b.innerText === correctAns);
+                if(correctBtn) correctBtn.classList.add('correct');
+                if(card.querySelector('.option-btn.selected')) card.querySelector('.option-btn.selected').classList.add('incorrect');
+            }
+        }
+    }
+
+    // Suntik tombol Reset ke Exercise secara dinamis
+    function injectResetButton(card) {
+        if(!card.querySelector('.btn-reset-exercise')) {
+            let resetBtn = document.createElement('button');
+            resetBtn.className = 'nav-btn btn-prev btn-reset-exercise';
+            resetBtn.style.cssText = 'margin-top: 10px; padding: 8px 15px; font-size: 0.8rem;';
+            resetBtn.innerHTML = '<i class="fas fa-redo"></i> Coba Lagi';
+            resetBtn.onclick = () => resetExercise(card.id.replace('step-', ''));
+            
+            let fb = card.querySelector('.feedback');
+            if(fb) {
+                card.insertBefore(resetBtn, fb);
+            } else {
+                card.appendChild(resetBtn);
+            }
+        }
+    }
+
+    // Fungsi Reset Exercise
+    function resetExercise(stepId) {
+        const card = document.getElementById(`step-${stepId}`);
+        const fb = document.getElementById(`fb-${stepId}`);
+        
+        // Hapus Feedback
+        if(fb) { fb.className = 'feedback'; fb.innerHTML = ''; }
+        
+        // Tutup Pembahasan
+        const collapseContent = card.querySelector('.collapse-content');
+        if(collapseContent) collapseContent.classList.remove('show');
+
+        // Reset Opsi Pilihan Ganda
+        if(card.querySelector('.options-grid')) {
+            card.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+                btn.disabled = false;
+            });
+        } 
+        // Reset Input Text
+        else {
+            let inputEl = card.querySelector('.input-answer');
+            if(inputEl) inputEl.value = '';
+        }
+    }
+
+    function toggleCollapse(id) {
+        document.getElementById(id).classList.toggle('show');
+    }
+
+    function resetAll() {
+        if(confirm("Yakin ingin mereset semua progres jawaban?")) {
+            location.reload();
+        }
+    }
+
+    // Print Logic
+    function printAssignment(groupId) {
+        const printArea = document.getElementById('printArea');
+        const printTableBody = document.getElementById('printTableBody');
+        const printGroup = document.getElementById('printGroup');
+        
+        printGroup.innerText = groupId.toUpperCase();
+        printTableBody.innerHTML = '';
+
+        const assignmentSteps = steps.filter(s => s.dataset.section === groupId && s.dataset.type === 'exercise');
+        
+        assignmentSteps.forEach((step, index) => {
+            const questionText = step.querySelector('.question-text') ? step.querySelector('.question-text').innerText : '';
+            const correctAns = step.dataset.answer;
+            let userAns = '';
+
+            if(step.querySelector('.options-grid')) {
+                let selected = step.querySelector('.option-btn.selected');
+                userAns = selected ? selected.innerText : '-';
+            } else {
+                let inputEl = step.querySelector('.input-answer');
+                userAns = inputEl && inputEl.value.trim() ? inputEl.value.trim() : '-';
+            }
+
+            let row = `<tr>
+                <td style="padding:5px; text-align:center;">${index + 1}</td>
+                <td style="padding:5px;">${questionText}</td>
+                <td style="padding:5px; text-align:center;">${userAns}</td>
+                <td style="padding:5px; text-align:center;">${correctAns}</td>
+                <td style="padding:5px; text-align:center;">${userAns === correctAns ? '✓' : '✗'}</td>
+            </tr>`;
+            printTableBody.insertAdjacentHTML('beforeend', row);
+        });
+
+        window.print();
+    }
+</script>
+
+</body>
+</html>
