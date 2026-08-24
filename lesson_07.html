@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Rasio & Perbandingan</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
+        .translation { font-style: italic; font-size: 0.85em; color: #6b7280; display: block; margin-top: 4px; }
+        .main-content { min-height: 70vh; }
+        .sidebar-item.active { background-color: #3b82f6; color: white; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { background-color: #e0f2fe; }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .collapse-content.open { max-height: 1000px; }
+        @media print {
+            body > *:not(#printArea) { display: none !important; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 20px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            table { width: 100%; border-collapse: collapse; }
+            tr, td, th { page-break-inside: avoid; }
+            @page { size: A4; margin: 1cm; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold text-blue-600">Math Tutoring by Deni</h1>
+            <p class="text-sm text-gray-600">Topic: Rasio, Perbandingan Senilai & Berbalik Nilai</p>
+            <p class="translation">Topik: Ratio, Direct & Inverse Proportion</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+                <i class="fas fa-gavel"></i> Class Rules
+                <span class="translation" style="color: #bfdbfe;">Aturan Kelas</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Class Rules Modal -->
+    <div id="rulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-blue-600">Class Rules</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Berbicara secara bergantian</p>
+                        <p class="translation">Take turns speaking</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Meminta izin jika ingin meninggalkan kelas</p>
+                        <p class="translation">Ask for permission if you want to leave the class</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Menyalakan kamera dan microphone jika diperlukan</p>
+                        <p class="translation">Turn on camera and microphone when needed</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg h-screen sticky top-0 overflow-y-auto no-print">
+            <ul class="py-4">
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('warmup', 0, event)">
+                    <i class="fas fa-fire mr-2"></i>Spiral Review Warm-up (00:00-00:10)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('intro', 0, event)">
+                    <i class="fas fa-bullhorn mr-2"></i>Introduction & Real-World (00:10-00:15)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('review', 0, event)">
+                    <i class="fas fa-history mr-2"></i>Review of Prior Knowledge (00:15-00:20)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('problem', 0, event)">
+                    <i class="fas fa-puzzle-piece mr-2"></i>Problem Introduction (00:20-00:30)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('guided', 0, event)">
+                    <i class="fas fa-hand-holding mr-2"></i>Guided Practice (00:30-00:45)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('independent', 0, event)">
+                    <i class="fas fa-user-graduate mr-2"></i>Independent Practice (00:45-00:55)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('consolidation', 0, event)">
+                    <i class="fas fa-book-open mr-2"></i>Consolidation & Reflection (00:55-01:00)
+                </li>
+                <li class="border-t border-gray-200 mt-2"></li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task1', 0, event)">
+                    <i class="fas fa-tasks mr-2"></i>Task 1
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task2', 0, event)">
+                    <i class="fas fa-tasks mr-2"></i>Task 2
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task3', 0, event)">
+                    <i class="fas fa-tasks mr-2"></i>Task 3
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task4', 0, event)">
+                    <i class="fas fa-tasks mr-2"></i>Task 4
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task5', 0, event)">
+                    <i class="fas fa-tasks mr-2"></i>Task 5
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 main-content" id="mainContent">
+            <!-- Content will be injected here -->
+        </main>
+    </div>
+
+    <!-- Hidden Print Area -->
+    <div id="printArea" class="hidden"></div>
+
+    <script>
+        let contentData = {
+            warmup: {
+                title: "Spiral Review Warm-up",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-balance-scale-right mr-2"></i>Memahami Rasio (Ratio)</h2>
+                            <p class="translation">Understanding Ratio</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <circle cx="50" cy="75" r="30" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+                                <text x="50" y="80" font-size="20" fill="#000" text-anchor="middle">2</text>
+                                <path d="M 90 75 L 110 75" stroke="#3b82f6" stroke-width="4" marker-end="url(#arrow)"/>
+                                <circle cx="150" cy="75" r="30" fill="#3b82f6" stroke="#1e40af" stroke-width="3"/>
+                                <text x="150" y="80" font-size="20" fill="#fff" text-anchor="middle">3</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Rasio adalah perbandingan dua besaran dengan satuan yang sama.</p>
+                                <p class="translation">A ratio is a comparison of two quantities with the same units.</p>
+                                <p class="mt-2">Misalnya, rasio kucing dan anjing adalah \\( 2 : 3 \\). Ini berarti untuk setiap 2 kucing, terdapat 3 anjing.</p>
+                                <p class="translation">For example, the ratio of cats to dogs is \\( 2 : 3 \\). This means for every 2 cats, there are 3 dogs.</p>
+                            </div>
+                        </div>
+                        <p class="bg-yellow-50 p-4 rounded-lg border border-yellow-200"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i>Rasio bisa ditulis sebagai pecahan \\( \\frac{2}{3} \\), titik dua \\( 2:3 \\), atau kata "dua banding tiga".</p>
+                        <p class="translation"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i>A ratio can be written as a fraction \\( \\frac{2}{3} \\), a colon \\( 2:3 \\), or the words "two to three".</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Di sebuah kelas, terdapat 15 siswa laki-laki dan 20 siswa perempuan. Berapakah rasio siswa laki-laki terhadap siswa perempuan dalam bentuk paling sederhana?", q_trans: "In a class, there are 15 male students and 20 female students. What is the ratio of male to female students in its simplest form?", opts: ["\\( 15 : 20 \\)", "\\( 3 : 4 \\)", "\\( 4 : 3 \\)", "\\( 5 : 6 \\)", "\\( 3 : 5 \\)"], correct: 1, exp: "<p>Bagi kedua angka dengan FPB (Faktor Persekutuan Terbesar) dari 15 dan 20, yaitu 5. \\( 15 \\div 5 = 3 \\) dan \\( 20 \\div 5 = 4 \\). Jadi, rasinya adalah \\( 3 : 4 \\).</p><p class='translation'>Divide both numbers by the GCF of 15 and 20, which is 5. \\( 15 \\div 5 = 3 \\) and \\( 20 \\div 5 = 4 \\). So, the ratio is \\( 3 : 4 \\).</p>" },
+                        { q: "Sebuah resep kue membutuhkan 250 gram gula dan 400 gram tepung. Berapakah rasio gula terhadap total berat bahan kering tersebut?", q_trans: "A cake recipe requires 250g of sugar and 400g of flour. What is the ratio of sugar to the total weight of the dry ingredients?", opts: ["\\( 5 : 8 \\)", "\\( 5 : 13 \\)", "\\( 8 : 13 \\)", "\\( 1 : 2 \\)", "\\( 25 : 40 \\)"], correct: 1, exp: "<p>Total bahan = 250 + 400 = 650 gram. Rasio gula terhadap total = \\( 250 : 650 \\). Bagi dengan 50 (FPB): \\( 5 : 13 \\).</p><p class='translation'>Total ingredients = 250 + 400 = 650g. Ratio of sugar to total = \\( 250 : 650 \\). Divide by 50 (GCF): \\( 5 : 13 \\).</p>" },
+                        { q: "Diketahui rasio umur Andi dan Budi adalah \\( 4 : 5 \\). Jika selisih umur mereka adalah 3 tahun, berapakah umur Budi?", q_trans: "Given the ratio of Andi's age to Budi's age is \\( 4 : 5 \\). If the difference in their ages is 3 years, how old is Budi?", opts: ["9 tahun", "12 tahun", "15 tahun", "20 tahun", "27 tahun"], correct: 2, exp: "<p>Selisih bagian = \\( 5 - 4 = 1 \\) bagian. Karena 1 bagian = 3 tahun, maka umur Budi (5 bagian) = \\( 5 \\times 3 = 15 \\) tahun.</p><p class='translation'>Difference in parts = \\( 5 - 4 = 1 \\) part. Since 1 part = 3 years, Budi's age (5 parts) = \\( 5 \\times 3 = 15 \\) years.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-equals mr-2"></i>Nilai Rasio dan Skala</h2>
+                            <p class="translation">Ratio Value and Scale</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="10" y="80" width="60" height="60" fill="#3b82f6" opacity="0.8"/>
+                                <text x="40" y="160" font-size="12" text-anchor="middle">Asli / Real</text>
+                                <path d="M 80 110 L 120 110" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="100" y="100" font-size="12" text-anchor="middle">1:100</text>
+                                <rect x="130" y="100" width="30" height="30" fill="#ef4444" opacity="0.8"/>
+                                <text x="145" y="160" font-size="12" text-anchor="middle">Gambar</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Skala adalah rasio antara ukuran pada gambar dengan ukuran sebenarnya.</p>
+                                <p class="translation">Scale is the ratio between the size on a drawing/model and its actual size.</p>
+                                <p class="mt-2">Jika skala peta adalah \\( 1 : 100.000 \\), maka 1 cm di peta mewakili 100.000 cm (atau 1 km) di dunia nyata.</p>
+                                <p class="translation">If a map scale is \\( 1 : 100,000 \\), then 1 cm on the map represents 100,000 cm (or 1 km) in the real world.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah peta memiliki skala \\( 1 : 500.000 \\). Jarak antara dua kota di peta adalah 4 cm. Berapakah jarak sebenarnya antara dua kota tersebut?", q_trans: "A map has a scale of \\( 1 : 500,000 \\). The distance between two cities on the map is 4 cm. What is the actual distance between the two cities?", opts: ["2 km", "20 km", "200 km", "2.000 m", "5 km"], correct: 1, exp: "<p>Jarak sebenarnya = \\( 4 \\times 500.000 = 2.000.000 \\) cm. Konversi ke km: \\( 2.000.000 \\div 100.000 = 20 \\) km.</p><p class='translation'>Actual distance = \\( 4 \\times 500,000 = 2,000,000 \\) cm. Convert to km: \\( 2,000,000 \\div 100,000 = 20 \\) km.</p>" },
+                        { q: "Jarak sebenarnya antara kota A dan B adalah 15 km. Jika pada peta jaraknya 3 cm, berapakah skala peta tersebut?", q_trans: "The actual distance between city A and B is 15 km. If the distance on the map is 3 cm, what is the scale of the map?", opts: ["\\( 1 : 500.000 \\)", "\\( 1 : 50.000 \\)", "\\( 1 : 5.000 \\)", "\\( 1 : 500 \\)", "\\( 1 : 5.000.000 \\)"], correct: 0, exp: "<p>15 km = 1.500.000 cm. Skala = Jarak peta : Jarak asli = \\( 3 : 1.500.000 = 1 : 500.000 \\).</p><p class='translation'>15 km = 1,500,000 cm. Scale = Map distance : Actual distance = \\( 3 : 1,500,000 = 1 : 500,000 \\).</p>" },
+                        { q: "Sebuah model kapal dibuat dengan skala \\( 1 : 200 \\). Jika panjang model kapal tersebut 30 cm, berapakah panjang kapal sebenarnya dalam meter?", q_trans: "A ship model is made with a scale of \\( 1 : 200 \\). If the length of the model is 30 cm, what is the actual length of the ship in meters?", opts: ["6 meter", "60 meter", "600 meter", "60 cm", "6000 meter"], correct: 1, exp: "<p>Panjang asli = \\( 30 \\times 200 = 6.000 \\) cm = 60 meter.</p><p class='translation'>Actual length = \\( 30 \\times 200 = 6,000 \\) cm = 60 meters.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-percentage mr-2"></i>Persentase sebagai Rasio</h2>
+                            <p class="translation">Percentage as a Ratio</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="120" height="150" viewBox="0 0 100 150" class="flex-shrink-0">
+                                <circle cx="50" cy="50" r="40" fill="#e0e7ff" stroke="#4f46e5" stroke-width="4"/>
+                                <path d="M 50 50 L 50 10 A 40 40 0 0 1 90 50 Z" fill="#4f46e5"/>
+                                <text x="50" y="110" font-size="15" text-anchor="middle">25%</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Persentase adalah bentuk khusus dari rasio dengan jumlah keseluruhan 100.</p>
+                                <p class="translation">Percentage is a special form of ratio where the total is 100.</p>
+                                <p class="mt-2">Misalnya \\( 25\\% \\) berarti \\( 25 : 100 \\) atau \\( \\frac{1}{4} \\).</p>
+                                <p class="translation">For example, \\( 25\\% \\) means \\( 25 : 100 \\) or \\( \\frac{1}{4} \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Sebuah toko memberikan diskon 20% untuk semua barang. Jika harga sebuah sepatu adalah Rp 150.000, berapakah harga setelah diskon?", q_trans: "A store gives a 20% discount on all items. If the price of a shoe is Rp 150,000, what is the price after the discount?", opts: ["Rp 100.000", "Rp 120.000", "Rp 130.000", "Rp 30.000", "Rp 140.000"], correct: 1, exp: "<p>Diskon = \\( 20\\% \\times 150.000 = 30.000 \\). Harga akhir = \\( 150.000 - 30.000 = 120.000 \\).</p><p class='translation'>Discount = \\( 20\\% \\times 150,000 = 30,000 \\). Final price = \\( 150,000 - 30,000 = 120,000 \\).</p>" },
+                        { q: "Dari 40 siswa, 75% lulus ujian matematika. Berapakah jumlah siswa yang TIDAK lulus?", q_trans: "Out of 40 students, 75% passed the math exam. How many students did NOT pass?", opts: ["30 siswa", "25 siswa", "15 siswa", "10 siswa", "5 siswa"], correct: 3, exp: "<p>Persentase tidak lulus = \\( 100\\% - 75\\% = 25\\% \\). Jumlah = \\( 25\\% \\times 40 = \\frac{1}{4} \\times 40 = 10 \\) siswa.</p><p class='translation'>Percentage did not pass = \\( 100\\% - 75\\% = 25\\% \\). Amount = \\( 25\\% \\times 40 = 10 \\) students.</p>" },
+                        { q: "Sebuah investasi saham mengalami kenaikan 15% menjadi Rp 1.150.000. Berapakah nilai awal investasi tersebut?", q_trans: "A stock investment increased by 15% to Rp 1,150,000. What was the initial value of the investment?", opts: ["Rp 1.000.000", "Rp 850.000", "Rp 1.150.000", "Rp 950.000", "Rp 1.250.000"], correct: 0, exp: "<p>Nilai akhir = \\( 115\\% \\times \\text{Awal} \\). Maka \\( 1.150.000 = 1,15 \\times \\text{Awal} \\). \\( \\text{Awal} = \\frac{1.150.000}{1,15} = 1.000.000 \\).</p><p class='translation'>Final value = \\( 115\\% \\times \\text{Initial} \\). So \\( 1,150,000 = 1.15 \\times \\text{Initial} \\). \\( \\text{Initial} = 1,000,000 \\).</p>" },
+                        { q: "Jumlah siswa di sekolah A dan B adalah 800 siswa. Rasio siswa A dan B adalah 3:1. Berapakah selisih jumlah siswa sekolah A dan B?", q_trans: "The total number of students in schools A and B is 800. The ratio of students in A and B is 3:1. What is the difference in the number of students between school A and B?", opts: ["200", "400", "600", "800", "100"], correct: 1, exp: "<p>Total bagian = \\( 3 + 1 = 4 \\). Nilai 1 bagian = \\( 800 \\div 4 = 200 \\). A = 600, B = 200. Selisih = \\( 600 - 200 = 400 \\).</p><p class='translation'>Total parts = 4. 1 part = 200. A = 600, B = 200. Difference = 400.</p>" }
+                    ]}
+                ]
+            },
+            intro: {
+                title: "Introduction & Real-World Connection",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-cogs mr-2"></i>Perbandingan Senilai (Direct Proportion)</h2>
+                            <p class="translation">Direct Proportion</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="200" height="120" viewBox="0 0 250 120" class="flex-shrink-0">
+                                <rect x="10" y="40" width="40" height="40" fill="#3b82f6" rx="5"/>
+                                <text x="30" y="100" font-size="12" text-anchor="middle">1 kg</text>
+                                <path d="M 60 60 L 100 60" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <rect x="110" y="20" width="50" height="80" fill="#10b981" rx="5"/>
+                                <text x="135" y="110" font-size="12" text-anchor="middle">Rp 20k</text>
+                                <path d="M 170 60 L 210 60" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <rect x="220" y="10" width="60" height="100" fill="#f59e0b" rx="5"/>
+                                <text x="250" y="120" font-size="12" text-anchor="middle">Rp 40k</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Pada perbandingan senilai, jika satu besaran naik, besaran lainnya juga ikut naik secara proporsional.</p>
+                                <p class="translation">In direct proportion, if one quantity increases, the other quantity also increases proportionally.</p>
+                                <p class="mt-2">Misalnya: Harga barang. Semakin banyak apel yang dibeli, semakin besar pula uang yang harus dibayarkan.</p>
+                                <p class="translation">For example: Price of goods. The more apples you buy, the more money you have to pay.</p>
+                            </div>
+                        </div>
+                        <p>Rumus: \\( \\frac{x_1}{y_1} = \\frac{x_2}{y_2} \\)</p>
+                        <p class="translation">Formula: \\( \\frac{x_1}{y_1} = \\frac{x_2}{y_2} \\)</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Harga 3 kg jeruk adalah Rp 45.000. Berapakah harga 5 kg jeruk yang sama?", q_trans: "The price of 3 kg of oranges is Rp 45,000. What is the price of 5 kg of the same oranges?", opts: ["Rp 60.000", "Rp 75.000", "Rp 90.000", "Rp 100.000", "Rp 50.000"], correct: 1, exp: "<p>\\( \\frac{3}{45.000} = \\frac{5}{x} \\). Maka \\( 3x = 225.000 \\implies x = 75.000 \\).</p><p class='translation'>\\( \\frac{3}{45,000} = \\frac{5}{x} \\). So \\( 3x = 225,000 \\implies x = 75,000 \\).</p>" },
+                        { q: "Sebuah mobil menempuh jarak 120 km dalam 2 jam. Jika kecepatannya konstan, berapakah jarak yang ditempuh dalam 5 jam?", q_trans: "A car travels 120 km in 2 hours. If the speed is constant, what distance is covered in 5 hours?", opts: ["240 km", "300 km", "360 km", "600 km", "250 km"], correct: 1, exp: "<p>\\( \\frac{120}{2} = \\frac{x}{5} \\). Maka \\( 2x = 600 \\implies x = 300 \\) km.</p><p class='translation'>\\( \\frac{120}{2} = \\frac{x}{5} \\). So \\( 2x = 600 \\implies x = 300 \\) km.</p>" },
+                        { q: "Pekerja A dapat mengecat tembok seluas 40 \\( m^2 \\) dalam 4 hari. Jika akan mengecat tembok seluas 100 \\( m^2 \\), berapa hari yang dibutuhkan?", q_trans: "Worker A can paint a wall of 40 \\( m^2 \\) in 4 days. If he is to paint a wall of 100 \\( m^2 \\), how many days are needed?", opts: ["10 hari", "8 hari", "12 hari", "15 hari", "20 hari"], correct: 0, exp: "<p>\\( \\frac{40}{4} = \\frac{100}{x} \\implies 40x = 400 \\implies x = 10 \\) hari.</p><p class='translation'>\\( \\frac{40}{4} = \\frac{100}{x} \\implies 40x = 400 \\implies x = 10 \\) days.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-users-cog mr-2"></i>Perbandingan Berbalik Nilai (Inverse Proportion)</h2>
+                            <p class="translation">Inverse Proportion</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 250 120" class="flex-shrink-0">
+                                <text x="40" y="30" font-size="14" text-anchor="middle" fill="#3b82f6">1 Pekerja</text>
+                                <rect x="20" y="40" width="40" height="60" fill="#3b82f6" rx="5"/>
+                                <text x="40" y="115" font-size="12" text-anchor="middle">10 Hari</text>
+                                <path d="M 70 60 L 110 60" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="90" y="50" font-size="12" text-anchor="middle">Tambah</text>
+                                <text x="160" y="30" font-size="14" text-anchor="middle" fill="#ef4444">2 Pekerja</text>
+                                <rect x="130" y="60" width="50" height="30" fill="#ef4444" rx="5"/>
+                                <text x="155" y="115" font-size="12" text-anchor="middle">5 Hari</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Pada perbandingan berbalik nilai, jika satu besaran naik, besaran lainnya akan turun secara proporsional.</p>
+                                <p class="translation">In inverse proportion, if one quantity increases, the other quantity decreases proportionally.</p>
+                                <p class="mt-2">Misalnya: Kecepatan dan waktu. Semakin cepat kendaraan melaju, semakin sedikit waktu yang dibutuhkan untuk menempuh jarak yang sama.</p>
+                                <p class="translation">For example: Speed and time. The faster a vehicle moves, the less time it takes to cover the same distance.</p>
+                            </div>
+                        </div>
+                        <p>Rumus: \\( x_1 \\times y_1 = x_2 \\times y_2 \\)</p>
+                        <p class="translation">Formula: \\( x_1 \\times y_1 = x_2 \\times y_2 \\)</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah pekerjaan dapat diselesaikan oleh 6 orang dalam 12 hari. Jika pekerja ditambah menjadi 8 orang, berapa hari pekerjaan itu selesai?", q_trans: "A job can be completed by 6 people in 12 days. If the workers are increased to 8 people, how many days will the job be completed?", opts: ["9 hari", "10 hari", "8 hari", "16 hari", "6 hari"], correct: 0, exp: "<p>\\( 6 \\times 12 = 8 \\times x \\implies 72 = 8x \\implies x = 9 \\) hari.</p><p class='translation'>\\( 6 \\times 12 = 8 \\times x \\implies 72 = 8x \\implies x = 9 \\) days.</p>" },
+                        { q: "Jarak kota A ke B ditempuh dalam 4 jam dengan kecepatan 60 km/jam. Jika ingin tiba lebih cepat dalam 3 jam, berapakah kecepatan yang dibutuhkan?", q_trans: "The distance from city A to B is covered in 4 hours at 60 km/h. If you want to arrive faster in 3 hours, what is the required speed?", opts: ["45 km/jam", "80 km/jam", "90 km/jam", "70 km/jam", "120 km/jam"], correct: 1, exp: "<p>\\( 60 \\times 4 = x \\times 3 \\implies 240 = 3x \\implies x = 80 \\) km/jam.</p><p class='translation'>\\( 60 \\times 4 = x \\times 3 \\implies 240 = 3x \\implies x = 80 \\) km/h.</p>" },
+                        { q: "Sebuah drum berisi air dapat habis dalam 15 menit jika keran dibuka penuh. Jika keran dibuka setengahnya, berapa menit waktu yang dibutuhkan agar air habis?", q_trans: "A drum full of water empties in 15 minutes if the tap is fully opened. If the tap is half-opened, how many minutes will it take for the water to run out?", opts: ["20 menit", "7,5 menit", "10 menit", "30 menit", "22,5 menit"], correct: 3, exp: "<p>Debit berbanding terbalik dengan waktu. \\( 1 \\times 15 = 0.5 \\times x \\implies x = 30 \\) menit.</p><p class='translation'>Flow rate is inversely proportional to time. \\( 1 \\times 15 = 0.5 \\times x \\implies x = 30 \\) minutes.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-route mr-2"></i>Membedakan Keduanya</h2>
+                            <p class="translation">Differentiating Both</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="200" height="150" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <rect x="10" y="60" width="40" height="30" fill="#3b82f6"/>
+                                <rect x="50" y="40" width="40" height="50" fill="#3b82f6"/>
+                                <rect x="90" y="20" width="40" height="70" fill="#3b82f6"/>
+                                <path d="M 30 100 L 110 20" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrow)"/>
+                                <text x="100" y="130" font-size="12" text-anchor="middle" fill="#3b82f6">Senilai</text>
+                                
+                                <rect x="115" y="60" width="40" height="30" fill="#ef4444"/>
+                                <rect x="115" y="40" width="40" height="50" fill="#ef4444" opacity="0.5"/>
+                                <path d="M 135 20 L 135 100" stroke="#ef4444" stroke-width="3" marker-end="url(#arrow)"/>
+                                <text x="150" y="130" font-size="12" text-anchor="middle" fill="#ef4444">Berbalik</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2"><strong>Senilai:</strong> "Semakin..., semakin..." (A naik, B naik).</p>
+                                <p class="translation"><strong>Direct:</strong> "The more..., the more..." (A goes up, B goes up).</p>
+                                <p class="mt-2"><strong>Berbalik Nilai:</strong> "Semakin..., semakin sedikit..." (A naik, B turun).</p>
+                                <p class="translation"><strong>Inverse:</strong> "The more..., the less..." (A goes up, B goes down).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Manakah dari situasi berikut yang merupakan perbandingan senilai?", q_trans: "Which of the following situations is a direct proportion?", opts: ["Jumlah pekerja dan waktu penyelesaian", "Kecepatan kendaraan dan waktu tempuh", "Jumlah barang dibeli dan total harga", "Banyak keran terbuka dan waktu air habis", "Ukuran roda sepeda dan jumlah putaran per km"], correct: 2, exp: "<p>Semakin banyak barang dibeli, total harganya semakin besar (naik-naik). Ini perbandingan senilai.</p><p class='translation'>The more items bought, the higher the total price. This is direct proportion.</p>" },
+                        { q: "Manakah dari situasi berikut yang merupakan perbandingan berbalik nilai?", q_trans: "Which of the following situations is an inverse proportion?", opts: ["Panjang sisi persegi dan luasnya", "Jumlah liter bensin dan jarak tempuh mobil", "Jumlah mesin fotokopi dan waktu menyalin buku", "Banyak kayu dan berat kayu", "Besar gaji dan pajak pendapatan"], correct: 2, exp: "<p>Semakin banyak mesin fotokopi yang dipakai, semakin cepat (sedikit waktu) buku selesai disalin. Ini berbalik nilai.</p><p class='translation'>The more copier machines used, the less time it takes to copy the book. This is inverse.</p>" },
+                        { q: "Jika \\( x \\) dan \\( y \\) berbanding senilai, dan \\( x = 4 \\) saat \\( y = 12 \\). Berapakah nilai \\( y \\) saat \\( x = 10 \\)?", q_trans: "If \\( x \\) and \\( y \\) are directly proportional, and \\( x = 4 \\) when \\( y = 12 \\). What is the value of \\( y \\) when \\( x = 10 \\)?", opts: ["20", "30", "40", "10", "15"], correct: 1, exp: "<p>\\( \\frac{4}{12} = \\frac{10}{y} \\implies 4y = 120 \\implies y = 30 \\).</p><p class='translation'>\\( \\frac{4}{12} = \\frac{10}{y} \\implies 4y = 120 \\implies y = 30 \\).</p>" },
+                        { q: "Jika \\( a \\) dan \\( b \\) berbanding berbalik nilai, dengan \\( a = 5 \\) saat \\( b = 6 \\). Berapakah nilai \\( a \\) saat \\( b = 10 \\)?", q_trans: "If \\( a \\) and \\( b \\) are inversely proportional, with \\( a = 5 \\) when \\( b = 6 \\). What is the value of \\( a \\) when \\( b = 10 \\)?", opts: ["3", "4", "5", "2", "6"], correct: 0, exp: "<p>\\( 5 \\times 6 = a \\times 10 \\implies 30 = 10a \\implies a = 3 \\).</p><p class='translation'>\\( 5 \\times 6 = a \\times 10 \\implies 30 = 10a \\implies a = 3 \\).</p>" }
+                    ]}
+                ]
+            },
+            review: {
+                title: "Review of Prior Knowledge",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-divide mr-2"></i>Pecahan dan Rasio</h2>
+                            <p class="translation">Fractions and Ratios</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="100" r="60" fill="#f59e0b" stroke="#000" stroke-width="2"/>
+                                <path d="M 100 40 A 60 60 0 0 1 160 100 L 100 100 Z" fill="#ef4444"/>
+                                <text x="80" y="120" font-size="20" text-anchor="middle">1/4</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Rasio dapat diekspresikan sebagai pecahan. Rasio \\( a : b \\) setara dengan pecahan \\( \\frac{a}{a+b} \\) untuk bagian pertama.</p>
+                                <p class="translation">A ratio can be expressed as a fraction. The ratio \\( a : b \\) is equivalent to the fraction \\( \\frac{a}{a+b} \\) for the first part.</p>
+                                <p class="mt-2">Misal, rasio merah dan biru \\( 1 : 3 \\). Maka bagian merah dari keseluruhan adalah \\( \\frac{1}{1+3} = \\frac{1}{4} \\).</p>
+                                <p class="translation">For example, ratio of red to blue is \\( 1 : 3 \\). So the red portion of the whole is \\( \\frac{1}{4} \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Rasio siswa yang menyukai matematika dan fisika adalah 2 : 3. Jika total siswa di kelas adalah 40 orang, berapakah jumlah siswa yang menyukai fisika?", q_trans: "The ratio of students who like math to physics is 2 : 3. If the total number of students is 40, how many students like physics?", opts: ["8", "12", "16", "24", "20"], correct: 3, exp: "<p>Total bagian = 5. 1 bagian = 40/5 = 8. Siswa fisika = 3 bagian = \\( 3 \\times 8 = 24 \\).</p><p class='translation'>Total parts = 5. 1 part = 8. Physics students = 3 parts = 24.</p>" },
+                        { q: "Sebuah kelas terdiri dari siswa yang suka olahraga (O) dan seni (S) dengan rasio 4 : 1. Berapakah persentase siswa yang menyukai olahraga?", q_trans: "A class consists of students who like sports (O) and arts (S) with a ratio of 4 : 1. What is the percentage of students who like sports?", opts: ["20%", "40%", "60%", "75%", "80%"], correct: 4, exp: "<p>Bagian olahraga dari total = \\( \\frac{4}{5} \\). Persentase = \\( \\frac{4}{5} \\times 100\\% = 80\\% \\).</p><p class='translation'>Sports portion of total = \\( \\frac{4}{5} \\). Percentage = 80%.</p>" },
+                        { q: "Jumlah uang Andi dan Budi adalah Rp 75.000. Jika rasio uang Andi dan Budi adalah 2 : 3, berapakah selisih uang mereka?", q_trans: "The total money of Andi and Budi is Rp 75,000. If the ratio is 2 : 3, what is the difference in their money?", opts: ["Rp 10.000", "Rp 15.000", "Rp 20.000", "Rp 25.000", "Rp 30.000"], correct: 1, exp: "<p>1 bagian = 75.000 / 5 = 15.000. Selisih bagian = 3 - 2 = 1 bagian. Maka selisih = Rp 15.000.</p><p class='translation'>1 part = 15,000. Difference in parts = 1. Difference in money = Rp 15,000.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-tachometer-alt mr-2"></i>Konsep Debit dan Kecepatan</h2>
+                            <p class="translation">Concept of Flow Rate and Speed</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <rect x="50" y="20" width="100" height="60" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+                                <path d="M 100 80 L 100 120 M 90 110 L 100 120 L 110 110" stroke="#1e40af" stroke-width="4" fill="none"/>
+                                <text x="100" y="140" font-size="12" text-anchor="middle">Debit / Flow</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Debit air adalah volume air yang mengalir per satuan waktu. \\( Q = \\frac{V}{t} \\). Debit berbanding lurus dengan volume dan berbanding terbalik dengan waktu.</p>
+                                <p class="translation">Water flow rate is the volume of water flowing per unit of time. \\( Q = \\frac{V}{t} \\). Flow rate is directly proportional to volume and inversely proportional to time.</p>
+                                <p class="mt-2">Kecepatan adalah jarak per satuan waktu. \\( v = \\frac{s}{t} \\).</p>
+                                <p class="translation">Speed is distance per unit of time. \\( v = \\frac{s}{t} \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah pipa mengalirkan 600 liter air dalam 5 menit. Berapakah debit pipa tersebut dalam liter/detik?", q_trans: "A pipe flows 600 liters of water in 5 minutes. What is the flow rate in liters/second?", opts: ["2 l/detik", "12 l/detik", "120 l/detik", "3000 l/detik", "0,5 l/detik"], correct: 0, exp: "<p>5 menit = 300 detik. \\( Q = \\frac{600}{300} = 2 \\) l/detik.</p><p class='translation'>5 mins = 300 secs. \\( Q = \\frac{600}{300} = 2 \\) l/s.</p>" },
+                        { q: "Sebuah kolam berisi 12.000 liter air. Jika debit air yang masuk adalah 40 liter/menit, berapa jam waktu yang dibutuhkan untuk penuh?", q_trans: "A pool holds 12,000 liters of water. If the inflow is 40 liters/minute, how many hours will it take to fill?", opts: ["3 jam", "4 jam", "5 jam", "6 jam", "2 jam"], correct: 2, exp: "<p>Waktu = Volume / Debit = 12.000 / 40 = 300 menit. 300 menit / 60 = 5 jam.</p><p class='translation'>Time = Volume / Rate = 12,000 / 40 = 300 mins = 5 hours.</p>" },
+                        { q: "Jika kecepatan sebuah sepeda motor adalah 45 km/jam, berapakah jarak yang ditempuh dalam 20 menit?", q_trans: "If a motorcycle's speed is 45 km/h, what distance is traveled in 20 minutes?", opts: ["9 km", "15 km", "22,5 km", "5 km", "10 km"], correct: 1, exp: "<p>20 menit = \\( \\frac{1}{3} \\) jam. \\( s = v \\times t = 45 \\times \\frac{1}{3} = 15 \\) km.</p><p class='translation'>20 mins = 1/3 hour. Distance = 15 km.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-male mr-2"></i>Perbandingan Usia dan Umur</h2>
+                            <p class="translation">Age Proportion</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="50" r="20" fill="#3b82f6"/>
+                                <rect x="80" y="70" width="40" height="80" fill="#3b82f6" rx="10"/>
+                                <text x="100" y="170" font-size="12" text-anchor="middle">Anak</text>
+                                
+                                <circle cx="100" cy="150" r="30" fill="#ef4444"/>
+                                <rect x="70" y="180" width="60" height="0" fill="#ef4444"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Umur seseorang sering dinyatakan dalam bentuk rasio terhadap umur orang lain.</p>
+                                <p class="translation">A person's age is often expressed as a ratio to another person's age.</p>
+                                <p class="mt-2">Kunci penting: Selisih umur dua orang tidak pernah berubah, namun rasio umurnya akan terus berubah seiring waktu.</p>
+                                <p class="translation">Key point: The age difference between two people never changes, but their age ratio will constantly change over time.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Umur ayah dan anak adalah 40 dan 10 tahun. Berapakah rasio umur mereka 5 tahun yang lalu?", q_trans: "The ages of father and son are 40 and 10 years. What was their age ratio 5 years ago?", opts: ["\\( 7 : 1 \\)", "\\( 4 : 1 \\)", "\\( 5 : 1 \\)", "\\( 8 : 1 \\)", "\\( 3 : 1 \\)"], correct: 0, exp: "<p>5 tahun lalu: Umur ayah = 35, Umur anak = 5. Rasio = \\( 35 : 5 = 7 : 1 \\).</p><p class='translation'>5 years ago: Father = 35, Son = 5. Ratio = 7:1.</p>" },
+                        { q: "Rasio umur kakak dan adik adalah 3 : 1. Jika selisih umur mereka adalah 8 tahun, berapakah umur kakak saat ini?", q_trans: "The ratio of older brother to younger brother is 3 : 1. If the age difference is 8 years, what is the older brother's current age?", opts: ["4 tahun", "8 tahun", "12 tahun", "16 tahun", "20 tahun"], correct: 2, exp: "<p>Selisih bagian = 3 - 1 = 2 bagian. 2 bagian = 8 tahun, 1 bagian = 4 tahun. Umur kakak = 3 bagian = 12 tahun.</p><p class='translation'>Difference in parts = 2. 2 parts = 8 yrs, 1 part = 4 yrs. Older brother = 3 parts = 12 yrs.</p>" },
+                        { q: "Rasio umur A dan B adalah 4 : 3. Jika 4 tahun mendatang rasio mereka menjadi 5 : 4, berapakah umur A saat ini?", q_trans: "The ratio of A's age to B's is 4 : 3. If in 4 years their ratio becomes 5 : 4, what is A's current age?", opts: ["8 tahun", "12 tahun", "16 tahun", "20 tahun", "24 tahun"], correct: 2, exp: "<p>\\( \\frac{4x + 4}{3x + 4} = \\frac{5}{4} \\implies 16x + 16 = 15x + 20 \\implies x = 4 \\). Umur A = \\( 4x = 16 \\) tahun.</p><p class='translation'>\\( x = 4 \\). A's age = 16.</p>" },
+                        { q: "Umur seorang ayah saat ini adalah 45 tahun, dan anaknya 15 tahun. Pada tahun berapa rasio umur ayah dan anak akan menjadi 2 : 1?", q_trans: "A father's current age is 45, and his son's is 15. In how many years will their age ratio be 2 : 1?", opts: ["5 tahun lagi", "10 tahun lagi", "15 tahun lagi", "20 tahun lagi", "Tidak pernah"], correct: 0, exp: "<p>Misal \\( x \\) tahun lagi. \\( \\frac{45+x}{15+x} = \\frac{2}{1} \\implies 45+x = 30+2x \\implies x = 15 \\) tahun.</p><p class='translation'>Let it be \\( x \\) years. \\( 45+x = 30+2x \\implies x = 15 \\) years. Wait, option doesn't match logic. Correction: \\( x = 15 \\). Correct answer should be C.</p>", correct: 2 }
+                    ]}
+                ]
+            },
+			
+            problem: {
+                title: "Problem Introduction",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-calculator mr-2"></i>Menyelesaikan Masalah Perbandingan Senilai</h2>
+                            <p class="translation">Solving Direct Proportion Problems</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <rect x="20" y="50" width="30" height="50" fill="#3b82f6"/>
+                                <text x="35" y="115" font-size="12" text-anchor="middle">10</text>
+                                <rect x="60" y="20" width="50" height="80" fill="#10b981"/>
+                                <text x="85" y="115" font-size="12" text-anchor="middle">50</text>
+                                <path d="M 120 60 L 160 60" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="140" y="50" font-size="12" text-anchor="middle">?</text>
+                                <rect x="170" y="10" width="60" height="90" fill="#f59e0b"/>
+                                <text x="200" y="115" font-size="12" text-anchor="middle">x</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Langkah penyelesaian: Identifikasi besaran, tentukan jenis perbandingan (senilai), lalu gunakan rumus perbandingan senilai.</p>
+                                <p class="translation">Solving steps: Identify quantities, determine the proportion type (direct), then use the direct proportion formula.</p>
+                                <p class="mt-2">Jika 10 pekerja dapat menyelesaikan pekerjaan dalam 50 hari, maka 5 pekerja akan membutuhkan waktu lebih lama. (Tunggu, ini berbalik nilai!). Hati-hati!</p>
+                                <p class="translation">If 10 workers can finish a job in 50 days, 5 workers will take longer. (Wait, this is inverse!). Be careful!</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah pabrik sepatu memproduksi 240 pasang sepatu dalam 8 hari. Jika pabrik tersebut memproduksi 300 pasang sepatu, berapa hari yang dibutuhkan?", q_trans: "A shoe factory produces 240 pairs of shoes in 8 days. If the factory produces 300 pairs of shoes, how many days are needed?", opts: ["10 hari", "12 hari", "15 hari", "6 hari", "9 hari"], correct: 0, exp: "<p>Perbandingan senilai: \\( \\frac{240}{8} = \\frac{300}{x} \\implies 240x = 2400 \\implies x = 10 \\) hari.</p><p class='translation'>Direct proportion: 10 days.</p>" },
+                        { q: "Jarak antara kota A dan B pada peta berskala 1:2.000.000 adalah 5 cm. Jika seseorang menempuh jarak tersebut dengan kecepatan 50 km/jam, berapa jam perjalanannya?", q_trans: "The distance between city A and B on a 1:2,000,000 scale map is 5 cm. If someone travels this distance at 50 km/h, how many hours is the trip?", opts: ["1 jam", "2 jam", "3 jam", "4 jam", "5 jam"], correct: 1, exp: "<p>Jarak asli = \\( 5 \\times 2.000.000 = 10.000.000 \\) cm = 100 km. Waktu = \\( \\frac{100}{50} = 2 \\) jam.</p><p class='translation'>Actual distance = 100 km. Time = 2 hours.</p>" },
+                        { q: "Harga 4 kg apel adalah Rp 40.000. Jika Bu Ani membeli 7 kg apel dengan uang Rp 100.000, berapakah uang kembalian yang diterima?", q_trans: "The price of 4 kg of apples is Rp 40,000. If Mrs. Ani buys 7 kg of apples with Rp 100,000, how much change will she receive?", opts: ["Rp 10.000", "Rp 20.000", "Rp 25.000", "Rp 30.000", "Rp 40.000"], correct: 3, exp: "<p>Harga 1 kg = 40.000 / 4 = 10.000. Harga 7 kg = 7 \\times 10.000 = 70.000. Kembalian = 100.000 - 70.000 = 30.000.</p><p class='translation'>Change = Rp 30,000.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-recycle mr-2"></i>Menyelesaikan Masalah Perbandingan Berbalik Nilai</h2>
+                            <p class="translation">Solving Inverse Proportion Problems</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <circle cx="50" cy="60" r="30" fill="#3b82f6"/>
+                                <text x="50" y="65" font-size="12" text-anchor="middle">Gear A</text>
+                                <circle cx="140" cy="60" r="50" fill="#ef4444" opacity="0.7"/>
+                                <text x="140" y="65" font-size="12" text-anchor="middle">Gear B</text>
+                                <path d="M 80 60 L 90 60" stroke="#000" stroke-width="2"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Rumus dasar: \\( x_1 \\times y_1 = x_2 \\times y_2 \\). Perhatikan bahwa perkalian kedua besaran harus selalu sama.</p>
+                                <p class="translation">Basic formula: \\( x_1 \\times y_1 = x_2 \\times y_2 \\). Note that the product of both quantities must always be the same.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah mobil menempuh jarak 180 km dengan kecepatan 60 km/jam. Jika kecepatan diturunkan menjadi 45 km/jam, berapa waktu yang dibutuhkan untuk jarak yang sama?", q_trans: "A car travels 180 km at 60 km/h. If the speed is reduced to 45 km/h, how much time is needed for the same distance?", opts: ["3 jam", "4 jam", "5 jam", "6 jam", "2,5 jam"], correct: 1, exp: "<p>\\( 60 \\times t_1 = 45 \\times t_2 \\). Waktu awal = 180/60 = 3 jam. \\( 60 \\times 3 = 45 \\times t_2 \\implies 180 = 45 t_2 \\implies t_2 = 4 \\) jam.</p><p class='translation'>4 hours.</p>" },
+                        { q: "Sebuah proyek dapat diselesaikan oleh 15 pekerja dalam 24 hari. Jika proyek harus selesai dalam 10 hari, berapa pekerja tambahan yang dibutuhkan?", q_trans: "A project can be completed by 15 workers in 24 days. If the project must be completed in 10 days, how many additional workers are needed?", opts: ["21 pekerja", "36 pekerja", "12 pekerja", "10 pekerja", "25 pekerja"], correct: 0, exp: "<p>\\( 15 \\times 24 = x \\times 10 \\implies 360 = 10x \\implies x = 36 \\) pekerja total. Tambahan = 36 - 15 = 21 pekerja.</p><p class='translation'>Additional workers = 21.</p>" },
+                        { q: "Jika 6 keran air dapat mengisi kolam dalam 7 jam, berapa jam yang dibutuhkan jika hanya 2 keran yang dibuka?", q_trans: "If 6 water taps can fill a pool in 7 hours, how many hours will it take if only 2 taps are opened?", opts: ["18 jam", "21 jam", "14 jam", "24 jam", "12 jam"], correct: 1, exp: "<p>\\( 6 \\times 7 = 2 \\times x \\implies 42 = 2x \\implies x = 21 \\) jam.</p><p class='translation'>21 hours.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-mix mr-2"></i>Perbandingan Gabungan</h2>
+                            <p class="translation">Compound Proportion</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="10" y="80" width="40" height="40" fill="#3b82f6"/>
+                                <text x="30" y="140" font-size="12" text-anchor="middle">A</text>
+                                <rect x="60" y="80" width="40" height="40" fill="#10b981"/>
+                                <text x="80" y="140" font-size="12" text-anchor="middle">B</text>
+                                <rect x="110" y="80" width="40" height="40" fill="#f59e0b"/>
+                                <text x="130" y="140" font-size="12" text-anchor="middle">C</text>
+                                <path d="M 30 60 L 80 60 L 130 60" stroke="#000" fill="none"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Kadang, sebuah masalah melibatkan lebih dari dua besaran. Tentukan hubungan setiap besaran terhadap besaran yang ditanyakan (senilai/berbalik nilai).</p>
+                                <p class="translation">Sometimes, a problem involves more than two quantities. Determine the relationship of each quantity to the one being asked (direct/inverse).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "12 orang pekerja dapat menyelesaikan pekerjaan dalam 10 hari. Jika ditambah 3 orang pekerja, berapa hari pekerjaan akan selesai?", q_trans: "12 workers can finish a job in 10 days. If 3 more workers are added, how many days will it take to finish the job?", opts: ["6 hari", "8 hari", "12 hari", "15 hari", "9 hari"], correct: 1, exp: "<p>\\( 12 \\times 10 = 15 \\times x \\implies 120 = 15x \\implies x = 8 \\) hari.</p><p class='translation'>8 days.</p>" },
+                        { q: "Harga 5 kg gula adalah Rp 25.000. Berapakah harga 8 kg gula?", q_trans: "The price of 5 kg of sugar is Rp 25,000. What is the price of 8 kg of sugar?", opts: ["Rp 30.000", "Rp 35.000", "Rp 40.000", "Rp 45.000", "Rp 50.000"], correct: 2, exp: "<p>\\( \\frac{5}{25.000} = \\frac{8}{x} \\implies 5x = 200.000 \\implies x = 40.000 \\).</p><p class='translation'>Rp 40,000.</p>" },
+                        { q: "Sebuah mobil berangkat dari kota A pukul 07.00 dengan kecepatan 60 km/jam dan tiba di kota B pukul 10.00. Jika kecepatannya dinaikkan menjadi 90 km/jam, pukul berapa mobil akan tiba di kota B?", q_trans: "A car leaves city A at 07:00 at 60 km/h and arrives at city B at 10:00. If the speed is increased to 90 km/h, what time will the car arrive at city B?", opts: ["08.00", "08.30", "09.00", "09.30", "10.00"], correct: 2, exp: "<p>Waktu awal = 3 jam. Jarak = 60 \\times 3 = 180 km. Waktu baru = 180 / 90 = 2 jam. Tiba pukul 07.00 + 2 jam = 09.00.</p><p class='translation'>Arrives at 09:00.</p>" },
+                        { q: "Jika \\( a \\) berbanding senilai dengan \\( b \\), dan \\( b \\) berbanding berbalik nilai dengan \\( c \\). Bagaimana hubungan \\( a \\) dan \\( c \\)?", q_trans: "If \\( a \\) is directly proportional to \\( b \\), and \\( b \\) is inversely proportional to \\( c \\). What is the relationship between \\( a \\) and \\( c \\)?", opts: ["Senilai", "Berbalik nilai", "Tidak berhubungan", "Senilai kuadrat", "Berbalik kuadrat"], correct: 1, exp: "<p>\\( a \\sim b \\), \\( b \\sim \\frac{1}{c} \\). Maka \\( a \\sim \\frac{1}{c} \\), sehingga \\( a \\) dan \\( c \\) berbanding berbalik nilai.</p><p class='translation'>Inverse proportion.</p>" }
+                    ]}
+                ]
+            },
+            guided: {
+                title: "Guided Practice",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-pie-chart mr-2"></i>Pembagian Perbandingan (Proportional Division)</h2>
+                            <p class="translation">Proportional Division</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="200" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <circle cx="75" cy="75" r="60" fill="#e0e7ff" stroke="#3b82f6" stroke-width="3"/>
+                                <path d="M 75 75 L 75 15 A 60 60 0 0 1 135 75 Z" fill="#3b82f6"/>
+                                <path d="M 75 75 L 135 75 A 60 60 0 0 1 75 135 Z" fill="#10b981"/>
+                                <path d="M 75 75 L 75 135 A 60 60 0 1 1 75 15 Z" fill="#f59e0b"/>
+                                <text x="40" y="50" font-size="14" text-anchor="middle">1</text>
+                                <text x="110" y="50" font-size="14" text-anchor="middle">2</text>
+                                <text x="75" y="105" font-size="14" text-anchor="middle">3</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Jika sebuah jumlah \\( T \\) dibagi dengan rasio \\( a : b : c \\), maka jumlah total bagian adalah \\( a + b + c \\). Nilai 1 bagian adalah \\( \\frac{T}{a+b+c} \\).</p>
+                                <p class="translation">If a total \\( T \\) is divided with ratio \\( a : b : c \\), total parts is \\( a + b + c \\). Value of 1 part is \\( \\frac{T}{a+b+c} \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah uang sebesar Rp 1.200.000 dibagi kepada Ani, Budi, dan Citra dengan rasio 1 : 2 : 3. Berapakah bagian yang diterima Budi?", q_trans: "A sum of money of Rp 1,200,000 is divided among Ani, Budi, and Citra with a ratio of 1 : 2 : 3. How much does Budi receive?", opts: ["Rp 200.000", "Rp 300.000", "Rp 400.000", "Rp 600.000", "Rp 500.000"], correct: 2, exp: "<p>Total bagian = 1 + 2 + 3 = 6. 1 bagian = 1.200.000 / 6 = 200.000. Budi dapat 2 bagian = 2 \\times 200.000 = 400.000.</p><p class='translation'>Rp 400,000.</p>" },
+                        { q: "Sebuah taman berbentuk persegi panjang memiliki keliling 120 m. Jika rasio panjang dan lebar adalah 3 : 2, berapakah luas taman tersebut?", q_trans: "A rectangular garden has a perimeter of 120 m. If the ratio of length to width is 3 : 2, what is the area of the garden?", opts: ["\\( 864 \\, m^2 \\)", "\\( 432 \\, m^2 \\)", "\\( 1200 \\, m^2 \\)", "\\( 600 \\, m^2 \\)", "\\( 216 \\, m^2 \\)"], correct: 0, exp: "<p>Keliling = 2(p+l). p+l = 60 m. Rasio 3:2, total 5 bagian. 1 bagian = 60/5 = 12m. p = 36m, l = 24m. Luas = 36 \\times 24 = 864 \\, m^2.</p><p class='translation'>864 m^2.</p>" },
+                        { q: "Uang Andi, Budi, dan Citra memiliki rasio 2 : 3 : 5. Jika Andi memiliki Rp 20.000, berapakah total uang mereka bertiga?", q_trans: "The money of Ani, Budi, and Citra has a ratio of 2 : 3 : 5. If Ani has Rp 20,000, what is their total money?", opts: ["Rp 100.000", "Rp 80.000", "Rp 120.000", "Rp 50.000", "Rp 200.000"], correct: 0, exp: "<p>2 bagian = 20.000, maka 1 bagian = 10.000. Total bagian = 10. Total uang = 10 \\times 10.000 = 100.000.</p><p class='translation'>Rp 100,000.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-cogs mr-2"></i>Perbandingan Berbalik Nilai dalam Kecepatan</h2>
+                            <p class="translation">Inverse Proportion in Speed</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="200" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <rect x="10" y="50" width="40" height="60" fill="#3b82f6"/>
+                                <text x="30" y="125" font-size="12" text-anchor="middle">v1</text>
+                                <rect x="60" y="70" width="40" height="40" fill="#ef4444"/>
+                                <text x="80" y="125" font-size="12" text-anchor="middle">v2</text>
+                                <path d="M 110 80 L 150 80" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="130" y="70" font-size="12" text-anchor="middle">t2 < t1</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Jika jarak tetap, kecepatan dan waktu berbanding berbalik nilai. \\( v_1 \\times t_1 = v_2 \\times t_2 \\).</p>
+                                <p class="translation">If distance is constant, speed and time are inversely proportional.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Andi berangkat ke sekolah dengan bersepeda berkecepatan 15 km/jam dan tiba dalam 20 menit. Jika ia berjalan kaki dengan kecepatan 5 km/jam, berapa menit waktu yang dibutuhkan?", q_trans: "Andi goes to school by cycling at 15 km/h and arrives in 20 minutes. If he walks at 5 km/h, how many minutes will it take?", opts: ["40 menit", "50 menit", "60 menit", "30 menit", "45 menit"], correct: 2, exp: "<p>\\( 15 \\times 20 = 5 \\times t \\implies 300 = 5t \\implies t = 60 \\) menit.</p><p class='translation'>60 minutes.</p>" },
+                        { q: "Sebuah pesawat terbang dengan kecepatan 600 km/jam selama 2 jam. Jika kecepatannya dikurangi menjadi 400 km/jam, berapa jam waktu yang dibutuhkan untuk menempuh jarak yang sama?", q_trans: "A plane flies at 600 km/h for 2 hours. If the speed is reduced to 400 km/h, how many hours will it take to cover the same distance?", opts: ["3 jam", "4 jam", "5 jam", "2 jam", "6 jam"], correct: 0, exp: "<p>\\( 600 \\times 2 = 400 \\times t \\implies 1200 = 400t \\implies t = 3 \\) jam.</p><p class='translation'>3 hours.</p>" },
+                        { q: "Jarak kota P ke Q ditempuh oleh bus dalam 3 jam dengan kecepatan 40 km/jam. Jika mobil menempuh jarak tersebut dalam 2 jam, berapakah kecepatan mobil tersebut?", q_trans: "The distance from city P to Q is covered by a bus in 3 hours at 40 km/h. If a car covers this distance in 2 hours, what is the speed of the car?", opts: ["50 km/jam", "60 km/jam", "70 km/jam", "80 km/jam", "90 km/jam"], correct: 1, exp: "<p>\\( 40 \\times 3 = v \\times 2 \\implies 120 = 2v \\implies v = 60 \\) km/jam.</p><p class='translation'>60 km/h.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-flask mr-2"></i>Perbandingan dalam Kimia Sederhana</h2>
+                            <p class="translation">Proportions in Simple Chemistry</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="120" height="150" viewBox="0 0 100 150" class="flex-shrink-0">
+                                <path d="M 30 150 L 30 50 L 70 20 L 70 150 Z" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+                                <rect x="30" y="100" width="40" height="50" fill="#3b82f6" opacity="0.5"/>
+                                <text x="50" y="80" font-size="10" text-anchor="middle">Konsentrasi</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Konsentrasi larutan berbanding lurus dengan jumlah zat terlarut dan berbanding terbalik dengan volume pelarut.</p>
+                                <p class="translation">Solution concentration is directly proportional to solute and inversely proportional to solvent volume.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Dalam 200 ml air terdapat 50 gram gula. Berapakah gram gula yang dibutuhkan untuk 500 ml air dengan konsentrasi yang sama?", q_trans: "In 200 ml of water there is 50g of sugar. How many grams of sugar are needed for 500 ml of water with the same concentration?", opts: ["100 gram", "125 gram", "150 gram", "200 gram", "75 gram"], correct: 1, exp: "<p>\\( \\frac{200}{50} = \\frac{500}{x} \\implies 200x = 25000 \\implies x = 125 \\) gram.</p><p class='translation'>125 grams.</p>" },
+                        { q: "Jika 4 pekerja dapat mengecat tembok seluas 100 \\( m^2 \\) dalam 5 hari, berapa hari yang dibutuhkan 5 pekerja untuk mengecat tembok seluas 150 \\( m^2 \\)?", q_trans: "If 4 workers can paint a 100 \\( m^2 \\) wall in 5 days, how many days will it take 5 workers to paint a 150 \\( m^2 \\) wall?", opts: ["4 hari", "5 hari", "6 hari", "7 hari", "8 hari"], correct: 2, exp: "<p>Kapasitas 1 pekerja = \\( \\frac{100}{4 \\times 5} = 5 \\, m^2/\\text{hari} \\). Untuk 5 pekerja dan 150 \\( m^2 \\): Waktu = \\( \\frac{150}{5 \\times 5} = 6 \\) hari.</p><p class='translation'>6 days.</p>" },
+                        { q: "Sebuah mobil memerlukan 10 liter bensin untuk menempuh jarak 120 km. Jika mobil tersebut diisi 15 liter bensin, berapakah jarak maksimal yang dapat ditempuh?", q_trans: "A car requires 10 liters of fuel to travel 120 km. If the car is filled with 15 liters of fuel, what is the maximum distance that can be traveled?", opts: ["150 km", "160 km", "170 km", "180 km", "200 km"], correct: 3, exp: "<p>\\( \\frac{10}{120} = \\frac{15}{x} \\implies 10x = 1800 \\implies x = 180 \\) km.</p><p class='translation'>180 km.</p>" },
+                        { q: "Sebuah keran air mengalir dengan debit 20 liter/menit. Jika ingin tangki berkapasitas 600 liter penuh dalam waktu yang lebih singkat, yaitu 15 menit, berapakah debit air yang dibutuhkan?", q_trans: "A water tap flows at 20 liters/minute. If you want a 600-liter tank to fill faster, in 15 minutes, what is the required water flow rate?", opts: ["30 l/m", "40 l/m", "50 l/m", "60 l/m", "70 l/m"], correct: 1, exp: "<p>Debit awal t = 600/20 = 30 mnt. \\( 20 \\times 30 = x \\times 15 \\implies 600 = 15x \\implies x = 40 \\) l/m.</p><p class='translation'>40 l/m.</p>" }
+                    ]}
+                ]
+            },
+            independent: {
+                title: "Independent Practice",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-expand-arrows-alt mr-2"></i>Skala pada Bangun Ruang</h2>
+                            <p class="translation">Scale in 3D Shapes</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <path d="M 20 150 L 20 50 L 100 20 L 100 120 Z" fill="#3b82f6" opacity="0.8"/>
+                                <path d="M 100 120 L 100 20 L 180 50 L 180 150 Z" fill="#3b82f6" opacity="0.6"/>
+                                <path d="M 20 150 L 100 120 L 180 150 Z" fill="#3b82f6" opacity="1"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Jika skala panjang adalah \\( 1 : k \\), maka skala luas adalah \\( 1 : k^2 \\), dan skala volume adalah \\( 1 : k^3 \\).</p>
+                                <p class="translation">If length scale is \\( 1 : k \\), area scale is \\( 1 : k^2 \\), and volume scale is \\( 1 : k^3 \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah model gedung dibuat dengan skala 1 : 100. Jika volume model tersebut adalah 2 \\( m^3 \\), berapakah volume gedung aslinya?", q_trans: "A building model is made at a scale of 1 : 100. If the model's volume is 2 \\( m^3 \\), what is the actual building's volume?", opts: ["\\( 200 \\, m^3 \\)", "\\( 2.000 \\, m^3 \\)", "\\( 20.000 \\, m^3 \\)", "\\( 200.000 \\, m^3 \\)", "\\( 2.000.000 \\, m^3 \\)"], correct: 3, exp: "<p>Skala volume = \\( 1 : 100^3 = 1 : 1.000.000 \\). Volume asli = 2 \\times 1.000.000 = 2.000.000 \\( m^3 \\). Wait, 2,000,000 is option E. Ah, let me check options. \\( 100^3 = 1,000,000 \\). \\( 2 \\times 1,000,000 = 2,000,000 \\).</p>", correct: 4 },
+                        { q: "Sebuah kebun berbentuk persegi panjang digambar dengan skala 1 : 500. Jika luas pada gambar adalah 8 \\( cm^2 \\), berapakah luas sebenarnya dalam \\( m^2 \\)?", q_trans: "A rectangular garden is drawn to a scale of 1 : 500. If the area on the drawing is 8 \\( cm^2 \\), what is the actual area in \\( m^2 \\)?", opts: ["\\( 100 \\, m^2 \\)", "\\( 200 \\, m^2 \\)", "\\( 500 \\, m^2 \\)", "\\( 1.000 \\, m^2 \\)", "\\( 2.000 \\, m^2 \\)"], correct: 1, exp: "<p>Skala luas = \\( 1 : 500^2 = 1 : 250.000 \\). Luas asli = 8 \\times 250.000 = 2.000.000 \\( cm^2 \\) = 200 \\( m^2 \\).</p><p class='translation'>200 m^2.</p>" },
+                        { q: "Sebuah foto ukuran 4R (10 cm x 15 cm) diperbesar sehingga lebarnya menjadi 30 cm. Berapakah panjang foto setelah diperbesar?", q_trans: "A 4R photo (10 cm x 15 cm) is enlarged so its width becomes 30 cm. What is the length of the photo after enlargement?", opts: ["20 cm", "30 cm", "45 cm", "60 cm", "50 cm"], correct: 2, exp: "<p>Faktor skala = 30 / 10 = 3. Panjang baru = 15 \\times 3 = 45 cm.</p><p class='translation'>45 cm.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-users mr-2"></i>Kecepatan Kerja dan Efisiensi</h2>
+                            <p class="translation">Work Rate and Efficiency</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="50" y="100" width="100" height="60" fill="#10b981"/>
+                                <circle cx="100" cy="80" r="20" fill="#fbbf24"/>
+                                <rect x="90" y="60" width="20" height="20" fill="#3b82f6"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Jika pekerja A lebih cepat dari pekerja B, maka waktu yang dibutuhkan A lebih sedikit. Kecepatan kerja berbanding terbalik dengan waktu.</p>
+                                <p class="translation">If worker A is faster than worker B, A takes less time. Work rate is inversely proportional to time.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Ali dapat mengecat tembok dalam 6 hari, sedangkan Budi dalam 12 hari. Jika mereka bekerja sama, berapa hari pekerjaan akan selesai?", q_trans: "Ali can paint a wall in 6 days, while Budi in 12 days. If they work together, how many days will the job be finished?", opts: ["3 hari", "4 hari", "5 hari", "6 hari", "8 hari"], correct: 1, exp: "<p>Kecepatan Ali = 1/6, Budi = 1/12. Gabungan = 1/6 + 1/12 = 2/12 + 1/12 = 3/12 = 1/4. Maka waktu = 4 hari.</p><p class='translation'>4 days.</p>" },
+                        { q: "Sebuah pipa A dapat mengisi kolam dalam 4 jam, pipa B dalam 6 jam. Jika kedua pipa dibuka bersamaan, pukul berapa kolam akan penuh jika dibuka pukul 07.00?", q_trans: "Pipe A can fill a pool in 4 hours, pipe B in 6 hours. If both pipes are opened simultaneously, what time will the pool be full if opened at 07:00?", opts: ["08.00", "08.24", "09.00", "09.24", "10.00"], correct: 3, exp: "<p>A = 1/4, B = 1/6. Gabungan = 1/4 + 1/6 = 3/12 + 2/12 = 5/12. Waktu = 12/5 = 2.4 jam = 2 jam 24 menit. 07.00 + 2 jam 24 menit = 09.24.</p><p class='translation'>09:24.</p>" },
+                        { q: "Mesin A dapat membuat 100 barang dalam 5 jam. Mesin B dapat membuat 100 barang dalam 4 jam. Jika bekerja bersama, berapa jam mereka dapat membuat 100 barang?", q_trans: "Machine A can make 100 items in 5 hours. Machine B can make 100 items in 4 hours. If working together, how many hours can they make 100 items?", opts: ["2 jam", "\\( 2 \\frac{2}{9} \\) jam", "3 jam", "\\( 3 \\frac{1}{2} \\) jam", "4 jam"], correct: 1, exp: "<p>A = 1/5, B = 1/4. Gabungan = 9/20. Waktu = 20/9 = 2 \\( \\frac{2}{9} \\) jam.</p><p class='translation'>2 2/9 hours.</p>" }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-exchange-alt mr-2"></i>Soal Cerita Lengkap</h2>
+                            <p class="translation">Comprehensive Word Problems</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="20" y="20" width="160" height="160" fill="#fef3c7" stroke="#f59e0b" stroke-width="4" rx="15"/>
+                                <text x="100" y="100" font-size="40" fill="#000" text-anchor="middle">?</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Baca soal dengan teliti, pisahkan informasi yang diketahui, dan tentukan apa yang ditanyakan.</p>
+                                <p class="translation">Read carefully, separate known information, and determine what is being asked.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Sebuah toko menjual 3 kg jeruk seharga Rp 36.000. Jika Bu Guru ingin membeli jeruk untuk 30 siswa dan setiap siswa mendapat 0,5 kg, berapakah uang yang harus dibayarkan?", q_trans: "A store sells 3 kg of oranges for Rp 36,000. If Mrs. Teacher wants to buy oranges for 30 students and each student gets 0.5 kg, how much money must be paid?", opts: ["Rp 120.000", "Rp 150.000", "Rp 180.000", "Rp 200.000", "Rp 240.000"], correct: 2, exp: "<p>Total jeruk = 30 \\times 0,5 = 15 kg. Harga 1 kg = 36.000 / 3 = 12.000. Total = 15 \\times 12.000 = 180.000.</p><p class='translation'>Rp 180,000.</p>" },
+                        { q: "Sebuah pabrik sepatu mempekerjakan 20 pekerja dan dapat menyelesaikan 1.000 pasang sepatu dalam 10 hari. Jika pabrik menerima pesanan 1.500 pasang sepatu dan harus selesai dalam 15 hari, berapakah pekerja yang dibutuhkan?", q_trans: "A shoe factory employs 20 workers and can finish 1,000 pairs of shoes in 10 days. If the factory receives an order for 1,500 pairs and must finish in 15 days, how many workers are needed?", opts: ["15 pekerja", "20 pekerja", "25 pekerja", "30 pekerja", "40 pekerja"], correct: 1, exp: "<p>1 pekerja = 1000 / (20 \\times 10) = 5 pasang/hari. Pesanan baru = 1500. 1 pekerja 15 hari = 75 pasang. Total pekerja = 1500 / 75 = 20 pekerja.</p><p class='translation'>20 workers.</p>" },
+                        { q: "Jarak dua kota pada peta berskala 1:250.000 adalah 8 cm. Sebuah mobil melaju dengan kecepatan 50 km/jam. Jika mobil berangkat pukul 08.00, pukul berapa mobil akan tiba?", q_trans: "The distance between two cities on a 1:250,000 scale map is 8 cm. A car travels at 50 km/h. If the car leaves at 08:00, what time will it arrive?", opts: ["08.20", "08.24", "08.30", "08.40", "08.45"], correct: 1, exp: "<p>Jarak = 8 \\times 250.000 = 2.000.000 cm = 20 km. Waktu = 20 / 50 = 0,4 jam = 24 menit. Tiba = 08.00 + 24 menit = 08.24.</p><p class='translation'>Arrives at 08:24.</p>" },
+                        { q: "Sebuah drum berisi 200 liter air. Jika keran dibuka penuh, air akan habis dalam 40 menit. Jika keran dibuka hanya 1/4 bagian, berapa jam waktu air akan habis?", q_trans: "A drum contains 200 liters of water. If the tap is fully opened, the water runs out in 40 minutes. If the tap is only 1/4 open, how many hours will it take for the water to run out?", opts: ["1 jam 20 menit", "2 jam 40 menit", "2 jam 30 menit", "3 jam", "4 jam"], correct: 1, exp: "<p>\\( 1 \\times 40 = \\frac{1}{4} \\times x \\implies x = 160 \\) menit. 160 menit = 2 jam 40 menit.</p><p class='translation'>2 hours 40 minutes.</p>" }
+                    ]}
+                ]
+            },
+            consolidation: {
+                title: "Consolidation & Reflection",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-indigo-700 mb-2"><i class="fas fa-check-double mr-2"></i>Rangkuman Pembelajaran</h2>
+                            <p class="translation">Learning Summary</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="40" y="40" width="120" height="120" fill="#e0e7ff" stroke="#4f46e5" stroke-width="3" rx="15"/>
+                                <path d="M 60 100 L 90 130 L 140 70" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Hari ini kita belajar tentang Rasio, Perbandingan Senilai, dan Perbandingan Berbalik Nilai.</p>
+                                <p class="translation">Today we learned about Ratio, Direct Proportion, and Inverse Proportion.</p>
+                                <ul class="list-disc ml-6 mt-2">
+                                    <li><strong>Rasio:</strong> Membandingkan dua besaran.</li>
+                                    <li class="translation">Ratio: Comparing two quantities.</li>
+                                    <li><strong>Senilai:</strong> Naik-turun bersamaan. \\( \\frac{x_1}{y_1} = \\frac{x_2}{y_2} \\).</li>
+                                    <li class="translation">Direct: Rises and falls together.</li>
+                                    <li><strong>Berbalik Nilai:</strong> Naik-turun berlawanan. \\( x_1 \\times y_1 = x_2 \\times y_2 \\).</li>
+                                    <li class="translation">Inverse: Rises and falls oppositely.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="mb-4">Siap menguji kemampuanmu lebih jauh? Kunjungi platform pembelajaran kami untuk latihan tanpa batas!</p>
+                            <p class="translation">Ready to test your skills further? Visit our learning platform for unlimited practice!</p>
+                            <a href="https://learn.algonova.id" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg shadow-md inline-flex items-center gap-2 mt-2">
+                                <i class="fas fa-rocket"></i> Continue to Algonova
+                                <span class="translation" style="color: #bfdbfe; display: inline;">Lanjut ke Algonova</span>
+                            </a>
+                        </div>
+                    `}
+                ]
+            },
+            task1: {
+                title: "Task 1: Rasio & Perbandingan Senilai",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Harga 2 kg apel adalah Rp 30.000. Berapakah harga 5 kg apel yang sama?", q_trans: "The price of 2 kg of apples is Rp 30,000. What is the price of 5 kg of the same apples?", opts: ["Rp 50.000", "Rp 60.000", "Rp 75.000", "Rp 80.000", "Rp 90.000"], correct: 2, exp: "<p>\\( \\frac{2}{30.000} = \\frac{5}{x} \\implies 2x = 150.000 \\implies x = 75.000 \\).</p><p class='translation'>Rp 75,000.</p>" },
+                        { q: "Jarak pada peta berskala 1:1.000.000 adalah 3 cm. Berapakah jarak sebenarnya dalam km?", q_trans: "A map distance with a scale of 1:1,000,000 is 3 cm. What is the actual distance in km?", opts: ["3 km", "10 km", "30 km", "100 km", "300 km"], correct: 2, exp: "<p>3 \\times 1.000.000 = 3.000.000 cm = 30 km.</p><p class='translation'>30 km.</p>" },
+                        { q: "Sebuah mobil menempuh 150 km dalam 3 jam. Berapa km jarak yang ditempuh dalam 5 jam dengan kecepatan yang sama?", q_trans: "A car travels 150 km in 3 hours. How many km are covered in 5 hours at the same speed?", opts: ["200 km", "250 km", "300 km", "350 km", "400 km"], correct: 1, exp: "<p>\\( \\frac{150}{3} = \\frac{x}{5} \\implies 3x = 750 \\implies x = 250 \\).</p><p class='translation'>250 km.</p>" },
+                        { q: "Harga 4 buah buku adalah Rp 20.000. Jika Andi membelu 15 buah buku, berapakah uang yang harus ia bayarkan?", q_trans: "The price of 4 books is Rp 20,000. If Andi buys 15 books, how much money must he pay?", opts: ["Rp 50.000", "Rp 60.000", "Rp 70.000", "Rp 75.000", "Rp 80.000"], correct: 3, exp: "<p>\\( \\frac{4}{20.000} = \\frac{15}{x} \\implies 4x = 300.000 \\implies x = 75.000 \\).</p><p class='translation'>Rp 75,000.</p>" },
+                        { q: "Sebuah pabrik memproduksi 500 botol dalam 2 jam. Berapa botol yang diproduksi dalam 7 jam?", q_trans: "A factory produces 500 bottles in 2 hours. How many bottles are produced in 7 hours?", opts: ["1.000", "1.250", "1.500", "1.750", "2.000"], correct: 3, exp: "<p>\\( \\frac{500}{2} = \\frac{x}{7} \\implies 2x = 3500 \\implies x = 1750 \\).</p><p class='translation'>1750.</p>" },
+                        { q: "Jika 3 kg gula harganya Rp 24.000, berapakah harga 1,5 kg gula?", q_trans: "If 3 kg of sugar costs Rp 24,000, what is the price of 1.5 kg of sugar?", opts: ["Rp 10.000", "Rp 12.000", "Rp 14.000", "Rp 15.000", "Rp 16.000"], correct: 1, exp: "<p>\\( \\frac{3}{24.000} = \\frac{1.5}{x} \\implies 3x = 36.000 \\implies x = 12.000 \\).</p><p class='translation'>Rp 12,000.</p>" },
+                        { q: "Uang Rp 100.000 cukup untuk membeli 4 kg daging. Jika uang yang tersedia Rp 150.000, berapa kg daging yang bisa dibeli?", q_trans: "Rp 100,000 is enough to buy 4 kg of meat. If the available money is Rp 150,000, how many kg of meat can be bought?", opts: ["5 kg", "6 kg", "7 kg", "8 kg", "9 kg"], correct: 1, exp: "<p>\\( \\frac{100.000}{4} = \\frac{150.000}{x} \\implies 100.000x = 600.000 \\implies x = 6 \\) kg.</p><p class='translation'>6 kg.</p>" },
+                        { q: "Jarak kota A ke B ditempuh dalam 4 jam dengan kecepatan 50 km/jam. Berapa kecepatan yang dibutuhkan agar dapat tiba dalam 2,5 jam?", q_trans: "The distance from city A to B is covered in 4 hours at 50 km/h. What speed is needed to arrive in 2.5 hours?", opts: ["60 km/jam", "70 km/jam", "80 km/jam", "90 km/jam", "100 km/jam"], correct: 2, exp: "<p>Jarak = 4 \\times 50 = 200 km. Kecepatan = 200 / 2.5 = 80 km/jam.</p><p class='translation'>80 km/h.</p>" },
+                        { q: "Sebuah mesin fotokopi menghasilkan 120 lembar dalam 2 menit. Berapa lembar yang dihasilkan dalam 15 menit?", q_trans: "A copy machine produces 120 sheets in 2 minutes. How many sheets are produced in 15 minutes?", opts: ["700", "800", "900", "1000", "1200"], correct: 2, exp: "<p>\\( \\frac{120}{2} = \\frac{x}{15} \\implies 2x = 1800 \\implies x = 900 \\).</p><p class='translation'>900.</p>" },
+                        { q: "Jika 5 pekerja dapat mengecat tembok dalam 12 hari, berapa hari yang dibutuhkan 6 pekerja untuk pekerjaan yang sama?", q_trans: "If 5 workers can paint a wall in 12 days, how many days will it take 6 workers for the same job?", opts: ["8 hari", "10 hari", "11 hari", "13 hari", "14 hari"], correct: 1, exp: "<p>\\( 5 \\times 12 = 6 \\times x \\implies 60 = 6x \\implies x = 10 \\) hari. (Perhatikan: ini berbanding berbalik nilai!).</p><p class='translation'>10 days. (Note: This is inverse!).</p>" }
+                    ]}
+                ]
+            },
+            task2: {
+                title: "Task 2: Perbandingan Berbalik Nilai",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Sebuah pekerjaan dapat diselesaikan oleh 8 pekerja dalam 9 hari. Jika pekerja dikurangi menjadi 6 orang, berapa hari pekerjaan selesai?", q_trans: "A job can be done by 8 workers in 9 days. If workers are reduced to 6, how many days will it take?", opts: ["10 hari", "11 hari", "12 hari", "13 hari", "14 hari"], correct: 2, exp: "<p>\\( 8 \\times 9 = 6 \\times x \\implies 72 = 6x \\implies x = 12 \\).</p><p class='translation'>12 days.</p>" },
+                        { q: "Sebuah tangki berisi air dapat habis dalam 10 menit jika keran dibuka penuh. Jika keran dibuka 1/2, berapa menit waktu air habis?", q_trans: "A full water tank empties in 10 minutes if the tap is fully open. If the tap is half-open, how many minutes will it take?", opts: ["15 menit", "20 menit", "25 menit", "30 menit", "40 menit"], correct: 1, exp: "<p>\\( 1 \\times 10 = 0.5 \\times x \\implies x = 20 \\).</p><p class='translation'>20 minutes.</p>" },
+                        { q: "Sebuah mobil menempuh jarak dengan kecepatan 60 km/jam selama 3 jam. Jika kecepatan dinaikkan menjadi 90 km/jam, berapa jam waktu yang dibutuhkan?", q_trans: "A car travels a distance at 60 km/h for 3 hours. If the speed is increased to 90 km/h, how many hours are needed?", opts: ["1 jam", "1,5 jam", "2 jam", "2,5 jam", "3 jam"], correct: 2, exp: "<p>\\( 60 \\times 3 = 90 \\times x \\implies 180 = 90x \\implies x = 2 \\).</p><p class='translation'>2 hours.</p>" },
+                        { q: "12 orang bisa menyewa sebuah bus dengan harga Rp 60.000 per orang. Jika yang ikut hanya 10 orang, berapakah biaya per orang?", q_trans: "12 people can rent a bus for Rp 60,000 per person. If only 10 people join, what is the cost per person?", opts: ["Rp 50.000", "Rp 60.000", "Rp 70.000", "Rp 72.000", "Rp 80.000"], correct: 3, exp: "<p>Total = 12 \\times 60.000 = 720.000. Per orang (10) = 720.000 / 10 = 72.000.</p><p class='translation'>Rp 72,000.</p>" },
+                        { q: "Jika 6 keran air mengisi kolam dalam 4 jam, berapa jam yang dibutuhkan jika hanya 3 keran yang berfungsi?", q_trans: "If 6 water taps fill a pool in 4 hours, how many hours will it take if only 3 taps function?", opts: ["6 jam", "7 jam", "8 jam", "9 jam", "10 jam"], correct: 2, exp: "<p>\\( 6 \\times 4 = 3 \\times x \\implies 24 = 3x \\implies x = 8 \\).</p><p class='translation'>8 hours.</p>" },
+                        { q: "Sebuah mobil menempuh jarak tertentu dengan kecepatan 60 km/jam selama 2 jam. Jika kecepatannya dinaikkan menjadi 80 km/jam, berapakah perbandingan waktu awal dan waktu akhir?", q_trans: "A car covers a certain distance at 60 km/h for 2 hours. If the speed is increased to 80 km/h, what is the ratio of initial time to final time?", opts: ["3:4", "4:3", "2:3", "3:2", "1:1"], correct: 1, exp: "<p>Kecepatan dan waktu berbanding berbalik nilai. \\( 60 \\times t_1 = 80 \\times t_2 \\). Jika \\( t_1 = 2 \\), maka \\( t_2 = 1,5 \\). Rasio waktu awal dan akhir = \\( 2 : 1,5 = 4 : 3 \\).</p><p class='translation'>Ratio 4:3.</p>" },
+                        { q: "Sebuah tugas diselesaikan oleh 4 siswa dalam 6 hari. Jika ditambah 2 siswa, berapa hari tugas itu selesai?", q_trans: "A task is completed by 4 students in 6 days. If 2 students are added, how many days will it finish?", opts: ["3 hari", "4 hari", "5 hari", "6 hari", "7 hari"], correct: 1, exp: "<p>\\( 4 \\times 6 = 6 \\times x \\implies 24 = 6x \\implies x = 4 \\).</p><p class='translation'>4 days.</p>" },
+                        { q: "Sebuah drum berisi air habis dalam 15 menit. Jika volume air diperbesar menjadi 2 kali lipat dan keran tetap sama, berapa menit air akan habis?", q_trans: "A drum of water empties in 15 minutes. If the water volume is doubled and the tap remains the same, how many minutes until it empties?", opts: ["20 menit", "25 menit", "30 menit", "35 menit", "40 menit"], correct: 2, exp: "<p>Volume berbanding senilai dengan waktu. \\( 1 \\times 15 = 2 \\times x \\implies x = 30 \\).</p><p class='translation'>30 minutes.</p>" },
+                        { q: "Jika \\( a \\) berbanding berbalik nilai dengan \\( b \\), dan \\( a = 10 \\) saat \\( b = 3 \\). Berapakah \\( a \\) saat \\( b = 5 \\)?", q_trans: "If \\( a \\) is inversely proportional to \\( b \\), and \\( a = 10 \\) when \\( b = 3 \\). What is \\( a \\) when \\( b = 5 \\)?", opts: ["4", "5", "6", "7", "8"], correct: 2, exp: "<p>\\( 10 \\times 3 = a \\times 5 \\implies 30 = 5a \\implies a = 6 \\).</p><p class='translation'>6.</p>" },
+                        { q: "20 pekerja dapat membuat 100 mainan dalam 5 hari. Jika hanya 10 pekerja, berapa hari untuk membuat 100 mainan yang sama?", q_trans: "20 workers can make 100 toys in 5 days. If only 10 workers, how many days to make the same 100 toys?", opts: ["8 hari", "10 hari", "12 hari", "15 hari", "20 hari"], correct: 1, exp: "<p>\\( 20 \\times 5 = 10 \\times x \\implies 100 = 10x \\implies x = 10 \\).</p><p class='translation'>10 days.</p>" }
+                    ]}
+                ]
+            },
+            task3: {
+                title: "Task 3: Pembagian Perbandingan & Skala",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Uang sebesar Rp 500.000 dibagi kepada dua orang dengan rasio 2 : 3. Berapakah selisih uang yang diterima?", q_trans: "Rp 500,000 is divided between two people with a ratio of 2 : 3. What is the difference in money received?", opts: ["Rp 50.000", "Rp 100.000", "Rp 150.000", "Rp 200.000", "Rp 250.000"], correct: 1, exp: "<p>1 bagian = 500.000 / 5 = 100.000. Selisih = (3-2) \\times 100.000 = 100.000.</p><p class='translation'>Rp 100,000.</p>" },
+                        { q: "Sebuah persegi panjang memiliki rasio panjang dan lebar 4 : 3. Jika kelilingnya 42 cm, berapakah luasnya?", q_trans: "A rectangle has a length to width ratio of 4 : 3. If the perimeter is 42 cm, what is its area?", opts: ["\\( 96 \\, cm^2 \\)", "\\( 108 \\, cm^2 \\)", "\\( 120 \\, cm^2 \\)", "\\( 144 \\, cm^2 \\)", "\\( 168 \\, cm^2 \\)"], correct: 1, exp: "<p>p+l = 21. 1 bagian = 21/7 = 3. p = 12, l = 9. Luas = 12 \\times 9 = 108.</p><p class='translation'>108 cm^2.</p>" },
+                        { q: "Skala pada peta adalah 1 : 500.000. Jarak sebenarnya 25 km. Berapakah jarak pada peta?", q_trans: "The scale on a map is 1 : 500,000. The actual distance is 25 km. What is the distance on the map?", opts: ["2 cm", "3 cm", "4 cm", "5 cm", "6 cm"], correct: 3, exp: "<p>25 km = 2.500.000 cm. Jarak peta = 2.500.000 / 500.000 = 5 cm.</p><p class='translation'>5 cm.</p>" },
+                        { q: "Uang Andi, Budi, dan Citra memiliki rasio 1 : 2 : 4. Jika selisih uang Andi dan Citra adalah Rp 60.000, berapakah total uang mereka?", q_trans: "The money of Ani, Budi, and Citra has a ratio of 1 : 2 : 4. If the difference between Ani's and Citra's money is Rp 60,000, what is their total money?", opts: ["Rp 105.000", "Rp 120.000", "Rp 140.000", "Rp 150.000", "Rp 160.000"], correct: 2, exp: "<p>Selisih bagian = 3. 3 bagian = 60.000, 1 bagian = 20.000. Total bagian = 7. Total = 7 \\times 20.000 = 140.000.</p><p class='translation'>Rp 140,000.</p>" },
+                        { q: "Sebuah model rumah dibuat dengan skala 1 : 50. Jika luas atap model tersebut 20 \\( cm^2 \\), berapakah luas atap rumah aslinya dalam \\( m^2 \\)?", q_trans: "A house model is made at a scale of 1 : 50. If the roof area of the model is 20 \\( cm^2 \\), what is the actual roof area in \\( m^2 \\)?", opts: ["\\( 2 \\, m^2 \\)", "\\( 5 \\, m^2 \\)", "\\( 10 \\, m^2 \\)", "\\( 20 \\, m^2 \\)", "\\( 50 \\, m^2 \\)"], correct: 1, exp: "<p>Skala luas = \\( 1 : 50^2 = 1 : 2500 \\). Luas asli = 20 \\times 2500 = 50.000 \\( cm^2 \\) = 5 \\( m^2 \\).</p><p class='translation'>5 m^2.</p>" },
+                        { q: "Sebuah taman persegi panjang luasnya 600 \\( m^2 \\). Jika rasio panjang dan lebar 3 : 2, berapakah keliling taman tersebut?", q_trans: "A rectangular garden has an area of 600 \\( m^2 \\). If the ratio of length to width is 3 : 2, what is the perimeter of the garden?", opts: ["80 m", "90 m", "100 m", "110 m", "120 m"], correct: 2, exp: "<p>\\( 3x \\times 2x = 6x^2 = 600 \\implies x^2 = 100 \\implies x = 10 \\). p = 30, l = 20. K = 2(30+20) = 100 m.</p><p class='translation'>100 m.</p>" },
+                        { q: "Umur ayah dan anak adalah 5 : 2. Jika selisih umur mereka 30 tahun, berapakah umur ayah?", q_trans: "The ratio of father's to son's age is 5 : 2. If their age difference is 30 years, what is the father's age?", opts: ["40 tahun", "45 tahun", "50 tahun", "55 tahun", "60 tahun"], correct: 2, exp: "<p>Selisih bagian = 3. 3 bagian = 30, 1 bagian = 10. Ayah = 5 \\times 10 = 50 tahun.</p><p class='translation'>50 years.</p>" },
+                        { q: "Sebuah kelas memiliki 40 siswa. Rasio siswa laki-laki dan perempuan adalah 3 : 5. Berapakah jumlah siswa laki-laki?", q_trans: "A class has 40 students. The ratio of male to female students is 3 : 5. How many male students are there?", opts: ["10", "12", "15", "20", "25"], correct: 2, exp: "<p>Total bagian = 8. 1 bagian = 5. Laki-laki = 3 \\times 5 = 15.</p><p class='translation'>15.</p>" },
+                        { q: "Sebuah lingkaran dibagi menjadi 3 bagian dengan rasio 1 : 2 : 3. Berapakah besar sudut bagian terbesar?", q_trans: "A circle is divided into 3 parts with a ratio of 1 : 2 : 3. What is the angle of the largest part?", opts: ["\\( 60^\\circ \\)", "\\( 120^\\circ \\)", "\\( 150^\\circ \\)", "\\( 180^\\circ \\)", "\\( 200^\\circ \\)"], correct: 3, exp: "<p>Total bagian = 6. 1 bagian = 360/6 = 60. Bagian terbesar (3) = 3 \\times 60 = 180 derajat.</p><p class='translation'>180 degrees.</p>" },
+                        { q: "Sebuah foto ukuran 4R (10x15) diperbesar dengan skala 1:3. Berapakah luas foto setelah diperbesar?", q_trans: "A 4R photo (10x15) is enlarged at a scale of 1:3. What is the area of the enlarged photo?", opts: ["\\( 450 \\, cm^2 \\)", "\\( 600 \\, cm^2 \\)", "\\( 900 \\, cm^2 \\)", "\\( 1350 \\, cm^2 \\)", "\\( 1500 \\, cm^2 \\)"], correct: 3, exp: "<p>Ukuran baru = 30x45. Luas = 30 \\times 45 = 1350 \\( cm^2 \\).</p><p class='translation'>1350 cm^2.</p>" }
+                    ]}
+                ]
+            },
+            task4: {
+                title: "Task 4: Soal Cerita Usia & Waktu",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Rasio umur kakak dan adik adalah 7 : 3. Jika umur adik 12 tahun, berapakah umur kakak?", q_trans: "The ratio of older brother's to younger brother's age is 7 : 3. If the younger brother is 12 years old, what is the older brother's age?", opts: ["20 tahun", "24 tahun", "28 tahun", "30 tahun", "35 tahun"], correct: 2, exp: "<p>1 bagian = 12/3 = 4. Kakak = 7 \\times 4 = 28 tahun.</p><p class='translation'>28 years.</p>" },
+                        { q: "Umur seorang ayah saat ini 45 tahun, dan anaknya 15 tahun. Berapakah rasio umur mereka 5 tahun yang lalu?", q_trans: "A father's current age is 45, and his son's is 15. What was their age ratio 5 years ago?", opts: ["\\( 3 : 1 \\)", "\\( 4 : 1 \\)", "\\( 5 : 1 \\)", "\\( 6 : 1 \\)", "\\( 7 : 1 \\)"], correct: 1, exp: "<p>5 tahun lalu: Ayah = 40, Anak = 10. Rasio = 40:10 = 4:1.</p><p class='translation'>4 : 1.</p>" },
+                        { q: "Rasio umur A dan B adalah 2 : 1. Selisih umur mereka 10 tahun. Berapakah umur A saat ini?", q_trans: "The ratio of A's to B's age is 2 : 1. Their age difference is 10 years. What is A's current age?", opts: ["10 tahun", "15 tahun", "20 tahun", "25 tahun", "30 tahun"], correct: 2, exp: "<p>Selisih bagian = 1. 1 bagian = 10. A = 2 \\times 10 = 20 tahun.</p><p class='translation'>20 years.</p>" },
+                        { q: "Rasio umur A dan B adalah 4 : 3. Jika 4 tahun mendatang rasio mereka menjadi 5 : 4, berapakah umur A saat ini?", q_trans: "The ratio of A's to B's age is 4 : 3. If in 4 years their ratio becomes 5 : 4, what is A's current age?", opts: ["8 tahun", "12 tahun", "16 tahun", "20 tahun", "24 tahun"], correct: 2, exp: "<p>\\( \\frac{4x+4}{3x+4} = \\frac{5}{4} \\implies 16x+16 = 15x+20 \\implies x = 4 \\). Umur A = 4x = 16.</p><p class='translation'>16 years.</p>" },
+                        { q: "Sebuah mobil menempuh jarak 240 km dengan kecepatan 80 km/jam. Jika kecepatannya dinaikkan menjadi 120 km/jam, berapakah waktu yang dibutuhkan?", q_trans: "A car travels 240 km at 80 km/h. If the speed is increased to 120 km/h, what is the time needed?", opts: ["1 jam", "1,5 jam", "2 jam", "2,5 jam", "3 jam"], correct: 2, exp: "<p>Waktu awal = 240/80 = 3 jam. Waktu baru = 240/120 = 2 jam.</p><p class='translation'>2 hours.</p>" },
+                        { q: "Bus A berangkat pukul 06.00 dengan kecepatan 50 km/jam. Bus B berangkat pukul 07.00 dengan kecepatan 60 km/jam. Pukul berapa Bus B menyusul Bus A?", q_trans: "Bus A departs at 06:00 at 50 km/h. Bus B departs at 07:00 at 60 km/h. At what time will Bus B overtake Bus A?", opts: ["10.00", "11.00", "12.00", "13.00", "14.00"], correct: 2, exp: "<p>Kejar = 1 jam \\times 50 = 50 km. Selisih kecepatan = 10 km/j. Waktu = 50/10 = 5 jam. 07.00 + 5 jam = 12.00.</p><p class='translation'>12:00.</p>" },
+                        { q: "Sebuah keran mengisi bak mandi dalam 15 menit. Jika keran tersebut hanya membuka 1/3 dari lubangnya, berapa menit waktu yang dibutuhkan untuk mengisi bak yang sama?", q_trans: "A tap fills a bathtub in 15 minutes. If the tap is only 1/3 open, how many minutes will it take to fill the same tub?", opts: ["30 menit", "35 menit", "40 menit", "45 menit", "50 menit"], correct: 3, exp: "<p>\\( 1 \\times 15 = \\frac{1}{3} \\times x \\implies x = 45 \\) menit.</p><p class='translation'>45 minutes.</p>" },
+                        { q: "Ali dapat menyelesaikan tugas dalam 4 hari, Budi dalam 6 hari. Jika mereka bekerja sama, berapa hari tugas selesai?", q_trans: "Ali can finish a task in 4 days, Budi in 6 days. If they work together, how many days will the task be finished?", opts: ["2,4 hari", "3 hari", "3,2 hari", "4,2 hari", "5 hari"], correct: 0, exp: "<p>1/4 + 1/6 = 5/12. Waktu = 12/5 = 2,4 hari.</p><p class='translation'>2.4 days.</p>" },
+                        { q: "Sebuah jam dinding memiliki jarum panjang (menit). Berapakah sudut yang dibentuk jarum menit pukul 08.20?", q_trans: "A wall clock has a long (minute) hand. What angle is formed by the minute hand at 08:20?", opts: ["\\( 60^\\circ \\)", "\\( 90^\\circ \\)", "\\( 120^\\circ \\)", "\\( 150^\\circ \\)", "\\( 180^\\circ \\)"], correct: 2, exp: "<p>20 menit = 1/3 jam. 1 jam = 360/12 = 30 derajat. 1/3 jam = 10 derajat. Tunggu, jarum menit! 60 menit = 360 derajat. 20 menit = (20/60) \\times 360 = 120 derajat.</p><p class='translation'>120 degrees.</p>" },
+                        { q: "Seorang pekerja mengecat 1/3 bagian tembok dalam 2 jam. Berapa jam waktu yang dibutuhkan untuk mengecat seluruh tembok?", q_trans: "A worker paints 1/3 of a wall in 2 hours. How many hours will it take to paint the entire wall?", opts: ["4 jam", "5 jam", "6 jam", "7 jam", "8 jam"], correct: 2, exp: "<p>1/3 bagian = 2 jam. 1 bagian = 2 \\times 3 = 6 jam.</p><p class='translation'>6 hours.</p>" }
+                    ]}
+                ]
+            },
+            task5: {
+                title: "Task 5: Soal Campuran & Lanjutan",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Harga 5 kg jeruk sama dengan harga 3 kg apel. Jika harga 1 kg apel Rp 10.000, berapakah harga 2 kg jeruk?", q_trans: "The price of 5 kg of oranges equals the price of 3 kg of apples. If 1 kg of apples costs Rp 10,000, what is the price of 2 kg of oranges?", opts: ["Rp 8.000", "Rp 10.000", "Rp 12.000", "Rp 15.000", "Rp 20.000"], correct: 2, exp: "<p>5 kg jeruk = 3 \\times 10.000 = 30.000. 1 kg jeruk = 6.000. 2 kg = 12.000.</p><p class='translation'>Rp 12,000.</p>" },
+                        { q: "Sebuah pabrik sepatu memproduksi 1000 pasang sepatu dalam 10 hari oleh 50 pekerja. Jika ditambah 10 pekerja, berapa hari untuk memproduksi 1200 pasang sepatu?", q_trans: "A shoe factory produces 1000 pairs of shoes in 10 days by 50 workers. If 10 workers are added, how many days to produce 1200 pairs?", opts: ["8 hari", "9 hari", "10 hari", "11 hari", "12 hari"], correct: 2, exp: "<p>1 pekerja 1 hari = 1000 / (50 \\times 10) = 2 pasang. Total pekerja = 60. Waktu = 1200 / (60 \\times 2) = 10 hari.</p><p class='translation'>10 days.</p>" },
+                        { q: "Jika \\( x \\) berbanding senilai dengan \\( y \\), dan berbanding berbalik nilai dengan \\( z \\). Jika \\( x = 4 \\) saat \\( y = 2 \\) dan \\( z = 3 \\), berapakah \\( x \\) saat \\( y = 4 \\) dan \\( z = 2 \\)?", q_trans: "If \\( x \\) is directly proportional to \\( y \\), and inversely proportional to \\( z \\). If \\( x = 4 \\) when \\( y = 2 \\) and \\( z = 3 \\), what is \\( x \\) when \\( y = 4 \\) and \\( z = 2 \\)?", opts: ["6", "8", "10", "12", "16"], correct: 3, exp: "<p>\\( x = k \\frac{y}{z} \\). 4 = k (2/3) \\implies k = 6. x = 6 \\times (4/2) = 12.</p><p class='translation'>12.</p>" },
+                        { q: "Sebuah rel kereta api memiliki panjang 360 meter. Sebuah kereta melintasinya dalam 20 detik. Jika kereta tersebut melaju dengan kecepatan yang sama, berapa meter rel yang bisa ditempuh dalam 45 detik?", q_trans: "A railway track is 360 meters long. A train crosses it in 20 seconds. If the train travels at the same speed, how many meters of track can be covered in 45 seconds?", opts: ["720 m", "810 m", "900 m", "950 m", "1000 m"], correct: 1, exp: "<p>\\( \\frac{360}{20} = \\frac{x}{45} \\implies 20x = 16200 \\implies x = 810 \\) m.</p><p class='translation'>810 m.</p>" },
+                        { q: "Sebuah toko memberi diskon 20% untuk semua barang. Jika harga setelah diskon Rp 80.000, berapakah harga awalnya?", q_trans: "A store gives a 20% discount on all items. If the price after discount is Rp 80,000, what was the original price?", opts: ["Rp 90.000", "Rp 96.000", "Rp 100.000", "Rp 120.000", "Rp 150.000"], correct: 2, exp: "<p>Harga akhir = 80% \\times awal. 80.000 = 0.8 \\times awal. Awal = 100.000.</p><p class='translation'>Rp 100,000.</p>" },
+                        { q: "Uang Rp 200.000 dibagi kepada A, B, dan C dengan rasio 1 : 2 : 5. Jika B mendapat bagian Rp 50.000, apakah pernyataan ini benar?", q_trans: "Rp 200,000 is divided among A, B, and C with a ratio of 1 : 2 : 5. If B gets Rp 50,000, is this statement true?", opts: ["Benar", "Salah", "Tidak bisa ditentukan", "B dapat Rp 40.000", "B dapat Rp 60.000"], correct: 0, exp: "<p>1 bagian = 200.000 / 8 = 25.000. B = 2 bagian = 50.000. Jadi benar.</p><p class='translation'>True.</p>" },
+                        { q: "Sebuah kolam berisi 1000 liter air. Jika keran dibuka, air berkurang 5 liter per menit. Berapa jam air akan habis?", q_trans: "A pool contains 1000 liters of water. If the tap is open, water decreases by 5 liters per minute. How many hours until the water runs out?", opts: ["2 jam 30 menit", "3 jam 15 menit", "3 jam 20 menit", "3 jam 30 menit", "4 jam"], correct: 2, exp: "<p>Waktu = 1000 / 5 = 200 menit. 200 menit = 3 jam 20 menit.</p><p class='translation'>3 hours 20 minutes.</p>" },
+                        { q: "Sebuah taman berbentuk lingkaran dengan luas 154 \\( m^2 \\). Jika jari-jari taman diperbesar 2 kali lipat, berapakah luas taman yang baru?", q_trans: "A circular garden has an area of 154 \\( m^2 \\). If the radius is doubled, what is the new area?", opts: ["\\( 308 \\, m^2 \\)", "\\( 462 \\, m^2 \\)", "\\( 616 \\, m^2 \\)", "\\( 770 \\, m^2 \\)", "\\( 924 \\, m^2 \\)"], correct: 2, exp: "<p>Skala jari-jari 1:2, maka skala luas 1:4. Luas baru = 154 \\times 4 = 616 \\( m^2 \\).</p><p class='translation'>616 m^2.</p>" },
+                        { q: "Jika 5 orang pekerja dapat menyelesaikan pekerjaan dalam 12 hari, dan setelah 3 hari 2 orang pekerja berhenti, berapa hari lagi pekerjaan tersebut selesai?", q_trans: "If 5 workers can finish a job in 12 days, and after 3 days 2 workers quit, how many more days will the job be finished?", opts: ["15 hari", "18 hari", "20 hari", "22,5 hari", "25 hari"], correct: 0, exp: "<p>Total kerja = 5 \\times 12 = 60 hari-orang. 3 hari pertama = 5 \\times 3 = 15. Sisa kerja = 60 - 15 = 45. Sisa pekerja = 3 orang. Waktu = 45 / 3 = 15 hari.</p><p class='translation'>15 days.</p>" },
+                        { q: "Sebuah barang dijual dengan harga Rp 120.000 dan mengalami kerugian 20%. Berapakah harga beli barang tersebut?", q_trans: "An item is sold for Rp 120,000 and experiences a 20% loss. What was the purchase price of the item?", opts: ["Rp 100.000", "Rp 120.000", "Rp 140.000", "Rp 150.000", "Rp 160.000"], correct: 3, exp: "<p>Harga jual = 80% \\times beli. 120.000 = 0.8 \\times beli. Beli = 150.000.</p><p class='translation'>Rp 150,000.</p>" }
+                    ]}
+                ]
+            }
+        };
+
+        // --- AUTO FIX KATEX ESCAPE SEQUENCE ---
+        (function() {
+            function fixString(str) {
+                if (typeof str !== 'string') return str;
+                str = str.replace(/\u000Crac/g, '\\frac');
+                str = str.replace(/\neq/g, '\\neq');
+                str = str.replace(/\u0009imes/g, '\\times');
+                str = str.replace(/\u0009ext/g, '\\text');
+                str = str.replace(/ pi\(/g, ' \\pi(');
+                str = str.replace(/ div /g, ' \\div ');
+                str = str.replace(/ cdot /g, ' \\cdot ');
+                str = str.replace(/ implies /g, ' \\implies ');
+                str = str.replace(/ pm /g, ' \\pm ');
+                str = str.replace(/ sqrt/g, ' \\sqrt');
+                str = str.replace(/ leq /g, ' \\leq ');
+                str = str.replace(/ geq /g, ' \\geq ');
+                str = str.replace(/ infty /g, ' \\infty ');
+                return str;
+            }
+            function processObject(obj) {
+                for (const key in obj) {
+                    if (typeof obj[key] === 'string') {
+                        obj[key] = fixString(obj[key]);
+                    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        processObject(obj[key]);
+                    }
+                }
+            }
+            processObject(contentData);
+        })();
+
+        // --- FUNCTIONS FOR MODAL ---
+        function openModal() { document.getElementById('rulesModal').classList.remove('hidden'); document.getElementById('rulesModal').classList.add('flex'); }
+        function closeModal() { document.getElementById('rulesModal').classList.add('hidden'); }
+
+        // --- NAVIGATION & PAGINATION ---
+        let currentSection = '';
+        let currentPage = 0;
+
+        function showSection(sectionId, pageIndex, event) {
+            currentSection = sectionId;
+            currentPage = pageIndex;
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                const activeItem = document.querySelector(`.sidebar-item[onclick*="${sectionId}"]`);
+                if(activeItem) activeItem.classList.add('active');
+            }
+            renderContent();
+        }
+
+        function renderContent() {
+            const section = contentData[currentSection];
+            const mainContent = document.getElementById('mainContent');
+            const page = section.pages[currentPage];
+            
+            let html = `<h2 class="text-3xl font-bold text-blue-800 mb-4">${section.title}</h2>`;
+            
+            if (currentSection.startsWith('task')) {
+                const taskNum = currentSection.replace('task', '');
+                html += `<div class="mb-4 no-print flex justify-end">
+                            <button onclick="printTask(${taskNum})" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+                                <i class="fas fa-print"></i> Print Task ${taskNum}
+                            </button>
+                         </div>`;
+            }
+
+            if (page.type === 'theory') {
+                html += `<div class="bg-white p-6 rounded-lg shadow-md">${page.content}</div>`;
+            } else if (page.type === 'tasks') {
+                html += `<div class="bg-white p-6 rounded-lg shadow-md">`;
+                page.tasks.forEach((task, index) => {
+                    html += renderTask(task, index);
+                });
+                html += `</div>`;
+            }
+
+            html += `<div class="flex justify-between mt-6 no-print">`;
+            if (currentPage > 0) {
+                html += `<button onclick="prevPage()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i> Prev</button>`;
+            } else {
+                html += `<div></div>`;
+            }
+            if (currentPage < section.pages.length - 1) {
+                html += `<button onclick="nextPage()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next <i class="fas fa-arrow-right"></i></button>`;
+            } else {
+                html += `<div></div>`;
+            }
+            html += `</div>`;
+
+            mainContent.innerHTML = html;
+            if (window.renderMathInElement) {
+                renderMathInElement(mainContent, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+        }
+        
+        function prevPage() { currentPage--; renderContent(); }
+        function nextPage() { currentPage++; renderContent(); }
+
+        function renderTask(task, index) {
+            const taskId = `${currentSection}-${currentPage}-${index}`;
+            let opts = task.opts.map((opt, i) => ({ text: opt, isCorrect: i === task.correct }));
+            opts = shuffleArray(opts);
+
+            let optionsHtml = '';
+            opts.forEach((opt, i) => {
+                optionsHtml += `
+                    <button id="opt-${taskId}-${i}" onclick="checkAnswer('${taskId}', ${i}, ${opt.isCorrect})" class="option-btn w-full text-left p-3 border rounded-lg mb-2 flex items-center">
+                        <span class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-3 font-bold">${String.fromCharCode(65 + i)}</span>
+                        <span>${opt.text}</span>
+                    </button>
+                `;
+            });
+
+            // PERBAIKAN: 
+            // 1. Ganti \times dengan karakter × (unicode) agar tidak muncul sebagai teks mentah.
+            // 2. Ganti tag <p> menjadi <div> di dalam explanation agar tidak terjadi nested <p> yang merusak layout.
+            let safeExp = task.exp ? task.exp.replace(/\\times/g, '×').replace(/<p>/g, '<div>').replace(/<\/p>/g, '</div>') : '';
+
+            return `
+                <div class="border-b border-gray-200 py-4">
+                    <p class="font-semibold mb-2">${index + 1}. ${task.q}</p>
+                    <p class="translation">${task.q_trans}</p>
+                    <div class="mt-4">
+                        ${optionsHtml}
+                    </div>
+                    <div id="feedback-${taskId}" class="mt-2"></div>
+                    <div id="collapse-${taskId}" class="collapse-content mt-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h4 class="font-bold text-blue-600 mb-2"><i class="fas fa-lightbulb mr-1"></i>Explanation</h4>
+                        <div>${safeExp}</div>
+                    </div>
+                    <div class="mt-2 no-print flex gap-2">
+                        <button id="reset-${taskId}" onclick="resetTask('${taskId}')" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-bold py-1 px-3 rounded"><i class="fas fa-redo mr-1"></i>Reset</button>
+                        <button onclick="toggleCollapse('${taskId}')" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-1 px-3 rounded"><i class="fas fa-chevron-down mr-1"></i>Show Explanation</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function checkAnswer(taskId, optIndex, isCorrect) {
+            const buttons = document.querySelectorAll(`[id^="opt-${taskId}-"]`);
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            const selectedBtn = document.getElementById(`opt-${taskId}-${optIndex}`);
+            const feedback = document.getElementById(`feedback-${taskId}`);
+            const resetBtn = document.getElementById(`reset-${taskId}`);
+            const explainBtn = document.querySelector(`#reset-${taskId}`).nextElementSibling;
+            
+            resetBtn.classList.remove('hidden');
+            explainBtn.classList.remove('hidden');
+
+            if (isCorrect) {
+                selectedBtn.classList.add('bg-green-200', 'border-green-500');
+                feedback.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Correct! (Benar!)</p>`;
+            } else {
+                selectedBtn.classList.add('bg-red-200', 'border-red-500');
+                feedback.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Incorrect. Check the explanation! (Salah. Cek penjelasannya!)</p>`;
+                document.getElementById(`collapse-${taskId}`).classList.add('open');
+            }
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            content.classList.toggle('open');
+        }
+
+        function resetTask(taskId) {
+            renderContent();
+        }
+
+        function printTask(taskNumber) {
+            const printArea = document.getElementById('printArea');
+            const date = new Date().toLocaleDateString('en-GB');
+            let taskContent = contentData['task' + taskNumber].pages[0]; 
+            
+            let tableRows = '';
+            let score = 0;
+
+            taskContent.tasks.forEach((task, index) => {
+                const taskId = `task${taskNumber}-0-${index}`;
+                const correctAnswerText = task.opts[task.correct];
+                
+                const selectedBtn = document.querySelector(`[id^="opt-${taskId}-"].bg-green-200, [id^="opt-${taskId}-"].bg-red-200`);
+                
+                let studentAnswerHtml = '<span style="color:#9ca3af; font-style:italic;">(Empty)</span>';
+                let noteHtml = '❌';
+                
+                if (selectedBtn) {
+                    const ann = selectedBtn.querySelector('.katex-mathml annotation');
+                    if (ann) {
+                        studentAnswerHtml = `\\( ${ann.textContent} \\)`;
+                    } else {
+                        const spans = selectedBtn.querySelectorAll('span');
+                        if (spans.length >= 2) {
+                            studentAnswerHtml = spans[1].innerText;
+                        } else {
+                            studentAnswerHtml = selectedBtn.innerText.substring(1).trim();
+                        }
+                    }
+                    
+                    if (selectedBtn.classList.contains('bg-green-200')) {
+                        noteHtml = '✔️';
+                        score++;
+                    } else {
+                        noteHtml = '❌';
+                    }
+                }
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center; vertical-align: top;">${index + 1}</td>
+                        <td style="vertical-align: top;">${task.q}</td>
+                        <td style="vertical-align: top;">${studentAnswerHtml}</td>
+                        <td style="vertical-align: top;">${correctAnswerText}</td>
+                        <td style="text-align: center; vertical-align: top; font-size: 16px;">${noteHtml}</td>
+                    </tr>
+                `;
+            });
+            printArea.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h1>Math Tutoring by Deni</h1>
+                    <p>Topic: Rasio, Perbandingan Senilai & Berbalik Nilai</p>
+                    <p>Name: .........................</p>
+                    <p>Date: ${date}</p>
+                    <p>Task: ${taskNumber}/5</p>
+                    <p>Score: ${score} / 10</p>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                    <thead>
+                        <tr style="border: 1px solid #000; background-color: #f3f4f6;">
+                            <th style="border: 1px solid #000; padding: 5px; width: 5%;">No.</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 40%;">Question</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 20%;">Student Answer</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 25%;">Correct Answer</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 10%;">Note (❌/✔️)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+                <div style="margin-top: 40px; text-align: right;">
+                    <p>Checked by,</p>
+                    <br><br>
+                    <p><strong>Deni</strong></p>
+                </div>
+            `;
+            
+            if (window.renderMathInElement) {
+                renderMathInElement(printArea, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+            
+            printArea.classList.remove('hidden');
+            window.print();
+            printArea.classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.renderMathInElement) {
+                document.querySelector('.sidebar-item').click();
+            } else {
+                window.addEventListener('load', () => {
+                    document.querySelector('.sidebar-item').click();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
