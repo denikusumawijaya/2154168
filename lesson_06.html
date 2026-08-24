@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Pecahan Aljabar</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Tailwind CSS (for easier styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
+        .translation { font-style: italic; font-size: 0.85em; color: #6b7280; display: block; margin-top: 4px; }
+        .main-content { min-height: 70vh; }
+        .sidebar-item.active { background-color: #3b82f6; color: white; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { background-color: #e0f2fe; }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .collapse-content.open { max-height: 500px; }
+        @media print {
+            body > *:not(#printArea) { 
+                display: none !important; 
+            }
+            
+            /* Pastikan printArea terlihat dan diatur ukurannya */
+            #printArea { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                padding: 20px; 
+                box-sizing: border-box;
+            }
+            
+            .no-print { 
+                display: none !important; 
+            }
+            
+            /* Pastikan tabel tidak terpotong aneh dan muat di 1 halaman */
+            table { 
+                width: 100%; 
+                border-collapse: collapse; 
+            }
+            tr, td, th { 
+                page-break-inside: avoid; 
+            }
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold text-blue-600">Math Tutoring by Deni</h1>
+            <p class="text-sm text-gray-600">Topic: Pengantar Pecahan Aljabar (Menyederhanakan)</p>
+            <p class="translation">Math Tutoring by Deni / Topic: Introduction to Algebraic Fractions (Simplifying)</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+                <i class="fas fa-gavel"></i> Class Rules
+                <span class="translation" style="color: #bfdbfe;">Class Rules</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Class Rules Modal -->
+    <div id="rulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-blue-600">Class Rules</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Berbicara secara bergantian</p>
+                        <p class="translation">Speak in turns / Take turns speaking</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Meminta izin jika ingin meninggalkan kelas</p>
+                        <p class="translation">Ask for permission if you want to leave the class</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-blue-500 mt-1"></i>
+                    <div>
+                        <p>Menyalakan kamera dan microphone jika diperlukan</p>
+                        <p class="translation">Turn on camera and microphone when needed</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg h-screen sticky top-0 overflow-y-auto no-print">
+            <ul class="py-4">
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('warmup', 0)">
+                    <i class="fas fa-fire mr-2"></i>Spiral Review Warm-up (00:00-00:10)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('intro', 0)">
+                    <i class="fas fa-bullhorn mr-2"></i>Introduction & Real-World (00:10-00:15)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('review', 0)">
+                    <i class="fas fa-history mr-2"></i>Review of Prior Knowledge (00:15-00:20)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('problem', 0)">
+                    <i class="fas fa-puzzle-piece mr-2"></i>Problem Introduction (00:20-00:30)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('guided', 0)">
+                    <i class="fas fa-hand-holding mr-2"></i>Guided Practice (00:30-00:45)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('independent', 0)">
+                    <i class="fas fa-user-graduate mr-2"></i>Independent Practice (00:45-00:55)
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('consolidation', 0)">
+                    <i class="fas fa-book-open mr-2"></i>Consolidation & Reflection (00:55-01:00)
+                </li>
+                <li class="border-t border-gray-200 mt-2"></li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task1', 0)">
+                    <i class="fas fa-tasks mr-2"></i>Task 1
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task2', 0)">
+                    <i class="fas fa-tasks mr-2"></i>Task 2
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task3', 0)">
+                    <i class="fas fa-tasks mr-2"></i>Task 3
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task4', 0)">
+                    <i class="fas fa-tasks mr-2"></i>Task 4
+                </li>
+                <li class="sidebar-item p-3 cursor-pointer hover:bg-blue-50" onclick="showSection('task5', 0)">
+                    <i class="fas fa-tasks mr-2"></i>Task 5
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 main-content" id="mainContent">
+            <!-- Content will be injected here -->
+        </main>
+    </div>
+
+    <!-- Hidden Print Area -->
+    <div id="printArea" class="hidden"></div>
+
+    <script>
+        let contentData = {
+            warmup: {
+                title: "Spiral Review Warm-up",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-fire mr-2"></i>Apa itu Pecahan?</h2>
+                            <p class="translation">What is a Fraction?</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="100" r="80" fill="#fbbf24" stroke="#d97706" stroke-width="4"/>
+                                <path d="M 100 100 L 100 20 A 80 80 0 0 1 180 100 Z" fill="#ef4444"/>
+                                <path d="M 100 100 L 180 100 A 80 80 0 0 1 100 180 Z" fill="#3b82f6"/>
+                                <path d="M 100 100 L 100 180 A 80 80 0 0 1 20 100 Z" fill="#10b981"/>
+                                <path d="M 100 100 L 20 100 A 80 80 0 0 1 100 20 Z" fill="#fff"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Pecahan mewakili bagian dari keseluruhan. Di sebelah kiri adalah ilustrasi pizza yang dibagi menjadi 4 bagian.</p>
+                                <p class="translation">A fraction represents a part of a whole. On the left is an illustration of a pizza divided into 4 parts.</p>
+                                <p class="mt-2">Jika kita mengambil 1 bagian, kita menulisnya sebagai \\( \frac{1}{4} \\).</p>
+                                <p class="translation">If we take 1 part, we write it as \\( \frac{1}{4} \\).</p>
+                            </div>
+                        </div>
+                        <p>Angka di atas disebut <strong>pembilang</strong> (numerator), dan angka di bawah disebut <strong>penyebut</strong> (denominator).</p>
+                        <p class="translation">The top number is called the numerator, and the bottom number is called the denominator.</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah kue dibagi menjadi 8 potong sama besar. Budi memakan 3 potong. Berapa pecahan bagian kue yang dimakan Budi?", q_trans: "A cake is divided into 8 equal slices. Budi eats 3 slices. What is the fraction of the cake eaten by Budi?", opts: ["\\( \frac{3}{8} \\)", "\\( \frac{8}{3} \\)", "\\( \frac{5}{8} \\)", "\\( \frac{3}{5} \\)", "\\( \frac{8}{5} \\)"], correct: 0, exp: "Pembilang adalah bagian yang dimakan (3), penyebut adalah total bagian (8). Jadi, \\( \frac{3}{8} \\)." },
+                        { q: "Dalam pecahan \\( \frac{7}{10} \\), angka 10 disebut?", q_trans: "In the fraction \\( \frac{7}{10} \\), what is the number 10 called?", opts: ["Pembilang", "Penyebut", "Bilangan cacah", "Faktor", "Kelipatan"], correct: 1, exp: "Angka di bawah garis pecahan disebut penyebut (denominator), yang menunjukkan jumlah total bagian." },
+                        { q: "Ibu memiliki 12 apel. 5 di antaranya diberikan kepada tetangga. Pecahan apel yang tersisa di ibu adalah...", q_trans: "Mother has 12 apples. 5 of them are given to the neighbor. The fraction of apples left with mother is...", opts: ["\\( \frac{5}{12} \\)", "\\( \frac{12}{7} \\)", "\\( \frac{7}{12} \\)", "\\( \frac{12}{5} \\)", "\\( \frac{5}{7} \\)"], correct: 2, exp: "Sisa apel = 12 - 5 = 7. Total apel = 12. Pecahan sisa = \\( \frac{7}{12} \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-balance-scale mr-2"></i>Pecahan Setara</h2>
+                            <p class="translation">Equivalent Fractions</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <div>
+                                <p>Pecahan setara adalah pecahan yang nilainya sama meskipun angkanya berbeda.</p>
+                                <p class="translation">Equivalent fractions are fractions that have the same value even though the numbers are different.</p>
+                                <p class="mt-2">Contoh: \\( \frac{1}{2} = \frac{2}{4} = \frac{4}{8} \\)</p>
+                                <p class="translation">Example: \\( \frac{1}{2} = \frac{2}{4} = \frac{4}{8} \\)</p>
+                            </div>
+                            <svg width="200" height="100" viewBox="0 0 200 100">
+                                <rect x="10" y="20" width="50" height="60" fill="#f59e0b" stroke="#000"/>
+                                <rect x="10" y="20" width="25" height="60" fill="#f97316" stroke="#000"/>
+                                <rect x="80" y="20" width="100" height="60" fill="#f59e0b" stroke="#000"/>
+                                <rect x="80" y="20" width="25" height="60" fill="#f97316" stroke="#000"/>
+                                <rect x="105" y="20" width="25" height="60" fill="#f97316" stroke="#000"/>
+                            </svg>
+                        </div>
+                        <p>Kita bisa menyederhanakan pecahan dengan membagi pembilang dan penyebut dengan faktor persekutuan terbesar (FPB).</p>
+                        <p class="translation">We can simplify fractions by dividing the numerator and denominator by the greatest common factor (GCF).</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan pecahan \\( \frac{6}{9} \\).", q_trans: "Simplify the fraction \\( \frac{6}{9} \\).", opts: ["\\( \frac{2}{3} \\)", "\\( \frac{3}{2} \\)", "\\( \frac{1}{3} \\)", "\\( \frac{6}{3} \\)", "\\( \frac{2}{9} \\)"], correct: 0, exp: "FPB dari 6 dan 9 adalah 3. \\( \frac{6 \div 3}{9 \div 3} = \frac{2}{3} \\)." },
+                        { q: "Diketahui pecahan \\( \frac{10}{15} \\). Jika disederhanakan, hasilnya sama dengan...", q_trans: "Given the fraction \\( \frac{10}{15} \\). When simplified, the result equals...", opts: ["\\( \frac{2}{3} \\)", "\\( \frac{3}{2} \\)", "\\( \frac{5}{3} \\)", "\\( \frac{2}{5} \\)", "\\( \frac{5}{2} \\)"], correct: 0, exp: "FPB dari 10 dan 15 adalah 5. \\( \frac{10 \div 5}{15 \div 5} = \frac{2}{3} \\)." },
+                        { q: "Andi berlari sejauh 12 km dari total rute 18 km. Pecahan paling sederhana dari jarak yang ditempuh Andi adalah...", q_trans: "Andi ran 12 km out of an 18 km total route. The simplest fraction of the distance Andi covered is...", opts: ["\\( \frac{12}{18} \\)", "\\( \frac{2}{3} \\)", "\\( \frac{3}{4} \\)", "\\( \frac{6}{9} \\)", "\\( \frac{4}{6} \\)"], correct: 1, exp: "Jarak tempuh = \\( \frac{12}{18} \\). Faktor persekutuan 6. \\( \frac{12 \div 6}{18 \div 6} = \frac{2}{3} \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-superscript mr-2"></i>Memasukkan Variabel (Aljabar)</h2>
+                            <p class="translation">Introducing Variables (Algebra)</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                             <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="20" y="50" width="160" height="100" fill="#e0e7ff" stroke="#4f46e5" stroke-width="4" rx="10"/>
+                                <text x="100" y="115" font-size="40" fill="#4f46e5" text-anchor="middle" font-family="monospace">x</text>
+                            </svg>
+                            <div>
+                                <p>Dalam aljabar, kita mengganti angka dengan huruf (variabel) seperti \\( x \\) atau \\( y \\).</p>
+                                <p class="translation">In algebra, we replace numbers with letters (variables) like \\( x \\) or \\( y \\).</p>
+                                <p class="mt-2">Pecahan aljabar memiliki bentuk dasar \\( \frac{P(x)}{Q(x)} \\), di mana \\( P \\) dan \\( Q \\) adalah polinomial.</p>
+                                <p class="translation">Algebraic fractions have the basic form \\( \frac{P(x)}{Q(x)} \\), where \\( P \\) and \\( Q \\) are polynomials.</p>
+                            </div>
+                        </div>
+                        <p>Menyederhanakan pecahan aljabar pada dasarnya sama dengan menyederhanakan pecahan biasa: kita mencari faktor yang sama lalu membaginya.</p>
+                        <p class="translation">Simplifying algebraic fractions is essentially the same as simplifying regular fractions: we find common factors and divide them.</p>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Diketahui pecahan aljabar \\( \frac{3x}{9x} \\). Jika \\( x \neq 0 \\), bentuk sederhananya adalah...", q_trans: "Given the algebraic fraction \\( \frac{3x}{9x} \\). If \\( x \neq 0 \\), its simplified form is...", opts: ["\\( \frac{1}{3} \\)", "\\( \frac{3}{9} \\)", "\\( \frac{x}{3} \\)", "\\( 3 \\)", "\\( \frac{3}{x} \\)"], correct: 0, exp: "Bagi pembilang dan penyebut dengan \\( 3x \\). \\( \frac{3x \div 3x}{9x \div 3x} = \frac{1}{3} \\)." },
+                        { q: "Sebuah persegi panjang memiliki panjang \\( 4a \\) dan lebar \\( 2a \\). Jika luasnya dipecah menjadi pecahan terhadap kelilingnya, atau dalam konteks aljabar dasar, sederhanakan bentuk \\( \frac{4a}{2a} \\) (\\( a \neq 0 \\)).", q_trans: "A rectangle has length \\( 4a \\) and width \\( 2a \\). Simplify the algebraic form \\( \frac{4a}{2a} \\) (\\( a \neq 0 \\)).", opts: ["\\( 2 \\)", "\\( \frac{1}{2} \\)", "\\( 2a \\)", "\\( \frac{2}{a} \\)", "\\( 4 \\)"], correct: 0, exp: "Bagi pembilang dan penyebut dengan \\( 2a \\). \\( \frac{4a \div 2a}{2a \div 2a} = \frac{2}{1} = 2 \\)." },
+                        { q: "Sederhanakan pecahan aljabar \\( \frac{5y}{10y^2} \\) untuk \\( y \neq 0 \\).", q_trans: "Simplify the algebraic fraction \\( \frac{5y}{10y^2} \\) for \\( y \neq 0 \\).", opts: ["\\( \frac{1}{2y} \\)", "\\( \frac{5}{10y} \\)", "\\( \frac{1}{2} \\)", "\\( \frac{y}{2} \\)", "\\( \frac{5y}{2} \\)"], correct: 0, exp: "FPB dari \\( 5y \\) dan \\( 10y^2 \\) adalah \\( 5y \\). \\( \frac{5y \div 5y}{10y^2 \div 5y} = \frac{1}{2y} \\)." },
+                        { q: "Sebuah toko menjual \\( 6m \\) kg gula dalam \\( 2m \\) karung. Berapa kg gula per karung? (Sederhanakan \\( \frac{6m}{2m} \\), \\( m \neq 0 \\))", q_trans: "A store sells \\( 6m \\) kg of sugar in \\( 2m \\) sacks. How many kg of sugar per sack? (Simplify \\( \frac{6m}{2m} \\), \\( m \neq 0 \\))", opts: ["\\( 3 \\) kg", "\\( 3m \\) kg", "\\( \frac{1}{3} \\) kg", "\\( 2 \\) kg", "\\( 6 \\) kg"], correct: 0, exp: "Bagi \\( 6m \\) dengan \\( 2m \\). \\( \frac{6m \div 2m}{2m \div 2m} = \frac{3}{1} = 3 \\) kg per karung." }
+                    ]}
+                ]
+            },
+            intro: {
+                title: "Introduction & Real-World Connection",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-car mr-2"></i>Pecahan Aljabar di Dunia Nyata</h2>
+                            <p class="translation">Algebraic Fractions in the Real World</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="50" y="80" width="100" height="40" fill="#3b82f6" rx="5"/>
+                                <rect x="60" y="60" width="80" height="30" fill="#93c5fd" rx="5"/>
+                                <circle cx="70" cy="125" r="15" fill="#1f2937"/>
+                                <circle cx="130" cy="125" r="15" fill="#1f2937"/>
+                                <path d="M 50 80 Q 100 20 150 80" stroke="#fbbf24" stroke-width="4" fill="none"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Bayangkan kamu sedang menghitung kecepatan rata-rata. Rumus kecepatan adalah Jarak dibagi Waktu: \\( v = \frac{s}{t} \\).</p>
+                                <p class="translation">Imagine you are calculating average speed. The speed formula is Distance divided by Time: \\( v = \frac{s}{t} \\).</p>
+                                <p class="mt-2">Jika jaraknya adalah \\( 2x \\) km dan waktunya \\( x \\) jam, maka kecepatannya adalah \\( \frac{2x}{x} \\).</p>
+                                <p class="translation">If the distance is \\( 2x \\) km and the time is \\( x \\) hours, then the speed is \\( \frac{2x}{x} \\).</p>
+                            </div>
+                        </div>
+                        <p>Ini adalah contoh sederhana bagaimana pecahan aljabar digunakan. Menyederhanakannya akan membantu kita menemukan kecepatan sebenarnya, yaitu 2 km/jam!</p>
+                        <p class="translation">This is a simple example of how algebraic fractions are used. Simplifying it will help us find the actual speed, which is 2 km/h!</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sebuah mobil menempuh jarak \\( 4x \\) km dalam waktu \\( 2x \\) jam. Kecepatan rata-rata mobil tersebut adalah...", q_trans: "A car covers a distance of \\( 4x \\) km in \\( 2x \\) hours. The average speed of the car is...", opts: ["\\( 2 \\) km/jam", "\\( 2x \\) km/jam", "\\( \frac{1}{2} \\) km/jam", "\\( 4 \\) km/jam", "\\( 8x \\) km/jam"], correct: 0, exp: "Kecepatan = Jarak / Waktu = \\( \frac{4x}{2x} \\). Sederhanakan dengan membagi \\( 2x \\), hasilnya \\( 2 \\) km/jam." },
+                        { q: "Seorang tukang kebun memotong rumput seluas \\( 6y \\) meter persegi dalam \\( 3y \\) menit. Berapa luas rumput yang dipotong per menit?", q_trans: "A gardener mows \\( 6y \\) square meters of grass in \\( 3y \\) minutes. How much grass is mowed per minute?", opts: ["\\( 2 \\) m²", "\\( 2y \\) m²", "\\( 3 \\) m²", "\\( \frac{1}{2} \\) m²", "\\( 6 \\) m²"], correct: 0, exp: "Luas per menit = \\( \frac{6y}{3y} \\). Bagi dengan \\( 3y \\), hasilnya \\( 2 \\) m² per menit." },
+                        { q: "Harga \\( 5a \\) buah pensil adalah Rp \\( 10.000a \\). Berapakah harga 1 buah pensil tersebut?", q_trans: "The price of \\( 5a \\) pencils is Rp \\( 10.000a \\). What is the price of 1 pencil?", opts: ["Rp 2.000", "Rp 2.000a", "Rp 5.000", "Rp 10.000", "Rp 50.000a"], correct: 0, exp: "Harga 1 pensil = \\( \frac{10000a}{5a} \\). Bagi dengan \\( 5a \\), hasilnya Rp 2.000." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-puzzle-piece mr-2"></i>Konsep Faktor dalam Aljabar</h2>
+                            <p class="translation">The Concept of Factors in Algebra</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="160" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <rect x="10" y="50" width="40" height="50" fill="#10b981" rx="3"/>
+                                <rect x="50" y="50" width="40" height="50" fill="#10b981" rx="3"/>
+                                <rect x="90" y="50" width="40" height="50" fill="#10b981" rx="3"/>
+                                <rect x="130" y="50" width="40" height="50" fill="#10b981" rx="3"/>
+                                <text x="90" y="40" font-size="20" fill="#000" text-anchor="middle">4x</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Dalam aljabar, faktor adalah perkalian yang membentuk suatu suku. \\( 4x \\) dapat difaktorkan menjadi \\( 4 \times x \\).</p>
+                                <p class="translation">In algebra, a factor is a multiplication that forms a term. \\( 4x \\) can be factored into \\( 4 \times x \\).</p>
+                                <p class="mt-2">Sama seperti angka 12 bisa ditulis \\( 3 \times 4 \\). Menemukan faktor yang sama antara pembilang dan penyebut adalah kunci menyederhanakan pecahan.</p>
+                                <p class="translation">Just like the number 12 can be written as \\( 3 \times 4 \\). Finding common factors between numerator and denominator is the key to simplifying fractions.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Faktor persekutuan dari \\( 8x \\) dan \\( 4x \\) adalah...", q_trans: "The common factor of \\( 8x \\) and \\( 4x \\) is...", opts: ["\\( 4x \\)", "\\( 2x \\)", "\\( 8 \\)", "\\( 4 \\)", "\\( x \\)"], correct: 0, exp: "Faktor terbesar yang bisa membagi habis \\( 8x \\) dan \\( 4x \\) adalah \\( 4x \\)." },
+                        { q: "Sebuah papan kayu sepanjang \\( 12m \\) cm dipotong menjadi \\( 4m \\) cm bagian yang sama. Berapa banyak potongan yang didapat? (Sederhanakan \\( \frac{12m}{4m} \\), \\( m \neq 0 \\))", q_trans: "A wooden board \\( 12m \\) cm long is cut into \\( 4m \\) cm equal pieces. How many pieces are obtained? (Simplify \\( \frac{12m}{4m} \\), \\( m \neq 0 \\))", opts: ["3 potong", "4 potong", "12 potong", "48 potong", "8 potong"], correct: 0, exp: "Bagi \\( 12m \\) dengan \\( 4m \\). \\( \frac{12m \div 4m}{4m \div 4m} = 3 \\) potong." },
+                        { q: "Diketahui pecahan \\( \frac{15a}{25a} \\) (\\( a \neq 0 \\)). Faktor persekutuan terbesar (FPB) dari pembilang dan penyebutnya adalah...", q_trans: "Given the fraction \\( \frac{15a}{25a} \\) (\\( a \neq 0 \\)). The greatest common factor (GCF) of the numerator and denominator is...", opts: ["\\( 5a \\)", "\\( 5 \\)", "\\( 15 \\)", "\\( 25a \\)", "\\( 3a \\)"], correct: 0, exp: "FPB dari 15 dan 25 adalah 5. Kedua suku memiliki variabel \\( a \\). Jadi FPB-nya adalah \\( 5a \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-balance-scale-right mr-2"></i>Aturan Emas Penyederhanaan</h2>
+                            <p class="translation">The Golden Rule of Simplification</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#f59e0b" stroke-width="5" stroke-dasharray="10 5"/>
+                                <text x="100" y="95" font-size="30" fill="#000" text-anchor="middle">Atas</text>
+                                <line x1="40" y1="100" x2="160" y2="100" stroke="#ef4444" stroke-width="4"/>
+                                <text x="100" y="130" font-size="30" fill="#000" text-anchor="middle">Bawah</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Aturan emasnya: <strong>Bagi pembilang dan penyebut dengan faktor yang sama.</strong></p>
+                                <p class="translation">The golden rule: <strong>Divide the numerator and denominator by the same factor.</strong></p>
+                                <p class="mt-2">Jangan pernah membagi dengan angka yang berbeda. \\( \frac{ax}{bx} = \frac{a}{b} \\) (jika \\( x \neq 0 \\)).</p>
+                                <p class="translation">Never divide by different numbers. \\( \frac{ax}{bx} = \frac{a}{b} \\) (if \\( x \neq 0 \\)).</p>
+                            </div>
+                        </div>
+                        <p class="bg-red-50 p-4 rounded-lg border border-red-200"><i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>Ingat: Pembagian dengan noll TIDAK BOLEH! Itulah mengapa kita selalu syaratkan \\( x \neq 0 \\).</p>
+                        <p class="translation"><i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>Remember: Division by zero is NOT ALLOWED! That's why we always require \\( x \neq 0 \\).</p>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Sederhanakan \\( \frac{7p}{7p} \\) untuk \\( p \neq 0 \\).", q_trans: "Simplify \\( \frac{7p}{7p} \\) for \\( p \neq 0 \\).", opts: ["1", "0", "7", "p", "7p"], correct: 0, exp: "Apapun yang dibagi dengan dirinya sendiri (kecuali 0) hasilnya adalah 1. \\( \frac{7p}{7p} = 1 \\)." },
+                        { q: "Seorang penjual buah membagikan \\( 9k \\) apel kepada \\( 9k \\) anak. Berapa apel yang diterima setiap anak? (Sederhanakan \\( \frac{9k}{9k} \\))", q_trans: "A fruit seller distributes \\( 9k \\) apples to \\( 9k \\) children. How many apples does each child receive? (Simplify \\( \frac{9k}{9k} \\))", opts: ["1 buah", "9 buah", "k buah", "0 buah", "9k buah"], correct: 0, exp: "Karena jumlah apel sama dengan jumlah anak, setiap anak mendapat 1 apel. \\( \frac{9k \div 9k}{9k \div 9k} = 1 \\)." },
+                        { q: "Sederhanakan \\( \frac{4ab}{2a} \\) untuk \\( a \neq 0 \\).", q_trans: "Simplify \\( \frac{4ab}{2a} \\) for \\( a \neq 0 \\).", opts: ["\\( 2b \\)", "\\( 2ab \\)", "\\( 2a \\)", "\\( 4b \\)", "\\( \frac{b}{2} \\)"], correct: 0, exp: "Bagi pembilang dan penyebut dengan \\( 2a \\). \\( \frac{4ab \div 2a}{2a \div 2a} = \frac{2b}{1} = 2b \\)." },
+                        { q: "Volume sebuah kotak adalah \\( 6xy \\) cm³. Jika luas alas kotak tersebut \\( 2x \\) cm², maka tinggi kotak tersebut adalah... (Sederhanakan \\( \frac{6xy}{2x} \\))", q_trans: "The volume of a box is \\( 6xy \\) cm³. If the base area of the box is \\( 2x \\) cm², then the height of the box is... (Simplify \\( \frac{6xy}{2x} \\))", opts: ["\\( 3y \\) cm", "\\( 3xy \\) cm", "\\( 3x \\) cm", "\\( 6y \\) cm", "\\( 2y \\) cm"], correct: 0, exp: "Tinggi = Volume / Luas Alas = \\( \frac{6xy}{2x} \\). Bagi dengan \\( 2x \\), hasilnya \\( 3y \\) cm." }
+                    ]}
+                ]
+            },
+            review: {
+                title: "Review of Prior Knowledge",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-cubes mr-2"></i>Memfaktorkan Suku Aljabar</h2>
+                            <p class="translation">Factoring Algebraic Terms</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="20" y="40" width="40" height="40" fill="#3b82f6"/>
+                                <rect x="60" y="40" width="40" height="40" fill="#3b82f6"/>
+                                <rect x="100" y="40" width="40" height="40" fill="#3b82f6"/>
+                                <rect x="20" y="80" width="120" height="40" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+                                <text x="80" y="65" font-size="20" fill="#fff" text-anchor="middle">x</text>
+                                <text x="80" y="110" font-size="20" fill="#3b82f6" text-anchor="middle">3</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Sebelum menyederhanakan, kita harus bisa memfaktorkan ekspresi aljabar. Contoh: \\( 3x + 6 \\) dapat difaktorkan menjadi \\( 3(x + 2) \\).</p>
+                                <p class="translation">Before simplifying, we must be able to factor algebraic expressions. Example: \\( 3x + 6 \\) can be factored into \\( 3(x + 2) \\).</p>
+                                <p class="mt-2">Caranya dengan mencari FPB dari koefisien dan variabelnya.</p>
+                                <p class="translation">The way to do it is by finding the GCF of the coefficients and its variables.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Bentuk faktor dari \\( 4x + 8 \\) adalah...", q_trans: "The factored form of \\( 4x + 8 \\) is...", opts: ["\\( 4(x + 2) \\)", "\\( 4(x + 8) \\)", "\\( 2(x + 4) \\)", "\\( 4(x + 4) \\)", "\\( x(x + 8) \\)"], correct: 0, exp: "FPB dari 4 dan 8 adalah 4. Keluarkan 4, sehingga menjadi \\( 4(x + 2) \\)." },
+                        { q: "Seorang tukang kayu memiliki papan dengan keliling \\( 10l + 20 \\). Jika papan tersebut berbentuk persegi panjang, salah satu sisi dapat direpresentasikan sebagai faktor dari kelilingnya. Faktorkan \\( 10l + 20 \\).", q_trans: "A carpenter has a board with a perimeter of \\( 10l + 20 \\). Factor \\( 10l + 20 \\).", opts: ["\\( 10(l + 2) \\)", "\\( 10(l + 20) \\)", "\\( 5(l + 4) \\)", "\\( 2(5l + 10) \\)", "\\( 10l(1 + 2) \\)"], correct: 0, exp: "FPB dari 10 dan 20 adalah 10. Keluarkan 10, sehingga menjadi \\( 10(l + 2) \\)." },
+                        { q: "Faktorkan bentuk aljabar \\( 5a^2 - 10a \\).", q_trans: "Factor the algebraic expression \\( 5a^2 - 10a \\).", opts: ["\\( 5a(a - 2) \\)", "\\( 5(a - 2a) \\)", "\\( 5a(a + 2) \\)", "\\( a(5a - 10) \\)", "\\( 5(a^2 - 2a) \\)"], correct: 0, exp: "FPB dari 5 dan 10 adalah 5. FPB dari \\( a^2 \\) dan \\( a \\) adalah \\( a \\). Keluarkan \\( 5a \\), sehingga menjadi \\( 5a(a - 2) \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-columns mr-2"></i>Identitas Aljabar</h2>
+                            <p class="translation">Algebraic Identities</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="30" y="30" width="140" height="140" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+                                <line x1="30" y1="100" x2="170" y2="100" stroke="#10b981" stroke-width="2"/>
+                                <line x1="100" y1="30" x2="100" y2="170" stroke="#10b981" stroke-width="2"/>
+                                <rect x="100" y="30" width="70" height="70" fill="#10b981" opacity="0.5"/>
+                                <rect x="30" y="100" width="70" height="70" fill="#10b981" opacity="0.5"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Identitas aljabar sangat membantu penyederhanaan. Yang paling umum adalah <strong>Selisih Dua Kuadrat</strong>:</p>
+                                <p class="translation">Algebraic identities are very helpful for simplification. The most common is the <strong>Difference of Two Squares</strong>:</p>
+                                <p class="mt-2">\\( a^2 - b^2 = (a + b)(a - b) \\)</p>
+                                <p class="translation">\\( a^2 - b^2 = (a + b)(a - b) \\)</p>
+                            </div>
+                        </div>
+                        <p>Mengenali pola ini akan mempermudah kamu memotong-motong bentuk pecahan!</p>
+                        <p class="translation">Recognizing this pattern will make it easier for you to cut down fraction forms!</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Faktorkan \\( x^2 - 9 \\).", q_trans: "Factor \\( x^2 - 9 \\).", opts: ["\\( (x + 3)(x - 3) \\)", "\\( (x - 9)(x + 1) \\)", "\\( (x - 3)(x - 3) \\)", "\\( (x + 9)(x - 1) \\)", "\\( x(x - 9) \\)"], correct: 0, exp: "Ini adalah selisih dua kuadrat: \\( x^2 - 3^2 \\). Faktornya adalah \\( (x + 3)(x - 3) \\)." },
+                        { q: "Luas sebuah lahan berbentuk lingkaran adalah \\( \pi (r^2 - 25) \\). Jika difaktorkan, luas lahan tersebut dapat ditulis sebagai...", q_trans: "The area of a circular plot is \\( \pi (r^2 - 25) \\). When factored, the area can be written as...", opts: ["\\( \pi (r + 5)(r - 5) \\)", "\\( \pi (r - 5)(r - 5) \\)", "\\( \pi (r + 25)(r - 1) \\)", "\\( \pi r(r - 5) \\)", "\\( \pi (r + 5)(r + 5) \\)"], correct: 0, exp: "Bagian dalam kurung adalah \\( r^2 - 5^2 \\). Faktornya \\( (r + 5)(r - 5) \\). Jadi luasnya \\( \pi (r + 5)(r - 5) \\)." },
+                        { q: "Bentuk faktor dari \\( 4y^2 - 1 \\) adalah...", q_trans: "The factored form of \\( 4y^2 - 1 \\) is...", opts: ["\\( (2y + 1)(2y - 1) \\)", "\\( (4y + 1)(y - 1) \\)", "\\( (2y - 1)(2y - 1) \\)", "\\( (4y - 1)(4y + 1) \\)", "\\( 4(y^2 - 1) \\)"], correct: 0, exp: "\\( 4y^2 - 1 = (2y)^2 - 1^2 \\). Menggunakan rumus selisih kuadrat, faktornya adalah \\( (2y + 1)(2y - 1) \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-ban mr-2"></i>Nilai yang Tidak Terdefinisi</h2>
+                            <p class="translation">Undefined Values</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="100" r="80" fill="#ede9fe" stroke="#8b5cf6" stroke-width="4"/>
+                                <line x1="40" y1="40" x2="160" y2="160" stroke="#ef4444" stroke-width="8"/>
+                                <text x="100" y="115" font-size="40" fill="#8b5cf6" text-anchor="middle">0</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Pecahan terdefinisi selama penyebutnya BUKAN nol. Jika penyebut nol, pecahan itu "tidak terdefinisi" (undefined).</p>
+                                <p class="translation">A fraction is defined as long as the denominator is NOT zero. If the denominator is zero, the fraction is "undefined".</p>
+                                <p class="mt-2">Untuk pecahan \\( \frac{A}{B-x} \\), pecahan tidak terdefinisi jika \\( B - x = 0 \\), artinya \\( x = B \\).</p>
+                                <p class="translation">For the fraction \\( \frac{A}{B-x} \\), the fraction is undefined if \\( B - x = 0 \\), meaning \\( x = B \\).</p>
+                            </div>
+                        </div>
+                        <p class="bg-yellow-50 p-4 rounded border border-yellow-200">Saat menyederhanakan pecahan, kita harus menyebutkan syarat variabel agar penyebut tidak nol.</p>
+                        <p class="translation">When simplifying fractions, we must state the condition of the variable so that the denominator is not zero.</p>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Untuk pecahan \\( \frac{5}{x - 4} \\), nilai \\( x \\) yang membuat pecahan tidak terdefinisi adalah...", q_trans: "For the fraction \\( \frac{5}{x - 4} \\), the value of \\( x \\) that makes the fraction undefined is...", opts: ["4", "0", "-4", "5", "1"], correct: 0, exp: "Penyebut tidak boleh nol. \\( x - 4 = 0 \implies x = 4 \\)." },
+                        { q: "Mesin pompa air memiliki debit rumus \\( \frac{10t}{2t - 8} \\). Agar mesin berfungsi (tidak error/undefined), waktu \\( t \\) tidak boleh sama dengan...", q_trans: "A water pump machine has a flow rate formula \\( \frac{10t}{2t - 8} \\). For the machine to function, time \\( t \\) cannot be equal to...", opts: ["4", "2", "8", "10", "0"], correct: 0, exp: "Penyebut \\( 2t - 8 \neq 0 \\). Maka \\( 2t \neq 8 \implies t \neq 4 \\)." },
+                        { q: "Pada pecahan \\( \frac{3x}{x(x-1)} \\), syarat nilai \\( x \\) agar pecahan terdefinisi adalah...", q_trans: "In the fraction \\( \frac{3x}{x(x-1)} \\), the condition for \\( x \\) so that the fraction is defined is...", opts: ["\\( x \neq 0 \\) dan \\( x \neq 1 \\)", "\\( x \neq 0 \\)", "\\( x \neq 1 \\)", "\\( x \neq 3 \\)", "\\( x \neq -1 \\)"], correct: 0, exp: "Penyebut adalah hasil kali \\( x \\) dan \\( (x-1) \\). Keduanya tidak boleh nol. Jadi \\( x \neq 0 \\) dan \\( x \neq 1 \\)." },
+                        { q: "Sebuah sirkuit listrik memiliki hambatan total \\( R = \frac{V}{I - 5} \\). Agar ada arus listrik, nilai \\( I \\) tidak boleh bernilai...", q_trans: "An electrical circuit has total resistance \\( R = \frac{V}{I - 5} \\). For current to exist, \\( I \\) cannot have the value of...", opts: ["5", "0", "-5", "V", "1"], correct: 0, exp: "Penyebut tidak boleh nol: \\( I - 5 \neq 0 \implies I \neq 5 \\)." }
+                    ]}
+                ]
+            },
+
+            problem: {
+                title: "Problem Introduction",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-cut mr-2"></i>Memotong Faktor yang Sama</h2>
+                            <p class="translation">Canceling Common Factors</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="180" height="120" viewBox="0 0 200 150" class="flex-shrink-0">
+                                <text x="80" y="50" font-size="30" fill="#000" text-anchor="middle">3(x+2)</text>
+                                <line x1="20" y1="70" x2="140" y2="70" stroke="#000" stroke-width="2"/>
+                                <text x="80" y="100" font-size="30" fill="#000" text-anchor="middle">5(x+2)</text>
+                                <line x1="30" y1="40" x2="130" y2="110" stroke="#ef4444" stroke-width="3"/>
+                                <line x1="30" y1="110" x2="130" y2="40" stroke="#ef4444" stroke-width="3"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Inti dari menyederhanakan pecahan aljabar adalah membagi (mencoret) faktor yang sama di pembilang dan penyebut.</p>
+                                <p class="translation">The essence of simplifying algebraic fractions is dividing (canceling) the same factors in the numerator and denominator.</p>
+                                <p class="mt-2">Contoh: \\( \frac{3(x+2)}{5(x+2)} \\). Karena \\( (x+2) \\) ada di atas dan bawah, mereka saling mencoret. Hasilnya: \\( \frac{3}{5} \\).</p>
+                                <p class="translation">Example: \\( \frac{3(x+2)}{5(x+2)} \\). Since \\( (x+2) \\) is on top and bottom, they cancel each other out. Result: \\( \frac{3}{5} \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan pecahan \\( \frac{2(x+5)}{4(x+5)} \\) untuk \\( x \neq -5 \\).", q_trans: "Simplify the fraction \\( \frac{2(x+5)}{4(x+5)} \\) for \\( x \neq -5 \\).", opts: ["\\( \frac{1}{2} \\)", "\\( \frac{2}{4} \\)", "\\( \frac{x+5}{2} \\)", "\\( 2 \\)", "\\( \frac{1}{4} \\)"], correct: 0, exp: "Coret \\( (x+5) \\). Sisa \\( \frac{2}{4} \\). Lalu sederhanakan angkanya menjadi \\( \frac{1}{2} \\)." },
+                        { q: "Sebuah perusahaan memproduksi \\( a(a-3) \\) unit mainan dalam \\( 2a(a-3) \\) hari. Berapa unit mainan yang diproduksi per hari? (Sederhanakan \\( \frac{a(a-3)}{2a(a-3)} \\), \\( a \neq 0, a \neq 3 \\))", q_trans: "A company produces \\( a(a-3) \\) toys in \\( 2a(a-3) \\) days. How many toys are produced per day? (Simplify \\( \frac{a(a-3)}{2a(a-3)} \\), \\( a \neq 0, a \neq 3 \\))", opts: ["\\( \frac{1}{2} \\) unit/hari", "\\( 2 \\) unit/hari", "\\( a \\) unit/hari", "\\( \frac{a}{2} \\) unit/hari", "\\( \frac{1}{2a} \\) unit/hari"], correct: 0, exp: "Coret \\( a(a-3) \\). Sisa \\( \frac{1}{2} \\). Jadi, 0.5 unit per hari." },
+                        { q: "Sederhanakan \\( \frac{7m(2-n)}{7m(2-n)} \\) untuk syarat yang tepat.", q_trans: "Simplify \\( \frac{7m(2-n)}{7m(2-n)} \\) for the appropriate conditions.", opts: ["1", "0", "7m", "2-n", "Tidak terdefinisi"], correct: 0, exp: "Pembilang dan penyebut sama persis. Apapun itu, jika dibagi dengan dirinya sendiri (dan tidak nol), hasilnya 1. Syaratnya \\( m \neq 0 \\) dan \\( n \neq 2 \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-layer-group mr-2"></i>Faktorisasi Lebih Dulu</h2>
+                            <p class="translation">Factorize First</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="30" y="80" width="40" height="40" fill="#10b981"/>
+                                <rect x="70" y="80" width="40" height="40" fill="#10b981"/>
+                                <rect x="30" y="40" width="80" height="40" fill="#10b981" opacity="0.5"/>
+                                <path d="M 120 100 L 150 130 L 180 100 L 150 70 Z" fill="#fbbf24"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Terkadang, faktornya tidak terlihat langsung. Kita harus memfaktorkan pembilang dan penyebut terlebih dahulu sebelum mencoret.</p>
+                                <p class="translation">Sometimes, the factors are not directly visible. We must factor the numerator and denominator first before canceling.</p>
+                                <p class="mt-2">Contoh: \\( \frac{x^2 - 4}{x + 2} \\). Faktorkan atasnya: \\( \frac{(x+2)(x-2)}{x+2} \\). Coret \\( (x+2) \\). Hasil: \\( x - 2 \\).</p>
+                                <p class="translation">Example: \\( \frac{x^2 - 4}{x + 2} \\). Factor the top: \\( \frac{(x+2)(x-2)}{x+2} \\). Cancel \\( (x+2) \\). Result: \\( x - 2 \\).</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan \\( \frac{x^2 - 9}{x - 3} \\) untuk \\( x \neq 3 \\).", q_trans: "Simplify \\( \frac{x^2 - 9}{x - 3} \\) for \\( x \neq 3 \\).", opts: ["\\( x + 3 \\)", "\\( x - 3 \\)", "\\( x + 9 \\)", "\\( x - 9 \\)", "\\( x^2 - 3 \\)"], correct: 0, exp: "Atas adalah selisih kuadrat: \\( (x+3)(x-3) \\). Pecahan menjadi \\( \frac{(x+3)(x-3)}{x-3} \\). Coret \\( (x-3) \\). Hasilnya \\( x+3 \\)." },
+                        { q: "Sebuah taman berbentuk lingkaran dengan luas \\( \pi(r^2 - 16) \\). Jika taman tersebut dibelah oleh jalan berbentuk garis lurus sepanjang \\( r - 4 \\), maka perbandingan luas taman dengan panjang jalan dapat disederhanakan menjadi... (Sederhanakan \\( \frac{r^2 - 16}{r - 4} \\), \\( r \neq 4 \\))", q_trans: "Simplify \\( \frac{r^2 - 16}{r - 4} \\) for \\( r \neq 4 \\).", opts: ["\\( r + 4 \\)", "\\( r - 4 \\)", "\\( r^2 + 4 \\)", "\\( r + 16 \\)", "\\( r - 16 \\)"], correct: 0, exp: "Faktorkan atas: \\( (r+4)(r-4) \\). Coret \\( (r-4) \\). Hasilnya \\( r+4 \\)." },
+                        { q: "Sederhanakan \\( \frac{2y^2 - 2}{2y + 2} \\) untuk \\( y \neq -1 \\).", q_trans: "Simplify \\( \frac{2y^2 - 2}{2y + 2} \\) for \\( y \neq -1 \\).", opts: ["\\( y - 1 \\)", "\\( y + 1 \\)", "\\( 2y - 1 \\)", "\\( y^2 - 1 \\)", "\\( y - 2 \\)"], correct: 0, exp: "Faktorkan atas: \\( 2(y^2 - 1) = 2(y+1)(y-1) \\). Bawah: \\( 2(y+1) \\). Coret \\( 2(y+1) \\). Hasilnya \\( y-1 \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-bezier-curve mr-2"></i>Faktorisasi dengan Pengelompokan</h2>
+                            <p class="translation">Factorization by Grouping</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <path d="M 20 100 Q 100 20 180 100 Q 100 180 20 100" fill="none" stroke="#f59e0b" stroke-width="4"/>
+                                <line x1="60" y1="60" x2="140" y2="140" stroke="#3b82f6" stroke-width="3"/>
+                                <line x1="60" y1="140" x2="140" y2="60" stroke="#3b82f6" stroke-width="3"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Untuk bentuk yang lebih kompleks seperti \\( ax + ay + bx + by \\), kita gunakan pengelompokan:</p>
+                                <p class="translation">For more complex forms like \\( ax + ay + bx + by \\), we use grouping:</p>
+                                <p class="mt-2">\\( a(x+y) + b(x+y) = (a+b)(x+y) \\).</p>
+                                <p class="translation">\\( a(x+y) + b(x+y) = (a+b)(x+y) \\).</p>
+                            </div>
+                        </div>
+                        <p>Ini adalah teknik wajib yang harus dikuasai sebelum melangkah ke soal-soal pecahan tingkat lanjut.</p>
+                        <p class="translation">This is a mandatory technique to master before stepping into advanced fraction problems.</p>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Faktorkan \\( x^2 + 5x + 6 \\).", q_trans: "Factor \\( x^2 + 5x + 6 \\).", opts: ["\\( (x + 2)(x + 3) \\)", "\\( (x + 1)(x + 6) \\)", "\\( (x - 2)(x - 3) \\)", "\\( (x + 5)(x + 1) \\)", "\\( x(x + 5) + 6 \\)"], correct: 0, exp: "Cari dua angka yang jika dikali = 6 dan jika dijumlah = 5. Angka tersebut 2 dan 3. Jadi \\( (x+2)(x+3) \\)." },
+                        { q: "Sebuah tangga memiliki jumlah anak tangga yang memenuhi persamaan \\( n^2 + 6n + 8 \\). Jika tangga ini akan dibagi menjadi dua segmen yang masing-masing memiliki jumlah anak tangga \\( n+2 \\), berapa kali bagian tersebut dibagi? (Sederhanakan \\( \frac{n^2 + 6n + 8}{n + 2} \\), \\( n \neq -2 \\))", q_trans: "Simplify \\( \frac{n^2 + 6n + 8}{n + 2} \\), \\( n \neq -2 \\).", opts: ["\\( n + 4 \\)", "\\( n + 2 \\)", "\\( n^2 + 4 \\)", "\\( n + 6 \\)", "\\( n - 4 \\)"], correct: 0, exp: "Faktorkan atas: cari dua angka yang dikali = 8, dijumlah = 6 (yaitu 2 dan 4). Atas menjadi \\( (n+2)(n+4) \\). Coret \\( (n+2) \\). Hasilnya \\( n+4 \\)." },
+                        { q: "Sederhanakan \\( \frac{m^2 - 5m + 6}{m - 3} \\) untuk \\( m \neq 3 \\).", q_trans: "Simplify \\( \frac{m^2 - 5m + 6}{m - 3} \\) for \\( m \neq 3 \\).", opts: ["\\( m - 2 \\)", "\\( m + 2 \\)", "\\( m - 3 \\)", "\\( m^2 - 2 \\)", "\\( m + 3 \\)"], correct: 0, exp: "Faktorkan atas: dikali = 6, dijumlah = -5 (yaitu -2 dan -3). Atas menjadi \\( (m-2)(m-3) \\). Coret \\( (m-3) \\). Hasilnya \\( m-2 \\)." },
+                        { q: "Faktorkan bentuk \\( 2x^2 + 7x + 3 \\).", q_trans: "Factor the expression \\( 2x^2 + 7x + 3 \\).", opts: ["\\( (2x + 1)(x + 3) \\)", "\\( (2x - 1)(x - 3) \\)", "\\( (2x + 3)(x + 1) \\)", "\\( 2(x + 3)(x + 1) \\)", "\\( (x + 7)(2x + 3) \\)"], correct: 0, exp: "Gunakan pemfaktoran AC: \\( 2 \times 3 = 6 \\). Cari faktor 6 yang dijumlah = 7 (yaitu 6 dan 1). \\( 2x^2 + 6x + x + 3 \implies 2x(x+3) + 1(x+3) \implies (2x+1)(x+3) \\)." }
+                    ]}
+                ]
+            },
+            
+            guided: {
+                title: "Guided Practice",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-shoe-prints mr-2"></i>Langkah-langkah Menyederhanakan</h2>
+                            <p class="translation">Steps to Simplify</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="160" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="30" r="20" fill="#3b82f6"/>
+                                <text x="100" y="35" font-size="15" fill="#fff" text-anchor="middle">1</text>
+                                <line x1="100" y1="50" x2="100" y2="80" stroke="#3b82f6" stroke-width="3" stroke-dasharray="5,5"/>
+                                <circle cx="100" cy="100" r="20" fill="#10b981"/>
+                                <text x="100" y="105" font-size="15" fill="#fff" text-anchor="middle">2</text>
+                                <line x1="100" y1="120" x2="100" y2="150" stroke="#10b981" stroke-width="3" stroke-dasharray="5,5"/>
+                                <circle cx="100" cy="170" r="20" fill="#f59e0b"/>
+                                <text x="100" y="175" font-size="15" fill="#fff" text-anchor="middle">3</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2"><strong>1. Faktorkan</strong> pembilang dan penyebut sepenuhnya.</p>
+                                <p class="translation"><strong>1. Factor</strong> the numerator and denominator completely.</p>
+                                <p class="mt-2"><strong>2. Coret</strong> faktor-faktor yang sama dari atas dan bawah.</p>
+                                <p class="translation"><strong>2. Cancel</strong> the common factors from top and bottom.</p>
+                                <p class="mt-2"><strong>3. Sederhanakan</strong> dan tuliskan syarat variabelnya.</p>
+                                <p class="translation"><strong>3. Simplify</strong> and state the variable conditions.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan \\( \frac{4x^2}{6x} \\) untuk \\( x \neq 0 \\).", q_trans: "Simplify \\( \frac{4x^2}{6x} \\) for \\( x \neq 0 \\).", opts: ["\\( \frac{2x}{3} \\)", "\\( \frac{2}{3} \\)", "\\( \frac{4}{6} \\)", "\\( \frac{2x^2}{3} \\)", "\\( \frac{4x}{6} \\)"], correct: 0, exp: "Faktorkan: \\( \frac{2x \cdot 2x}{3 \cdot 2x} \\). Coret \\( 2x \\). Sisa \\( \frac{2x}{3} \\)." },
+                        { q: "Sebuah tangki berisi \\( 15a^2 \\) liter air. Air ini akan dituang ke dalam botol-botol berkapasitas \\( 25a \\) liter. Berapa banyak botol yang dibutuhkan? (Sederhanakan \\( \frac{15a^2}{25a} \\), \\( a \neq 0 \\))", q_trans: "A tank contains \\( 15a^2 \\) liters of water. This water will be poured into bottles with a capacity of \\( 25a \\) liters. How many bottles are needed? (Simplify \\( \frac{15a^2}{25a} \\), \\( a \neq 0 \\))", opts: ["\\( \frac{3a}{5} \\) botol", "\\( \frac{3}{5} \\) botol", "\\( \frac{5a}{3} \\) botol", "\\( \frac{3a}{25} \\) botol", "\\( \frac{15}{25} \\) botol"], correct: 0, exp: "Faktorkan: FPB dari 15 dan 25 adalah 5. FPB dari \\( a^2 \\) dan \\( a \\) adalah \\( a \\). \\( \frac{15a^2 \div 5a}{25a \div 5a} = \frac{3a}{5} \\)." },
+                        { q: "Sederhanakan \\( \frac{8m^3n}{12m^2n^2} \\) untuk \\( m \neq 0, n \neq 0 \\).", q_trans: "Simplify \\( \frac{8m^3n}{12m^2n^2} \\) for \\( m \neq 0, n \neq 0 \\).", opts: ["\\( \frac{2m}{3n} \\)", "\\( \frac{2m^2}{3n} \\)", "\\( \frac{2m}{3n^2} \\)", "\\( \frac{8m}{12n} \\)", "\\( \frac{2}{3} \\)"], correct: 0, exp: "Bagi dengan \\( 4m^2n \\). \\( \frac{8m^3n \div 4m^2n}{12m^2n^2 \div 4m^2n} = \frac{2m}{3n} \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-green-700 mb-2"><i class="fas fa-cut mr-2"></i>Selisih Kuadrat di Pecahan</h2>
+                            <p class="translation">Difference of Squares in Fractions</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="30" y="60" width="60" height="60" fill="#fbbf24" rx="5"/>
+                                <text x="60" y="95" font-size="20" fill="#000" text-anchor="middle">x²</text>
+                                <rect x="110" y="60" width="60" height="60" fill="#3b82f6" rx="5"/>
+                                <text x="140" y="95" font-size="20" fill="#fff" text-anchor="middle">9</text>
+                                <line x1="80" y1="50" x2="120" y2="130" stroke="#ef4444" stroke-width="4"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Kita sering menemukan bentuk \\( \frac{x^2 - a^2}{x \pm a} \\). Langkah pertama selalu: <strong>Faktorkan!</strong></p>
+                                <p class="translation">We often encounter the form \\( \frac{x^2 - a^2}{x \pm a} \\). The first step is always: <strong>Factor!</strong></p>
+                                <p class="mt-2">Ingat rumus: \\( x^2 - a^2 = (x + a)(x - a) \\).</p>
+                                <p class="translation">Remember the formula: \\( x^2 - a^2 = (x + a)(x - a) \\).</p>
+                            </div>
+                        </div>
+                        <p>Contoh: \\( \frac{x^2 - 25}{x + 5} = \frac{(x+5)(x-5)}{x+5} = x - 5 \\) (syarat: \\( x \neq -5 \\)).</p>
+                        <p class="translation">Example: \\( \frac{x^2 - 25}{x + 5} = \frac{(x+5)(x-5)}{x+5} = x - 5 \\) (condition: \\( x \neq -5 \\)).</p>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan \\( \frac{a^2 - 16}{a + 4} \\) untuk \\( a \neq -4 \\).", q_trans: "Simplify \\( \frac{a^2 - 16}{a + 4} \\) for \\( a \neq -4 \\).", opts: ["\\( a - 4 \\)", "\\( a + 4 \\)", "\\( a - 16 \\)", "\\( a^2 - 4 \\)", "\\( a + 16 \\)"], correct: 0, exp: "Faktorkan atas (selisih kuadrat): \\( (a+4)(a-4) \\). Coret \\( (a+4) \\). Sisa \\( a-4 \\)." },
+                        { q: "Sebuah lapangan berbentuk persegi memiliki luas \\( (L^2 - 49) \\) m². Jika lapangan ini dibelah oleh jalan sepanjang \\( L - 7 \\) meter, maka perbandingan luas terhadap panjang jalan dapat disederhanakan menjadi...", q_trans: "A square field has an area of \\( (L^2 - 49) \\) m². If divided by a road \\( L - 7 \\) meters long, the ratio of area to road length simplifies to...", opts: ["\\( L + 7 \\) meter", "\\( L - 7 \\) meter", "\\( L + 49 \\) meter", "\\( L^2 - 7 \\) meter", "\\( L - 1 \\) meter"], correct: 0, exp: "Sederhanakan \\( \frac{L^2 - 49}{L - 7} = \frac{(L+7)(L-7)}{L-7} = L+7 \\)." },
+                        { q: "Sederhanakan \\( \frac{9 - y^2}{y - 3} \\) untuk \\( y \neq 3 \\).", q_trans: "Simplify \\( \frac{9 - y^2}{y - 3} \\) for \\( y \neq 3 \\).", opts: ["\\( -(y + 3) \\)", "\\( y - 3 \\)", "\\( y + 3 \\)", "\\( 3 - y \\)", "\\( y^2 - 3 \\)"], correct: 0, exp: "Atas adalah \\( 3^2 - y^2 = (3+y)(3-y) \\). Pecahan: \\( \frac{(3+y)(3-y)}{y-3} \\). Karena \\( 3-y = -(y-3) \\), maka menjadi \\( \frac{-(y+3)(y-3)}{y-3} = -(y+3) \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-2"><i class="fas fa-puzzle-piece mr-2"></i>Faktorisasi Kuadrat Lainnya</h2>
+                            <p class="translation">Other Quadratic Factorizations</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="40" y="40" width="120" height="120" fill="#e0e7ff" stroke="#4f46e5" stroke-width="3" rx="10"/>
+                                <line x1="40" y1="100" x2="160" y2="100" stroke="#4f46e5" stroke-width="3"/>
+                                <line x1="100" y1="40" x2="100" y2="160" stroke="#4f46e5" stroke-width="3"/>
+                                <text x="70" y="75" font-size="20" fill="#4f46e5" text-anchor="middle">x</text>
+                                <text x="130" y="75" font-size="20" fill="#4f46e5" text-anchor="middle">+2</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Tidak semua bentuk kuadrat adalah selisih kuadrat. Seringkali kita temukan bentuk \\( x^2 + bx + c \\).</p>
+                                <p class="translation">Not all quadratic forms are difference of squares. Often we find the form \\( x^2 + bx + c \\).</p>
+                                <p class="mt-2">Contoh: \\( x^2 + 5x + 6 = (x + 2)(x + 3) \\). Cari dua angka yang dikali = 6, ditambah = 5.</p>
+                                <p class="translation">Example: \\( x^2 + 5x + 6 = (x + 2)(x + 3) \\). Find two numbers that multiply to 6 and add to 5.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Sederhanakan \\( \frac{x^2 + 7x + 12}{x + 3} \\) untuk \\( x \neq -3 \\).", q_trans: "Simplify \\( \frac{x^2 + 7x + 12}{x + 3} \\) for \\( x \neq -3 \\).", opts: ["\\( x + 4 \\)", "\\( x + 3 \\)", "\\( x + 7 \\)", "\\( x - 4 \\)", "\\( x + 12 \\)"], correct: 0, exp: "Faktorkan atas: cari angka dikali = 12, ditambah = 7 (yaitu 3 dan 4). Atas menjadi \\( (x+3)(x+4) \\). Coret \\( (x+3) \\). Hasilnya \\( x+4 \\)." },
+                        { q: "Sebuah perusahaan memproduksi \\( p^2 + 6p + 8 \\) unit barang. Barang tersebut akan dikemas ke dalam wadah berisi \\( p + 4 \\) unit. Berapa banyak wadah yang dibutuhkan? (Sederhanakan \\( \frac{p^2 + 6p + 8}{p + 4} \\), \\( p \neq -4 \\))", q_trans: "Simplify \\( \frac{p^2 + 6p + 8}{p + 4} \\), \\( p \neq -4 \\).", opts: ["\\( p + 2 \\) wadah", "\\( p + 4 \\) wadah", "\\( p + 6 \\) wadah", "\\( p + 8 \\) wadah", "\\( p - 2 \\) wadah"], correct: 0, exp: "Faktorkan atas: dikali = 8, dijumlah = 6 (yaitu 2 dan 4). Atas menjadi \\( (p+2)(p+4) \\). Coret \\( (p+4) \\). Hasilnya \\( p+2 \\)." },
+                        { q: "Sederhanakan \\( \frac{2a^2 + 5a - 3}{2a - 1} \\) untuk \\( a \neq \frac{1}{2} \\).", q_trans: "Simplify \\( \frac{2a^2 + 5a - 3}{2a - 1} \\) for \\( a \neq \frac{1}{2} \\).", opts: ["\\( a + 3 \\)", "\\( 2a - 1 \\)", "\\( a - 3 \\)", "\\( 2a + 3 \\)", "\\( a + 5 \\)"], correct: 0, exp: "Gunakan AC method: \\( 2 \times -3 = -6 \\). Cari faktor -6 yang dijumlah = 5 (yaitu 6 dan -1). \\( 2a^2 + 6a - a - 3 \implies 2a(a+3) - 1(a+3) \implies (2a-1)(a+3) \\). Coret \\( (2a-1) \\). Hasilnya \\( a+3 \\)." },
+                        { q: "Sebuah kebun berbentuk persegi panjang memiliki luas \\( 3b^2 - 10b + 8 \\) m². Jika lebar kebun tersebut adalah \\( b - 2 \\) meter, maka panjang kebun tersebut adalah...", q_trans: "A rectangular garden has an area of \\( 3b^2 - 10b + 8 \\) m². If the width is \\( b - 2 \\) meters, the length is...", opts: ["\\( 3b - 4 \\) m", "\\( 3b + 4 \\) m", "\\( b - 4 \\) m", "\\( 3b - 2 \\) m", "\\( 3b + 8 \\) m"], correct: 0, exp: "Luas = Panjang x Lebar. \\( \frac{Luas}{Lebar} = Panjang \\). Sederhanakan \\( \frac{3b^2 - 10b + 8}{b - 2} \\). Faktorkan atas: \\( (3b - 4)(b - 2) \\). Coret \\( (b - 2) \\). Hasilnya \\( 3b - 4 \\) m." }
+                    ]}
+                ]
+            },
+            independent: {
+                title: "Independent Practice",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-red-700 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Jangan Coret Sembarangan!</h2>
+                            <p class="translation">Don't Cancel Carelessly!</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <circle cx="100" cy="100" r="80" fill="#fee2e2" stroke="#ef4444" stroke-width="4"/>
+                                <text x="70" y="80" font-size="20" fill="#000">x</text>
+                                <text x="85" y="80" font-size="20" fill="#000">+</text>
+                                <text x="100" y="80" font-size="20" fill="#000">5</text>
+                                <line x1="60" y1="90" x2="140" y2="90" stroke="#000" stroke-width="2"/>
+                                <text x="85" y="115" font-size="20" fill="#000">x</text>
+                                <line x1="70" y1="60" x2="120" y2="130" stroke="#ef4444" stroke-width="4"/>
+                                <line x1="70" y1="130" x2="120" y2="60" stroke="#ef4444" stroke-width="4"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Kesalahan terbesar siswa: mencoret suku, bukan faktor. <strong>Ingat: Kamu hanya boleh mencoret perkalian!</strong></p>
+                                <p class="translation">Biggest student mistake: canceling terms, not factors. <strong>Remember: You can only cancel multiplication!</strong></p>
+                                <p class="mt-2">Contoh Salah: \\( \frac{x + 5}{x} \implies x \\) dicoret. Ini <span class="text-red-500 font-bold">SALAH</span>.</p>
+                                <p class="translation">Wrong Example: \\( \frac{x + 5}{x} \implies x \\) is canceled. This is <span class="text-red-500 font-bold">WRONG</span>.</p>
+                                <p class="mt-2">Karena di atas itu adalah penjumlahan, bukan perkalian. Pecahan ini tidak bisa disederhanakan.</p>
+                                <p class="translation">Because on top it is an addition, not a multiplication. This fraction cannot be simplified.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Manakah dari pecahan berikut yang TIDAK DAPAT disederhanakan lagi?", q_trans: "Which of the following fractions CANNOT be simplified further?", opts: ["\\( \frac{x + 7}{x} \\)", "\\( \frac{7x}{x} \\)", "\\( \frac{x^2}{x} \\)", "\\( \frac{x \cdot 7}{x} \\)", "\\( \frac{7(x+2)}{x+2} \\)"], correct: 0, exp: "Pilihan A adalah penjumlahan, bukan perkalian, sehingga tidak bisa dicoret. Pilihan lain bisa disederhanakan karena bentuk perkalian." },
+                        { q: "Seorang siswa mencoba menyederhanakan \\( \frac{2x + 4}{2} \\). Langkah yang benar adalah...", q_trans: "A student tries to simplify \\( \frac{2x + 4}{2} \\). The correct step is...", opts: ["Faktorkan pembilang menjadi \\( 2(x+2) \\), lalu coret 2", "Coret angka 2 di atas dan bawah langsung", "Membagi 2x dengan 2 menjadi x, dan membiarkan 4 tetap 4", "Mengurangkan 2 dari pembilang", "Tidak bisa disederhanakan"], correct: 0, exp: "Jangan langsung coret! Faktorkan dulu atasnya: \\( \frac{2(x+2)}{2} \\). Baru coret 2-nya. Hasilnya \\( x+2 \\)." },
+                        { q: "Sederhanakan \\( \frac{3a + 9}{3} \\).", q_trans: "Simplify \\( \frac{3a + 9}{3} \\).", opts: ["\\( a + 3 \\)", "\\( a + 9 \\)", "\\( 3a + 3 \\)", "\\( 3a \\)", "Tidak bisa disederhanakan"], correct: 0, exp: "Faktorkan pembilang: \\( 3(a+3) \\). Pecahan menjadi \\( \frac{3(a+3)}{3} \\). Coret angka 3. Hasilnya \\( a+3 \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-blue-700 mb-2"><i class="fas fa-layer-group mr-2"></i>Penyederhanaan Bertingkat</h2>
+                            <p class="translation">Multi-step Simplification</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="40" y="40" width="60" height="60" fill="#60a5fa"/>
+                                <rect x="100" y="40" width="60" height="60" fill="#3b82f6"/>
+                                <rect x="40" y="100" width="60" height="60" fill="#93c5fd"/>
+                                <rect x="100" y="100" width="60" height="60" fill="#2563eb"/>
+                                <path d="M 30 170 L 170 170 L 100 30 Z" fill="none" stroke="#fbbf24" stroke-width="4"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Terkadang, pembilang dan penyebut keduanya harus difaktorkan secara kompleks. Jangan terkecoh oleh banyaknya angka.</p>
+                                <p class="translation">Sometimes, both numerator and denominator must be factored complexly. Don't be fooled by the number of terms.</p>
+                                <p class="mt-2">Contoh: \\( \frac{x^2 - 9}{x^2 + x - 12} \\). Faktorkan keduanya terlebih dahulu!</p>
+                                <p class="translation">Example: \\( \frac{x^2 - 9}{x^2 + x - 12} \\). Factor both first!</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 3, tasks: [
+                        { q: "Sederhanakan \\( \frac{x^2 - 9}{x^2 + x - 12} \\) untuk syarat yang sesuai.", q_trans: "Simplify \\( \frac{x^2 - 9}{x^2 + x - 12} \\) for appropriate conditions.", opts: ["\\( \frac{x - 3}{x - 3} \\) atau 1 (Jika dibuat sederhana)", "\\( \frac{x + 3}{x + 4} \\)", "\\( \frac{x - 3}{x + 4} \\)", "\\( \frac{x + 3}{x - 3} \\)", "\\( \frac{x^2 - 9}{x - 3} \\)"], correct: 1, exp: "Atas: \\( (x+3)(x-3) \\). Bawah: cari dikali = -12, dijumlah = 1 (yaitu 4 dan -3) -> \\( (x+4)(x-3) \\). Pecahan: \\( \frac{(x+3)(x-3)}{(x+4)(x-3)} \\). Coret \\( (x-3) \\). Sisa \\( \frac{x+3}{x+4} \\)." },
+                        { q: "Volume dua buah kubus adalah \\( 8p^3 \\) dan \\( 2p \\). Pecahan volume kubus pertama terhadap kedua jika disederhanakan adalah...", q_trans: "The volume of two cubes is \\( 8p^3 \\) and \\( 2p \\). The fraction of the first cube's volume to the second, when simplified, is...", opts: ["\\( 4p^2 \\)", "\\( 4p \\)", "\\( \frac{1}{4p^2} \\)", "\\( 8p^2 \\)", "\\( 2p^2 \\)"], correct: 0, exp: "Sederhanakan \\( \frac{8p^3}{2p} \\). Bagi koefisien (8/2 = 4) dan variabel (\\( p^3 / p = p^2 \\)). Hasilnya \\( 4p^2 \\)." },
+                        { q: "Sebuah mesin A menghasilkan \\( x^2 - 4x \\) produk per jam. Mesin B menghasilkan \\( x - 4 \\) produk per jam. Perbandingan efisiensi (Mesin A / Mesin B) yang disederhanakan adalah...", q_trans: "Machine A produces \\( x^2 - 4x \\) products per hour. Machine B produces \\( x - 4 \\) products per hour. The simplified efficiency ratio (Machine A / Machine B) is...", opts: ["\\( x \\)", "\\( x - 4 \\)", "\\( x + 4 \\)", "\\( x^2 \\)", "\\( x - 2 \\)"], correct: 0, exp: "Sederhanakan \\( \frac{x^2 - 4x}{x - 4} \\). Faktorkan atas: keluarkan \\( x \implies \frac{x(x - 4)}{x - 4} \\). Coret \\( (x - 4) \\). Hasilnya \\( x \\)." }
+                    ]},
+                    { type: 'theory', content: `
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-yellow-700 mb-2"><i class="fas fa-shield-alt mr-2"></i>Domain & Batasan Nilai</h2>
+                            <p class="translation">Domain & Value Restrictions</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <path d="M 100 20 L 180 50 L 180 110 Q 180 160 100 190 Q 20 160 20 110 L 20 50 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="4"/>
+                                <text x="100" y="100" font-size="30" fill="#000" text-anchor="middle">x ≠ 0</text>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Saat kamu menyederhanakan pecahan, <strong>domain (syarat) variabel harus melihat pecahan ASLINA, bukan hasil sederhananya.</strong></p>
+                                <p class="translation">When you simplify a fraction, the <strong>domain (condition) of the variable must look at the ORIGINAL fraction, not the simplified result.</strong></p>
+                                <p class="mt-2">Contoh: \\( \frac{x^2}{x} \\) disederhanakan menjadi \\( x \\). Tapi syaratnya tetap \\( x \neq 0 \\), bukan \\( x \\) boleh sembarang angka.</p>
+                                <p class="translation">Example: \\( \frac{x^2}{x} \\) simplifies to \\( x \\). But the condition remains \\( x \neq 0 \\), not that \\( x \\) can be any number.</p>
+                            </div>
+                        </div>
+                    `},
+                    { type: 'tasks', count: 4, tasks: [
+                        { q: "Diketahui pecahan \\( \frac{x(x-2)}{x-2} \\). Jika disederhanakan menjadi \\( x \\), syarat nilai \\( x \\) adalah...", q_trans: "Given the fraction \\( \frac{x(x-2)}{x-2} \\). If simplified to \\( x \\), the condition for \\( x \\) is...", opts: ["\\( x \neq 2 \\)", "\\( x \neq 0 \\)", "\\( x \neq -2 \\)", "\\( x \neq 1 \\)", "Tidak ada syarat"], correct: 0, exp: "Penyebut asli \\( (x-2) \\) tidak boleh nol. Maka \\( x - 2 \neq 0 \implies x \neq 2 \\)." },
+                        { q: "Sebuah rumus fisika menghasilkan nilai error jika variabel \\( t = 5 \\). Jika rumus tersebut disederhanakan dari \\( \frac{2t - 10}{t - 5} \\), bentuk sederhana dan syarat rumus tersebut adalah...", q_trans: "A physics formula gives an error if \\( t = 5 \\). If the formula is simplified from \\( \frac{2t - 10}{t - 5} \\), its simplified form and condition are...", opts: ["Bentuk: 2, Syarat: \\( t \neq 5 \\)", "Bentuk: 2, Syarat: \\( t \neq 0 \\)", "Bentuk: 2t, Syarat: \\( t \neq 5 \\)", "Bentuk: \\( t - 5 \\), Syarat: \\( t \neq 5 \\)", "Bentuk: 2, Tidak ada syarat"], correct: 0, exp: "Faktorkan atas: \\( \frac{2(t-5)}{t-5} \\). Coret \\( (t-5) \\) dengan syarat \\( t-5 \neq 0 \implies t \neq 5 \\). Hasil akhir: 2, dengan \\( t \neq 5 \\)." },
+                        { q: "Sederhanakan \\( \frac{m^2 + 2m - 8}{m + 4} \\) dan tentukan syaratnya.", q_trans: "Simplify \\( \frac{m^2 + 2m - 8}{m + 4} \\) and determine its condition.", opts: ["Bentuk: \\( m - 2 \\), Syarat: \\( m \neq -4 \\)", "Bentuk: \\( m + 2 \\), Syarat: \\( m \neq 4 \\)", "Bentuk: \\( m - 2 \\), Syarat: \\( m \neq 2 \\)", "Bentuk: \\( m + 4 \\), Syarat: \\( m \neq -4 \\)", "Bentuk: \\( m - 2 \\), Syarat: \\( m \neq 0 \\)"], correct: 0, exp: "Atas: \\( (m+4)(m-2) \\) (karena \\( 4 \times -2 = -8 \\), \\( 4 + (-2) = 2 \\)). Pecahan: \\( \frac{(m+4)(m-2)}{m+4} \\). Coret \\( (m+4) \\), syarat \\( m+4 \neq 0 \implies m \neq -4 \\). Hasil: \\( m-2 \\)." },
+                        { q: "Sebuah sirkuit listrik memiliki hambatan \\( R = \frac{V^2 - 36}{V - 6} \\). Agar sirkuit tidak terbakar (terdefinisi), tegangan \\( V \\) tidak boleh bernilai...", q_trans: "An electrical circuit has resistance \\( R = \frac{V^2 - 36}{V - 6} \\). For the circuit not to burn out (be defined), voltage \\( V \\) cannot be...", opts: ["6", "-6", "0", "36", "Tidak boleh sembarang angka"], correct: 0, exp: "Syarat ada pada penyebut asal: \\( V - 6 \neq 0 \implies V \neq 6 \\). Jika disederhanakan, \\( R = V + 6 \\), tapi syarat \\( V \neq 6 \\) tetap berlaku." }
+                    ]}
+                ]
+            },
+			
+            consolidation: {
+                title: "Consolidation & Reflection",
+                pages: [
+                    { type: 'theory', content: `
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg mb-6">
+                            <h2 class="text-2xl font-bold text-indigo-700 mb-2"><i class="fas fa-check-double mr-2"></i>Rangkuman Pembelajaran</h2>
+                            <p class="translation">Learning Summary</p>
+                        </div>
+                        <div class="flex gap-6 items-center mb-6">
+                            <svg width="150" height="150" viewBox="0 0 200 200" class="flex-shrink-0">
+                                <rect x="40" y="40" width="120" height="120" fill="#e0e7ff" stroke="#4f46e5" stroke-width="3" rx="15"/>
+                                <path d="M 60 100 L 90 130 L 140 70" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+                            </svg>
+                            <div>
+                                <p class="mb-2">Hari ini kita telah belajar cara menyederhanakan pecahan aljabar:</p>
+                                <p class="translation">Today we learned how to simplify algebraic fractions:</p>
+                                <ul class="list-disc ml-6 mt-2">
+                                    <li>Identifikasi faktor persekutuan (FPB).</li>
+                                    <li class="translation">Identify common factors (GCF).</li>
+                                    <li>Faktorkan bentuk kuadrat (Selisih kuadrat, dll).</li>
+                                    <li class="translation">Factor quadratic forms (Difference of squares, etc).</li>
+                                    <li>Coret faktor yang sama di atas dan bawah.</li>
+                                    <li class="translation">Cancel common factors on top and bottom.</li>
+                                    <li>Selalu perhatikan syarat penyebut tidak boleh nol.</li>
+                                    <li class="translation">Always mind the condition that denominator cannot be zero.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="mb-4">Siap menguji kemampuanmu lebih jauh? Kunjungi platform pembelajaran kami untuk latihan tanpa batas!</p>
+                            <p class="translation">Ready to test your skills further? Visit our learning platform for unlimited practice!</p>
+                            <a href="https://learn.algonova.id" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg shadow-md inline-flex items-center gap-2 mt-2">
+                                <i class="fas fa-rocket"></i> Lanjut ke Algonova
+                                <span class="translation" style="color: #bfdbfe; display: inline;">Continue to Algonova</span>
+                            </a>
+                        </div>
+                    `}
+                ]
+            },
+            task1: {
+                title: "Task 1: Penerapan Dasar (Monomial)",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Jarak \\( 12x \\) km ditempuh oleh sepeda motor dalam waktu \\( 3x \\) jam. Kecepatan rata-rata sepeda motor tersebut adalah...", q_trans: "A distance of \\( 12x \\) km is covered by a motorcycle in \\( 3x \\) hours. The average speed of the motorcycle is...", opts: ["\\( 4 \\text{ km/jam} \\)", "\\( 9 \\text{ km/jam} \\)", "\\( 12 \\text{ km/jam} \\)", "\\( 15 \\text{ km/jam} \\)", "\\( 36x \\text{ km/jam} \\)"], correct: 0, exp: "Kecepatan = Jarak / Waktu = \\( \frac{12x}{3x} \\). Coret \\( 3x \\), sisa 4 km/jam." },
+                        { q: "Harga pembelian \\( 5y \\) buah buku tulis adalah Rp \\( 25.000y \\). Berapakah harga 1 buah buku tulis tersebut?", q_trans: "The purchase price of \\( 5y \\) notebooks is Rp \\( 25.000y \\). What is the price of 1 notebook?", opts: ["\\( \text{Rp } 5.000 \\)", "\\( \text{Rp } 5.000y \\)", "\\( \text{Rp } 25.000 \\)", "\\( \text{Rp } 20.000 \\)", "\\( \text{Rp } 125.000y \\)"], correct: 0, exp: "Harga per buku = \\( \frac{25000y}{5y} \\). Coret \\( 5y \\), sisa Rp 5.000." },
+                        { q: "Luas sebuah kebun berbentuk persegi panjang adalah \\( 8a^2 \\) meter persegi. Jika lebar kebun tersebut \\( 4a \\) meter, maka panjang kebun adalah...", q_trans: "The area of a rectangular garden is \\( 8a^2 \\) square meters. If the width is \\( 4a \\) meters, the length is...", opts: ["\\( 2a \text{ meter} \\)", "\\( 2 \text{ meter} \\)", "\\( 4a \text{ meter} \\)", "\\( 8a \text{ meter} \\)", "\\( 32a^2 \text{ meter} \\)"], correct: 0, exp: "Panjang = Luas / Lebar = \\( \frac{8a^2}{4a} \\). Coret \\( 4a \\), sisa \\( 2a \\) meter." },
+                        { q: "Air sebanyak \\( 15m^3 \\) liter akan dituang ke dalam ember yang berkapasitas \\( 5m \\) liter. Berapa banyak ember yang dibutuhkan?", q_trans: "\\( 15m^3 \\) liters of water will be poured into buckets with a capacity of \\( 5m \\) liters. How many buckets are needed?", opts: ["\\( 3m^2 \text{ ember} \\)", "\\( 3m \text{ ember} \\)", "\\( 10m^3 \text{ ember} \\)", "\\( 75m^4 \text{ ember} \\)", "\\( 5m^2 \text{ ember} \\)"], correct: 0, exp: "Jumlah ember = \\( \frac{15m^3}{5m} \\). Coret \\( 5m \\), sisa \\( 3m^2 \\) ember." },
+                        { q: "Ali membeli \\( 7p \\) kg jeruk seharga Rp \\( 14p^2 \\). Berapakah harga 1 kg jeruk yang dibeli Ali?", q_trans: "Ali buys \\( 7p \\) kg of oranges for Rp \\( 14p^2 \\). What is the price of 1 kg of oranges?", opts: ["\\( 2p \text{ ribu} \\)", "\\( 2 \text{ ribu} \\)", "\\( 7p^2 \text{ ribu} \\)", "\\( 14p \text{ ribu} \\)", "\\( 98p^3 \text{ ribu} \\)"], correct: 0, exp: "Harga/kg = \\( \frac{14p^2}{7p} \\). Coret \\( 7p \\), sisa \\( 2p \\) ribu." },
+                        { q: "Sebuah jalan sepanjang \\( 18k \\) km akan diperbaiki oleh \\( 9k^2 \\) pekerja. Jarak jalan yang dikerjakan oleh setiap pekerja adalah...", q_trans: "A road \\( 18k \\) km long will be repaired by \\( 9k^2 \\) workers. The distance of road worked on by each worker is...", opts: ["\\( \frac{2}{k} \text{ km} \\)", "\\( 2k \text{ km} \\)", "\\( 2 \text{ km} \\)", "\\( 9k \text{ km} \\)", "\\( 162k^3 \text{ km} \\)"], correct: 0, exp: "Jarak/pekerja = \\( \frac{18k}{9k^2} \\). Coret \\( 9k \\), sisa \\( \frac{2}{k} \\) km." },
+                        { q: "Ibu membagikan \\( 10rs \\) gram gula kepada \\( 2r \\) tetangga. Berat gula yang diterima setiap tetangga adalah...", q_trans: "Mother distributes \\( 10rs \\) grams of sugar to \\( 2r \\) neighbors. The weight of sugar received by each neighbor is...", opts: ["\\( 5s \text{ gram} \\)", "\\( 5 \text{ gram} \\)", "\\( 8r \text{ gram} \\)", "\\( 20s \text{ gram} \\)", "\\( 10s \text{ gram} \\)"], correct: 0, exp: "Berat/tetangga = \\( \frac{10rs}{2r} \\). Coret \\( 2r \\), sisa \\( 5s \\) gram." },
+                        { q: "Sebuah pekerjaan memberikan upah total \\( 22xy \\) ribu rupiah untuk \\( 11x \\) hari kerja. Upah harian yang diterima adalah...", q_trans: "A job gives a total wage of \\( 22xy \\) thousand rupiah for \\( 11x \\) days of work. The daily wage received is...", opts: ["\\( 2y \text{ ribu} \\)", "\\( 2 \text{ ribu} \\)", "\\( 11y \text{ ribu} \\)", "\\( 22 \text{ ribu} \\)", "\\( x \text{ ribu} \\)"], correct: 0, exp: "Upah/hari = \\( \frac{22xy}{11x} \\). Coret \\( 11x \\), sisa \\( 2y \\) ribu." },
+                        { q: "Sebuah mesin menghasilkan energi sebesar \\( 6v^2 \\) Joule dalam waktu \\( 3v \\) detik. Daya mesin tersebut adalah...", q_trans: "A machine produces energy of \\( 6v^2 \\) Joules in \\( 3v \\) seconds. The power of the machine is...", opts: ["\\( 2v \text{ Watt} \\)", "\\( 2 \text{ Watt} \\)", "\\( 3v \text{ Watt} \\)", "\\( 18v \text{ Watt} \\)", "\\( 6v \text{ Watt} \\)"], correct: 0, exp: "Daya = Energi / Waktu = \\( \frac{6v^2}{3v} \\). Coret \\( 3v \\), sisa \\( 2v \\) Watt." },
+                        { q: "Tali sepanjang \\( 100ab \\) cm dipotong menjadi \\( 20a \\) bagian yang sama panjang. Panjang setiap potongan tali adalah...", q_trans: "A string \\( 100ab \\) cm long is cut into \\( 20a \\) equal pieces. The length of each piece of string is...", opts: ["\\( 5b \text{ cm} \\)", "\\( 5 \text{ cm} \\)", "\\( 20b \text{ cm} \\)", "\\( 100b \text{ cm} \\)", "\\( a \text{ cm} \\)"], correct: 0, exp: "Panjang/potong = \\( \frac{100ab}{20a} \\). Coret \\( 20a \\), sisa \\( 5b \\) cm." }
+                    ]}
+                ]
+            },
+            task2: {
+                title: "Task 2: Selisih Kuadrat",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Luas sebuah lahan pertanian berbentuk persegi adalah \\( x^2 - 49 \\) m². Jika panjang sisinya \\( x - 7 \\) meter, perbandingan luas terhadap panjang sisi dapat disederhanakan menjadi...", q_trans: "The area of a square farm is \\( x^2 - 49 \\) m². If the side length is \\( x - 7 \\) meters, the ratio of area to side length simplifies to...", opts: ["\\( x + 7 \\)", "\\( x - 7 \\)", "\\( x^2 + 7 \\)", "\\( 7 - x \\)", "\\( x + 49 \\)"], correct: 0, exp: "\\( \frac{x^2 - 49}{x - 7} = \frac{(x+7)(x-7)}{x-7} = x + 7 \\)." },
+                        { q: "Volume sebuah balok kayu adalah \\( a^2 - 25 \\) cm³. Jika tingginya \\( a + 5 \\) cm, maka luas alas balok tersebut adalah...", q_trans: "The volume of a wooden block is \\( a^2 - 25 \\) cm³. If the height is \\( a + 5 \\) cm, the base area is...", opts: ["\\( a - 5 \text{ cm}^2 \\)", "\\( a + 5 \text{ cm}^2 \\)", "\\( a - 25 \text{ cm}^2 \\)", "\\( 25 - a \text{ cm}^2 \\)", "\\( a^2 - 5 \text{ cm}^2 \\)"], correct: 0, exp: "Luas Alas = Volume / Tinggi = \\( \frac{a^2 - 25}{a + 5} = \frac{(a-5)(a+5)}{a+5} = a - 5 \\)." },
+                        { q: "Pak Budi memasang pagar sepanjang \\( y^2 - 64 \\) meter di sekitar kebunnya. Jika pagar dipasang dalam \\( y - 8 \\) ruas, maka panjang setiap ruas pagar adalah...", q_trans: "Mr. Budi installs a fence \\( y^2 - 64 \\) meters long around his garden. If installed in \\( y - 8 \\) sections, each section is...", opts: ["\\( y + 8 \text{ meter} \\)", "\\( y - 8 \text{ meter} \\)", "\\( y^2 - 8 \text{ meter} \\)", "\\( 64 - y \text{ meter} \\)", "\\( y + 64 \text{ meter} \\)"], correct: 0, exp: "\\( \frac{y^2 - 64}{y - 8} = \frac{(y-8)(y+8)}{y-8} = y + 8 \\)." },
+                        { q: "Biaya produksi \\( 9 - b^2 \\) juta rupiah dibagi rata untuk \\( 3 - b \\) unit produk. Biaya produksi per unit produk adalah...", q_trans: "Production cost of \\( 9 - b^2 \\) million is divided equally for \\( 3 - b \\) product units. Cost per unit is...", opts: ["\\( 3 + b \text{ juta} \\)", "\\( 3 - b \text{ juta} \\)", "\\( b - 3 \text{ juta} \\)", "\\( 9 + b \text{ juta} \\)", "\\( b + 9 \text{ juta} \\)"], correct: 0, exp: "\\( \frac{9 - b^2}{3 - b} = \frac{(3-b)(3+b)}{3-b} = 3 + b \\)." },
+                        { q: "Kecepatan sebuah roket dirumuskan dengan \\( \frac{4m^2 - 1}{2m + 1} \\) km/s. Sederhanakan rumus kecepatan tersebut...", q_trans: "A rocket's speed is formulated as \\( \frac{4m^2 - 1}{2m + 1} \\) km/s. Simplify the formula...", opts: ["\\( 2m - 1 \\)", "\\( 2m + 1 \\)", "\\( 4m + 1 \\)", "\\( 1 - 2m \\)", "\\( 2m^2 - 1 \\)"], correct: 0, exp: "\\( \frac{(2m-1)(2m+1)}{2m+1} = 2m - 1 \\)." },
+                        { q: "Kuat arus listrik dihitung dengan rumus \\( \frac{16p^2 - 9}{4p - 3} \\) Ampere. Bentuk sederhananya adalah...", q_trans: "Electric current is calculated by \\( \frac{16p^2 - 9}{4p - 3} \\) Ampere. Simplified form is...", opts: ["\\( 4p + 3 \\)", "\\( 4p - 3 \\)", "\\( 16p + 3 \\)", "\\( 9 - 4p \\)", "\\( 4p^2 + 3 \\)"], correct: 0, exp: "\\( \frac{(4p-3)(4p+3)}{4p-3} = 4p + 3 \\)." },
+                        { q: "Penjual tiket membagikan \\( 25 - k^2 \\) lembar tiket ke dalam \\( k - 5 \\) gerai. Jumlah tiket per gerai (sederhanakan) adalah...", q_trans: "A ticket seller distributes \\( 25 - k^2 \\) tickets to \\( k - 5 \\) booths. Tickets per booth (simplified) is...", opts: ["\\( -(k + 5) \\)", "\\( k + 5 \\)", "\\( k - 5 \\)", "\\( 5 - k \\)", "\\( 25 - k \\)"], correct: 0, exp: "\\( \frac{25 - k^2}{k - 5} = \frac{(5-k)(5+k)}{k-5} = \frac{-(k-5)(k+5)}{k-5} = -(k+5) \\)." },
+                        { q: "Donasi sebesar \\( 36 - t^2 \\) dibagi rata kepada \\( 6 + t \\) donatur. Sederhanakan pecahan untuk mencari donasi per orang...", q_trans: "Donation of \\( 36 - t^2 \\) is divided equally among \\( 6 + t \\) donors. Simplify to find donation per person...", opts: ["\\( 6 - t \\)", "\\( 6 + t \\)", "\\( t - 6 \\)", "\\( 36 - t \\)", "\\( t + 6 \\)"], correct: 0, exp: "\\( \frac{36 - t^2}{6 + t} = \frac{(6-t)(6+t)}{6+t} = 6 - t \\)." },
+                        { q: "Pabrik menghasilkan \\( 49x^2 - 4 \\) barang yang dikemas ke dalam wadah berkapasitas \\( 7x - 2 \\) unit. Banyaknya wadah yang dibutuhkan adalah...", q_trans: "Factory produces \\( 49x^2 - 4 \\) items packed in containers of \\( 7x - 2 \\) units. Number of containers needed is...", opts: ["\\( 7x + 2 \\)", "\\( 7x - 2 \\)", "\\( 49x + 4 \\)", "\\( 4 - 7x \\)", "\\( 2x - 7 \\)"], correct: 0, exp: "\\( \frac{(7x-2)(7x+2)}{7x-2} = 7x + 2 \\)." },
+                        { q: "Kolam renang memiliki luas \\( 81v^2 - 1 \\) meter persegi. Jika lebarnya \\( 9v + 1 \\) meter, maka panjang kolam adalah...", q_trans: "A pool has area \\( 81v^2 - 1 \\) m². If width is \\( 9v + 1 \\) m, the length is...", opts: ["\\( 9v - 1 \text{ meter} \\)", "\\( 9v + 1 \text{ meter} \\)", "\\( 81v - 1 \text{ meter} \\)", "\\( 1 - 9v \text{ meter} \\)", "\\( 9v^2 - 1 \text{ meter} \\)"], correct: 0, exp: "\\( \frac{81v^2 - 1}{9v + 1} = \frac{(9v-1)(9v+1)}{9v+1} = 9v - 1 \\)." }
+                    ]}
+                ]
+            },
+            task3: {
+                title: "Task 3: Faktor Trinomial",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Keuntungan toko sebesar \\( x^2 + 5x + 6 \\) juta dibagi rata selama \\( x + 2 \\) bulan. Sederhanakan pecahan untuk mengetahui untung per bulan...", q_trans: "Store profit of \\( x^2 + 5x + 6 \\) million is divided over \\( x + 2 \\) months. Simplify to find profit per month...", opts: ["\\( x + 3 \\)", "\\( x + 2 \\)", "\\( x + 5 \\)", "\\( x - 3 \\)", "\\( x + 6 \\)"], correct: 0, exp: "\\( \frac{(x+2)(x+3)}{x+2} = x + 3 \\)." },
+                        { q: "Jumlah ikan di kolam \\( p^2 + 8p + 15 \\) ekor, dipindahkan ke \\( p + 3 \\) keranjang. Banyak ikan per keranjang adalah...", q_trans: "Total fish \\( p^2 + 8p + 15 \\), moved to \\( p + 3 \\) baskets. Fish per basket is...", opts: ["\\( p + 5 \\)", "\\( p + 3 \\)", "\\( p + 8 \\)", "\\( p - 5 \\)", "\\( p + 15 \\)"], correct: 0, exp: "\\( \frac{(p+3)(p+5)}{p+3} = p + 5 \\)." },
+                        { q: "Hasil panen padi \\( m^2 - 7m + 12 \\) ton diangkut menggunakan \\( m - 3 \\) truk. Berat padi per truk adalah...", q_trans: "Harvest of \\( m^2 - 7m + 12 \\) tons transported by \\( m - 3 \\) trucks. Weight per truck is...", opts: ["\\( m - 4 \\)", "\\( m + 4 \\)", "\\( m - 3 \\)", "\\( m + 3 \\)", "\\( m - 12 \\)"], correct: 0, exp: "\\( \frac{(m-3)(m-4)}{m-3} = m - 4 \\)." },
+                        { q: "Sebuah kendaraan menempuh jarak \\( a^2 - 9a + 20 \\) km dalam \\( a - 5 \\) jam. Kecepatan rata-rata kendaraan adalah...", q_trans: "A vehicle travels \\( a^2 - 9a + 20 \\) km in \\( a - 5 \\) hours. Average speed is...", opts: ["\\( a - 4 \\)", "\\( a + 4 \\)", "\\( a - 5 \\)", "\\( a - 9 \\)", "\\( a + 20 \\)"], correct: 0, exp: "\\( \frac{(a-5)(a-4)}{a-5} = a - 4 \\)." },
+                        { q: "Biaya pesta \\( 2y^2 + 7y + 3 \\) juta ditanggung oleh \\( 2y + 1 \\) orang. Bagian biaya per orang adalah...", q_trans: "Party cost \\( 2y^2 + 7y + 3 \\) million borne by \\( 2y + 1 \\) people. Cost per person is...", opts: ["\\( y + 3 \\)", "\\( 2y + 3 \\)", "\\( 2y + 1 \\)", "\\( y + 1 \\)", "\\( 2y - 3 \\)"], correct: 0, exp: "\\( \frac{(2y+1)(y+3)}{2y+1} = y + 3 \\)." },
+                        { q: "Tersedia \\( 3k^2 - 10k + 3 \\) kg gula pasir yang dibagi ke dalam kantong berisi \\( 3k - 1 \\) kg. Banyak kantong yang diperlukan adalah...", q_trans: "\\( 3k^2 - 10k + 3 \\) kg of sugar divided into bags of \\( 3k - 1 \\) kg. Number of bags needed is...", opts: ["\\( k - 3 \\)", "\\( 3k - 1 \\)", "\\( k + 3 \\)", "\\( 3k + 1 \\)", "\\( 3k - 3 \\)"], correct: 0, exp: "\\( \frac{(3k-1)(k-3)}{3k-1} = k - 3 \\)." },
+                        { q: "Populasi penduduk suatu desa adalah \\( 4z^2 - 12z + 5 \\), tersebar di \\( 2z - 5 \\) dusun. Jumlah penduduk per dusun adalah...", q_trans: "Village population \\( 4z^2 - 12z + 5 \\), spread over \\( 2z - 5 \\) hamlets. Population per hamlet is...", opts: ["\\( 2z - 1 \\)", "\\( 2z + 1 \\)", "\\( 2z - 5 \\)", "\\( 4z - 1 \\)", "\\( z - 5 \\)"], correct: 0, exp: "\\( \frac{(2z-5)(2z-1)}{2z-5} = 2z - 1 \\)." },
+                        { q: "Sebuah truk mengangkut \\( x^2 - x - 12 \\) kotak buah. Jika muatan dibagi ke \\( x + 3 \\) petak, maka kotak per petak adalah...", q_trans: "A truck carries \\( x^2 - x - 12 \\) boxes. If load is divided into \\( x + 3 \\) compartments, boxes per compartment is...", opts: ["\\( x - 4 \\)", "\\( x + 4 \\)", "\\( x - 3 \\)", "\\( x + 12 \\)", "\\( x - 12 \\)"], correct: 0, exp: "\\( \frac{(x+3)(x-4)}{x+3} = x - 4 \\)." },
+                        { q: "Perpustakaan memiliki \\( n^2 + 2n - 8 \\) buku, disusun di \\( n - 2 \\) rak. Buku per rak adalah...", q_trans: "Library has \\( n^2 + 2n - 8 \\) books, arranged on \\( n - 2 \\) shelves. Books per shelf is...", opts: ["\\( n + 4 \\)", "\\( n - 4 \\)", "\\( n + 2 \\)", "\\( n - 2 \\)", "\\( n - 8 \\)"], correct: 0, exp: "\\( \frac{(n-2)(n+4)}{n-2} = n + 4 \\)." },
+                        { q: "Terdapat \\( 5c^2 + 13c + 6 \\) gram tepung, akan dibagi untuk adonan yang masing-masing butuh \\( 5c + 3 \\) gram. Banyak adonan yang bisa dibuat adalah...", q_trans: "There is \\( 5c^2 + 13c + 6 \\) grams of flour, divided for doughs requiring \\( 5c + 3 \\) grams each. Number of doughs is...", opts: ["\\( c + 2 \\)", "\\( 5c + 2 \\)", "\\( 5c + 3 \\)", "\\( c + 3 \\)", "\\( c + 6 \\)"], correct: 0, exp: "\\( \frac{(5c+3)(c+2)}{5c+3} = c + 2 \\)." }
+                    ]}
+                ]
+            },
+            task4: {
+                title: "Task 4: Multi-Step & Complex",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Produksi pabrik \\( x^2 + 3x \\) unit barang dilakukan dalam waktu \\( x + 3 \\) hari. Produksi per hari adalah...", q_trans: "Factory production \\( x^2 + 3x \\) units done in \\( x + 3 \\) days. Production per day is...", opts: ["\\( x \\)", "\\( x + 3 \\)", "\\( x^2 \\)", "\\( 3x \\)", "\\( x^2 + 3 \\)"], correct: 0, exp: "\\( \frac{x(x+3)}{x+3} = x \\)." },
+                        { q: "Sebanyak \\( 2a^2 - 8a \\) liter air dimasukkan ke dalam botol berkapasitas \\( a - 4 \\) liter. Banyak botol yang terisi adalah...", q_trans: "\\( 2a^2 - 8a \\) liters of water put into bottles of \\( a - 4 \\) liters. Number of bottles filled is...", opts: ["\\( 2a \\)", "\\( 2(a-2) \\)", "\\( a - 4 \\)", "\\( 2a^2 \\)", "\\( 2a + 4 \\)"], correct: 0, exp: "\\( \frac{2a(a-4)}{a-4} = 2a \\)." },
+                        { q: "Uang sebesar \\( 5y^2 - 15y \\) ribu dibagi rata kepada \\( y - 3 \\) anak. Bagian uang tiap anak adalah...", q_trans: "Money \\( 5y^2 - 15y \\) thousand divided among \\( y - 3 \\) children. Each child gets...", opts: ["\\( 5y \text{ ribu} \\)", "\\( y - 3 \text{ ribu} \\)", "\\( 5y^2 \text{ ribu} \\)", "\\( 15 \text{ ribu} \\)", "\\( 5y + 3 \text{ ribu} \\)"], correct: 0, exp: "\\( \frac{5y(y-3)}{y-3} = 5y \\)." },
+                        { q: "Energi listrik \\( x^3 - x \\) Joule digunakan oleh \\( x^2 - 1 \\) mesin. Energi per mesin adalah...", q_trans: "Electrical energy \\( x^3 - x \\) Joules used by \\( x^2 - 1 \\) machines. Energy per machine is...", opts: ["\\( x \\)", "\\( x - 1 \\)", "\\( x + 1 \\)", "\\( x^2 \\)", "\\( x^3 \\)"], correct: 0, exp: "\\( \frac{x(x^2-1)}{x^2-1} = \frac{x(x-1)(x+1)}{(x-1)(x+1)} = x \\)." },
+                        { q: "Volume kubus adalah \\( m^2 - 4m + 4 \\) cm³. Jika panjang rusuknya \\( m - 2 \\) cm, maka luas alas kubus tersebut adalah...", q_trans: "Cube volume \\( m^2 - 4m + 4 \\) cm³. If side is \\( m - 2 \\) cm, base area is...", opts: ["\\( m - 2 \\)", "\\( m + 2 \\)", "\\( (m-2)^2 \\)", "\\( m^2 - 2 \\)", "\\( m - 4 \\)"], correct: 0, exp: "Volume = Alas x Rusuk. \\( \frac{(m-2)(m-2)}{m-2} = m - 2 \\)." },
+                        { q: "Massa total benda \\( p^2 + 2p + 1 \\) gram, dibagi rata untuk \\( p + 1 \\) benda. Massa per benda adalah...", q_trans: "Total mass \\( p^2 + 2p + 1 \\) g, divided for \\( p + 1 \\) objects. Mass per object is...", opts: ["\\( p + 1 \\)", "\\( p - 1 \\)", "\\( p^2 + 1 \\)", "\\( 2p \\)", "\\( p + 2 \\)"], correct: 0, exp: "\\( \frac{(p+1)(p+1)}{p+1} = p + 1 \\)." },
+                        { q: "Gaji pegawai \\( 3x^2 - 12 \\) juta, dibagi selama \\( x^2 + 5x + 6 \\) bulan. Sederhanakan bentuk pecahan gaji per bulan...", q_trans: "Salary \\( 3x^2 - 12 \\) million, divided over \\( x^2 + 5x + 6 \\) months. Simplify salary per month...", opts: ["\\( \frac{3(x-2)}{x+3} \\)", "\\( \frac{3x-2}{x+3} \\)", "\\( \frac{x-2}{x+3} \\)", "\\( \frac{3(x+2)}{x-3} \\)", "\\( \frac{3x+2}{x-3} \\)"], correct: 0, exp: "Atas: \\( 3(x^2-4) = 3(x-2)(x+2) \\). Bawah: \\( (x+2)(x+3) \\). Coret \\( (x+2) \\). Sisa: \\( \frac{3(x-2)}{x+3} \\)." },
+                        { q: "Jarak tempuh \\( k^2 - 9 \\) km, ditempuh dalam waktu \\( k^2 - 4k + 3 \\) jam. Kecepatan rata-rata adalah...", q_trans: "Distance \\( k^2 - 9 \\) km, traveled in \\( k^2 - 4k + 3 \\) hours. Average speed is...", opts: ["\\( \frac{k+3}{k-1} \\)", "\\( \frac{k-3}{k-1} \\)", "\\( \frac{k+3}{k+1} \\)", "\\( k - 3 \\)", "\\( k + 1 \\)"], correct: 0, exp: "Atas: \\( (k+3)(k-3) \\). Bawah: \\( (k-1)(k-3) \\). Coret \\( (k-3) \\). Sisa: \\( \frac{k+3}{k-1} \\)." },
+                        { q: "Terdapat \\( 2t^2 - 8 \\) liter minyak, disalurkan ke \\( t^2 - 4t + 4 \\) toko. Minyak per toko (dalam pecahan sederhana) adalah...", q_trans: "\\( 2t^2 - 8 \\) liters of oil, distributed to \\( t^2 - 4t + 4 \\) stores. Oil per store is...", opts: ["\\( \frac{2(t+2)}{t-2} \\)", "\\( \frac{2(t-2)}{t+2} \\)", "\\( \frac{t+2}{t-2} \\)", "\\( \frac{2(t-2)}{t-2} \\)", "\\( \frac{2(t+2)}{t+2} \\)"], correct: 0, exp: "Atas: \\( 2(t^2-4) = 2(t-2)(t+2) \\). Bawah: \\( (t-2)^2 \\). Coret \\( (t-2) \\). Sisa: \\( \frac{2(t+2)}{t-2} \\)." },
+                        { q: "Terdapat \\( 4v^2 - 1 \\) kue, dibagi rata di toples berkapasitas \\( 2v^2 + 5v + 2 \\) kue. Sederhanakan pecahan banyak toples...", q_trans: "There are \\( 4v^2 - 1 \\) cakes, divided into jars of \\( 2v^2 + 5v + 2 \\) cakes. Simplify fraction of jars...", opts: ["\\( \frac{2v-1}{v+2} \\)", "\\( \frac{2v+1}{v+2} \\)", "\\( \frac{2v-1}{2v+1} \\)", "\\( \frac{v-1}{v+2} \\)", "\\( \frac{2v-1}{v-2} \\)"], correct: 0, exp: "Atas: \\( (2v-1)(2v+1) \\). Bawah: \\( (2v+1)(v+2) \\). Coret \\( (2v+1) \\). Sisa: \\( \frac{2v-1}{v+2} \\)." }
+                    ]}
+                ]
+            },
+            task5: {
+                title: "Task 5: Syarat & Undefined",
+                pages: [
+                    { type: 'tasks', count: 10, tasks: [
+                        { q: "Sebuah rumus obat-obatan \\( \frac{x-5}{x^2 - 25} \\). Agar obat bereaksi sempurna (tidak error/tak terdefinisi), nilai \\( x \\) tidak boleh sama dengan...", q_trans: "Medicine formula \\( \frac{x-5}{x^2 - 25} \\). To react perfectly (not undefined), \\( x \\) cannot be...", opts: ["5 dan -5", "5", "-5", "0", "25"], correct: 0, exp: "Penyebut \\( x^2 - 25 = (x-5)(x+5) \neq 0 \\). Maka \\( x \neq 5 \\) dan \\( x \neq -5 \\)." },
+                        { q: "Rumus debit air di sungai \\( \frac{2y}{y^2 - 4y} \\). Saluran akan error/kering jika nilai \\( y \\) sama dengan...", q_trans: "River flow formula \\( \frac{2y}{y^2 - 4y} \\). Channel errors if \\( y \\) equals...", opts: ["0 dan 4", "0", "4", "2", "-4"], correct: 0, exp: "Penyebut \\( y(y-4) \neq 0 \\). Maka \\( y \neq 0 \\) dan \\( y \neq 4 \\)." },
+                        { q: "Rumus tegangan mesin \\( \frac{3m}{m^2 + 3m} \\). Mesin akan rusak (undefined) jika variabel \\( m \\) bernilai...", q_trans: "Engine voltage formula \\( \frac{3m}{m^2 + 3m} \\). Engine breaks if \\( m \\) is...", opts: ["0 dan -3", "0", "3", "-3", "1"], correct: 0, exp: "Penyebut \\( m(m+3) \neq 0 \\). Maka \\( m \neq 0 \\) dan \\( m \neq -3 \\)." },
+                        { q: "Kecepatan roket \\( \frac{p+2}{p^2 - 4} \\). Peluncuran akan gagal jika nilai \\( p \\) sama dengan...", q_trans: "Rocket speed \\( \frac{p+2}{p^2 - 4} \\). Launch fails if \\( p \\) equals...", opts: ["2 dan -2", "2", "-2", "4", "0"], correct: 0, exp: "Penyebut \\( p^2 - 4 = (p-2)(p+2) \neq 0 \\). Maka \\( p \neq 2 \\) dan \\( p \neq -2 \\)." },
+                        { q: "Kuat arus listrik \\( \frac{k-1}{k^2 - k - 2} \\). Sirkuit terbakar (undefined) jika \\( k \\) bernilai...", q_trans: "Electric current \\( \frac{k-1}{k^2 - k - 2} \\). Circuit burns if \\( k \\) is...", opts: ["2 dan -1", "2", "-1", "1", "-2"], correct: 0, exp: "\\( k^2 - k - 2 = (k-2)(k+1) \neq 0 \\). Maka \\( k \neq 2 \\) dan \\( k \neq -1 \\)." },
+                        { q: "Tekanan ban \\( \frac{5}{t^2 - 10t + 25} \\). Ban akan pecah jika \\( t \\) bernilai...", q_trans: "Tire pressure \\( \frac{5}{t^2 - 10t + 25} \\). Tire bursts if \\( t \\) is...", opts: ["5", "-5", "10", "0", "25"], correct: 0, exp: "\\( t^2 - 10t + 25 = (t-5)^2 \neq 0 \\). Maka \\( t \neq 5 \\)." },
+                        { q: "Massa jenis zat \\( \frac{v}{2v^2 - 18} \\). Rumus ini tidak terdefinisi (error) jika \\( v \\) bernilai...", q_trans: "Density \\( \frac{v}{2v^2 - 18} \\). Undefined if \\( v \\) is...", opts: ["3 dan -3", "3", "-3", "0", "9"], correct: 0, exp: "Penyebut \\( 2(v^2 - 9) = 2(v-3)(v+3) \neq 0 \\). Maka \\( v \neq 3 \\) dan \\( v \neq -3 \\)." },
+                        { q: "Volume benda \\( \frac{x}{x^3 - x} \\). Nilai \\( x \\) yang membuat perhitungan error adalah...", q_trans: "Volume \\( \frac{x}{x^3 - x} \\). \\( x \\) causing error is...", opts: ["0, 1, dan -1", "0 dan 1", "Hanya 0", "Hanya 1", "1 dan -1"], correct: 0, exp: "\\( x^3 - x = x(x^2 - 1) = x(x-1)(x+1) \neq 0 \\). Maka \\( x \neq 0, x \neq 1, x \neq -1 \\)." },
+                        { q: "Luas bidang \\( \frac{a+1}{a^2 + 2a + 1} \\). Bidang tidak terbentuk jika nilai \\( a \\) sama dengan...", q_trans: "Area \\( \frac{a+1}{a^2 + 2a + 1} \\). Area undefined if \\( a \\) equals...", opts: ["-1", "1", "0", "2", "-2"], correct: 0, exp: "\\( a^2 + 2a + 1 = (a+1)^2 \neq 0 \\). Maka \\( a \neq -1 \\)." },
+                        { q: "Daya listrik \\( \frac{b-3}{2b^2 - 12b + 18} \\). Alat mati (undefined) jika \\( b \\) bernilai...", q_trans: "Power \\( \frac{b-3}{2b^2 - 12b + 18} \\). Device dies if \\( b \\) is...", opts: ["3", "-3", "0", "2", "6"], correct: 0, exp: "Penyebut \\( 2(b^2 - 6b + 9) = 2(b-3)^2 \neq 0 \\). Maka \\( b \neq 3 \\)." }
+                    ]}
+                ]
+            }
+        };
+
+        // --- AUTO FIX KATEX ESCAPE SEQUENCE (SAFE VERSION) ---
+        (function() {
+            function fixString(str) {
+                if (typeof str !== 'string') return str;
+                
+                // 1. Memperbaiki karakter kontrol dari JS escape sequence
+                str = str.replace(/\u000Crac/g, '\\frac'); // \f (formfeed) + rac -> \frac
+                str = str.replace(/\neq/g, '\\neq');       // \n (newline) + eq -> \neq
+                str = str.replace(/\u0009imes/g, '\\times'); // \t (tab) + imes -> \times
+                str = str.replace(/\u0009ext/g, '\\text');   // \t (tab) + ext -> \text
+                
+                // 2. Memperbaiki backslash yang hilang (karena JS menghapus \ jika tidak diikuti karakter khusus)
+                // Kita pakai spasi agar TIDAK merusak tag HTML seperti <div>
+                str = str.replace(/ pi\(/g, ' \\pi(');
+                str = str.replace(/ div /g, ' \\div ');
+                str = str.replace(/ cdot /g, ' \\cdot ');
+                str = str.replace(/ implies /g, ' \\implies ');
+                str = str.replace(/ pm /g, ' \\pm ');
+                str = str.replace(/ sqrt/g, ' \\sqrt');
+                str = str.replace(/ leq /g, ' \\leq ');
+                str = str.replace(/ geq /g, ' \\geq ');
+                str = str.replace(/ infty /g, ' \\infty ');
+                
+                return str;
+            }
+
+            function processObject(obj) {
+                for (const key in obj) {
+                    if (typeof obj[key] === 'string') {
+                        obj[key] = fixString(obj[key]);
+                    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        processObject(obj[key]);
+                    }
+                }
+            }
+            
+            processObject(contentData);
+        })();
+
+        // Functions for Modal
+        function openModal() { document.getElementById('rulesModal').classList.remove('hidden'); document.getElementById('rulesModal').classList.add('flex'); }
+        function closeModal() { document.getElementById('rulesModal').classList.add('hidden'); }
+
+        // Functions for Navigation and Pagination
+        let currentSection = '';
+        let currentPage = 0;
+
+        function showSection(sectionId, pageIndex, event) {
+            currentSection = sectionId;
+            currentPage = pageIndex;
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Fallback jika dipanggil tanpa event (misal saat page load)
+                const activeItem = document.querySelector(`.sidebar-item[onclick*="${sectionId}"]`);
+                if(activeItem) activeItem.classList.add('active');
+            }
+
+            renderContent();
+        }
+
+        function renderContent() {
+            const section = contentData[currentSection];
+            const mainContent = document.getElementById('mainContent');
+            const page = section.pages[currentPage];
+            
+            let html = `<h2 class="text-3xl font-bold text-blue-800 mb-4">${section.title}</h2>`;
+            
+            // Tambahan: Tombol Print untuk Task 1 - 5
+            if (currentSection.startsWith('task')) {
+                const taskNum = currentSection.replace('task', '');
+                html += `<div class="mb-4 no-print flex justify-end">
+                            <button onclick="printTask(${taskNum})" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+                                <i class="fas fa-print"></i> Print Task ${taskNum}
+                            </button>
+                         </div>`;
+            }
+
+            if (page.type === 'theory') {
+                html += `<div class="bg-white p-6 rounded-lg shadow-md">${page.content}</div>`;
+            } else if (page.type === 'tasks') {
+                html += `<div class="bg-white p-6 rounded-lg shadow-md">`;
+                page.tasks.forEach((task, index) => {
+                    html += renderTask(task, index);
+                });
+                html += `</div>`;
+            }
+
+            // Pagination
+            html += `<div class="flex justify-between mt-6 no-print">`;
+            if (currentPage > 0) {
+                html += `<button onclick="prevPage()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i> Prev</button>`;
+            } else {
+                html += `<div></div>`;
+            }
+            if (currentPage < section.pages.length - 1) {
+                html += `<button onclick="nextPage()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Next <i class="fas fa-arrow-right"></i></button>`;
+            } else {
+                html += `<div></div>`;
+            }
+            html += `</div>`;
+
+            mainContent.innerHTML = html;
+            if (window.renderMathInElement) {
+                renderMathInElement(mainContent, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+        }
+
+        function prevPage() { currentPage--; renderContent(); }
+        function nextPage() { currentPage++; renderContent(); }
+
+        function renderTask(task, index) {
+            const taskId = `${currentSection}-${currentPage}-${index}`;
+            // Randomize options
+            let opts = task.opts.map((opt, i) => ({ text: opt, isCorrect: i === task.correct }));
+            opts = shuffleArray(opts);
+
+            let optionsHtml = '';
+            opts.forEach((opt, i) => {
+                optionsHtml += `
+                    <button id="opt-${taskId}-${i}" onclick="checkAnswer('${taskId}', ${i}, ${opt.isCorrect})" class="option-btn w-full text-left p-3 border rounded-lg mb-2 flex items-center">
+                        <span class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-3 font-bold">${String.fromCharCode(65 + i)}</span>
+                        <span>${opt.text}</span>
+                    </button>
+                `;
+            });
+
+            return `
+                <div class="border-b border-gray-200 py-4">
+                    <p class="font-semibold mb-2">${index + 1}. ${task.q}</p>
+                    <p class="translation">${task.q_trans}</p>
+                    <div class="mt-4">
+                        ${optionsHtml}
+                    </div>
+                    <div id="feedback-${taskId}" class="mt-2"></div>
+                    <div id="collapse-${taskId}" class="collapse-content mt-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h4 class="font-bold text-blue-600 mb-2"><i class="fas fa-lightbulb mr-1"></i>Penjelasan (Explanation)</h4>
+                        <p>${task.exp}</p>
+                    </div>
+                    <div class="mt-2 no-print flex gap-2">
+                        <button id="reset-${taskId}" onclick="resetTask('${taskId}')" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-bold py-1 px-3 rounded"><i class="fas fa-redo mr-1"></i>Reset</button>
+                        <button onclick="toggleCollapse('${taskId}')" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-1 px-3 rounded"><i class="fas fa-chevron-down mr-1"></i>Show Explanation</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function checkAnswer(taskId, optIndex, isCorrect) {
+            const buttons = document.querySelectorAll(`[id^="opt-${taskId}-"]`);
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            const selectedBtn = document.getElementById(`opt-${taskId}-${optIndex}`);
+            const feedback = document.getElementById(`feedback-${taskId}`);
+            const resetBtn = document.getElementById(`reset-${taskId}`);
+            const explainBtn = document.querySelector(`#reset-${taskId}`).nextElementSibling;
+            
+            resetBtn.classList.remove('hidden');
+            explainBtn.classList.remove('hidden');
+
+            if (isCorrect) {
+                selectedBtn.classList.add('bg-green-200', 'border-green-500');
+                feedback.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! (Correct!)</p>`;
+            } else {
+                selectedBtn.classList.add('bg-red-200', 'border-red-500');
+                feedback.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah. Coba lihat penjelasannya! (Incorrect. Check the explanation!)</p>`;
+                // Open collapse automatically on wrong answer
+                document.getElementById(`collapse-${taskId}`).classList.add('open');
+            }
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            content.classList.toggle('open');
+        }
+
+        function resetTask(taskId) {
+            // Re-render the specific task or the whole page for simplicity
+            renderContent();
+        }
+
+        // Print Function
+        function printTask(taskNumber) {
+            const printArea = document.getElementById('printArea');
+            const date = new Date().toLocaleDateString('id-ID');
+            let taskContent = contentData['task' + taskNumber].pages[0]; 
+            
+            let tableRows = '';
+            let score = 0;
+
+            taskContent.tasks.forEach((task, index) => {
+                const taskId = `task${taskNumber}-0-${index}`;
+                const correctAnswerText = task.opts[task.correct];
+                
+                // Mencari tombol yang diklik oleh siswa (yang berwarna hijau atau merah)
+                const selectedBtn = document.querySelector(`[id^="opt-${taskId}-"].bg-green-200, [id^="opt-${taskId}-"].bg-red-200`);
+                
+                let studentAnswerHtml = '<span style="color:#9ca3af; font-style:italic;">(Kosong)</span>';
+                let noteHtml = '❌';
+                
+                if (selectedBtn) {
+                    // Jika ada jawaban yang dipilih, ekstrak teksnya
+                    const ann = selectedBtn.querySelector('.katex-mathml annotation');
+                    if (ann) {
+                        // Jika rumus matematika (KaTeX)
+                        studentAnswerHtml = `\\( ${ann.textContent} \\)`;
+                    } else {
+                        // Jika teks biasa
+                        const spans = selectedBtn.querySelectorAll('span');
+                        if (spans.length >= 2) {
+                            studentAnswerHtml = spans[1].innerText;
+                        } else {
+                            studentAnswerHtml = selectedBtn.innerText.substring(1).trim();
+                        }
+                    }
+                    
+                    // Cek apakah jawaban benar atau salah
+                    if (selectedBtn.classList.contains('bg-green-200')) {
+                        noteHtml = '✔️';
+                        score++;
+                    } else {
+                        noteHtml = '❌';
+                    }
+                }
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center; vertical-align: top;">${index + 1}</td>
+                        <td style="vertical-align: top;">${task.q}</td>
+                        <td style="vertical-align: top;">${studentAnswerHtml}</td>
+                        <td style="vertical-align: top;">${correctAnswerText}</td>
+                        <td style="text-align: center; vertical-align: top; font-size: 16px;">${noteHtml}</td>
+                    </tr>
+                `;
+            });
+
+            printArea.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h1>Math Tutoring by Deni</h1>
+                    <p>Topic: Pengantar Pecahan Aljabar (Menyederhanakan)</p>
+                    <p>Name: .........................</p>
+                    <p>Date: ${date}</p>
+                    <p>Task: ${taskNumber}/5</p>
+                    <p>Score: ${score} / 10</p>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                    <thead>
+                        <tr style="border: 1px solid #000; background-color: #f3f4f6;">
+                            <th style="border: 1px solid #000; padding: 5px; width: 5%;">No.</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 40%;">Question</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 20%;">Student Answer</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 25%;">Correct Answer</th>
+                            <th style="border: 1px solid #000; padding: 5px; width: 10%;">Note (❌/✔️)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+                <div style="margin-top: 40px; text-align: right;">
+                    <p>Checked by,</p>
+                    <br><br>
+                    <p><strong>Deni</strong></p>
+                </div>
+            `;
+            
+            // Wajib render KaTeX di area print sebelum dicetak
+            if (window.renderMathInElement) {
+                renderMathInElement(printArea, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false}
+                    ]
+                });
+            }
+            
+            printArea.classList.remove('hidden');
+            window.print();
+            printArea.classList.add('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.renderMathInElement) {
+                document.querySelector('.sidebar-item').click();
+            } else {
+                // Tunggu KaTeX selesai loading jika belum ada
+                window.addEventListener('load', () => {
+                    document.querySelector('.sidebar-item').click();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
