@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; 
+            padding: 0; 
+            border: 0;
+            background: transparent;
+        }
+        .collapse-content.open { 
+            max-height: 2000px; 
+            padding: 1.5rem; 
+            border: 1px solid #bfdbfe; 
+            background: #eff6ff; 
+            border-radius: 0.5rem;
+            margin-top: 1rem; 
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .no-print { display: none !important; }
+            @page { size: A4; margin: 10mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Perbandingan Berbalik Nilai (Inverse Proportion)</p>
+            <p class="translation text-blue-200">Topik: Inverse Proportion</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-blue-800">Class Rules <br><span class="translation text-gray-500">Aturan Kelas</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-blue-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-blue-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-blue-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-blue-800 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-blue-200 mt-1">Select a topic to navigate</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="warmup">
+                            <div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:00 - 00:10
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="intro">
+                            <div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:10 - 00:15
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="review">
+                            <div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:15 - 00:20
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="problem">
+                            <div class="font-semibold text-sm text-gray-800">Problem Introduction</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:20 - 00:30
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="guided">
+                            <div class="font-semibold text-sm text-gray-800">Guided Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:30 - 00:45
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="independent">
+                            <div class="font-semibold text-sm text-gray-800">Independent Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:45 - 00:55
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-800 transition-colors cursor-pointer" data-section="consolidation">
+                            <div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <i class="far fa-clock"></i> 00:55 - 01:00
+                            </div>
+                        </a>
+                    </li>
+                    
+                    <hr class="my-3 border-gray-200">
+                    
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5">
+                            <div class="font-bold text-sm text-blue-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Konsep Dasar: Perkalian Faktor</h2>
+                        <p class="translation">Basic Concept: Factor Multiplication</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded flex justify-center">
+                                <!-- SVG Illustration: Balance Scale with factors -->
+                                <svg width="150" height="120" viewBox="0 0 150 120">
+                                    <path d="M75,10 L75,30" stroke="#333" stroke-width="2"/>
+                                    <path d="M20,30 L130,30" stroke="#333" stroke-width="2"/>
+                                    <path d="M75,30 L75,110" stroke="#333" stroke-width="2"/>
+                                    <path d="M70,110 L80,110" stroke="#333" stroke-width="2"/>
+                                    <!-- Left Box -->
+                                    <rect x="10" y="30" width="20" height="20" fill="#3b82f6" rx="2"/>
+                                    <text x="20" y="45" font-size="12" fill="white" text-anchor="middle" font-weight="bold">2</text>
+                                    <path d="M20,50 L20,70 L30,70" stroke="#3b82f6" fill="none"/>
+                                    <!-- Right Box -->
+                                    <rect x="120" y="30" width="20" height="20" fill="#3b82f6" rx="2"/>
+                                    <text x="130" y="45" font-size="12" fill="white" text-anchor="middle" font-weight="bold">4</text>
+                                    <path d="M130,50 L130,70 L120,70" stroke="#3b82f6" fill="none"/>
+                                    <!-- Center Box (Result) -->
+                                    <rect x="60" y="70" width="30" height="30" fill="#f59e0b" rx="2"/>
+                                    <text x="75" y="90" font-size="14" fill="white" text-anchor="middle" font-weight="bold">8</text>
+                                </svg>
+                            </div>
+                            <p>Dalam matematika, jika dua angka dikalikan, hasilnya disebut hasil kali. <span class="katex">\( 2 \times 4 = 8 \)</span>. <span class="translation">In mathematics, if two numbers are multiplied, the result is called the product. 2 x 4 = 8.</span></p>
+                        </div>
+
+                        <p>Jika kita memiliki angka <span class="katex">\( 8 \)</span> dan kita ingin membaginya menjadi dua faktor, ada beberapa cara. <span class="translation">If we have the number 8 and we want to divide it into two factors, there are several ways.</span></p>
+                        <p class="mt-2">Misalnya: <span class="katex">\( 1 \times 8 \)</span>, <span class="katex">\( 2 \times 4 \)</span>. <span class="translation">For example: 1 x 8, 2 x 4.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Pola Kebalikan (Inverse Pattern)</h2>
+                        <p class="translation">Inverse Pattern</p>
+                        
+                        <div class="flex gap-4 my-4">
+                            <div class="bg-green-50 p-4 rounded flex items-center">
+                                <!-- SVG: Two gears turning opposite -->
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <path d="M30,50 A20,20 0 1,1 30,50.1" fill="none" stroke="#10b981" stroke-width="2"/>
+                                    <path d="M30,30 L30,20 M30,70 L30,80 M10,50 L20,50 M40,50 L50,50" stroke="#10b981" stroke-width="2"/>
+                                    <text x="30" y="55" font-size="10" fill="#10b981" text-anchor="middle">UP</text>
+                                    
+                                    <path d="M80,50 A15,15 0 1,1 80,50.1" fill="none" stroke="#10b981" stroke-width="2"/>
+                                    <path d="M80,35 L80,25 M80,65 L80,75 M65,50 L75,50 M85,50 L95,50" stroke="#10b981" stroke-width="2"/>
+                                    <text x="80" y="55" font-size="8" fill="#10b981" text-anchor="middle">DOWN</text>
+                                    
+                                    <path d="M50,50 L65,50" stroke="#333" stroke-width="2" stroke-dasharray="2,2"/>
+                                </svg>
+                            </div>
+                            <p>Jika hasil kali harus tetap sama (misalnya 8), dan salah satu angka membesar, maka angka lainnya harus mengecil. <span class="translation">If the product must remain the same (e.g., 8), and one number gets larger, the other number must get smaller.</span></p>
+                        </div>
+                        <p>Contoh: Jika faktor pertama adalah 1, faktor kedua adalah 8. Jika faktor pertama membesar menjadi 2, faktor kedua mengecil menjadi 4. <span class="translation">Example: If the first factor is 1, the second is 8. If the first grows to 2, the second shrinks to 4.</span></p>
+                        <p class="mt-2">Hubungan ini disebut **berbalik nilai**. <span class="translation">This relationship is called inversely proportional.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Rumus Nilai Konstan</h2>
+                        <p class="translation">Constant Value Formula</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <!-- SVG: x * y = k -->
+                                <svg width="140" height="80" viewBox="0 0 140 80">
+                                    <rect x="10" y="20" width="30" height="40" fill="#8b5cf6" rx="5"/>
+                                    <text x="25" y="45" font-size="16" fill="white" text-anchor="middle" font-weight="bold">x</text>
+                                    
+                                    <text x="50" y="45" font-size="16" fill="#8b5cf6" text-anchor="middle" font-weight="bold">×</text>
+                                    
+                                    <rect x="60" y="20" width="30" height="40" fill="#a78bfa" rx="5"/>
+                                    <text x="75" y="45" font-size="16" fill="white" text-anchor="middle" font-weight="bold">y</text>
+                                    
+                                    <text x="100" y="45" font-size="16" fill="#8b5cf6" text-anchor="middle" font-weight="bold">=</text>
+                                    
+                                    <rect x="110" y="20" width="30" height="40" fill="#c4b5fd" rx="5"/>
+                                    <text x="125" y="45" font-size="16" fill="white" text-anchor="middle" font-weight="bold">k</text>
+                                </svg>
+                            </div>
+                            <p>Dalam perbandingan berbalik nilai, perkalian kedua bilangan selalu tetap. Kita sebut bilangan tetap itu <strong>k</strong> (konstanta). <span class="translation">In inverse proportion, the product of the two numbers is always constant. We call this constant number k.</span></p>
+                        </div>
+                        <p>Rumusnya: <span class="katex">\( x \times y = k \)</span>. <span class="translation">The formula is: x * y = k.</span></p>
+                        <p class="mt-2">Jika <span class="katex">\( x \)</span> naik, <span class="katex">\( y \)</span> harus turun agar hasil kalinya selalu <span class="katex">\( k \)</span>. <span class="translation">If x goes up, y must go down so their product is always k.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+
+            </div>
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Kecepatan dan Waktu</h2>
+                        <p class="translation">Speed and Time</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <!-- SVG: Car and Clock -->
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+                                    <!-- Fast Car -->
+                                    <path d="M10,60 L10,40 L30,20 L60,20 L70,30 L90,30 L90,60 Z" fill="#3b82f6"/>
+                                    <circle cx="25" cy="60" r="8" fill="#333"/>
+                                    <circle cx="75" cy="60" r="8" fill="#333"/>
+                                    <!-- Fast Arrow -->
+                                    <path d="M95,30 L130,30" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowR)"/>
+                                    <path d="M95,20 L120,20" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowR)"/>
+                                    <defs>
+                                        <marker id="arrowR" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                                            <path d="M0,0 L10,5 L0,10 Z" fill="#ef4444"/>
+                                        </marker>
+                                    </defs>
+                                    <!-- Slow Clock -->
+                                    <circle cx="120" cy="75" r="15" fill="none" stroke="#10b981" stroke-width="2"/>
+                                    <path d="M120,75 L120,65 M120,75 L125,78" stroke="#10b981" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <p>Misalkan jarak kota A ke B adalah <span class="katex">\( 120 \text{ km} \)</span>. Jika mobil melaju cepat, waktu tempuhnya akan singkat. Jika melaju lambat, waktu tempuhnya akan lama. <span class="translation">Assume the distance from city A to B is 120 km. If a car travels fast, the travel time is short. If it travels slowly, the travel time is long.</span></p>
+                        </div>
+                        <p>Hubungan antara kecepatan dan waktu adalah berbalik nilai. Semakin cepat, semakin sedikit waktu dibutuhkan. <span class="translation">The relationship between speed and time is inversely proportional. The faster the speed, the less time is needed.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Pekerja dan Waktu</h2>
+                        <p class="translation">Workers and Time</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded">
+                                <!-- SVG: Multiple workers -->
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+                                    <circle cx="30" cy="30" r="10" fill="#10b981"/>
+                                    <rect x="20" y="40" width="20" height="30" fill="#10b981"/>
+                                    <circle cx="60" cy="30" r="10" fill="#10b981"/>
+                                    <rect x="50" y="40" width="20" height="30" fill="#10b981"/>
+                                    <circle cx="90" cy="30" r="10" fill="#10b981"/>
+                                    <rect x="80" y="40" width="20" height="30" fill="#10b981"/>
+                                    <!-- Calendar/Clock shrinking -->
+                                    <rect x="110" y="20" width="30" height="30" fill="none" stroke="#f59e0b" stroke-width="2" rx="3"/>
+                                    <line x1="110" y1="30" x2="140" y2="30" stroke="#f59e0b" stroke-width="2"/>
+                                    <path d="M125,40 L125,45 M125,35 L125,45" stroke="#f59e0b" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <p>Jika sebuah pekerjaan harus diselesaikan, menambah jumlah pekerja akan membuat pekerjaan tersebut selesai lebih cepat (waktu berkurang). <span class="translation">If a job must be completed, adding more workers will make the job finish faster (time decreases).</span></p>
+                        </div>
+                        <p>Hasil kali jumlah pekerja dan waktu selalu tetap. <span class="translation">The product of the number of workers and time is always constant.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Membandingkan Kondisi</h2>
+                        <p class="translation">Comparing Conditions</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <!-- SVG: x1 y1 = x2 y2 -->
+                                <svg width="180" height="80" viewBox="0 0 180 80">
+                                    <text x="20" y="30" font-size="16" fill="#8b5cf6" font-weight="bold">Keadaan 1</text>
+                                    <text x="20" y="50" font-size="14" fill="#333">3 pekerja × 8 hari</text>
+                                    
+                                    <text x="80" y="45" font-size="20" fill="#ef4444" font-weight="bold">=</text>
+                                    
+                                    <text x="100" y="30" font-size="16" fill="#8b5cf6" font-weight="bold">Keadaan 2</text>
+                                    <text x="100" y="50" font-size="14" fill="#333">4 pekerja × ? hari</text>
+                                </svg>
+                            </div>
+                            <p>Kita bisa mencari nilai yang belum diketahui dengan menyamakan hasil kali pada kedua keadaan. <span class="translation">We can find the unknown value by equating the products in both conditions.</span></p>
+                        </div>
+                        <p>Rumusnya: <span class="katex">\( x_1 \times y_1 = x_2 \times y_2 \)</span>. <span class="translation">The formula is: x_1 * y_1 = x_2 * y_2.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Ingat Kembali: Perbandingan Senilai</h2>
+                        <p class="translation">Recall: Direct Proportion</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded">
+                                <!-- SVG: Direct proportion graph -->
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <path d="M10,90 L110,10" stroke="#3b82f6" stroke-width="3" fill="none"/>
+                                    <circle cx="30" cy="70" r="4" fill="#ef4444"/>
+                                    <circle cx="60" cy="40" r="4" fill="#ef4444"/>
+                                    <text x="40" y="85" font-size="10">Naik = Naik</text>
+                                </svg>
+                            </div>
+                            <p>Sebelumnya kita belajar perbandingan senilai: jika nilai x naik, maka nilai y juga ikut naik. <span class="translation">Previously we learned direct proportion: if the value of x increases, then the value of y also increases.</span></p>
+                        </div>
+                        <p>Contoh: Harga 1 kg gula adalah Rp 12.000. Makin banyak gula yang dibeli, makin mahal harganya. <span class="translation">Example: The price of 1 kg of sugar is Rp 12,000. The more sugar bought, the more expensive it is.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Perbedaan Senilai vs Berbalik Nilai</h2>
+                        <p class="translation">Difference Between Direct and Inverse</p>
+                        
+                        <div class="flex gap-4 my-4">
+                            <div class="bg-green-50 p-4 rounded text-center w-1/2">
+                                <svg width="80" height="60" viewBox="0 0 80 60">
+                                    <path d="M10,50 L70,10" stroke="#10b981" stroke-width="3"/>
+                                    <path d="M10,40 L10,30" stroke="#10b981" stroke-width="2" marker-end="url(#aUp)"/>
+                                    <path d="M20,30 L20,20" stroke="#10b981" stroke-width="2" marker-end="url(#aUp)"/>
+                                </svg>
+                                <p class="text-sm mt-2">Senilai: Naik = Naik <span class="translation text-xs">Direct: Up = Up</span></p>
+                            </div>
+                            <div class="bg-orange-50 p-4 rounded text-center w-1/2">
+                                <svg width="80" height="60" viewBox="0 0 80 60">
+                                    <path d="M10,10 L70,50" stroke="#f59e0b" stroke-width="3"/>
+                                    <path d="M10,20 L10,10" stroke="#f59e0b" stroke-width="2" marker-end="url(#aUp)"/>
+                                    <path d="M20,30 L20,40" stroke="#f59e0b" stroke-width="2" marker-end="url(#aDown)"/>
+                                </svg>
+                                <p class="text-sm mt-2">Berbalik: Naik = Turun <span class="translation text-xs">Inverse: Up = Down</span></p>
+                            </div>
+                        </div>
+                        <p>Pada perbandingan berbalik nilai, jika x naik, y harus turun agar hasil kalinya tetap. <span class="translation">In inverse proportion, if x increases, y must decrease so their product remains constant.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Cara Mengenali Soal</h2>
+                        <p class="translation">How to Recognize the Problem</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex items-center gap-2">
+                                <svg width="60" height="60" viewBox="0 0 60 60">
+                                    <rect x="10" y="10" width="40" height="40" fill="none" stroke="#8b5cf6" stroke-width="2" rx="5"/>
+                                    <text x="30" y="35" font-size="14" fill="#8b5cf6" text-anchor="middle" font-weight="bold">?</text>
+                                </svg>
+                            </div>
+                            <p>Kunci jawabannya ada di kata kunci. Jika soal menyebutkan "dapat diselesaikan oleh", "menambah pekerja", atau "mempercepat", biasanya itu berbalik nilai. <span class="translation">The key is in the keywords. If the problem mentions "can be solved by", "adding workers", or "speeding up", it is usually inverse proportion.</span></p>
+                        </div>
+                        <p>Ingat: Hasil kali (Kapasitas Total) tidak pernah berubah! <span class="translation">Remember: The product (Total Capacity) never changes!</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Mencari Nilai Konstanta (k)</h2>
+                        <p class="translation">Finding the Constant Value (k)</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded flex flex-col items-center">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <rect x="40" y="20" width="40" height="60" fill="#3b82f6" rx="5"/>
+                                    <text x="60" y="55" font-size="24" fill="white" text-anchor="middle" font-weight="bold">k</text>
+                                    <path d="M30,50 L40,50 M80,50 L90,50" stroke="#333" stroke-width="2"/>
+                                    <text x="20" y="45" font-size="12" fill="#ef4444" text-anchor="middle">x</text>
+                                    <text x="100" y="45" font-size="12" fill="#10b981" text-anchor="middle">y</text>
+                                </svg>
+                            </div>
+                            <p>Langkah pertama dalam menyelesaikan soal berbalik nilai adalah mencari nilai konstanta (k). <span class="translation">The first step in solving inverse proportion problems is finding the constant value (k).</span></p>
+                        </div>
+                        <p>Jika diketahui 3 pekerja butuh 8 hari, maka <span class="katex">\( k = 3 \times 8 = 24 \)</span>. <span class="translation">If it is known that 3 workers need 8 days, then k = 3 * 8 = 24.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Menghitung Kebutuhan Baru</h2>
+                        <p class="translation">Calculating New Requirements</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded text-center">
+                                <svg width="150" height="100" viewBox="0 0 150 100">
+                                    <text x="75" y="30" font-size="14" fill="#333" text-anchor="middle">Jika k = 24</text>
+                                    <text x="75" y="50" font-size="14" fill="#10b981" text-anchor="middle">4 pekerja = ... hari?</text>
+                                    <path d="M75,60 L75,80" stroke="#10b981" stroke-width="2" marker-end="url(#aDown)"/>
+                                    <text x="75" y="95" font-size="14" fill="#333" text-anchor="middle">24 ÷ 4 = 6 hari</text>
+                                </svg>
+                            </div>
+                            <p>Setelah nilai <span class="katex">\( k \)</span> diketahui, kita bisa mencari nilai apapun jika salah satu faktornya berubah. <span class="translation">Once the value of k is known, we can find any value if one of the factors changes.</span></p>
+                        </div>
+                        <p>Rumusnya: <span class="katex">\( y = \frac{k}{x} \)</span>. <span class="translation">The formula is: y = k / x.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Grafik Perbandingan Berbalik Nilai</h2>
+                        <p class="translation">Inverse Proportion Graph</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded">
+                                <!-- SVG: Hyperbola curve -->
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <path d="M10,110 Q30,30 110,10" stroke="#8b5cf6" stroke-width="3" fill="none"/>
+                                    <line x1="10" y1="10" x2="10" y2="110" stroke="#333" stroke-width="1"/>
+                                    <line x1="10" y1="110" x2="110" y2="110" stroke="#333" stroke-width="1"/>
+                                    <text x="5" y="50" font-size="10" fill="#333" transform="rotate(-90 5,50)">y (Waktu)</text>
+                                    <text x="50" y="120" font-size="10" fill="#333">x (Pekerja)</text>
+                                </svg>
+                            </div>
+                            <p>Jika digambarkan dalam grafik, perbandingan berbalik nilai membentuk kurva melengkung ke bawah (tidak lurus). <span class="translation">If drawn on a graph, inverse proportion forms a downward curving line (not straight).</span></p>
+                        </div>
+                        <p>Bentuk lengkung ini disebut hiperbola. <span class="translation">This curved shape is called a hyperbola.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Langkah 1 & 2: Identifikasi dan Kalikan</h2>
+                        <p class="translation">Steps 1 & 2: Identify and Multiply</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded flex flex-col items-center">
+                                <svg width="100" height="120" viewBox="0 0 100 120">
+                                    <!-- Checklist -->
+                                    <rect x="20" y="20" width="60" height="80" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" rx="5"/>
+                                    <path d="M30,40 L70,40 M30,60 L70,60 M30,80 L70,80" stroke="#3b82f6" stroke-width="1"/>
+                                    <path d="M35,35 L40,40 L50,30" stroke="#10b981" stroke-width="2" fill="none"/>
+                                    <circle cx="40" cy="60" r="3" fill="#3b82f6"/>
+                                    <circle cx="40" cy="80" r="3" fill="#3b82f6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Langkah 1: Identifikasi mana yang naik dan mana yang turun. <span class="translation">Step 1: Identify which goes up and which goes down.</span></p>
+                                <p class="mt-2">Langkah 2: Kalikan kedua nilai awal untuk mendapatkan <span class="katex">\( k \)</span>. <span class="translation">Step 2: Multiply the two initial values to get k.</span></p>
+                            </div>
+                        </div>
+                        <p>Contoh: 2 kambing makan rumput dalam 6 hari. <span class="katex">\( k = 2 \times 6 = 12 \)</span>. <span class="translation">Example: 2 goats eat grass in 6 days. k = 2 * 6 = 12.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Langkah 3: Bagi dengan Nilai Baru</h2>
+                        <p class="translation">Step 3: Divide by the New Value</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded text-center">
+                                <svg width="140" height="100" viewBox="0 0 140 100">
+                                    <rect x="10" y="30" width="40" height="40" fill="#10b981" rx="5"/>
+                                    <text x="30" y="55" font-size="16" fill="white" text-anchor="middle" font-weight="bold">k=12</text>
+                                    <text x="60" y="55" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">÷</text>
+                                    <rect x="70" y="30" width="40" height="40" fill="#f59e0b" rx="5"/>
+                                    <text x="90" y="55" font-size="16" fill="white" text-anchor="middle" font-weight="bold">3</text>
+                                    <text x="120" y="55" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">= 4</text>
+                                </svg>
+                            </div>
+                            <p>Jika ditanya berapa lama jika ada 3 kambing? Cukup bagi <span class="katex">\( k \)</span> dengan jumlah kambing baru. <span class="translation">If asked how long if there are 3 goats? Just divide k by the new number of goats.</span></p>
+                        </div>
+                        <p><span class="katex">\( 12 \div 3 = 4 \)</span> hari. <span class="translation">12 / 3 = 4 days.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Mencari Banyaknya Faktor (Mencari x)</h2>
+                        <p class="translation">Finding the Number of Factors (Finding x)</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded text-center">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <rect x="10" y="30" width="40" height="40" fill="#8b5cf6" rx="5"/>
+                                    <text x="30" y="55" font-size="16" fill="white" text-anchor="middle" font-weight="bold">k=12</text>
+                                    <text x="60" y="55" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">÷</text>
+                                    <rect x="70" y="30" width="40" height="40" fill="#f59e0b" rx="5"/>
+                                    <text x="90" y="55" font-size="16" fill="white" text-anchor="middle" font-weight="bold">2</text>
+                                    <text x="115" y="55" font-size="16" fill="#333" text-anchor="middle" font-weight="bold">= 6</text>
+                                </svg>
+                            </div>
+                            <p>Bagaimana jika yang ditanyakan adalah jumlah pekerja (x) jika waktu diketahui? <span class="translation">What if the question asks for the number of workers (x) if the time is known?</span></p>
+                        </div>
+                        <p>Logikanya sama! Bagi <span class="katex">\( k \)</span> dengan waktu baru tersebut. Misal: <span class="katex">\( 12 \div 2 = 6 \)</span> kambing. <span class="translation">The logic is the same! Divide k by the new time. Example: 12 / 2 = 6 goats.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-2">Soal Cerita: Kecepatan kendaraan</h2>
+                        <p class="translation">Word Problem: Vehicle Speed</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-blue-50 p-4 rounded flex flex-col items-center">
+                                <svg width="120" height="100" viewBox="0 0 120 100">
+                                    <!-- Bike and Car -->
+                                    <circle cx="30" cy="70" r="10" fill="#333"/>
+                                    <circle cx="70" cy="70" r="10" fill="#333"/>
+                                    <path d="M30,70 L50,50 L70,70" stroke="#3b82f6" stroke-width="3" fill="none"/>
+                                    <text x="50" y="40" font-size="10" fill="#3b82f6" text-anchor="middle">Lambat</text>
+                                    
+                                    <rect x="90" y="40" width="20" height="15" fill="#10b981"/>
+                                    <rect x="95" y="35" width="10" height="5" fill="#10b981"/>
+                                    <circle cx="95" cy="60" r="5" fill="#333"/>
+                                    <circle cx="105" cy="60" r="5" fill="#333"/>
+                                    <text x="100" y="30" font-size="10" fill="#10b981" text-anchor="middle">Cepat</text>
+                                </svg>
+                            </div>
+                            <p>Jarak kota sama. Jika sepeda berkecepatan 10 km/jam butuh 6 jam. Berapa lama jika motor berkecepatan 30 km/jam? <span class="translation">City distance is the same. If a bicycle at 10 km/h takes 6 hours. How long if a motorcycle at 30 km/h?</span></p>
+                        </div>
+                        <p>Ingat: Kecepatan naik = Waktu turun. <span class="translation">Remember: Speed up = Time down.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 2-4: TASKS 1-3 -->
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Soal Cerita: Pengisian Air</h2>
+                        <p class="translation">Word Problem: Filling Water</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded text-center">
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <path d="M20,30 L20,80 L80,80 L80,30 Z" fill="#eff6ff" stroke="#10b981" stroke-width="2"/>
+                                    <path d="M20,60 Q50,50 80,60 L80,80 L20,80 Z" fill="#10b981"/>
+                                    <path d="M40,20 L60,20 M50,20 L50,30" stroke="#333" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <p>1 keran air mengisi kolam dalam 12 jam. Jika ada 3 keran, berapa jam kolam akan penuh? <span class="translation">1 water tap fills the pool in 12 hours. If there are 3 taps, how many hours to fill the pool?</span></p>
+                        </div>
+                        <p>Tambah keran = Kurangi waktu. <span class="translation">More taps = Less time.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 6-8: TASKS 4-6 -->
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Soal Cerita: Makanan Ternak</h2>
+                        <p class="translation">Word Problem: Animal Feed</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded text-center">
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <!-- Cow and Sack -->
+                                    <rect x="20" y="40" width="40" height="30" fill="#a78bfa" rx="5"/>
+                                    <rect x="10" y="45" width="15" height="10" fill="#a78bfa"/>
+                                    <line x1="60" y1="50" x2="75" y2="50" stroke="#8b5cf6" stroke-width="2"/>
+                                    <rect x="75" y="50" width="15" height="25" fill="#c4b5fd" rx="3"/>
+                                    <text x="82" y="65" font-size="8" fill="#fff" text-anchor="middle">Food</text>
+                                </svg>
+                            </div>
+                            <p>Peternak memiliki persediaan makanan untuk 4 sapi selama 15 hari. Jika 1 sapi dijual, berapa lama persediaan makanan itu bertahan? <span class="translation">A farmer has food supply for 4 cows for 15 days. If 1 cow is sold, how long will the food supply last?</span></p>
+                        </div>
+                        <p>Kurangi sapi = Tambah hari. <span class="translation">Fewer cows = More days.</span></p>
+                    </div>
+                </div>
+
+                <!-- PAGES 10-13: TASKS 7-10 -->
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Konsolidasi & Refleksi</h2>
+                    <p class="translation">Consolidation & Reflection</p>
+                    <p>Kamu telah menyelesaikan perjalanan belajar tentang Perbandingan Berbalik Nilai. <span class="translation">You have finished the learning journey about Inverse Proportion.</span></p>
+                    <p class="mt-2">Ingat selalu: <span class="katex">\( x \times y = k \)</span>. Jika satu naik, yang lain turun. <span class="translation">Always remember: x * y = k. If one goes up, the other goes down.</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Pergi ke learn.algonova.id <span class="translation text-sm italic">Go to learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TASK SECTIONS (1 to 5)                     -->
+            <!-- ========================================== -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div id="paginationBar" class="sticky bottom-0 mt-6 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+	
+    <script>
+        // ====== MATH QUESTIONS DATA ======
+        const questions = {
+            // SPIRAL REVIEW WARM-UP TASKS
+            "w-task1": { q: "Hasil dari \\( 2 \\times 6 \\) adalah...", q_trans: "The result of 2 * 6 is...", opts: ["\\( 8 \\)", "\\( 12 \\)", "\\( 10 \\)", "\\( 14 \\)", "\\( 16 \\)"], ans: "\\( 12 \\)", exp: "Perkalian 2 dengan 6 sama dengan 12. Ini adalah hasil kali dasar yang nantinya menjadi konsep tetapan (konstanta).", exp_trans: "Multiplying 2 by 6 equals 12. This is a basic product that will later become the constant concept." },
+            "w-task2": { q: "Jika 3 kotak berisi 4 bola, berapa jumlah bola seluruhnya?", q_trans: "If 3 boxes contain 4 balls each, what is the total number of balls?", opts: ["\\( 7 \\)", "\\( 10 \\)", "\\( 12 \\)", "\\( 14 \\)", "\\( 15 \\)"], ans: "\\( 12 \\)", exp: "Jumlah bola = jumlah kotak \\( \\times \\) isi per kotak = \\( 3 \\times 4 = 12 \\).", exp_trans: "Total balls = number of boxes * contents per box = 3 * 4 = 12." },
+            "w-task3": { q: "Diketahui \\( x \\times y = 12 \\). Jika \\( x = 3 \\), maka nilai \\( y \\) adalah...", q_trans: "Given x * y = 12. If x = 3, then the value of y is...", opts: ["\\( 4 \\)", "\\( 9 \\)", "\\( 15 \\)", "\\( 36 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "Untuk mencari y, kita bagi nilai konstanta dengan x. \\( y = 12 \\div 3 = 4 \\).", exp_trans: "To find y, we divide the constant value by x. y = 12 / 3 = 4." },
+            "w-task4": { q: "Jika \\( 4 \\times 5 = 20 \\), maka \\( 2 \\times 10 \\) sama dengan...", q_trans: "If 4 * 5 = 20, then 2 * 10 equals...", opts: ["\\( 5 \\)", "\\( 10 \\)", "\\( 20 \\)", "\\( 25 \\)", "\\( 30 \\)"], ans: "\\( 20 \\)", exp: "Hasil kali keduanya adalah 20. Walaupun angkanya berubah (4 turun menjadi 2, 5 naik menjadi 10), hasil kalinya tetap 20.", exp_trans: "The product of both is 20. Even though the numbers change (4 drops to 2, 5 rises to 10), the product remains 20." },
+            "w-task5": { q: "Sebuah pekerjaan selesai dalam 4 hari oleh 3 orang. Jika dikerjakan oleh 2 orang, berapa hari yang dibutuhkan?", q_trans: "A job is completed in 4 days by 3 people. If done by 2 people, how many days are needed?", opts: ["\\( 5 \\text{ hari} \\)", "\\( 6 \\text{ hari} \\)", "\\( 7 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)", "\\( 3 \\text{ hari} \\)"], ans: "\\( 6 \\text{ hari} \\)", exp: "Total kapasitas = \\( 3 \\times 4 = 12 \\). Jika hanya 2 orang, maka hari = \\( 12 \\div 2 = 6 \\) hari.", exp_trans: "Total capacity = 3 * 4 = 12. If only 2 people, then days = 12 / 2 = 6 days." },
+            "w-task6": { q: "Jika \\( a \\times b = 15 \\). Nilai \\( a \\) naik menjadi 3 kali lipat. Agar hasil kali tetap 15, nilai \\( b \\) harus menjadi...", q_trans: "If a * b = 15. The value of a increases to 3 times. To keep the product 15, the value of b must become...", opts: ["\\( 3 \\text{ kali lipat} \\)", "\\( \\frac{1}{3} \\text{ kali lipat} \\)", "\\( 2 \\text{ kali lipat} \\)", "\\( \\text{Tetap} \\)", "\\( 6 \\text{ kali lipat} \\)"], ans: "\\( \\frac{1}{3} \\text{ kali lipat} \\)", exp: "Ini adalah konsep berbalik nilai. Jika satu naik 3 kali, yang lain harus turun menjadi 1/3 kali agar hasil kalinya konstan.", exp_trans: "This is the inverse proportion concept. If one goes up 3 times, the other must go down to 1/3 times so the product is constant." },
+            "w-task7": { q: "Diketahui \\( x \\times y = 16 \\). Jika \\( x = 8 \\), maka nilai \\( y \\) adalah...", q_trans: "Given x * y = 16. If x = 8, then the value of y is...", opts: ["\\( 2 \\)", "\\( 4 \\)", "\\( 8 \\)", "\\( 24 \\)", "\\( 128 \\)"], ans: "\\( 2 \\)", exp: "\\( y = 16 \\div 8 = 2 \\). Semakin besar \\( x \\), semakin kecil \\( y \\).", exp_trans: "y = 16 / 8 = 2. The larger x is, the smaller y is." },
+            "w-task8": { q: "Jarak 8 km ditempuh dalam 4 jam. Jika kecepatan dinaikkan menjadi 8 km/jam, berapa waktu tempuhnya?", q_trans: "A distance of 8 km is covered in 4 hours. If the speed is increased to 8 km/h, what is the travel time?", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 8 \\text{ jam} \\)"], ans: "\\( 1 \\text{ jam} \\)", exp: "Jarak (k) = Kecepatan \\( \\times \\) Waktu = \\( 2 \\times 4 = 8 \\) km. Kecepatan baru = 8 km/jam. Waktu = \\( 8 \\div 8 = 1 \\) jam.", exp_trans: "Distance (k) = Speed * Time = 2 * 4 = 8 km. New speed = 8 km/h. Time = 8 / 8 = 1 hour." },
+            "w-task9": { q: "Dua keran air mengisi kolam dalam 6 jam. Jika keran bertambah menjadi 3, berapa jam kolam akan penuh?", q_trans: "Two water taps fill a pool in 6 hours. If the taps increase to 3, how many hours will the pool be full?", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 9 \\text{ jam} \\)"], ans: "\\( 4 \\text{ jam} \\)", exp: "Kapasitas = \\( 2 \\times 6 = 12 \\). Jika 3 keran, waktu = \\( 12 \\div 3 = 4 \\) jam.", exp_trans: "Capacity = 2 * 6 = 12. If 3 taps, time = 12 / 3 = 4 hours." },
+            "w-task10": { q: "Manakah hubungan yang benar antara kecepatan kendaraan dan waktu tempuh?", q_trans: "Which is the correct relationship between vehicle speed and travel time?", opts: ["Senilai", "Berbalik nilai", "Tidak berkaitan", "Selalu sama", "Berbanding lurus"], ans: "Berbalik nilai", exp: "Jika kecepatan naik, waktu tempuh turun. Ini adalah ciri khas perbandingan berbalik nilai.", exp_trans: "If speed goes up, travel time goes down. This is a characteristic of inverse proportion." },
+            
+            // INTRODUCTION & REAL-WORLD TASKS
+            "i-task1": { q: "Konsep dasar perbandingan berbalik nilai adalah...", q_trans: "The basic concept of inverse proportion is...", opts: ["Jika satu naik, yang lain naik", "Jika satu naik, yang lain turun", "Kedua nilai selalu sama", "Hasil bagi selalu tetap", "Tidak ada hubungan"], ans: "Jika satu naik, yang lain turun", exp: "Pada perbandingan berbalik nilai, saat satu variabel nilainya bertambah, variabel lainnya harus berkurang agar hasil kalinya tetap.", exp_trans: "In inverse proportion, when one variable increases, the other must decrease so their product remains constant." },
+            "i-task2": { q: "4 pekerja mengecat tembok dalam 3 jam. Jika ada 6 pekerja, berapa jam yang dibutuhkan?", q_trans: "4 workers paint a wall in 3 hours. If there are 6 workers, how many hours are needed?", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "Total waktu kerja = \\( 4 \\times 3 = 12 \\). Untuk 6 pekerja, waktu = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "Total work time = 4 * 3 = 12. For 6 workers, time = 12 / 6 = 2 hours." },
+            "i-task3": { q: "Jika sebuah mobil melaju dengan kecepatan 60 km/jam selama 2 jam, jarak yang ditempuh adalah...", q_trans: "If a car travels at 60 km/h for 2 hours, the distance covered is...", opts: ["\\( 30 \\text{ km} \\)", "\\( 60 \\text{ km} \\)", "\\( 90 \\text{ km} \\)", "\\( 120 \\text{ km} \\)", "\\( 180 \\text{ km} \\)"], ans: "\\( 120 \\text{ km} \\)", exp: "Jarak = Kecepatan \\( \\times \\) Waktu = \\( 60 \\times 2 = 120 \\) km. Nilai konstan (jarak) inilah yang dipertahankan.", exp_trans: "Distance = Speed * Time = 60 * 2 = 120 km. This constant value (distance) is maintained." },
+            "i-task4": { q: "Pada perbandingan berbalik nilai, hasil kali kedua bilangan selalu...", q_trans: "In inverse proportion, the product of the two numbers is always...", opts: ["Berubah", "Tetap", "Naik", "Turun", "Nol"], ans: "Tetap", exp: "Hasil kali kedua bilangan disebut konstanta (k), yang nilainya tidak pernah berubah.", exp_trans: "The product of the two numbers is called the constant (k), which never changes." },
+            "i-task5": { q: "Rumus yang benar untuk perbandingan berbalik nilai adalah...", q_trans: "The correct formula for inverse proportion is...", opts: ["\\( \\frac{x}{y} = k \\)", "\\( x + y = k \\)", "\\( x \\times y = k \\)", "\\( x - y = k \\)", "\\( x^y = k \\)"], ans: "\\( x \\times y = k \\)", exp: "Karena hasil kali harus tetap, maka rumusnya adalah perkalian kedua variabel sama dengan konstanta.", exp_trans: "Since the product must remain constant, the formula is the multiplication of both variables equals the constant." },
+            "i-task6": { q: "Sebuah tugas dapat diselesaikan 4 orang dalam 3 jam. Jika ditambah 2 orang (jadi 6 orang), tugas selesai dalam... jam.", q_trans: "A task can be completed by 4 people in 3 hours. If 2 people are added (making it 6 people), the task is completed in... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu untuk 6 orang = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time for 6 people = 12 / 6 = 2 hours." },
+            "i-task7": { q: "Jika \\( k = 20 \\), dan nilai \\( y = 4 \\), maka nilai \\( x \\) adalah...", q_trans: "If k = 20, and y = 4, then the value of x is...", opts: ["\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 16 \\)", "\\( 24 \\)"], ans: "\\( 5 \\)", exp: "\\( x = k \\div y = 20 \\div 4 = 5 \\).", exp_trans: "x = k / y = 20 / 4 = 5." },
+            "i-task8": { q: "3 mesin mencetak undangan dalam 4 jam. Jika hanya 2 mesin yang beroperasi, waktu cetak menjadi...", q_trans: "3 machines print invitations in 4 hours. If only 2 machines operate, the printing time becomes...", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 6 \\text{ jam} \\)", exp: "\\( k = 3 \\times 4 = 12 \\). Waktu 2 mesin = \\( 12 \\div 2 = 6 \\) jam.", exp_trans: "k = 3 * 4 = 12. Time for 2 machines = 12 / 2 = 6 hours." },
+            "i-task9": { q: "Persediaan makanan 5 sapi bertahan 6 hari. Jika hanya 3 sapi, makanan bertahan... hari.", q_trans: "Food supply for 5 cows lasts 6 days. If only 3 cows, the food lasts... days.", opts: ["\\( 8 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 12 \\text{ hari} \\)", "\\( 15 \\text{ hari} \\)", "\\( 18 \\text{ hari} \\)"], ans: "\\( 10 \\text{ hari} \\)", exp: "\\( k = 5 \\times 6 = 30 \\). Hari untuk 3 sapi = \\( 30 \\div 3 = 10 \\) hari.", exp_trans: "k = 5 * 6 = 30. Days for 3 cows = 30 / 3 = 10 days." },
+            "i-task10": { q: "Grafik perbandingan berbalik nilai berbentuk...", q_trans: "The graph of inverse proportion is shaped like...", opts: ["Garis lurus ke atas", "Garis lurus ke bawah", "Kurva melengkung ke bawah", "Lingkaran", "Titik"], ans: "Kurva melengkung ke bawah", exp: "Grafiknya berbentuk hiperbola, yaitu kurva yang menurun dan tidak pernah menyentuh sumbu nol.", exp_trans: "The graph is a hyperbola, which is a curve that decreases and never touches the zero axis." },
+            
+            // REVIEW OF PRIOR KNOWLEDGE TASKS
+            "r-task1": { q: "Harga 1 kg apel adalah Rp 3.000. Berapakah harga 4 kg apel?", q_trans: "The price of 1 kg of apples is Rp 3,000. What is the price of 4 kg of apples?", opts: ["Rp 6.000", "Rp 9.000", "Rp 12.000", "Rp 15.000", "Rp 20.000"], ans: "Rp 12.000", exp: "Ini adalah perbandingan senilai. Semakin banyak apel, harganya semakin mahal. \\( 4 \\times 3.000 = 12.000 \\).", exp_trans: "This is direct proportion. The more apples, the more expensive. 4 * 3,000 = 12,000." },
+            "r-task2": { q: "Manakah yang merupakan perbandingan berbalik nilai?", q_trans: "Which of the following is an inverse proportion?", opts: ["Jumlah barang dengan total harga", "Banyak pekerja dengan waktu kerja", "Panjang sisi dengan keliling persegi", "Jarak tempuh dengan bensin yang terpakai", "Berat tepung dengan harganya"], ans: "Banyak pekerja dengan waktu kerja", exp: "Semakin banyak pekerja, semakin cepat selesai (waktu turun). Ini berbalik nilai.", exp_trans: "The more workers, the faster it finishes (time decreases). This is inverse." },
+            "r-task3": { q: "2 truk mengangkut pasir dalam 5 jam. Jika ada 5 truk, waktu menjadi...", q_trans: "2 trucks transport sand in 5 hours. If there are 5 trucks, the time becomes...", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "\\( k = 2 \\times 5 = 10 \\). Waktu 5 truk = \\( 10 \\div 5 = 2 \\) jam.", exp_trans: "k = 2 * 5 = 10. Time for 5 trucks = 10 / 5 = 2 hours." },
+            "r-task4": { q: "Jika kecepatan mobil 40 km/jam, waktu 3 jam. Jika kecepatan 60 km/jam, waktu = ...", q_trans: "If car speed is 40 km/h, time is 3 hours. If speed is 60 km/h, time = ...", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "Jarak tetap. \\( k = 40 \\times 3 = 120 \\). Waktu = \\( 120 \\div 60 = 2 \\) jam.", exp_trans: "Distance constant. k = 40 * 3 = 120. Time = 120 / 60 = 2 hours." },
+            "r-task5": { q: "Pada perbandingan senilai, jika x naik, maka y...", q_trans: "In direct proportion, if x increases, then y...", opts: ["Turun", "Naik", "Tetap", "Nol", "Berubah acak"], ans: "Naik", exp: "Perbandingan senilai artinya kedua nilai bergerak ke arah yang sama (naik bersama atau turun bersama).", exp_trans: "Direct proportion means both values move in the same direction (increase together or decrease together)." },
+            "r-task6": { q: "Manakah yang BUKAN perbandingan berbalik nilai?", q_trans: "Which is NOT an inverse proportion?", opts: ["Keran air dengan waktu isi", "Pekerja dengan waktu selesai", "Kecepatan dengan waktu", "Jumlah barang dengan harga", "Mesin dengan waktu produksi"], ans: "Jumlah barang dengan harga", exp: "Semakin banyak barang dibeli, semakin mahal harganya. Ini adalah perbandingan senilai.", exp_trans: "The more goods bought, the more expensive. This is direct proportion." },
+            "r-task7": { q: "4 orang menyelesaikan teka-teki dalam 3 menit. 2 orang menyelesaikannya dalam... menit.", q_trans: "4 people solve a puzzle in 3 minutes. 2 people solve it in... minutes.", opts: ["\\( 4 \\text{ menit} \\)", "\\( 5 \\text{ menit} \\)", "\\( 6 \\text{ menit} \\)", "\\( 7 \\text{ menit} \\)", "\\( 8 \\text{ menit} \\)"], ans: "\\( 6 \\text{ menit} \\)", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu 2 orang = \\( 12 \\div 2 = 6 \\) menit.", exp_trans: "k = 4 * 3 = 12. Time for 2 people = 12 / 2 = 6 minutes." },
+            "r-task8": { q: "6 ayam makan jagung dalam 5 hari. 3 ayam makan jagung dalam... hari.", q_trans: "6 chickens eat corn in 5 days. 3 chickens eat corn in... days.", opts: ["\\( 7 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)", "\\( 9 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 12 \\text{ hari} \\)"], ans: "\\( 10 \\text{ hari} \\)", exp: "\\( k = 6 \\times 5 = 30 \\). Hari 3 ayam = \\( 30 \\div 3 = 10 \\) hari.", exp_trans: "k = 6 * 5 = 30. Days for 3 chickens = 30 / 3 = 10 days." },
+            "r-task9": { q: "Jika \\( x_1 \\times y_1 = x_2 \\times y_2 \\), dan diketahui \\( 3 \\times 8 = 4 \\times y \\), maka nilai y adalah...", q_trans: "If x_1 * y_1 = x_2 * y_2, and given 3 * 8 = 4 * y, then the value of y is...", opts: ["\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 7 \\)", "\\( 8 \\)"], ans: "\\( 6 \\)", exp: "\\( 24 = 4 \\times y \\). Maka \\( y = 24 \\div 4 = 6 \\).", exp_trans: "24 = 4 * y. Then y = 24 / 4 = 6." },
+            "r-task10": { q: "Pada perbandingan berbalik nilai, yang selalu tetap adalah...", q_trans: "In inverse proportion, what remains constant is...", opts: ["Nilai x", "Nilai y", "Hasil bagi", "Hasil kali", "Selisih"], ans: "Hasil kali", exp: "Hasil kali x dan y selalu tetap (disebut konstanta k).", exp_trans: "The product of x and y is always constant (called constant k)." },
+
+            // PROBLEM INTRODUCTION TASKS
+            "p-task1": { q: "5 kucing makan ikan dalam 4 hari. Berapa nilai konstanta (k)?", q_trans: "5 cats eat fish in 4 days. What is the constant value (k)?", opts: ["\\( 9 \\)", "\\( 15 \\)", "\\( 20 \\)", "\\( 25 \\)", "\\( 1 \\)"], ans: "\\( 20 \\)", exp: "Konstanta adalah hasil kali keduanya. \\( k = 5 \\times 4 = 20 \\).", exp_trans: "The constant is their product. k = 5 * 4 = 20." },
+            "p-task2": { q: "4 pekerja butuh 6 hari. Jika hanya 3 pekerja, butuh... hari.", q_trans: "4 workers need 6 days. If only 3 workers, it takes... days.", opts: ["\\( 6 \\text{ hari} \\)", "\\( 7 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)", "\\( 9 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)"], ans: "\\( 8 \\text{ hari} \\)", exp: "\\( k = 4 \\times 6 = 24 \\). Hari 3 pekerja = \\( 24 \\div 3 = 8 \\) hari.", exp_trans: "k = 4 * 6 = 24. Days for 3 workers = 24 / 3 = 8 days." },
+            "p-task3": { q: "Kecepatan 30 km/jam butuh 4 jam. Jika kecepatan 60 km/jam, butuh... jam.", q_trans: "Speed 30 km/h takes 4 hours. If speed is 60 km/h, it takes... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "Jarak = \\( 30 \\times 4 = 120 \\) km. Waktu = \\( 120 \\div 60 = 2 \\) jam.", exp_trans: "Distance = 30 * 4 = 120 km. Time = 120 / 60 = 2 hours." },
+            "p-task4": { q: "Jika \\( k = 24 \\), dan waktu baru adalah 6 hari, maka pekerja yang dibutuhkan adalah...", q_trans: "If k = 24, and the new time is 6 days, then the workers needed are...", opts: ["\\( 2 \\text{ pekerja} \\)", "\\( 3 \\text{ pekerja} \\)", "\\( 4 \\text{ pekerja} \\)", "\\( 5 \\text{ pekerja} \\)", "\\( 6 \\text{ pekerja} \\)"], ans: "\\( 4 \\text{ pekerja} \\)", exp: "Pekerja = \\( k \\div \\) waktu = \\( 24 \\div 6 = 4 \\) pekerja.", exp_trans: "Workers = k / time = 24 / 6 = 4 workers." },
+            "p-task5": { q: "2 pompa menguras kolam dalam 6 jam. 3 pompa menguras dalam... jam.", q_trans: "2 pumps drain a pool in 6 hours. 3 pumps drain it in... hours.", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 4 \\text{ jam} \\)", exp: "\\( k = 2 \\times 6 = 12 \\). Waktu = \\( 12 \\div 3 = 4 \\) jam.", exp_trans: "k = 2 * 6 = 12. Time = 12 / 3 = 4 hours." },
+            "p-task6": { q: "4 siswa menyelesaikan tugas dalam 3 jam. 6 siswa menyelesaikannya dalam... jam.", q_trans: "4 students finish a task in 3 hours. 6 students finish it in... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time = 12 / 6 = 2 hours." },
+            "p-task7": { q: "6 keran air mengisi dalam 2 jam. 4 keran air mengisi dalam... jam.", q_trans: "6 water taps fill in 2 hours. 4 water taps fill in... hours.", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 3 \\text{ jam} \\)", exp: "\\( k = 6 \\times 2 = 12 \\). Waktu = \\( 12 \\div 4 = 3 \\) jam.", exp_trans: "k = 6 * 2 = 12. Time = 12 / 4 = 3 hours." },
+            "p-task8": { q: "Mencari \\( x \\). Diketahui \\( 3 \\times 10 = x \\times 5 \\). Maka nilai \\( x = \\)", q_trans: "Find x. Given 3 * 10 = x * 5. Then the value of x =", opts: ["\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 7 \\)", "\\( 8 \\)"], ans: "\\( 6 \\)", exp: "\\( 30 = 5x \\). Maka \\( x = 30 \\div 5 = 6 \\).", exp_trans: "30 = 5x. Then x = 30 / 5 = 6." },
+            "p-task9": { q: "3 orang membangun rumah dalam 4 hari. Jika ditambah 1 orang (jadi 4 orang), rumah selesai dalam... hari.", q_trans: "3 people build a house in 4 days. If 1 person is added (making it 4 people), the house is done in... days.", opts: ["\\( 2 \\text{ hari} \\)", "\\( 3 \\text{ hari} \\)", "\\( 4 \\text{ hari} \\)", "\\( 5 \\text{ hari} \\)", "\\( 6 \\text{ hari} \\)"], ans: "\\( 3 \\text{ hari} \\)", exp: "\\( k = 3 \\times 4 = 12 \\). Hari = \\( k \\div \\) pekerja = \\( 12 \\div 4 = 3 \\) hari.", exp_trans: "k = 3 * 4 = 12. Days = k / workers = 12 / 4 = 3 days." },
+            "p-task10": { q: "Mencari \\( y \\). Diketahui \\( 4 \\times 6 = 8 \\times y \\). Maka nilai \\( y = \\)", q_trans: "Find y. Given 4 * 6 = 8 * y. Then the value of y =", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 3 \\)", exp: "\\( 24 = 8y \\). Maka \\( y = 24 \\div 8 = 3 \\).", exp_trans: "24 = 8y. Then y = 24 / 8 = 3." },
+
+            // GUIDED PRACTICE TASKS
+            "g-task1": { q: "Langkah 1: 3 pekerja mengecat tembok dalam 4 jam. Berapa nilai konstanta (k)?", q_trans: "Step 1: 3 workers paint a wall in 4 hours. What is the constant (k)?", opts: ["\\( 7 \\)", "\\( 12 \\)", "\\( 14 \\)", "\\( 24 \\)", "\\( 1 \\)"], ans: "\\( 12 \\)", exp: "Konstanta adalah hasil kali keduanya. \\( k = 3 \\times 4 = 12 \\).", exp_trans: "The constant is their product. k = 3 * 4 = 12." },
+            "g-task2": { q: "Langkah 2: Dari soal sebelumnya (k=12). Jika pekerja menjadi 6 orang, berapa jam yang dibutuhkan?", q_trans: "Step 2: From the previous problem (k=12). If workers become 6 people, how many hours are needed?", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "Waktu = \\( k \\div \\) pekerja = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "Time = k / workers = 12 / 6 = 2 hours." },
+            "g-task3": { q: "2 truk mengangkut muatan dalam 6 jam. Jika 4 truk, butuh... jam.", q_trans: "2 trucks transport load in 6 hours. If 4 trucks, it takes... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 3 \\text{ jam} \\)", exp: "\\( k = 2 \\times 6 = 12 \\). Waktu = \\( 12 \\div 4 = 3 \\) jam.", exp_trans: "k = 2 * 6 = 12. Time = 12 / 4 = 3 hours." },
+            "g-task4": { q: "Kecepatan 20 km/jam, waktu 3 jam. Jika kecepatan 30 km/jam, waktu = ... jam.", q_trans: "Speed 20 km/h, time 3 hours. If speed is 30 km/h, time = ... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "Jarak = \\( 20 \\times 3 = 60 \\) km. Waktu = \\( 60 \\div 30 = 2 \\) jam.", exp_trans: "Distance = 20 * 3 = 60 km. Time = 60 / 30 = 2 hours." },
+            "g-task5": { q: "5 keran mengisi kolam dalam 4 jam. 2 keran mengisi dalam... jam.", q_trans: "5 taps fill a pool in 4 hours. 2 taps fill it in... hours.", opts: ["\\( 8 \\text{ jam} \\)", "\\( 10 \\text{ jam} \\)", "\\( 12 \\text{ jam} \\)", "\\( 14 \\text{ jam} \\)", "\\( 15 \\text{ jam} \\)"], ans: "\\( 10 \\text{ jam} \\)", exp: "\\( k = 5 \\times 4 = 20 \\). Waktu = \\( 20 \\div 2 = 10 \\) jam.", exp_trans: "k = 5 * 4 = 20. Time = 20 / 2 = 10 hours." },
+            "g-task6": { q: "Mencari pekerja. Diketahui \\( k = 16 \\). Jika waktu yang diminta adalah 8 jam, berapa banyak pekerja?", q_trans: "Finding workers. Given k = 16. If the requested time is 8 hours, how many workers?", opts: ["\\( 1 \\text{ pekerja} \\)", "\\( 2 \\text{ pekerja} \\)", "\\( 3 \\text{ pekerja} \\)", "\\( 4 \\text{ pekerja} \\)", "\\( 8 \\text{ pekerja} \\)"], ans: "\\( 2 \\text{ pekerja} \\)", exp: "Pekerja = \\( k \\div \\) waktu = \\( 16 \\div 8 = 2 \\) pekerja.", exp_trans: "Workers = k / time = 16 / 8 = 2 workers." },
+            "g-task7": { q: "4 traktor membajak sawah dalam 3 jam. 6 traktor butuh... jam.", q_trans: "4 tractors plow a field in 3 hours. 6 tractors need... hours.", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time = 12 / 6 = 2 hours." },
+            "g-task8": { q: "Dengan k=24, jika ingin mengetik 12 halaman hanya dalam 1 jam, berapa orang yang dibutuhkan?", q_trans: "With k=24, if you want to type 12 pages in just 1 hour, how many people are needed?", opts: ["1 orang", "2 orang", "3 orang", "4 orang", "6 orang"], ans: "2 orang", exp: "Dalam 1 jam, 1 orang bisa mengetik 6 halaman (karena 12 halaman / 2 jam = 6 halaman/jam). Jika ingin 12 halaman selesai dalam 1 jam, maka dibutuhkan 12 / 6 = 2 orang.", exp_trans: "In 1 hour, 1 person can type 6 pages (because 12 pages / 2 hours = 6 pages/hour). If you want 12 pages finished in 1 hour, then 12 / 6 = 2 people are needed." },
+            "g-task9": { q: "5 pekerja butuh 6 jam. Jika hanya 3 pekerja, butuh... jam.", q_trans: "5 workers need 6 hours. If only 3 workers, it takes... hours.", opts: ["\\( 8 \\text{ jam} \\)", "\\( 9 \\text{ jam} \\)", "\\( 10 \\text{ jam} \\)", "\\( 12 \\text{ jam} \\)", "\\( 15 \\text{ jam} \\)"], ans: "\\( 10 \\text{ jam} \\)", exp: "\\( k = 5 \\times 6 = 30 \\). Waktu = \\( 30 \\div 3 = 10 \\) jam.", exp_trans: "k = 5 * 6 = 30. Time = 30 / 3 = 10 hours." },
+            "g-task10": { q: "8 orang menyelesaikan tugas dalam 3 hari. 4 orang menyelesaikannya dalam... hari.", q_trans: "8 people complete a task in 3 days. 4 people complete it in... days.", opts: ["\\( 4 \\text{ hari} \\)", "\\( 5 \\text{ hari} \\)", "\\( 6 \\text{ hari} \\)", "\\( 7 \\text{ hari} \\)", "\\( 8 \\text{ hari} \\)"], ans: "\\( 6 \\text{ hari} \\)", exp: "\\( k = 8 \\times 3 = 24 \\). Hari = \\( 24 \\div 4 = 6 \\) hari.", exp_trans: "k = 8 * 3 = 24. Days = 24 / 4 = 6 days." },
+
+            // INDEPENDENT PRACTICE TASKS
+            "ind-task1": { q: "3 pekerja selesai dalam 4 jam. Jika 1 orang pulang (tersisa 2 orang), selesai dalam... jam.", q_trans: "3 workers finish in 4 hours. If 1 goes home (2 left), finished in... hours.", opts: ["\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)", "\\( 7 \\text{ jam} \\)", "\\( 8 \\text{ jam} \\)", "\\( 9 \\text{ jam} \\)"], ans: "\\( 6 \\text{ jam} \\)", exp: "\\( k = 3 \\times 4 = 12 \\). Waktu 2 orang = \\( 12 \\div 2 = 6 \\) jam.", exp_trans: "k = 3 * 4 = 12. Time for 2 people = 12 / 2 = 6 hours." },
+            "ind-task2": { q: "4 keran mengisi kolam dalam 3 jam. Jika 1 keran rusak (tersisa 3), selesai dalam... jam.", q_trans: "4 taps fill pool in 3 hours. If 1 is broken (3 left), finished in... hours.", opts: ["\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)", "\\( 7 \\text{ jam} \\)"], ans: "\\( 4 \\text{ jam} \\)", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu 3 keran = \\( 12 \\div 3 = 4 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time for 3 taps = 12 / 3 = 4 hours." },
+            "ind-task3": { q: "Kecepatan 30 km/jam, waktu 4 jam. Jika hujan kecepatan turun menjadi 20 km/jam, butuh... jam.", q_trans: "Speed 30 km/h, time 4 hours. If raining and speed drops to 20 km/h, needs... hours.", opts: ["\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)", "\\( 7 \\text{ jam} \\)", "\\( 8 \\text{ jam} \\)"], ans: "\\( 6 \\text{ jam} \\)", exp: "Jarak = \\( 30 \\times 4 = 120 \\) km. Waktu = \\( 120 \\div 20 = 6 \\) jam.", exp_trans: "Distance = 30 * 4 = 120 km. Time = 120 / 20 = 6 hours." },
+            "ind-task4": { q: "5 mesin cetak butuh 6 hari. 3 mesin cetak butuh... hari.", q_trans: "5 printing machines need 6 days. 3 machines need... days.", opts: ["\\( 8 \\text{ hari} \\)", "\\( 9 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 12 \\text{ hari} \\)", "\\( 15 \\text{ hari} \\)"], ans: "\\( 10 \\text{ hari} \\)", exp: "\\( k = 5 \\times 6 = 30 \\). Hari = \\( 30 \\div 3 = 10 \\) hari.", exp_trans: "k = 5 * 6 = 30. Days = 30 / 3 = 10 days." },
+            "ind-task5": { q: "2 mobil mengangkut barang dalam 6 jam. 3 mobil mengangkut dalam... jam.", q_trans: "2 cars transport goods in 6 hours. 3 cars transport in... hours.", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 4 \\text{ jam} \\)", exp: "\\( k = 2 \\times 6 = 12 \\). Waktu = \\( 12 \\div 3 = 4 \\) jam.", exp_trans: "k = 2 * 6 = 12. Time = 12 / 3 = 4 hours." },
+            "ind-task6": { q: "6 ayam makan jagung dalam 4 hari. 8 ayam makan dalam... hari.", q_trans: "6 chickens eat corn in 4 days. 8 chickens eat in... days.", opts: ["\\( 2 \\text{ hari} \\)", "\\( 3 \\text{ hari} \\)", "\\( 4 \\text{ hari} \\)", "\\( 5 \\text{ hari} \\)", "\\( 6 \\text{ hari} \\)"], ans: "\\( 3 \\text{ hari} \\)", exp: "\\( k = 6 \\times 4 = 24 \\). Hari = \\( 24 \\div 8 = 3 \\) hari.", exp_trans: "k = 6 * 4 = 24. Days = 24 / 8 = 3 days." },
+            "ind-task7": { q: "4 pompa menguras kolam dalam 5 jam. 5 pompa menguras dalam... jam.", q_trans: "4 pumps drain pool in 5 hours. 5 pumps drain in... hours.", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 4 \\text{ jam} \\)", exp: "\\( k = 4 \\times 5 = 20 \\). Waktu = \\( 20 \\div 5 = 4 \\) jam.", exp_trans: "k = 4 * 5 = 20. Time = 20 / 5 = 4 hours." },
+            "ind-task8": { q: "3 truk butuh 6 jam. 2 truk butuh... jam.", q_trans: "3 trucks need 6 hours. 2 trucks need... hours.", opts: ["\\( 7 \\text{ jam} \\)", "\\( 8 \\text{ jam} \\)", "\\( 9 \\text{ jam} \\)", "\\( 10 \\text{ jam} \\)", "\\( 12 \\text{ jam} \\)"], ans: "\\( 9 \\text{ jam} \\)", exp: "\\( k = 3 \\times 6 = 18 \\). Waktu = \\( 18 \\div 2 = 9 \\) jam.", exp_trans: "k = 3 * 6 = 18. Time = 18 / 2 = 9 hours." },
+            "ind-task9": { q: "4 orang membangun pagar dalam 5 hari. 2 orang butuh... hari.", q_trans: "4 people build a fence in 5 days. 2 people need... days.", opts: ["\\( 8 \\text{ hari} \\)", "\\( 9 \\text{ hari} \\)", "\\( 10 \\text{ hari} \\)", "\\( 12 \\text{ hari} \\)", "\\( 15 \\text{ hari} \\)"], ans: "\\( 10 \\text{ hari} \\)", exp: "\\( k = 4 \\times 5 = 20 \\). Hari = \\( 20 \\div 2 = 10 \\) hari.", exp_trans: "k = 4 * 5 = 20. Days = 20 / 2 = 10 days." },
+            "ind-task10": { q: "6 siswa membersihkan kelas dalam 2 jam. 4 siswa butuh... jam.", q_trans: "6 students clean the class in 2 hours. 4 students need... hours.", opts: ["\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)", "\\( 6 \\text{ jam} \\)"], ans: "\\( 3 \\text{ jam} \\)", exp: "\\( k = 6 \\times 2 = 12 \\). Waktu = \\( 12 \\div 4 = 3 \\) jam.", exp_trans: "k = 6 * 2 = 12. Time = 12 / 4 = 3 hours." },
+
+            // TASK 1 (Dasar-Dasar Perbandingan Berbalik Nilai)
+            "t1-task1": { q: "Jika \\( 3 \\times 4 = 12 \\), berapakah nilai konstanta (k)?", q_trans: "If 3 * 4 = 12, what is the constant (k)?", opts: ["3", "4", "7", "12", "1"], ans: "12", exp: "Konstanta adalah hasil kali kedua bilangan, yaitu 12.", exp_trans: "The constant is the product of both numbers, which is 12." },
+            "t1-task2": { q: "Jika \\( k = 12 \\) dan \\( x = 2 \\), maka nilai \\( y = \\)", q_trans: "If k = 12 and x = 2, then the value of y =", opts: ["6", "4", "3", "12", "2"], ans: "6", exp: "\\( y = k \\div x = 12 \\div 2 = 6 \\).", exp_trans: "y = k / x = 12 / 2 = 6." },
+            "t1-task3": { q: "Jika \\( k = 20 \\) dan \\( y = 4 \\), maka nilai \\( x = \\)", q_trans: "If k = 20 and y = 4, then the value of x =", opts: ["4", "5", "6", "8", "10"], ans: "5", exp: "\\( x = k \\div y = 20 \\div 4 = 5 \\).", exp_trans: "x = k / y = 20 / 4 = 5." },
+            "t1-task4": { q: "Diketahui \\( x \\times y = 15 \\). Jika \\( x = 5 \\), nilai \\( y \\) adalah...", q_trans: "Given x * y = 15. If x = 5, the value of y is...", opts: ["2", "3", "4", "5", "10"], ans: "3", exp: "\\( y = 15 \\div 5 = 3 \\).", exp_trans: "y = 15 / 5 = 3." },
+            "t1-task5": { q: "Diketahui \\( x \\times y = 24 \\). Jika \\( y = 4 \\), nilai \\( x \\) adalah...", q_trans: "Given x * y = 24. If y = 4, the value of x is...", opts: ["4", "5", "6", "7", "8"], ans: "6", exp: "\\( x = 24 \\div 4 = 6 \\).", exp_trans: "x = 24 / 4 = 6." },
+            "t1-task6": { q: "Jika \\( x \\) berbanding berbalik nilai dengan \\( y \\), dan \\( x = 4 \\) saat \\( y = 3 \\). Berapakah nilai \\( y \\) jika \\( x = 6 \\)?", q_trans: "If x is inversely proportional to y, and x = 4 when y = 3. What is the value of y if x = 6?", opts: ["1", "2", "3", "4", "6"], ans: "2", exp: "\\( k = 4 \\times 3 = 12 \\). Lalu \\( y = 12 \\div 6 = 2 \\).", exp_trans: "k = 4 * 3 = 12. Then y = 12 / 6 = 2." },
+            "t1-task7": { q: "Jika \\( x \\) berbanding berbalik nilai dengan \\( y \\), dan \\( x = 5 \\) saat \\( y = 4 \\). Berapakah nilai \\( y \\) jika \\( x = 2 \\)?", q_trans: "If x is inversely proportional to y, and x = 5 when y = 4. What is the value of y if x = 2?", opts: ["8", "10", "12", "16", "20"], ans: "10", exp: "\\( k = 5 \\times 4 = 20 \\). Lalu \\( y = 20 \\div 2 = 10 \\).", exp_trans: "k = 5 * 4 = 20. Then y = 20 / 2 = 10." },
+            "t1-task8": { q: "Sebuah tugas selesai dalam 6 hari oleh 4 orang. Tentukan nilai konstanta (k)!", q_trans: "A task is completed in 6 days by 4 people. Determine the constant (k)!", opts: ["10", "12", "18", "24", "36"], ans: "24", exp: "\\( k = 4 \\times 6 = 24 \\).", exp_trans: "k = 4 * 6 = 24." },
+            "t1-task9": { q: "Jika konstanta suatu pekerjaan adalah 24, dan dikerjakan oleh 8 orang, berapa hari pekerjaan tersebut selesai?", q_trans: "If the constant of a job is 24, and is done by 8 people, how many days will the job be completed?", opts: ["2 hari", "3 hari", "4 hari", "6 hari", "8 hari"], ans: "3 hari", exp: "Waktu = \\( 24 \\div 8 = 3 \\) hari.", exp_trans: "Time = 24 / 8 = 3 days." },
+            "t1-task10": { q: "Kecepatan 20 km/jam menempuh jarak dalam waktu 6 jam. Tentukan nilai konstanta (k) jarak tersebut!", q_trans: "A speed of 20 km/h covers a distance in 6 hours. Determine the constant (k) of the distance!", opts: ["20", "26", "60", "100", "120"], ans: "120", exp: "\\( k = 20 \\times 6 = 120 \\).", exp_trans: "k = 20 * 6 = 120." },
+
+            // TASK 2 (Pekerja dan Waktu)
+            "t2-task1": { q: "Sebuah proyek dapat diselesaikan oleh 8 pekerja dalam waktu 3 hari. Jika proyek dikerjakan oleh 6 pekerja, berapa hari waktu yang dibutuhkan?", q_trans: "A project can be completed by 8 workers in 3 days. If the project is done by 6 workers, how many days are needed?", opts: ["2 hari", "3 hari", "4 hari", "5 hari", "6 hari"], ans: "4 hari", exp: "\\( k = 8 \\times 3 = 24 \\). Waktu = \\( 24 \\div 6 = 4 \\) hari.", exp_trans: "k = 8 * 3 = 24. Time = 24 / 6 = 4 days." },
+            "t2-task2": { q: "6 tukang dapat menyelesaikan rumah dalam 4 hari. Jika tukang dikurangi menjadi 3 orang, berapa hari rumah akan selesai?", q_trans: "6 builders can finish a house in 4 days. If builders are reduced to 3 people, how many days will the house be finished?", opts: ["6 hari", "8 hari", "10 hari", "12 hari", "16 hari"], ans: "8 hari", exp: "\\( k = 6 \\times 4 = 24 \\). Waktu = \\( 24 \\div 3 = 8 \\) hari.", exp_trans: "k = 6 * 4 = 24. Time = 24 / 3 = 8 days." },
+            "t2-task3": { q: "4 orang menyelesaikan tugas dalam 6 hari. Jika tugas ingin selesai dalam 3 hari, berapa orang yang dibutuhkan?", q_trans: "4 people complete a task in 6 days. If the task is to be completed in 3 days, how many people are needed?", opts: ["6 orang", "7 orang", "8 orang", "10 orang", "12 orang"], ans: "8 orang", exp: "\\( k = 4 \\times 6 = 24 \\). Orang = \\( 24 \\div 3 = 8 \\) orang.", exp_trans: "k = 4 * 6 = 24. People = 24 / 3 = 8 people." },
+            "t2-task4": { q: "Sebuah tugas diselesaikan 10 orang dalam 4 hari. Jika 2 orang sakit (tersisa 8 orang), berapa hari tugas selesai?", q_trans: "A task is completed by 10 people in 4 days. If 2 people are sick (8 left), how many days will the task be completed?", opts: ["3 hari", "4 hari", "5 hari", "6 hari", "8 hari"], ans: "5 hari", exp: "\\( k = 10 \\times 4 = 40 \\). Waktu = \\( 40 \\div 8 = 5 \\) hari.", exp_trans: "k = 10 * 4 = 40. Time = 40 / 8 = 5 days." },
+            "t2-task5": { q: "5 pekerja membutuhkan waktu 9 hari. Jika pekerja ditambah 1 orang (jadi 6 orang), berapa hari waktu yang dibutuhkan?", q_trans: "5 workers take 9 days. If 1 worker is added (making 6 people), how many days are needed?", opts: ["5 hari", "6 hari", "7 hari", "7.5 hari", "8 hari"], ans: "7.5 hari", exp: "\\( k = 5 \\times 9 = 45 \\). Waktu = \\( 45 \\div 6 = 7.5 \\) hari.", exp_trans: "k = 5 * 9 = 45. Time = 45 / 6 = 7.5 days." },
+            "t2-task6": { q: "3 anak dapat membersihkan halaman dalam 12 menit. Jika dibantu 1 anak (jadi 4 anak), berapa menit halaman akan bersih?", q_trans: "3 children can clean the yard in 12 minutes. If helped by 1 child (making 4 children), how many minutes will the yard be clean?", opts: ["4 menit", "6 menit", "8 menit", "9 menit", "10 menit"], ans: "9 menit", exp: "\\( k = 3 \\times 12 = 36 \\). Waktu = \\( 36 \\div 4 = 9 \\) menit.", exp_trans: "k = 3 * 12 = 36. Time = 36 / 4 = 9 minutes." },
+            "t2-task7": { q: "Sebuah buku diketik oleh 4 orang dalam 3 jam. Jika diketik oleh 1 orang, berapa jam buku akan selesai diketik?", q_trans: "A book is typed by 4 people in 3 hours. If typed by 1 person, how many hours will the book be typed?", opts: ["6 jam", "8 jam", "10 jam", "12 jam", "15 jam"], ans: "12 jam", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu = \\( 12 \\div 1 = 12 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time = 12 / 1 = 12 hours." },
+            "t2-task8": { q: "12 orang menanam pohon dalam 1 jam. Jika ingin selesai dalam 3 jam, berapa orang yang dibutuhkan?", q_trans: "12 people plant trees in 1 hour. If you want to finish in 3 hours, how many people are needed?", opts: ["2 orang", "3 orang", "4 orang", "6 orang", "8 orang"], ans: "4 orang", exp: "\\( k = 12 \\times 1 = 12 \\). Orang = \\( 12 \\div 3 = 4 \\) orang.", exp_trans: "k = 12 * 1 = 12. People = 12 / 3 = 4 people." },
+            "t2-task9": { q: "2 penjual menjual 10 kg dalam 5 jam. Jika ada 5 penjual, berapa jam waktu yang dibutuhkan?", q_trans: "2 sellers sell 10 kg in 5 hours. If there are 5 sellers, how many hours are needed?", opts: ["\\( 1 \\text{ jam} \\)", "\\( 2 \\text{ jam} \\)", "\\( 3 \\text{ jam} \\)", "\\( 4 \\text{ jam} \\)", "\\( 5 \\text{ jam} \\)"], ans: "\\( 2 \\text{ jam} \\)", exp: "\\( k = 2 \\times 5 = 10 \\). Waktu = \\( 10 \\div 5 = 2 \\) jam.", exp_trans: "k = 2 * 5 = 10. Time = 10 / 5 = 2 hours." },
+            "t2-task10": { q: "6 pekerja menyelesaikan tugas dalam 5 hari. Jika tugas ingin selesai dalam 3 hari, berapa pekerja yang harus ditambah?", q_trans: "6 workers complete a task in 5 days. If the task is to be completed in 3 days, how many workers must be added?", opts: ["2 orang", "3 orang", "4 orang", "5 orang", "6 orang"], ans: "4 orang", exp: "\\( k = 6 \\times 5 = 30 \\). Total pekerja = \\( 30 \\div 3 = 10 \\). Tambahan = 10 - 6 = 4 orang.", exp_trans: "k = 6 * 5 = 30. Total workers = 30 / 3 = 10. Additional = 10 - 6 = 4 people." },
+
+            // TASK 3 (Kecepatan dan Waktu)
+            "t3-task1": { q: "Sebuah mobil melaju dengan kecepatan 60 km/jam dan menempuh jarak dalam waktu 2 jam. Berapakah jarak tempuhnya (k)?", q_trans: "A car travels at 60 km/h and covers a distance in 2 hours. What is the distance (k)?", opts: ["30 km", "60 km", "90 km", "120 km", "150 km"], ans: "120 km", exp: "\\( k = 60 \\times 2 = 120 \\) km.", exp_trans: "k = 60 * 2 = 120 km." },
+            "t3-task2": { q: "Jarak 120 km ditempuh dalam waktu 4 jam. Berapakah kecepatan kendaraan tersebut?", q_trans: "A distance of 120 km is covered in 4 hours. What is the speed of the vehicle?", opts: ["20 km/jam", "30 km/jam", "40 km/jam", "50 km/jam", "60 km/jam"], ans: "30 km/jam", exp: "Kecepatan = \\( 120 \\div 4 = 30 \\) km/jam.", exp_trans: "Speed = 120 / 4 = 30 km/h." },
+            "t3-task3": { q: "Sebuah motor berkecepatan 40 km/jam tiba dalam 3 jam. Jika ingin tiba dalam 2 jam, berapa kecepatan yang dibutuhkan?", q_trans: "A motorcycle at 40 km/h arrives in 3 hours. If it wants to arrive in 2 hours, what speed is needed?", opts: ["50 km/jam", "60 km/jam", "70 km/jam", "80 km/jam", "90 km/jam"], ans: "60 km/jam", exp: "Jarak = 120 km. Kecepatan = \\( 120 \\div 2 = 60 \\) km/jam.", exp_trans: "Distance = 120 km. Speed = 120 / 2 = 60 km/h." },
+            "t3-task4": { q: "Bus berkecepatan 50 km/jam butuh 4 jam. Jika bus berkecepatan 40 km/jam, berapa jam waktu tempuhnya?", q_trans: "A bus at 50 km/h takes 4 hours. If the bus travels at 40 km/h, how many hours is the travel time?", opts: ["3 jam", "4 jam", "5 jam", "6 jam", "8 jam"], ans: "5 jam", exp: "Jarak = \\( 50 \\times 4 = 200 \\) km. Waktu = \\( 200 \\div 40 = 5 \\) jam.", exp_trans: "Distance = 50 * 4 = 200 km. Time = 200 / 40 = 5 hours." },
+            "t3-task5": { q: "Sepeda berkecepatan 10 km/jam butuh 6 jam. Jika kecepatannya dinaikkan menjadi 15 km/jam, berapa jam waktu tempuhnya?", q_trans: "A bicycle at 10 km/h takes 6 hours. If the speed is increased to 15 km/h, how many hours is the travel time?", opts: ["2 jam", "3 jam", "4 jam", "5 jam", "6 jam"], ans: "4 jam", exp: "Jarak = 60 km. Waktu = \\( 60 \\div 15 = 4 \\) jam.", exp_trans: "Distance = 60 km. Time = 60 / 15 = 4 hours." },
+            "t3-task6": { q: "Jarak 100 km ditempuh dalam 5 jam. Berapa kecepatan rata-rata kendaraan?", q_trans: "A distance of 100 km is covered in 5 hours. What is the average speed of the vehicle?", opts: ["10 km/jam", "15 km/jam", "20 km/jam", "25 km/jam", "30 km/jam"], ans: "20 km/jam", exp: "Kecepatan = \\( 100 \\div 5 = 20 \\) km/jam.", exp_trans: "Speed = 100 / 5 = 20 km/h." },
+            "t3-task7": { q: "Kereta api kecepatan 80 km/jam menempuh jarak dalam 3 jam. Jika kecepatannya 60 km/jam, waktu tempuhnya...", q_trans: "A train at 80 km/h covers a distance in 3 hours. If the speed is 60 km/h, the travel time is...", opts: ["2 jam", "3 jam", "4 jam", "5 jam", "6 jam"], ans: "4 jam", exp: "Jarak = 240 km. Waktu = \\( 240 \\div 60 = 4 \\) jam.", exp_trans: "Distance = 240 km. Time = 240 / 60 = 4 hours." },
+            "t3-task8": { q: "Paket diantar kurir dengan kecepatan 20 km/jam selama 2 jam. Jika kurir butuh 4 jam, berapa kecepatannya?", q_trans: "A package is delivered by a courier at 20 km/h for 2 hours. If the courier takes 4 hours, what is the speed?", opts: ["5 km/jam", "10 km/jam", "15 km/jam", "20 km/jam", "25 km/jam"], ans: "10 km/jam", exp: "Jarak = 40 km. Kecepatan = \\( 40 \\div 4 = 10 \\) km/jam.", exp_trans: "Distance = 40 km. Speed = 40 / 4 = 10 km/h." },
+            "t3-task9": { q: "Jika sebuah kendaraan ingin menempuh jarak 180 km dalam waktu 3 jam, kecepatan yang harus dijaga adalah...", q_trans: "If a vehicle wants to cover a distance of 180 km in 3 hours, the speed that must be maintained is...", opts: ["30 km/jam", "40 km/jam", "50 km/jam", "60 km/jam", "90 km/jam"], ans: "60 km/jam", exp: "Kecepatan = \\( 180 \\div 3 = 60 \\) km/jam.", exp_trans: "Speed = 180 / 3 = 60 km/h." },
+            "t3-task10": { q: "Jarak 150 km ditempuh dalam 2 jam. Jika jaraknya dipersingkat menjadi 75 km dengan kecepatan yang sama, waktu tempuhnya adalah...", q_trans: "A distance of 150 km is covered in 2 hours. If the distance is shortened to 75 km with the same speed, the travel time is...", opts: ["0.5 jam", "1 jam", "1.5 jam", "2 jam", "3 jam"], ans: "1 jam", exp: "Jarak turun setengahnya (dari 150 ke 75), maka waktu juga turun setengahnya (dari 2 jam ke 1 jam). Ini perbandingan senilai antara jarak dan waktu jika kecepatan tetap.", exp_trans: "Distance halves (from 150 to 75), so time also halves (from 2 hours to 1 hour). This is direct proportion between distance and time if speed is constant." },
+
+            // TASK 4 (Sarana & Sumber Daya - Keran Air, Makanan)
+            "t4-task1": { q: "Sebuah bak mandi berisi 600 liter air. Jika diisi 1 keran, penuh dalam 6 menit. Jika diisi 2 keran dengan debit sama, berapa menit waktu yang dibutuhkan?", q_trans: "A bathtub contains 600 liters of water. If filled by 1 tap, it is full in 6 minutes. If filled by 2 taps with the same flow rate, how many minutes are needed?", opts: ["2 menit", "3 menit", "4 menit", "5 menit", "6 menit"], ans: "3 menit", exp: "\\( k = 1 \\times 6 = 6 \\). Waktu = \\( 6 \\div 2 = 3 \\) menit.", exp_trans: "k = 1 * 6 = 6. Time = 6 / 2 = 3 minutes." },
+            "t4-task2": { q: "3 pipa air dapat mengisi kolam dalam waktu 4 jam. Jika ada 6 pipa dengan debit sama, berapa jam kolam akan penuh?", q_trans: "3 water pipes can fill a pool in 4 hours. If there are 6 pipes with the same flow rate, how many hours will the pool be full?", opts: ["1 jam", "2 jam", "3 jam", "4 jam", "6 jam"], ans: "2 jam", exp: "\\( k = 3 \\times 4 = 12 \\). Waktu = \\( 12 \\div 6 = 2 \\) jam.", exp_trans: "k = 3 * 4 = 12. Time = 12 / 6 = 2 hours." },
+            "t4-task3": { q: "Persediaan makanan 4 sapi dapat bertahan selama 15 hari. Jika sapi ditambah 1 (jadi 5 sapi), berapa hari persediaan makanan akan habis?", q_trans: "Food supply for 4 cows can last for 15 days. If 1 cow is added (making 5 cows), how many days will the food supply run out?", opts: ["8 hari", "10 hari", "12 hari", "14 hari", "16 hari"], ans: "12 hari", exp: "\\( k = 4 \\times 15 = 60 \\). Waktu = \\( 60 \\div 5 = 12 \\) hari.", exp_trans: "k = 4 * 15 = 60. Time = 60 / 5 = 12 days." },
+            "t4-task4": { q: "Makanan 6 ayam bertahan 10 hari. Jika ayam dijual 2 ekor (tersisa 4), berapa lama makanan akan bertahan?", q_trans: "Food for 6 chickens lasts 10 days. If 2 chickens are sold (4 left), how long will the food last?", opts: ["12 hari", "14 hari", "15 hari", "16 hari", "20 hari"], ans: "15 hari", exp: "\\( k = 6 \\times 10 = 60 \\). Waktu = \\( 60 \\div 4 = 15 \\) hari.", exp_trans: "k = 6 * 10 = 60. Time = 60 / 4 = 15 days." },
+            "t4-task5": { q: "2 pompa air dapat menguras kolam dalam waktu 5 jam. Jika ada 5 pompa, berapa jam kolam akan kering?", q_trans: "2 water pumps can drain a pool in 5 hours. If there are 5 pumps, how many hours will the pool be dry?", opts: ["1 jam", "2 jam", "3 jam", "4 jam", "5 jam"], ans: "2 jam", exp: "\\( k = 2 \\times 5 = 10 \\). Waktu = \\( 10 \\div 5 = 2 \\) jam.", exp_trans: "k = 2 * 5 = 10. Time = 10 / 5 = 2 hours." },
+            "t4-task6": { q: "4 keran air mengisi tangki dalam 3 jam. Jika hanya 1 keran yang dibuka, berapa jam tangki akan penuh?", q_trans: "4 water taps fill a tank in 3 hours. If only 1 tap is opened, how many hours will the tank be full?", opts: ["6 jam", "9 jam", "12 jam", "15 jam", "18 jam"], ans: "12 jam", exp: "\\( k = 4 \\times 3 = 12 \\). Waktu = \\( 12 \\div 1 = 12 \\) jam.", exp_trans: "k = 4 * 3 = 12. Time = 12 / 1 = 12 hours." },
+            "t4-task7": { q: "Sebuah tangki minyak berisi 400 liter. 1 pompa dapat mengisi tangki dalam 8 menit. Jika 4 pompa digunakan, berapa menit waktu yang dibutuhkan?", q_trans: "An oil tank contains 400 liters. 1 pump can fill the tank in 8 minutes. If 4 pumps are used, how many minutes are needed?", opts: ["1 menit", "2 menit", "3 menit", "4 menit", "5 menit"], ans: "2 menit", exp: "\\( k = 1 \\times 8 = 8 \\). Waktu = \\( 8 \\div 4 = 2 \\) menit.", exp_trans: "k = 1 * 8 = 8. Time = 8 / 4 = 2 minutes." },
+            "t4-task8": { q: "Persediaan makanan 8 orang bertahan 5 hari. Jika 3 orang pergi (tersisa 5 orang), berapa hari makanan akan habis?", q_trans: "Food supply for 8 people lasts 5 days. If 3 people leave (5 left), how many days will the food run out?", opts: ["6 hari", "7 hari", "8 hari", "9 hari", "10 hari"], ans: "8 hari", exp: "\\( k = 8 \\times 5 = 40 \\). Waktu = \\( 40 \\div 5 = 8 \\) hari.", exp_trans: "k = 8 * 5 = 40. Time = 40 / 5 = 8 days." },
+            "t4-task9": { q: "Makanan 3 kucing bertahan 12 hari. Jika 1 kucing ditambah (jadi 4 ekor), berapa lama persediaan makanan bertahan?", q_trans: "Food for 3 cats lasts 12 days. If 1 cat is added (making 4), how long will the food supply last?", opts: ["6 hari", "8 hari", "9 hari", "10 hari", "12 hari"], ans: "9 hari", exp: "\\( k = 3 \\times 12 = 36 \\). Waktu = \\( 36 \\div 4 = 9 \\) hari.", exp_trans: "k = 3 * 12 = 36. Time = 36 / 4 = 9 days." },
+            "t4-task10": { q: "2 oven dapat memanggang 100 roti dalam 4 jam. Jika 1 oven rusak (tersisa 1 oven), berapa jam waktu yang dibutuhkan untuk memanggang 100 roti?", q_trans: "2 ovens can bake 100 loaves of bread in 4 hours. If 1 oven breaks (1 oven left), how many hours are needed to bake 100 loaves of bread?", opts: ["4 jam", "6 jam", "8 jam", "10 jam", "12 jam"], ans: "8 jam", exp: "\\( k = 2 \\times 4 = 8 \\). Waktu = \\( 8 \\div 1 = 8 \\) jam.", exp_trans: "k = 2 * 4 = 8. Time = 8 / 1 = 8 hours." },
+
+            // TASK 5 (Aplikasi Sehari-hari & Soal Cerita Campuran)
+            "t5-task1": { q: "4 orang pekerja dapat mengecat tembok sekolah dalam waktu 9 hari. Jika 1 pekerja tidak hadir, berapa hari waktu yang dibutuhkan untuk mengecat tembok sekolah tersebut?", q_trans: "4 workers can paint the school wall in 9 days. If 1 worker is absent, how many days are needed to paint the school wall?", opts: ["10 hari", "11 hari", "12 hari", "13 hari", "14 hari"], ans: "12 hari", exp: "\\( k = 4 \\times 9 = 36 \\). Sisa pekerja 3. Waktu = \\( 36 \\div 3 = 12 \\) hari.", exp_trans: "k = 4 * 9 = 36. Remaining workers 3. Time = 36 / 3 = 12 days." },
+            "t5-task2": { q: "Sebuah mobil berangkat dari kota A ke kota B dengan kecepatan 60 km/jam dan tiba dalam waktu 4 jam. Jika mobil kembali ke kota A dengan kecepatan 40 km/jam, berapa jam waktu yang dibutuhkan?", q_trans: "A car departs from city A to city B at 60 km/h and arrives in 4 hours. If the car returns to city A at 40 km/h, how many hours are needed?", opts: ["5 jam", "6 jam", "7 jam", "8 jam", "9 jam"], ans: "6 jam", exp: "Jarak = \\( 60 \\times 4 = 240 \\) km. Waktu = \\( 240 \\div 40 = 6 \\) jam.", exp_trans: "Distance = 60 * 4 = 240 km. Time = 240 / 40 = 6 hours." },
+            "t5-task3": { q: "Harga 4 buah buku tulis adalah Rp 20.000. Jika Ani hanya punya uang Rp 15.000, berapa buku tulis yang dapat dibelinya?", q_trans: "The price of 4 notebooks is Rp 20,000. If Ani only has Rp 15,000, how many notebooks can she buy?", opts: ["1 buku", "2 buku", "3 buku", "4 buku", "5 buku"], ans: "3 buku", exp: "Ini perbandingan senilai. 1 buku = Rp 5.000. Dengan Rp 15.000, Ani dapat \\( 15.000 \\div 5.000 = 3 \\) buku.", exp_trans: "This is direct proportion. 1 book = Rp 5,000. With Rp 15,000, Ani gets 15,000 / 5,000 = 3 books." },
+            "t5-task4": { q: "Sebuah proyek pembangunan jembatan diselesaikan oleh 12 pekerja dalam waktu 20 hari. Jika proyek ingin diselesaikan dalam 15 hari, berapa pekerja tambahan yang diperlukan?", q_trans: "A bridge construction project is completed by 12 workers in 20 days. If the project is to be completed in 15 days, how many additional workers are required?", opts: ["2 pekerja", "3 pekerja", "4 pekerja", "5 pekerja", "6 pekerja"], ans: "4 pekerja", exp: "\\( k = 12 \\times 20 = 240 \\). Total pekerja baru = \\( 240 \\div 15 = 16 \\). Tambahan = 16 - 12 = 4 pekerja.", exp_trans: "k = 12 * 20 = 240. New total workers = 240 / 15 = 16. Additional = 16 - 12 = 4 workers." },
+            "t5-task5": { q: "2 truk mengangkut pasir dalam 8 jam. Jika truk dikurangi menjadi 1 truk, berapa waktu yang dibutuhkan?", q_trans: "2 trucks transport sand in 8 hours. If trucks are reduced to 1 truck, how much time is needed?", opts: ["4 jam", "8 jam", "12 jam", "16 jam", "20 jam"], ans: "16 jam", exp: "\\( k = 2 \\times 8 = 16 \\). Waktu = \\( 16 \\div 1 = 16 \\) jam.", exp_trans: "k = 2 * 8 = 16. Time = 16 / 1 = 16 hours." },
+            "t5-task6": { q: "1 pekerja dapat menyelesaikan tugas dalam 6 jam. Jika tugas ingin selesai dalam 2 jam, berapa pekerja tambahan yang dibutuhkan?", q_trans: "1 worker can complete a task in 6 hours. If the task is to be completed in 2 hours, how many additional workers are needed?", opts: ["1 pekerja", "2 pekerja", "3 pekerja", "4 pekerja", "5 pekerja"], ans: "2 pekerja", exp: "\\( k = 1 \\times 6 = 6 \\). Total pekerja untuk 2 jam = \\( 6 \\div 2 = 3 \\) pekerja. Tambahan = 3 - 1 = 2 pekerja.", exp_trans: "k = 1 * 6 = 6. Total workers for 2 hours = 6 / 2 = 3 workers. Additional = 3 - 1 = 2 workers." },
+            "t5-task7": { q: "Sebuah pabrik sepatu memproduksi 300 pasang sepatu dalam waktu 6 hari. Jika pabrik ingin memproduksi 600 pasang sepatu dengan jumlah pekerja dan mesin yang sama, berapa hari waktu yang dibutuhkan?", q_trans: "A shoe factory produces 300 pairs of shoes in 6 days. If the factory wants to produce 600 pairs of shoes with the same number of workers and machines, how many days are needed?", opts: ["8 hari", "10 hari", "12 hari", "14 hari", "15 hari"], ans: "12 hari", exp: "Ini perbandingan senilai antara jumlah barang dan waktu. Jumlah sepatu naik 2x lipat (dari 300 ke 600), maka waktu juga harus naik 2x lipat. \\( 6 \\times 2 = 12 \\) hari.", exp_trans: "This is direct proportion between goods and time. Number of shoes doubles (from 300 to 600), so time must also double. 6 * 2 = 12 days." },
+            "t5-task8": { q: "Sebuah mobil membutuhkan bensin 4 liter untuk menempuh jarak 40 km. Jika mobil tersebut ingin menempuh jarak 120 km, berapa liter bensin yang dibutuhkan?", q_trans: "A car requires 4 liters of gasoline to cover a distance of 40 km. If the car wants to cover a distance of 120 km, how many liters of gasoline are needed?", opts: ["8 liter", "10 liter", "12 liter", "14 liter", "16 liter"], ans: "12 liter", exp: "Perbandingan senilai. Jarak naik 3x lipat (dari 40 ke 120), bensin juga naik 3x lipat. \\( 4 \\times 3 = 12 \\) liter.", exp_trans: "Direct proportion. Distance increases 3 times (from 40 to 120), gasoline also increases 3 times. 4 * 3 = 12 liters." },
+            "t5-task9": { q: "3 orang petani dapat memanen sawit dalam waktu 8 hari. Jika sawit harus dipanen dalam 4 hari, berapa petani tambahan yang dibutuhkan?", q_trans: "3 farmers can harvest oil palm in 8 days. If the palm must be harvested in 4 days, how many additional farmers are needed?", opts: ["1 petani", "2 petani", "3 petani", "4 petani", "5 petani"], ans: "3 petani", exp: "\\( k = 3 \\times 8 = 24 \\). Total petani = \\( 24 \\div 4 = 6 \\). Tambahan = 6 - 3 = 3 petani.", exp_trans: "k = 3 * 8 = 24. Total farmers = 24 / 4 = 6. Additional = 6 - 3 = 3 farmers." },
+            "t5-task10": { q: "Sebuah keran air mengisi bak mandi dalam waktu 15 menit. Jika kita ingin bak mandi terisi 3 kali lebih cepat, berapa keran air dengan debit yang sama yang harus dibuka?", q_trans: "A water tap fills a bathtub in 15 minutes. If we want the bathtub to fill 3 times faster, how many water taps with the same flow rate must be opened?", opts: ["2 keran", "3 keran", "4 keran", "5 keran", "6 keran"], ans: "3 keran", exp: "Waktu yang biasanya 15 menit ingin dipersingkat menjadi 5 menit (3x lebih cepat). Karena waktu dibagi 3, jumlah keran harus dikali 3. Yaitu 3 keran.", exp_trans: "The usual time of 15 minutes wants to be shortened to 5 minutes (3 times faster). Because time is divided by 3, the number of taps must be multiplied by 3. That is 3 taps." }
+        };
+
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let totalPages = 13;
+        let currentTaskSection = ""; // For tracking which task section is active for printing
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-blue-100', 'text-blue-800', 'font-bold', 'bg-orange-100');
+                item.classList.add('text-gray-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100');
+                } else {
+                    activeLink.classList.add('bg-blue-100', 'text-blue-800', 'font-bold');
+                }
+            }
+            
+            // Reset to page 1 on section change
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; // Halaman teori untuk warmup sampai independent
+            
+            // Tombol Previous
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                
+                // Warna dasar (Teori vs Task)
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-blue-100 hover:bg-blue-200 text-blue-800'; // Teori (Biru)
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; // Task (Oranye)
+                }
+                
+                // Warna saat halaman sedang aktif (sedang dibuka)
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-blue-600 text-white shadow-md'; // Teori Aktif
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; // Task Aktif
+                    }
+                }
+                
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            // Tombol Next
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                const data = questions[taskId];
+                if(!data) return;
+
+                const shuffledOpts = shuffleArray([...data.opts]);
+                const isMainTask = taskId.startsWith('t');
+                const taskNum = isMainTask ? taskId[1] : 0;
+                
+                div.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                        <div class="flex justify-between items-center mb-4 no-print">
+                            <h2 class="text-xl font-bold text-orange-600">${isMainTask ? `Task ${taskNum}` : 'Task'} <span class="translation text-gray-500 text-sm">Tugas</span></h2>
+                            <div class="flex gap-2">
+                                <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                                ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                    <i class="fas fa-print"></i> Print
+                                </button>` : ''}
+                            </div>
+                        </div>
+                        <div class="mb-6 flex gap-4 items-start">
+                            <div class="bg-orange-100 p-3 rounded-full">
+                                <i class="fas fa-question text-orange-500 text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-lg">${data.q}</p>
+                                <p class="translation">${data.q_trans}</p>
+                            </div>
+                        </div>
+
+                        <div id="options-${taskId}" class="space-y-3">
+                            ${shuffledOpts.map((opt, i) => `
+                                <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'))" 
+                                        class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                        data-opt="${opt}">
+                                    <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold">${String.fromCharCode(65 + i)}</span>
+                                    <span class="katex">${opt}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                        <div class="mt-4 no-print">
+                            <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                                Show Explanation <span class="translation text-gray-500 text-xs">Tampilkan Penjelasan</span>
+                            </button>
+                            <div id="collapse-${taskId}" class="collapse-content w-full">
+                                <h3 class="font-bold text-blue-800">Explanation: <span class="translation text-gray-500 text-sm">Penjelasan:</span></h3>
+                                <p class="mt-2">${data.exp}</p>
+                                <p class="translation">${data.exp_trans}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            renderMath();
+        }
+
+        function checkAnswer(taskId, selectedOpt) {
+            studentAnswers[taskId] = selectedOpt; // Save answer for printing
+            
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const buttons = document.querySelectorAll(`#options-${taskId} button`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+                if(btn.getAttribute('data-opt') === data.ans) {
+                    btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                    btn.classList.add('border-green-500', 'bg-green-50');
+                } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                    btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                    btn.classList.add('border-red-500', 'bg-red-50');
+                }
+            });
+
+            if(selectedOpt === data.ans) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Correct! <span class="translation text-gray-600 font-normal">Benar!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Wrong! The correct answer is ${data.ans}. <span class="translation text-gray-600 font-normal">Salah! Jawaban yang benar adalah ${data.ans}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            // --- Otomatis membuka kotak penjelasan ---
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Hide Explanation <span class="translation text-gray-500 text-xs">Sembunyikan Penjelasan</span>';
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                const studentAns = studentAnswers[taskId] || 'Not Answered';
+                const correctAns = data.ans;
+                let note = '❌';
+                
+                // Bandingkan teks asli tanpa dibersihkan
+                if(studentAns === correctAns) { score++; note = '✔️'; }
+                
+                // Masukkan teks asli ke tabel agar bisa dirender oleh KaTeX
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${data.q}</td>
+                    <td class="border border-black p-1">${studentAns}</td>
+                    <td class="border border-black p-1">${correctAns}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            // Render ulang KaTeX khusus di area print sebelum dicetak
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Hide Explanation <span class="translation text-gray-500 text-xs">Sembunyikan Penjelasan</span>';
+            } else {
+                btn.innerHTML = 'Show Explanation <span class="translation text-gray-500 text-xs">Tampilkan Penjelasan</span>';
+            }
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId]; // Clear saved answer
+            renderTasks(); // Re-render to shuffle options and reset state
+            // Because renderTasks rebuilds the whole DOM, we need to ensure the active page is still active
+            const activeSection = document.querySelector('.content-section.active');
+            if(activeSection) {
+                const pageToActivate = activeSection.querySelector(`.page[data-page="${currentPage}"]`);
+                if(pageToActivate) pageToActivate.classList.add('active');
+            }
+        }
+
+        function renderMath() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+        }
+
+        // Initial load
+        window.onload = () => {
+            renderTasks();
+            renderMath();
+            showSection('warmup');
+        };
+    </script>
+
+    <!-- Print Area (Hidden, populated on print) -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: Perbandingan Berbalik Nilai (Inverse Proportion)</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+</body>
+</html>
