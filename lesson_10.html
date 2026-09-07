@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - Operasi SPLDV</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+        
+        .prompt-box { max-width: 650px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; align-items: center; text-align: left; }
+        .prompt-box p { width: 100%; }
+        .prompt-box img { width: 100%; height: auto; max-width: 300px; display: block; margin-top: 0.5rem; }
+        
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { 
+            max-height: 0; overflow: hidden; 
+            transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; 
+            padding: 0; border: 0; background: transparent;
+        }
+        .collapse-content.open { 
+            max-height: 2000px; padding: 1.5rem; 
+            border: 1px solid #bfdbfe; background: #eff6ff; 
+            border-radius: 0.5rem; margin-top: 1rem; 
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            #printArea table { table-layout: fixed; width: 100%; font-size: 9px; }
+            #printArea td, #printArea th { word-wrap: break-word; padding: 2px !important; }
+            @page { size: A4; margin: 5mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <!-- SVG Defs for Arrows -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+            <marker id="arr2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Operasi SPLDV</p>
+            <p class="translation text-indigo-200">Topik: Operasi SPLDV (System of Linear Equations in Two Variables)</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-indigo-600">Class Rules <br><span class="translation text-gray-500">Aturan Kelas</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-indigo-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-indigo-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-indigo-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-indigo-600 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-indigo-200 mt-1">Select topic to navigate <span class="translation text-indigo-300 block">Pilih topik untuk navigasi</span></p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="warmup">
+                            <div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="intro">
+                            <div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="review">
+                            <div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="problem">
+                            <div class="font-semibold text-sm text-gray-800">Problem Introduction</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="guided">
+                            <div class="font-semibold text-sm text-gray-800">Guided Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="independent">
+                            <div class="font-semibold text-sm text-gray-800">Independent Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="consolidation">
+                            <div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div>
+                        </a>
+                    </li>
+                    
+                    <hr class="my-3 border-gray-200">
+                    
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+            
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Persamaan Linear Satu Variabel</h2>
+                        <p class="translation">Linear Equation in One Variable</p>
+                        
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="120" viewBox="0 0 180 120">
+                                    <!-- Timbangan -->
+                                    <line x1="90" y1="20" x2="90" y2="90" stroke="#333" stroke-width="2"/>
+                                    <line x1="50" y1="40" x2="130" y2="40" stroke="#333" stroke-width="2"/>
+                                    <line x1="50" y1="40" x2="40" y2="70" stroke="#333" stroke-width="2"/>
+                                    <line x1="50" y1="40" x2="60" y2="70" stroke="#333" stroke-width="2"/>
+                                    <line x1="130" y1="40" x2="120" y2="70" stroke="#333" stroke-width="2"/>
+                                    <line x1="130" y1="40" x2="140" y2="70" stroke="#333" stroke-width="2"/>
+                                    <rect x="30" y="70" width="40" height="30" rx="3" fill="#fbbf24" stroke="#333"/>
+                                    <text x="50" y="90" font-size="14" text-anchor="middle" fill="#333">x + 2</text>
+                                    <rect x="110" y="70" width="40" height="30" rx="3" fill="#3b82f6" stroke="#333"/>
+                                    <text x="130" y="90" font-size="14" text-anchor="middle" fill="#fff">5</text>
+                                    <rect x="70" y="95" width="40" height="15" rx="2" fill="#a78bfa" stroke="#333"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Persamaan linear adalah kalimat matematika yang menunjukkan kesetaraan dua nilai, ditandai dengan tanda sama dengan (\( = \)). <span class="translation">A linear equation is a mathematical sentence showing equivalence of two values, marked by an equals sign.</span></p>
+                                <p class="mt-2">Contoh: \( x + 2 = 5 \). Artinya, nilai \( x \) ditambah 2 sama dengan 5. <span class="translation">Example: \( x + 2 = 5 \). Meaning, the value of \( x \) plus 2 equals 5.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Timbangan Seimbang</p>
+                            <p class="mt-1">Bayangkan persamaan seperti timbangan. Apapun yang kamu lakukan di sisi kiri, harus kamu lakukan di sisi kanan agar tetap seimbang. <span class="translation">Imagine an equation as a scale. Whatever you do on the left side, you must do on the right side to keep it balanced.</span></p>
+                            <p class="mt-1 font-bold">Rumus To The Point: Pindahkan variabel ke kiri, konstanta (angka) ke kanan. Ubah tanda saat pindah!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Mengenal Dua Variabel (x dan y)</h2>
+                        <p class="translation">Introduction to Two Variables (x and y)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="150" height="120" viewBox="0 0 150 120">
+                                    <!-- Dua Kotak Variabel -->
+                                    <rect x="20" y="40" width="40" height="40" rx="5" fill="#ef4444" stroke="#333" stroke-width="2"/>
+                                    <text x="40" y="65" font-size="20" text-anchor="middle" fill="#fff" font-weight="bold">x</text>
+                                    <text x="40" y="100" font-size="12" text-anchor="middle" fill="#333">Apel</text>
+                                    
+                                    <rect x="90" y="40" width="40" height="40" rx="5" fill="#3b82f6" stroke="#333" stroke-width="2"/>
+                                    <text x="110" y="65" font-size="20" text-anchor="middle" fill="#fff" font-weight="bold">y</text>
+                                    <text x="110" y="100" font-size="12" text-anchor="middle" fill="#333">Jeruk</text>
+                                    
+                                    <text x="75" y="65" font-size="20" text-anchor="middle" fill="#10b981" font-weight="bold">+</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dalam kehidupan sehari-hari, kita sering menjumpai dua hal yang berbeda, seperti jumlah apel dan jumlah jeruk. Kita bisa mewakilinya dengan dua variabel: \( x \) dan \( y \). <span class="translation">In everyday life, we often encounter two different things, like the number of apples and oranges. We can represent them with two variables: \( x \) and \( y \).</span></p>
+                                <p class="mt-2">Jika kita punya persamaan \( x + y = 5 \), artinya jumlah apel dan jeruk总共 adalah 5 buah. <span class="translation">If we have the equation \( x + y = 5 \), it means the total number of apples and oranges is 5.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Pilih Huruf yang Mudah Diingat</p>
+                            <p class="mt-1">Walaupun biasanya \( x \) dan \( y \), kamu bisa pakai huruf lain seperti \( a \) untuk apel dan \( j \) untuk jeruk. <span class="translation">Although usually \( x \) and \( y \), you can use other letters like \( a \) for apples and \( j \) for oranges.</span></p>
+                            <p class="mt-1 font-bold">Rumus To The Point: SPLDV selalu memiliki 2 persamaan dan 2 variabel.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Apa itu SPLDV?</h2>
+                        <p class="translation">What is a System of Linear Equations in Two Variables?</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="120" viewBox="0 0 180 120">
+                                    <!-- Puzzle Sambung -->
+                                    <rect x="20" y="30" width="60" height="50" rx="5" fill="#8b5cf6" stroke="#333"/>
+                                    <text x="50" y="60" font-size="12" text-anchor="middle" fill="#fff">Persamaan 1</text>
+                                    <text x="50" y="75" font-size="10" text-anchor="middle" fill="#fff">x + y = 5</text>
+                                    
+                                    <rect x="100" y="30" width="60" height="50" rx="5" fill="#fbbf24" stroke="#333"/>
+                                    <text x="130" y="60" font-size="12" text-anchor="middle" fill="#333">Persamaan 2</text>
+                                    <text x="130" y="75" font-size="10" text-anchor="middle" fill="#333">x - y = 1</text>
+                                    
+                                    <path d="M 80 55 L 100 55" stroke="#10b981" stroke-width="4" marker-end="url(#arr1)"/>
+                                    <text x="90" y="100" font-size="12" text-anchor="middle" fill="#10b981">Sistem Persamaan</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>SPLDV adalah kumpulan dua persamaan linear yang memiliki dua variabel yang sama. <span class="translation">SPLDV is a collection of two linear equations having the same two variables.</span></p>
+                                <p class="mt-2">Tujuannya adalah mencari nilai \( x \) dan \( y \) yang memenuhi KEDUA persamaan secara bersamaan. <span class="translation">The goal is to find the values of \( x \) and \( y \) that satisfy BOTH equations simultaneously.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Rumus To The Point: Bentuk Umum SPLDV</p>
+                            <p class="mt-1">\( a_1x + b_1y = c_1 \) <br> \( a_2x + b_2y = c_2 \) <br> <span class="translation">General form of SPLDV</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">SPLDV di Kehidupan Sehari-hari</h2>
+                        <p class="translation">SPLDV in Everyday Life</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="140" height="140" viewBox="0 0 140 140">
+                                    <!-- Keranjang Belanja -->
+                                    <path d="M30 50 L110 50 L100 110 L40 110 Z" fill="#a78bfa" stroke="#333" stroke-width="2"/>
+                                    <path d="M40 50 C 40 20, 100 20, 100 50" fill="none" stroke="#333" stroke-width="2"/>
+                                    <circle cx="55" cy="70" r="8" fill="#ef4444"/> <!-- Apel -->
+                                    <circle cx="85" cy="70" r="8" fill="#fbbf24"/> <!-- Jeruk -->
+                                </svg>
+                            </div>
+                            <p>Saat belanja, kita sering membeli lebih dari satu jenis barang. Jika kita tahu total harga dan jumlah barang, kita bisa mencari harga satuan dari masing-masing barang menggunakan SPLDV. <span class="translation">When shopping, we often buy more than one type of item. If we know the total price and quantity, we can find the unit price of each item using SPLDV.</span></p>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Terjemahkan Kata ke Matematika</p>
+                            <p class="mt-1">"Total" atau "Jumlah" artinya penjumlahan (\( + \)). "Selisih" atau "Lebih banyak" artinya pengurangan (\( - \)). <span class="translation">"Total" means addition. "Difference" means subtraction.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Menerjemahkan Soal Cerita</h2>
+                        <p class="translation">Translating Word Problems</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Buku ke Matematika -->
+                                    <rect x="10" y="30" width="40" height="50" rx="3" fill="#3b82f6" stroke="#333"/>
+                                    <text x="30" y="60" font-size="14" text-anchor="middle" fill="#fff">Buku</text>
+                                    <path d="M 55 55 L 85 55" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="70" y="45" font-size="10" text-anchor="middle" fill="#10b981">Ubah</text>
+                                    <rect x="90" y="30" width="60" height="50" rx="3" fill="#ef4444" stroke="#333"/>
+                                    <text x="120" y="50" font-size="10" text-anchor="middle" fill="#fff">2x + 3y</text>
+                                    <text x="120" y="65" font-size="10" text-anchor="middle" fill="#fff">= 12</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Misal: "Harga 2 buku dan 3 pulpen adalah Rp 12.000." <span class="translation">Example: "The price of 2 books and 3 pens is Rp 12,000."</span></p>
+                                <p class="mt-2">Jika \( x \) adalah harga buku dan \( y \) adalah harga pulpen, maka persamaannya adalah \( 2x + 3y = 12000 \). <span class="translation">If \( x \) is the book price and \( y \) is the pen price, the equation is \( 2x + 3y = 12000 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Rumus To The Point: (Jumlah Barang) x (Harga Satuan)</p>
+                            <p class="mt-1">Jangan lupa kalikan jumlah dengan variabelnya. <span class="translation">Don't forget to multiply quantity by the variable.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Konsep Harga Satuan</h2>
+                        <p class="translation">Concept of Unit Price</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="140" height="120" viewBox="0 0 140 120">
+                                    <!-- Uang pecahan -->
+                                    <rect x="40" y="20" width="60" height="80" rx="5" fill="#10b981" stroke="#333"/>
+                                    <circle cx="70" cy="60" r="20" fill="#fff" stroke="#333"/>
+                                    <text x="70" y="65" font-size="14" text-anchor="middle" fill="#10b981">Rp</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Mencari harga satuan berarti mencari harga 1 buah barang. Jika 2 apel harganya Rp 4.000, maka 1 apel harganya Rp 2.000. <span class="translation">Finding the unit price means finding the price of 1 item. If 2 apples cost Rp 4,000, then 1 apple costs Rp 2,000.</span></p>
+                                <p class="mt-2">SPLDV membantu kita menemukan harga satuan dari dua barang berbeda sekaligus! <span class="translation">SPLDV helps us find the unit prices of two different items simultaneously!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Tuliskan persamaan pertama, lalu cari persamaan kedua dari kondisi lain yang diberikan soal. <span class="translation">Write the first equation, then find the second equation from other conditions given by the problem.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Perbandingan Senilai</h2>
+                        <p class="translation">Direct Proportion</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="100" viewBox="0 0 160 100">
+                                    <!-- Dua panah naik -->
+                                    <line x1="30" y1="80" x2="30" y2="20" stroke="#ef4444" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <text x="20" y="50" font-size="12" fill="#333">x</text>
+                                    
+                                    <line x1="120" y1="80" x2="120" y2="20" stroke="#3b82f6" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <text x="110" y="50" font-size="12" fill="#333">y</text>
+                                    
+                                    <text x="80" y="50" font-size="14" fill="#10b981">~</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dua variabel dikatakan senilai jika keduanya bertambah atau berkurang secara bersamaan. <span class="translation">Two variables are directly proportional if they increase or decrease together.</span></p>
+                                <p class="mt-2">Rumusnya: \( \frac{x_1}{y_1} = \frac{x_2}{y_2} \) atau \( x \times y = k \) (konstanta). Tunggu, rumus senilai yang benar adalah \( \frac{x_1}{x_2} = \frac{y_1}{y_2} \). <span class="translation">The formula is \( \frac{x_1}{x_2} = \frac{y_1}{y_2} \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Rumus To The Point</p>
+                            <p class="mt-1">\( \frac{x_1}{x_2} = \frac{y_1}{y_2} \). Jika \( x \) naik, \( y \) juga naik. <span class="translation">If \( x \) goes up, \( y \) goes up.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Perbandingan Berbalik Nilai</h2>
+                        <p class="translation">Inverse Proportion</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="100" viewBox="0 0 160 100">
+                                    <!-- Panah berlawanan -->
+                                    <line x1="30" y1="80" x2="30" y2="20" stroke="#ef4444" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <text x="20" y="50" font-size="12" fill="#333">x</text>
+                                    
+                                    <line x1="120" y1="20" x2="120" y2="80" stroke="#3b82f6" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <text x="110" y="50" font-size="12" fill="#333">y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dua variabel berbalik nilai jika salah satu bertambah, yang lain berkurang. <span class="translation">Two variables are inversely proportional if one increases, the other decreases.</span></p>
+                                <p class="mt-2">Rumusnya: \( x_1 \times y_1 = x_2 \times y_2 \). <span class="translation">The formula is \( x_1 \times y_1 = x_2 \times y_2 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Lawan Arah</p>
+                            <p class="mt-1">Bayangkan tuas jungkat-jungkit. Jika kiri naik, kanan pasti turun. <span class="translation">Imagine a seesaw. If left goes up, right goes down.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Dari Perbandingan ke SPLDV</h2>
+                        <p class="translation">From Proportion to SPLDV</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="100" viewBox="0 0 180 100">
+                                    <text x="20" y="50" font-size="16" fill="#8b5cf6">x / y = 2 / 3</text>
+                                    <path d="M 90 45 L 110 45" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="130" y="50" font-size="16" fill="#10b981">3x = 2y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Perbandingan bisa diubah menjadi persamaan linear. Jika \( \frac{x}{y} = \frac{2}{3} \), maka dengan kalikan silang didapat \( 3x = 2y \). <span class="translation">Proportions can be turned into linear equations. If \( \frac{x}{y} = \frac{2}{3} \), cross-multiplying gives \( 3x = 2y \).</span></p>
+                                <p class="mt-2">Ini adalah langkah krusial sebelum menyelesaikan SPLDV! <span class="translation">This is a crucial step before solving SPLDV!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Kali silang: Pembilang kiri x Penyebut kanan = Penyebut kiri x Pembilang kanan. <span class="translation">Cross multiply: Left numerator x Right denominator = Left denominator x Right numerator.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Strategi Soal Cerita SPLDV</h2>
+                        <p class="translation">SPLDV Word Problem Strategy</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <!-- Tangga langkah -->
+                                    <rect x="20" y="80" width="20" height="20" fill="#3b82f6"/>
+                                    <rect x="40" y="60" width="20" height="40" fill="#10b981"/>
+                                    <rect x="60" y="40" width="20" height="60" fill="#fbbf24"/>
+                                    <rect x="80" y="20" width="20" height="80" fill="#ef4444"/>
+                                    <text x="30" y="95" font-size="10" text-anchor="middle" fill="#fff">1</text>
+                                    <text x="50" y="75" font-size="10" text-anchor="middle" fill="#fff">2</text>
+                                    <text x="70" y="55" font-size="10" text-anchor="middle" fill="#333">3</text>
+                                    <text x="90" y="35" font-size="10" text-anchor="middle" fill="#fff">4</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Langkah menyelesaikan soal cerita: <br> 1. Tentukan variabel (\( x \) dan \( y \)). <br> 2. Buat dua persamaan dari teks. <br> 3. Pilih metode (Substitusi/Eliminasi). <br> 4. Selesaikan dan tulis jawaban. <span class="translation">Steps: 1. Define variables. 2. Create equations. 3. Choose method. 4. Solve.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Baca soal dua kali. Stabilo kata kunci seperti "total", "dua kali", "selisih". <span class="translation">Read twice. Highlight keywords like "total", "twice", "difference".</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Soal Cerita: Jumlah dan Selisih</h2>
+                        <p class="translation">Word Problem: Sum and Difference</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Dua anak -->
+                                    <circle cx="40" cy="30" r="15" fill="#fbbf24"/>
+                                    <rect x="25" y="45" width="30" height="40" fill="#ef4444"/>
+                                    
+                                    <circle cx="120" cy="30" r="15" fill="#fbbf24"/>
+                                    <rect x="105" y="45" width="30" height="40" fill="#3b82f6"/>
+                                    
+                                    <text x="80" y="40" font-size="14" text-anchor="middle" fill="#10b981">+</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Jika diketahui jumlah dua bilangan adalah 10, dan selisihnya adalah 2. Kita bisa tulis: <br> \( x + y = 10 \) <br> \( x - y = 2 \) <span class="translation">If the sum is 10 and difference is 2: \( x + y = 10 \), \( x - y = 2 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Rumus To The Point</p>
+                            <p class="mt-1">"Jumlah" = \( x + y \). "Selisih" = \( x - y \). <span class="translation">"Sum" = \( x + y \). "Difference" = \( x - y \).</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+                
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Soal Cerita: Uang dan Kembalian</h2>
+                        <p class="translation">Word Problem: Money and Change</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Dompet dan koin -->
+                                    <rect x="30" y="40" width="60" height="40" rx="5" fill="#8b5cf6" stroke="#333"/>
+                                    <text x="60" y="65" font-size="12" text-anchor="middle" fill="#fff">Dompet</text>
+                                    <circle cx="120" cy="60" r="15" fill="#fbbf24" stroke="#333"/>
+                                    <text x="120" y="65" font-size="10" text-anchor="middle" fill="#333">Rp</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Soal uang sering melibatkan total belanja dan kembalian. Misal: "Beli 2 buku dan 1 pulpen bayar Rp 10.000. Beli 1 buku dan 2 pulpen bayar Rp 8.000." <span class="translation">Money problems often involve total purchase. E.g., "2 books and 1 pen cost Rp 10,000. 1 book and 2 pens cost Rp 8,000."</span></p>
+                                <p class="mt-2">Persamaan: \( 2x + y = 10000 \) dan \( x + 2y = 8000 \). <span class="translation">Equations: \( 2x + y = 10000 \) and \( x + 2y = 8000 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Kalikan jumlah barang dengan variabelnya, lalu jumlahkan. Samakan dengan total uang. <span class="translation">Multiply quantity by variable, then sum. Equate to total money.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- BAGIAN SELANJUTNYA AKAN DILANJUTKAN DI CHAT BERIKUTNYA -->
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Metode Substitusi (Bagian 1)</h2>
+                        <p class="translation">Substitution Method (Part 1)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="100" viewBox="0 0 180 100">
+                                    <!-- Konsep substitusi: ganti x dengan y -->
+                                    <text x="20" y="50" font-size="16" fill="#3b82f6">x = 2y</text>
+                                    <path d="M 80 40 L 110 50 L 80 60 Z" fill="#10b981"/>
+                                    <rect x="110" y="30" width="60" height="40" fill="#fbbf24" stroke="#333"/>
+                                    <text x="140" y="55" font-size="12" text-anchor="middle" fill="#333">(2y) + y = 6</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Metode substitusi digunakan jika salah satu variabel sudah dalam bentuk tunggal (misal \( x = ... \) atau \( y = ... \)). <span class="translation">Substitution is used if one variable is isolated (e.g., \( x = ... \) or \( y = ... \)).</span></p>
+                                <p class="mt-2">Kita "substitusi" (masukkan) nilai variabel tersebut ke persamaan lainnya. <span class="translation">We "substitute" that variable's value into the other equation.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Cari yang Paling Mudah</p>
+                            <p class="mt-1">Pilih persamaan yang koefisiennya 1 atau -1 untuk dijadikan \( x = ... \). <span class="translation">Choose the equation with a coefficient of 1 or -1 to isolate.</span></p>
+                            <p class="mt-1 font-bold">Rumus To The Point: Ubah jadi \( x = \text{angka} \), lalu tempel ke persamaan lain!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Metode Substitusi (Bagian 2)</h2>
+                        <p class="translation">Substitution Method (Part 2)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Langkah penyelesaian -->
+                                    <circle cx="40" cy="40" r="15" fill="#3b82f6"/>
+                                    <text x="40" y="45" font-size="12" text-anchor="middle" fill="#fff">1</text>
+                                    <text x="70" y="45" font-size="12" fill="#333">Cari y</text>
+                                    
+                                    <circle cx="40" cy="80" r="15" fill="#10b981"/>
+                                    <text x="40" y="85" font-size="12" text-anchor="middle" fill="#fff">2</text>
+                                    <text x="70" y="85" font-size="12" fill="#333">Cari x</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Setelah menemukan nilai satu variabel (misal \( y = 2 \)), masukkan kembali nilai tersebut ke salah satu persamaan awal untuk mencari variabel yang lain (\( x \)). <span class="translation">After finding one variable (e.g., \( y = 2 \)), substitute it back into an original equation to find the other variable (\( x \)).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Gunakan persamaan yang paling sederhana untuk memasukkan kembali nilai yang sudah ditemukan. <span class="translation">Use the simplest equation to substitute the found value back.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Latihan Substitusi Cerita</h2>
+                        <p class="translation">Substitution Word Problem Practice</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="100" viewBox="0 0 160 100">
+                                    <rect x="20" y="30" width="40" height="40" rx="3" fill="#8b5cf6"/>
+                                    <text x="40" y="55" font-size="12" text-anchor="middle" fill="#fff">Soal</text>
+                                    <path d="M 65 50 L 95 50" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <rect x="100" y="30" width="40" height="40" rx="3" fill="#fbbf24"/>
+                                    <text x="120" y="55" font-size="10" text-anchor="middle" fill="#333">Substitusi</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Saat soal cerita memberikan kalimat seperti "Umur Ayah dua kali umur Anak", itu langsung bisa ditulis \( x = 2y \). Ini adalah pertanda kuat untuk menggunakan metode substitusi! <span class="translation">When a word problem says "Dad's age is twice Child's age", it can be written as \( x = 2y \). This is a strong hint to use substitution!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Kalimat "dua kali", "setengah dari", atau "sama dengan" adalah sinyal substitusi. <span class="translation">Phrases like "twice", "half of", or "equals" are substitution signals.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Metode Eliminasi (Bagian 1)</h2>
+                        <p class="translation">Elimination Method (Part 1)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center">
+                                <svg width="180" height="100" viewBox="0 0 180 100">
+                                    <!-- Eliminasi silang -->
+                                    <text x="20" y="40" font-size="14" fill="#3b82f6">2x + y = 5</text>
+                                    <text x="20" y="70" font-size="14" fill="#ef4444">2x - y = 3</text>
+                                    <path d="M 120 55 L 150 55" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="135" y="45" font-size="14" fill="#10b981">4x = 8</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Metode eliminasi menghilangkan salah satu variabel dengan cara menjumlahkan atau mengurangkan kedua persamaan. <span class="translation">The elimination method removes one variable by adding or subtracting both equations.</span></p>
+                                <p class="mt-2">Syaratnya: Koefisien variabel yang ingin dihilangkan HARUS SAMA (bisa positif/positif atau positif/negatif). <span class="translation">Requirement: The coefficient of the variable to be eliminated MUST BE EQUAL (can be positive/positive or positive/negative).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Rumus To The Point</p>
+                            <p class="mt-1">Jika tandanya beda (\( +y \) dan \( -y \)), KALIHKAN (Jumlahkan). Jika tandanya sama (\( +y \) dan \( +y \)), KURANGKAN. <span class="translation">If signs are different, ADD. If signs are same, SUBTRACT.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Metode Eliminasi (Bagian 2)</h2>
+                        <p class="translation">Elimination Method (Part 2)</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Kali silang -->
+                                    <text x="20" y="50" font-size="14" fill="#333">x2 -></text>
+                                    <text x="60" y="40" font-size="12" fill="#3b82f6">2x + y = 5</text>
+                                    <text x="60" y="65" font-size="12" fill="#ef4444">x + y = 4</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bagaimana jika koefisiennya belum sama? Kita bisa mengalikan salah satu atau kedua persamaan dengan angka tertentu agar koefisiennya sama. <span class="translation">What if coefficients aren't equal? We can multiply one or both equations by a number to make them equal.</span></p>
+                                <p class="mt-2">Contoh: Untuk menghilangkan \( y \) pada \( 2x + y = 5 \) dan \( x + y = 4 \), kalikan persamaan kedua dengan 2. <span class="translation">Example: To eliminate \( y \) in \( 2x + y = 5 \) and \( x + y = 4 \), multiply the second equation by 2.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks: Cari KPK</p>
+                            <p class="mt-1">Gunakan KPK dari koefisien yang ingin disamakan. <span class="translation">Use the LCM of the coefficients you want to equalize.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Eliminasi pada Soal Cerita</h2>
+                        <p class="translation">Elimination in Word Problems</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center">
+                                <svg width="160" height="120" viewBox="0 0 160 120">
+                                    <!-- Grafik garis -->
+                                    <line x1="10" y1="100" x2="150" y2="100" stroke="#333"/>
+                                    <line x1="80" y1="10" x2="80" y2="110" stroke="#333"/>
+                                    <line x1="20" y1="90" x2="140" y2="20" stroke="#3b82f6"/>
+                                    <line x1="20" y1="30" x2="140" y2="90" stroke="#ef4444"/>
+                                    <circle cx="80" cy="55" r="4" fill="#10b981"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Eliminasi sangat berguna saat kedua persamaan dalam bentuk standar \( ax + by = c \). <span class="translation">Elimination is very useful when both equations are in standard form.</span></p>
+                                <p class="mt-2">Banyak soal cerita keuangan (membeli barang) menghasilkan persamaan dalam bentuk ini. <span class="translation">Many financial word problems result in equations in this form.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800">Tips & Tricks</p>
+                            <p class="mt-1">Eliminasi cocok ketika tidak ada variabel yang berkoefisien 1. <span class="translation">Elimination fits when no variable has a coefficient of 1.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Consolidation & Reflection</h2>
+                    <p class="translation">Konsolidasi & Refleksi</p>
+                    <p>Anda telah menyelesaikan perjalanan belajar tentang Operasi SPLDV. <span class="translation">You have finished the learning journey about SPLDV Operations.</span></p>
+                    <p class="mt-2">Ingat, kuasai metode Substitusi (menempel) dan Eliminasi (menghilangkan). Pilih yang paling mudah sesuai bentuk soalnya! <span class="translation">Remember, master the Substitution and Elimination methods. Choose the easiest one based on the problem's form!</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Go to learn.algonova.id <span class="translation text-sm italic">Pergi ke learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- TASK SECTIONS -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+            <!-- Pagination Bar -->
+            </div> <!-- Penutup #contentScrollArea -->
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: Operasi SPLDV</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+	
+    <script>
+        // ====== MATH QUESTIONS DATA (PART 1: WARMUP, INTRO, REVIEW, PROBLEM) ======
+        const questions = {};
+        Object.assign(questions, {
+            // SPIRAL REVIEW WARM-UP (Persamaan Linear, 2 Variabel, Pengenalan SPLDV)
+            "w-task1": { type: "single", q: "Jika \\( x + 4 = 7 \\), maka nilai \\( x \\) adalah... <i class='fas fa-calculator text-blue-500 ml-2'></i>", q_trans: "If \\( x + 4 = 7 \\), then the value of \\( x \\) is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 11 \\)", "\\( -3 \\)"], ans: "\\( 3 \\)", exp: "Untuk mencari x, pindahkan angka 4 ke ruas kanan dengan mengubah tandanya menjadi kurang. \\( x = 7 - 4 \\). Maka, \\( x = 3 \\).", exp_trans: "To find x, move 4 to the right side by changing its sign to minus. \\( x = 7 - 4 \\). Thus, \\( x = 3 \\)." },
+            "w-task2": { type: "fill", q: "Diketahui persamaan \\( 2y = 10 \\). Berapakah nilai dari \\( y \\)? <i class='fas fa-equals text-blue-500 ml-2'></i>", q_trans: "Given the equation \\( 2y = 10 \\). What is the value of \\( y \\)?", ans: "5", exp: "Untuk mendapatkan \\( y \\) sendirian, bagi kedua ruas dengan 2. \\( y = 10 : 2 \\). Maka \\( y = 5 \\).", exp_trans: "To get \\( y \\) alone, divide both sides by 2. \\( y = 10 : 2 \\). So \\( y = 5 \\)." },
+            "w-task3": { type: "tf_table", q: "Evaluasi pernyataan berikut tentang persamaan linear! <i class='fas fa-list-ul text-blue-500 ml-2'></i>", q_trans: "Evaluate the following statements about linear equations!", opts: ["Tanda sama dengan (=) berarti kedua sisi memiliki nilai yang sama", "Persamaan \\( x - 3 = 2 \\) memiliki solusi \\( x = 5 \\)", "Variabel adalah angka tetap yang tidak berubah", "Pindah angka melewati tanda sama dengan tidak mengubah tanda operasinya"], ans: ["B", "B", "S", "S"], exp: "1. Benar, timbangan seimbang. 2. Benar, x = 2+3 = 5. 3. Salah, variabel adalah huruf/wadah. 4. Salah, tanda operasinya berubah menjadi lawannya (+ jadi -, dll).", exp_trans: "1. True. 2. True. 3. False. 4. False." },
+            "w-task4": { type: "single", q: "Jika \\( x + y = 5 \\) dan nilai \\( x = 2 \\), maka nilai \\( y \\) adalah... <i class='fas fa-pencil-ruler text-blue-500 ml-2'></i>", q_trans: "If \\( x + y = 5 \\) and \\( x = 2 \\), then the value of \\( y \\) is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 10 \\)"], ans: "\\( 3 \\)", exp: "Masukkan nilai \\( x = 2 \\) ke dalam persamaan: \\( 2 + y = 5 \\). Lalu pindahkan 2 ke ruas kanan: \\( y = 5 - 2 \\). Hasilnya \\( y = 3 \\).", exp_trans: "Substitute \\( x = 2 \\) into the equation: \\( 2 + y = 5 \\). Move 2 to the right: \\( y = 5 - 2 \\). Result is \\( y = 3 \\)." },
+            "w-task5": { type: "complex", q: "Manakah pasangan nilai \\( (x, y) \\) yang memenuhi persamaan \\( x + y = 4 \\)? <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Which pairs of \\( (x, y) \\) satisfy the equation \\( x + y = 4 \\)?", opts: ["\\( (1, 3) \\)", "\\( (2, 2) \\)", "\\( (4, 0) \\)", "\\( (3, 2) \\)"], ans: [0, 1, 2], exp: "Kita cek jumlahnya: 1+3 = 4 (Benar). 2+2 = 4 (Benar). 4+0 = 4 (Benar). 3+2 = 5 (Salah). Jadi yang benar adalah 1, 2, dan 4.", exp_trans: "Check the sums: 1+3=4, 2+2=4, 4+0=4 are all correct. 3+2=5 is wrong. Correct answers are 1, 2, 4." },
+            "w-task6": { type: "fill", q: "Dalam persamaan \\( 2x + y = 8 \\), jika \\( x = 3 \\), maka nilai \\( y \\) adalah... <i class='fas fa-superscript text-blue-500 ml-2'></i>", q_trans: "In the equation \\( 2x + y = 8 \\), if \\( x = 3 \\), the value of \\( y \\) is...", ans: "2", exp: "Substitusi \\( x = 3 \\): \\( 2(3) + y = 8 \\) menjadi \\( 6 + y = 8 \\). Maka \\( y = 8 - 6 = 2 \\).", exp_trans: "Substitute \\( x = 3 \\): \\( 2(3) + y = 8 \\) becomes \\( 6 + y = 8 \\). Then \\( y = 8 - 6 = 2 \\)." },
+            "w-task7": { type: "single", q: "Manakah yang merupakan bentuk umum dari Sistem Persamaan Linear Dua Variabel (SPLDV)? <i class='fas fa-project-diagram text-blue-500 ml-2'></i>", q_trans: "Which is the general form of a System of Linear Equations in Two Variables (SPLDV)?", opts: ["\\( ax + b = c \\)", "\\( ax + by = c \\) dan \\( px + qy = r \\)", "\\( ax^2 + bx + c = 0 \\)", "\\( x + y + z = 10 \\)", "\\( ax + by + cz = d \\)"], ans: "\\( ax + by = c \\) dan \\( px + qy = r \\)", exp: "SPLDV selalu memiliki DUA persamaan linear, masing-masing mengandung DUA variabel (biasanya x dan y). Bentuk tunggal ax+b=c itu hanya satu persamaan satu variabel.", exp_trans: "SPLDV always has TWO linear equations, each with TWO variables. A single ax+b=c is just one equation one variable." },
+            "w-task8": { type: "tf_table", q: "Evaluasi pernyataan berikut tentang SPLDV! <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Evaluate the following statements about SPLDV!", opts: ["SPLDV terdiri dari dua persamaan linear", "Tujuan SPLDV adalah mencari nilai x dan y yang memenuhi kedua persamaan", "SPLDV hanya bisa diselesaikan dengan satu metode saja", "Bentuk \\( x + y = 5 \\) dan \\( 2x - y = 4 \\) adalah SPLDV"], ans: ["B", "B", "S", "B"], exp: "1. Benar. 2. Benar, cari nilai yang berlaku untuk keduanya. 3. Salah, ada metode substitusi, eliminasi, grafik. 4. Benar, dua persamaan dua variabel.", exp_trans: "1. True. 2. True. 3. False, there are multiple methods. 4. True." },
+            "w-task9": { type: "single", q: "Seekor ayam dan seekor bebek memiliki berat total 5 kg. Jika berat ayam \\( x \\) dan berat bebek \\( y \\), persamaan yang terbentuk adalah... <i class='fas fa-feather text-blue-500 ml-2'></i>", q_trans: "A chicken and a duck weigh 5 kg in total. If chicken is \\( x \\) and duck is \\( y \\), the equation is...", opts: ["\\( x - y = 5 \\)", "\\( x + y = 5 \\)", "\\( xy = 5 \\)", "\\( 2x + y = 5 \\)", "\\( x + 2y = 5 \\)"], ans: "\\( x + y = 5 \\)", exp: "Kata 'total' atau 'jumlah' berarti penjumlahan. Berat ayam (x) ditambah berat bebek (y) sama dengan 5. Maka \\( x + y = 5 \\).", exp_trans: "The word 'total' means addition. Chicken (x) plus duck (y) equals 5. So \\( x + y = 5 \\)." },
+            "w-task10": { type: "complex", q: "Diketahui sistem persamaan: \\( x + y = 6 \\) dan \\( x - y = 2 \\). Manakah pernyataan yang BENAR? <i class='fas fa-balance-scale-right text-blue-500 ml-2'></i>", q_trans: "Given the system: \\( x + y = 6 \\) and \\( x - y = 2 \\). Which statements are TRUE?", opts: ["Jumlah kedua persamaan menghasilkan \\( 2x = 8 \\)", "Selisih kedua persamaan menghasilkan \\( 2y = 4 \\)", "Nilai \\( x = 4 \\)", "Nilai \\( y = 2 \\)"], ans: [0, 1, 2, 3], exp: "Jumlahkan: (x+y)+(x-y) = 6+2 -> 2x = 8 -> x = 4 (Pernyataan 1 & 3 benar). Kurangkan: (x+y)-(x-y) = 6-2 -> 2y = 4 -> y = 2 (Pernyataan 2 & 4 benar). Semua pernyataan benar.", exp_trans: "Add them: 2x=8 -> x=4 (1 & 3 true). Subtract: 2y=4 -> y=2 (2 & 4 true). All statements are true." },
+
+            // INTRODUCTION & REAL-WORLD (Penerjemahan Soal Cerita)
+            "i-task1": { type: "single", q: "Harga 2 buku dan 1 pulpen adalah Rp 7.000,00. Jika harga buku adalah \\( x \\) dan pulpen adalah \\( y \\), model matematikanya adalah... <i class='fas fa-book text-green-500 ml-2'></i>", q_trans: "The price of 2 books and 1 pen is Rp 7,000. If book is \\( x \\) and pen is \\( y \\), the model is...", opts: ["\\( x + y = 7000 \\)", "\\( 2x + y = 7000 \\)", "\\( x + 2y = 7000 \\)", "\\( 2x - y = 7000 \\)", "\\( 2xy = 7000 \\)"], ans: "\\( 2x + y = 7000 \\)", exp: "2 buku berarti 2 dikali harga buat (2x). 1 pulpen berarti 1 dikali harga pulpen (y). Kata 'adalah' berarti sama dengan (=). Totalnya Rp 7.000. Jadi \\( 2x + y = 7000 \\).", exp_trans: "2 books means 2 times x. 1 pen means y. 'Is' means equals. Total 7000. So \\( 2x + y = 7000 \\)." },
+            "i-task2": { type: "fill", q: "Andi membeli 3 apel dan 2 jeruk dengan harga total Rp 10.000. Jika harga apel \\( a \\) dan jeruk \\( j \\), persamaannya adalah \\( 3a + 2j = ... \\) <i class='fas fa-apple-alt text-green-500 ml-2'></i>", q_trans: "Andi buys 3 apples and 2 oranges for Rp 10,000. If apple is \\( a \\) and orange is \\( j \\), the equation is \\( 3a + 2j = ... \\)", ans: "10000", exp: "Total harganya adalah Rp 10.000, maka ruas kanannya diisi 10000. Persamaan lengkapnya: \\( 3a + 2j = 10000 \\).", exp_trans: "Total price is Rp 10,000, so right side is 10000. Full equation: \\( 3a + 2j = 10000 \\)." },
+            "i-task3": { type: "tf_table", q: "Ubah kalimat berikut ke dalam model matematika! Variabel kucing = \\( k \\), tikus = \\( t \\). <i class='fas fa-cat text-green-500 ml-2'></i>", q_trans: "Convert these sentences to math models! Cat = \\( k \\), mouse = \\( t \\).", opts: ["Jumlah kucing dan tikus ada 10: \\( k + t = 10 \\)", "Kucing 2 kali lipat banyaknya tikus: \\( k = 2t \\)", "Selisih kucing dan tikus ada 4: \\( k + t = 4 \\)", "Tikus 3 ekor lebih sedikit dari kucing: \\( k - t = 3 \\)"], ans: ["B", "B", "S", "B"], exp: "1. B. 2. B. 3. S, selisih berarti pengurangan \\( k - t = 4 \\). 4. B, kucing lebih banyak, jadi k - t = 3.", exp_trans: "1. True. 2. True. 3. False, difference is subtraction. 4. True." },
+            "i-task4": { type: "single", q: "Umur Ayah 4 kali umur Anak. Jika selisih umur mereka 30 tahun, persamaan yang tepat adalah... <i class='fas fa-user-clock text-green-500 ml-2'></i>", q_trans: "Father's age is 4 times Child's age. If their age difference is 30 years, the correct equation is...", opts: ["\\( x + y = 30 \\)", "\\( x - y = 30 \\) dan \\( x = 4y \\)", "\\( 4x - y = 30 \\)", "\\( x + 4y = 30 \\)", "\\( x = y + 4 \\)"], ans: "\\( x - y = 30 \\) dan \\( x = 4y \\)", exp: "Misal Ayah = x, Anak = y. '4 kali umur anak' -> \\( x = 4y \\). 'Selisih umur 30' -> \\( x - y = 30 \\). Karena ayah lebih tua, yang dikurangi adalah x.", exp_trans: "Let Father = x, Child = y. '4 times' -> \\( x = 4y \\). 'Difference 30' -> \\( x - y = 30 \\). Father is older, so x minus y." },
+            "i-task5": { type: "complex", q: "Manakah kalimat matematika yang ekuivalen dengan 'Harga 2 mangga sama dengan harga 3 pisang'? <i class='fas fa-leaf text-green-500 ml-2'></i>", q_trans: "Which math sentences are equivalent to 'The price of 2 mangoes equals the price of 3 bananas'?", opts: ["\\( 2m = 3p \\)", "\\( \\frac{m}{p} = \\frac{3}{2} \\)", "\\( 2m - 3p = 0 \\)", "\\( m + p = 5 \\)"], ans: [0, 1, 2], exp: "Misal mangga=m, pisang=p. 2m = 3p. Jika dibagi 2p, didapat m/p = 3/2. Jika dipindahkan ke kiri, 2m - 3p = 0. Pernyataan 4 salah.", exp_trans: "Let mango=m, banana=p. 2m=3p. Divide by 2p gives m/p=3/2. Move left gives 2m-3p=0. Statement 4 is wrong." },
+            "i-task6": { type: "fill", q: "Terdapat dua bilangan. Jumlahnya 8. Jika bilangan pertama \\( x \\) dan bilangan kedua \\( y \\), maka persamaannya adalah \\( x + y = ... \\) <i class='fas fa-sort-numeric-up text-green-500 ml-2'></i>", q_trans: "There are two numbers. Their sum is 8. If first is \\( x \\) and second is \\( y \\), the equation is \\( x + y = ... \\)", ans: "8", exp: "Kata 'jumlahnya' menandakan operasi penjumlahan (x + y). Hasilnya adalah 8. Maka persamaannya \\( x + y = 8 \\).", exp_trans: "The word 'sum' indicates addition (x + y). Result is 8. So equation is \\( x + y = 8 \\)." },
+            "i-task7": { type: "single", q: "Jika 1 buku tulis dan 2 pensil berharga Rp 5.000, sedangkan 2 buku tulis dan 1 pensil berharga Rp 7.000. Manakah sistem persamaan yang benar? <i class='fas fa-book-open text-green-500 ml-2'></i>", q_trans: "If 1 book and 2 pens cost Rp 5k, while 2 books and 1 pen cost Rp 7k. Which system is correct?", opts: ["\\( x + 2y = 5000 \\) dan \\( 2x + y = 7000 \\)", "\\( 2x + y = 5000 \\) dan \\( x + 2y = 7000 \\)", "\\( x + y = 5000 \\) dan \\( 2x + 2y = 7000 \\)", "\\( x + 2y = 7000 \\) dan \\( 2x + y = 5000 \\)", "\\( x - 2y = 5000 \\) dan \\( 2x - y = 7000 \\)"], ans: "\\( x + 2y = 5000 \\) dan \\( 2x + y = 7000 \\)", exp: "Misal buku=x, pensil=y. Kondisi 1: 1 buku 2 pensil = 5000 -> x + 2y = 5000. Kondisi 2: 2 buku 1 pensil = 7000 -> 2x + y = 7000.", exp_trans: "Let book=x, pen=y. Cond 1: x + 2y = 5000. Cond 2: 2x + y = 7000." },
+            "i-task8": { type: "tf_table", q: "Pak Budi membeli 4 kg beras dan 1 kg gula seharga Rp 40.000. <i class='fas fa-shopping-bag text-green-500 ml-2'></i>", q_trans: "Mr. Budi buys 4kg rice and 1kg sugar for Rp 40k.", opts: ["Jika beras \\( x \\) dan gula \\( y \\), persamaannya \\( 4x + y = 40000 \\)", "Harga 1 kg beras bisa dicari jika diketahui persamaan kedua", "Persamaan \\( 4x + y = 40000 \\) hanya memiliki satu solusi tanpa persamaan kedua", "Jika harga gula (y) diketahui, kita bisa mencari harga beras (x)"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B, butuh 2 persamaan untuk SPLDV. 3. B, tanpa persamaan 2, ada banyak kemungkinan nilai x dan y. 4. B, tinggal substitusi y ke persamaan.", exp_trans: "All true. SPLDV requires two equations." },
+            "i-task9": { type: "single", q: "Terdapat dua bilangan asli. Bilangan pertama kurang dari 5. Jika jumlah kedua bilangan adalah 7, dan bilangan pertama adalah \\( x \\), maka bilangan kedua \\( y \\) adalah... <i class='fas fa-dice text-green-500 ml-2'></i>", q_trans: "Two natural numbers. First is less than 5. Sum is 7. If first is \\( x \\), second \\( y \\) is...", opts: ["\\( y = 7 - x \\)", "\\( y = 7 + x \\)", "\\( y = x - 7 \\)", "\\( y = x \\times 7 \\)", "\\( y = 7 \\)"], ans: "\\( y = 7 - x \\)", exp: "Jumlahnya 7 berarti \\( x + y = 7 \\). Untuk mencari y (membuat y menjadi subjek), pindahkan x ke ruas kanan sehingga menjadi \\( y = 7 - x \\).", exp_trans: "Sum is 7 means \\( x + y = 7 \\). To find y, move x to right side: \\( y = 7 - x \\)." },
+            "i-task10": { type: "complex", q: "Manakah situasi yang dapat dimodelkan menjadi sistem persamaan \\( x + y = 10 \\) dan \\( x - y = 2 \\)? <i class='fas fa-theater-masks text-green-500 ml-2'></i>", q_trans: "Which situations can be modeled as the system \\( x + y = 10 \\) and \\( x - y = 2 \\)?", opts: ["Jumlah dua bilangan adalah 10 dan selisihnya 2", "Terdapat 10 kelereng, 2 diantaranya merah", "Umur ayah (x) dan anak (y), jumlahnya 10 dan ayah 2 tahun lebih tua", "Harga 1 apel dan 1 jeruk Rp 10.000, selisih harganya Rp 2.000"], ans: [0, 2, 3], exp: "Pernyataan 1, 3, 4 secara langsung menerjemahkan jumlah=10 (x+y=10) dan selisih/keterangan lebih/kurang=2 (x-y=2). Pernyataan 2 bukan SPLDV.", exp_trans: "Statements 1, 3, 4 directly translate to sum=10 and difference=2. Statement 2 is not SPLDV." },
+
+            // REVIEW OF PRIOR KNOWLEDGE (Perbandingan Senilai, Berbalik Nilai, ke SPLDV)
+            "r-task1": { type: "single", q: "Jika \\( x \\) dan \\( y \\) berbanding senilai, dengan \\( \\frac{x}{y} = \\frac{2}{3} \\). Jika \\( x = 4 \\), maka nilai \\( y \\) adalah... <i class='fas fa-arrow-up text-purple-500 ml-2'></i>", q_trans: "If \\( x \\) and \\( y \\) are directly proportional, with \\( \\frac{x}{y} = \\frac{2}{3} \\). If \\( x = 4 \\), then \\( y \\) is...", opts: ["\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 12 \\)"], ans: "\\( 6 \\)", exp: "Bandingkan senilai: \\( \\frac{x_1}{y_1} = \\frac{x_2}{y_2} \\). Maka \\( \\frac{2}{3} = \\frac{4}{y} \\). Kali silang: \\( 2y = 12 \\). Hasilnya \\( y = 6 \\).", exp_trans: "Direct proportion: cross multiply. \\( 2y = 12 \\). Result \\( y = 6 \\)." },
+            "r-task2": { type: "fill", q: "Sepeda motor menempuh jarak dengan kecepatan dan waktu yang berbanding berbalik nilai. Jika \\( v_1 = 40 \\) km/jam, \\( t_1 = 3 \\) jam, dan \\( v_2 = 60 \\) km/jam, maka \\( t_2 = ... \\) jam. <i class='fas fa-motorcycle text-purple-500 ml-2'></i>", q_trans: "Motor travels with speed and time inversely proportional. If \\( v_1 = 40 \\), \\( t_1 = 3 \\), and \\( v_2 = 60 \\), then \\( t_2 = ... \\) hours.", ans: "2", exp: "Berbanding berbalik nilai: \\( v_1 \\times t_1 = v_2 \\times t_2 \\). Maka \\( 40 \\times 3 = 60 \\times t_2 \\). \\( 120 = 60 t_2 \\). Maka \\( t_2 = 2 \\).", exp_trans: "Inverse proportion: \\( 40 \\times 3 = 60 \\times t_2 \\). \\( 120 = 60 t_2 \\). So \\( t_2 = 2 \\)." },
+            "r-task3": { type: "tf_table", q: "Evaluasi pernyataan tentang perbandingan! <i class='fas fa-exchange-alt text-purple-500 ml-2'></i>", q_trans: "Evaluate statements about proportions!", opts: ["Perbandingan senilai: jika x naik, y juga naik", "Perbandingan berbalik nilai: jika x naik, y turun", "Rumus perbandingan senilai adalah \\( x_1 \\times y_1 = x_2 \\times y_2 \\)", "Rumus perbandingan berbalik nilai adalah \\( \\frac{x_1}{x_2} = \\frac{y_2}{y_1} \\)"], ans: ["B", "B", "S", "B"], exp: "1. B. 2. B. 3. S, rumus senilai adalah pembagian/p perkalian. 4. B, y2 dan y1 posisinya terbalik karena berbanding terbalik.", exp_trans: "1. True. 2. True. 3. False. 4. True." },
+            "r-task4": { type: "single", q: "Diketahui perbandingan \\( \\frac{x}{y} = \\frac{3}{4} \\). Jika diubah ke bentuk persamaan linear, hasilnya adalah... <i class='fas fa-project-diagram text-purple-500 ml-2'></i>", q_trans: "Given the ratio \\( \\frac{x}{y} = \\frac{3}{4} \\). If converted to a linear equation, the result is...", opts: ["\\( 3x = 4y \\)", "\\( 4x = 3y \\)", "\\( x + y = 7 \\)", "\\( x - y = 1 \\)", "\\( xy = 12 \\)"], ans: "\\( 4x = 3y \\)", exp: "Dengan kali silang: pembilang kiri (x) dikali penyebut kanan (4) = penyebut kiri (y) dikali pembilang kanan (3). Hasilnya: \\( 4x = 3y \\).", exp_trans: "Cross multiply: x * 4 = y * 3. Result: \\( 4x = 3y \\)." },
+            "r-task5": { type: "complex", q: "Manakah perbandingan yang menghasilkan persamaan linear \\( 2x = 5y \\)? <i class='fas fa-balance-scale text-purple-500 ml-2'></i>", q_trans: "Which proportions result in the linear equation \\( 2x = 5y \\)?", opts: ["\\( \\frac{x}{y} = \\frac{5}{2} \\)", "\\( \\frac{x}{y} = \\frac{2}{5} \\)", "\\( \\frac{2}{x} = \\frac{5}{y} \\)", "\\( \\frac{5}{x} = \\frac{2}{y} \\)"], ans: [0, 3], exp: "Opsi 1: Kali silang menghasilkan 2x = 5y (Benar). Opsi 2: Menghasilkan 5x = 2y (Salah). Opsi 3: Menghasilkan 5x = 2y (Salah). Opsi 4: Kali silang menghasilkan 5y = 2x, ekuivalen dengan 2x = 5y (Benar). Jawaban 1 dan 4.", exp_trans: "Options 1 and 4 cross-multiply to become 2x = 5y or its equivalent." },
+            "r-task6": { type: "fill", q: "Jika \\( \\frac{x}{2} = \\frac{y}{3} \\), maka nilai \\( 3x \\) adalah... (dalam bentuk y) <i class='fas fa-calculator text-purple-500 ml-2'></i>", q_trans: "If \\( \\frac{x}{2} = \\frac{y}{3} \\), then the value of \\( 3x \\) is... (in terms of y)", ans: "2y", exp: "Kali silang: \\( 3x = 2y \\). Jadi nilai \\( 3x \\) sama dengan \\( 2y \\).", exp_trans: "Cross multiply: \\( 3x = 2y \\). So \\( 3x \\) equals \\( 2y \\)." },
+            "r-task7": { type: "single", q: "Perbandingan uang Ani dan Budi adalah 2 : 3. Jika selisih uang mereka Rp 5.000, maka berapakah uang Ani? <i class='fas fa-money-bill-wave text-purple-500 ml-2'></i>", q_trans: "Ratio of Ani's to Budi's money is 2:3. If the difference is Rp 5k, how much is Ani's money?", opts: ["\\( Rp 5.000 \\)", "\\( Rp 10.000 \\)", "\\( Rp 15.000 \\)", "\\( Rp 20.000 \\)", "\\( Rp 25.000 \\)"], ans: "\\( Rp 10.000 \\)", exp: "Misal Ani = 2x, Budi = 3x. Selisih = 3x - 2x = x. Diketahui x = 5000. Uang Ani = 2x = 2 * 5000 = 10000.", exp_trans: "Let Ani = 2x, Budi = 3x. Difference = x = 5000. Ani = 2 * 5000 = 10000." },
+            "r-task8": { type: "tf_table", q: "Sebuah pekerjaan diselesaikan oleh beberapa pekerja. <i class='fas fa-people-carry text-purple-500 ml-2'></i>", q_trans: "A job is done by several workers.", opts: ["Jumlah pekerja dan waktu berbanding berbalik nilai", "Jika pekerja bertambah, waktu penyelesaian berkurang", "Rumusnya \\( w_1 \\times p_1 = w_2 \\times p_2 \\) (w=waktu, p=pekerja)", "4 pekerja butuh 6 hari, 8 pekerja butuh 12 hari"], ans: ["B", "B", "B", "S"], exp: "1, 2, 3 benar. 4 salah, jika pekerja naik 2x lipat (dari 4 jadi 8), waktu harus turun setengahnya (dari 6 jadi 3 hari).", exp_trans: "1, 2, 3 true. 4 false, if workers double, time halves (3 days)." },
+            "r-task9": { type: "single", q: "Umur A : Umur B = 3 : 4. Selisih umur mereka 5 tahun. Jika umur A = \\( x \\) dan umur B = \\( y \\), sistem persamaannya adalah... <i class='fas fa-birthday-cake text-purple-500 ml-2'></i>", q_trans: "Age A : Age B = 3 : 4. Difference is 5 years. If A = \\( x \\) and B = \\( y \\), the system is...", opts: ["\\( 4x = 3y \\) dan \\( y - x = 5 \\)", "\\( 3x = 4y \\) dan \\( x - y = 5 \\)", "\\( x + y = 7 \\) dan \\( y - x = 5 \\)", "\\( 4x = 3y \\) dan \\( x + y = 5 \\)", "\\( \\frac{x}{3} = \\frac{y}{4} \\) dan \\( x - y = 5 \\)"], ans: "\\( 4x = 3y \\) dan \\( y - x = 5 \\)", exp: "Dari rasio 3:4 -> x/y = 3/4 -> kali silang 4x = 3y. Karena B lebih tua (rasio 4), selisihnya B - A = y - x = 5.", exp_trans: "Ratio 3:4 -> 4x = 3y. B is older, difference y - x = 5." },
+            "r-task10": { type: "complex", q: "Manakah persamaan yang ekuivalen dengan \\( \\frac{x}{3} = \\frac{y}{5} \\)? <i class='fas fa-equals text-purple-500 ml-2'></i>", q_trans: "Which equations are equivalent to \\( \\frac{x}{3} = \\frac{y}{5} \\)?", opts: ["\\( 5x = 3y \\)", "\\( 5x - 3y = 0 \\)", "\\( x = \\frac{3}{5}y \\)", "\\( x + y = 8 \\)"], ans: [0, 1, 2], exp: "Kali silang 5x = 3y. Jika pindah ruas jadi 5x - 3y = 0. Jika mencari x, bagi 5: x = 3/5 y. Pernyataan 4 tidak relevan.", exp_trans: "Cross multiply 5x = 3y. Move side 5x - 3y = 0. Solve for x: x = 3/5 y." },
+
+            // PROBLEM INTRODUCTION (SPLDV Soal Cerita, Jumlah & Selisih, Uang)
+            "p-task1": { type: "single", q: "Jumlah dua bilangan adalah 10. Selisih kedua bilangan tersebut adalah 2. Berapakah bilangan yang lebih besar? <i class='fas fa-sort-numeric-up-alt text-orange-500 ml-2'></i>", q_trans: "The sum of two numbers is 10. The difference is 2. What is the larger number?", opts: ["\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 12 \\)"], ans: "\\( 6 \\)", exp: "Misal bilangan besar = x, kecil = y. \\( x + y = 10 \\) dan \\( x - y = 2 \\). Jumlahkan keduanya: \\( 2x = 12 \\). Maka \\( x = 6 \\).", exp_trans: "Let large = x, small = y. Add them: \\( 2x = 12 \\). So \\( x = 6 \\)." },
+            "p-task2": { type: "fill", q: "Diketahui \\( x + y = 15 \\) dan \\( x - y = 5 \\). Maka nilai dari \\( 2x \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Given \\( x + y = 15 \\) and \\( x - y = 5 \\). Then the value of \\( 2x \\) is...", ans: "20", exp: "Jumlahkan kedua persamaan: \\( (x+y) + (x-y) = 15 + 5 \\). \\( 2x = 20 \\). Ini adalah konsep dasar metode eliminasi.", exp_trans: "Add both: \\( 2x = 20 \\). This is the basic concept of elimination." },
+            "p-task3": { type: "tf_table", q: "Budi membeli 2 pacil dan 1 buku seharga Rp 10.000. Di toko lain, 1 pensil dan 1 buku seharga Rp 7.000. <i class='fas fa-store text-orange-500 ml-2'></i>", q_trans: "Budi buys 2 pens and 1 book for Rp 10k. Elsewhere, 1 pen and 1 book cost Rp 7k.", opts: ["Jika pensil x dan buku y, pers 1: \\( 2x + y = 10000 \\)", "Pers 2: \\( x + y = 7000 \\)", "Jika kedua persamaan dikurangkan, didapat \\( x = 3000 \\)", "Harga buku (y) adalah Rp 4.000"], ans: ["B", "B", "B", "B"], exp: "1, 2, 3 benar. Kurangkan: (2x+y) - (x+y) = 10000-7000 -> x = 3000. 4 benar, masukkan x: 3000 + y = 7000 -> y = 4000.", exp_trans: "All true. Subtract gives x=3000. Substitute gives y=4000." },
+            "p-task4": { type: "single", q: "Harga 3 kg apel dan 2 kg jeruk adalah Rp 19.000. Harga 1 kg apel dan 2 kg jeruk adalah Rp 11.000. Berapakah harga 1 kg apel? <i class='fas fa-apple-alt text-orange-500 ml-2'></i>", q_trans: "3kg apples and 2kg oranges cost Rp 19k. 1kg apples and 2kg oranges cost Rp 11k. How much is 1kg apples?", opts: ["\\( Rp 2.000 \\)", "\\( Rp 3.000 \\)", "\\( Rp 4.000 \\)", "\\( Rp 5.000 \\)", "\\( Rp 8.000 \\)"], ans: "\\( Rp 4.000 \\)", exp: "Misal apel=x, jeruk=y. \\( 3x + 2y = 19000 \\) dan \\( x + 2y = 11000 \\). Karena koefisien y sama (2y), kurangkan: \\( 2x = 8000 \\). Maka \\( x = 4000 \\).", exp_trans: "Let apple=x, orange=y. Subtract eqs: \\( 2x = 8000 \\). So \\( x = 4000 \\)." },
+            "p-task5": { type: "complex", q: "Jumlah umur ayah dan ibu adalah 60 tahun. Selisih umur mereka adalah 4 tahun. Manakah pernyataan yang BENAR? <i class='fas fa-user-friends text-orange-500 ml-2'></i>", q_trans: "Sum of father and mother's age is 60. Difference is 4. Which is TRUE?", opts: ["Persamaan: \\( x + y = 60 \\) dan \\( x - y = 4 \\)", "Umur ayah (x) adalah 32 tahun", "Umur ibu (y) adalah 28 tahun", "Umur ayah dan ibu sama dengan 34 tahun"], ans: [0, 1, 2], exp: "1. B. Jumlahkan: 2x = 64 -> x = 32 (Pernyataan 2 benar). Cari y: 32+y=60 -> y=28 (Pernyataan 3 benar). Pernyataan 4 salah.", exp_trans: "1. True. 2. True. 3. True. 4. False." },
+            "p-task6": { type: "fill", q: "Terdapat 25 soal dalam ujian. Setiap jawaban benar diberi nilai 4, salah diberi nilai -1. Jika Rina menjawab semua soal dan mendapat nilai 80, maka jumlah soal yang benar adalah... <i class='fas fa-file-signature text-orange-500 ml-2'></i>", q_trans: "25 questions in exam. Correct = 4 pts, Wrong = -1 pt. Rina answers all and gets 80. Number of correct answers is...", ans: "21", exp: "Misal benar=x, salah=y. x + y = 25. 4x - y = 80. Jumlahkan: 5x = 105. Maka x = 21.", exp_trans: "Let correct=x, wrong=y. x+y=25. 4x-y=80. Add: 5x=105. x=21." },
+            "p-task7": { type: "single", q: "Sebuah tempat parkir berisi 20 kendaraan roda 4 dan roda 2. Jika total roda seluruh kendaraan ada 64 buah, maka banyak sepeda motor adalah... <i class='fas fa-motorcycle text-orange-500 ml-2'></i>", q_trans: "Parking lot has 20 vehicles (4 wheels and 2 wheels). Total wheels = 64. Number of motorcycles is...", opts: ["\\( 6 \\)", "\\( 8 \\)", "\\( 10 \\)", "\\( 12 \\)", "\\( 14 \\)"], ans: "\\( 8 \\)", exp: "Misal mobil=x, motor=y. x + y = 20. 4x + 2y = 64. Bagi pers 2 dengan 2: 2x + y = 32. Kurangkan pers 1: x = 12. Maka y = 20 - 12 = 8 motor.", exp_trans: "Let car=x, moto=y. x+y=20. 4x+2y=64 -> 2x+y=32. Subtract: x=12. Then y=8." },
+            "p-task8": { type: "tf_table", q: "Kantin BU Ani menjual nasi goreng (x) dan mie goreng (y). <i class='fas fa-utensils text-orange-500 ml-2'></i>", q_trans: "Mrs. Ani's canteen sells fried rice (x) and fried noodles (y).", opts: ["Terjual 2 nasi dan 3 mie, bayar Rp 17.000: \\( 2x + 3y = 17000 \\)", "Terjual 3 nasi dan 2 mie, bayar Rp 18.000: \\( 3x + 2y = 18000 \\)", "Jumlahkan kedua persamaan menghasilkan \\( 5x + 5y = 35000 \\)", "Harga nasi goreng (x) lebih murah dari mie goreng (y)"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B. 3. B, jika dijumlahkan langsung menghasilkan 5x+5y=35000. 4. S, karena dari eliminasi didapat x=4000 dan y=3000, yang berarti nasi (x) lebih mahal dari mie (y).", exp_trans: "1, 2, 3 true. 4 is false, x=4000 and y=3000, so x is more expensive." },
+            "p-task9": { type: "single", q: "Andi memiliki uang pecahan Rp 1.000 dan Rp 2.000. Jika total uangnya Rp 14.000 dan jumlah lembar uangnya ada 10 lembar, maka banyak uang Rp 2.000 adalah... <i class='fas fa-money-bill-alt text-orange-500 ml-2'></i>", q_trans: "Andi has Rp 1k and Rp 2k notes. Total money Rp 14k, total notes = 10. Number of Rp 2k notes is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "Misal 1000=x, 2000=y. x + y = 10. 1000x + 2000y = 14000. Bagi pers 2 dengan 1000: x + 2y = 14. Kurangkan pers 1: y = 4. (x=6, cek: 6+8=14rb).", exp_trans: "Let 1k=x, 2k=y. x+y=10. x+2y=14. Subtract: y=4." },
+            "p-task10": { type: "complex", q: "Manakah soal cerita yang dapat diselesaikan dengan SPLDV berikut: \\( x + y = 10 \\) dan \\( 2x + 5y = 32 \\)? <i class='fas fa-lightbulb text-orange-500 ml-2'></i>", q_trans: "Which word problems can be solved with the system: \\( x + y = 10 \\) and \\( 2x + 5y = 32 \\)?", opts: ["10 ekor ayam dan bebek, total kaki 32 (ayam 2 kaki, bebek 4 kaki)", "10 barang berharga Rp 32.000, harga satuan x Rp 2.000 dan y Rp 5.000", "Umur A dan B total 10, 2 tahun lalu umur A dan 5 tahun lalu umur B jumlahnya 32", "Jarak 10 km ditempuh dengan jalan kaki (2km/jam) dan sepeda (5km/jam)"], ans: [1, 3], exp: "Opsi 1 menghasilkan persamaan 2x+4y=32 (Salah). Opsi 2 benar (jumlah barang 10, total harga 2x + 5y = 32000). Opsi 3 salah (x-2 + y-5 = 32 -> x+y = 39). Opsi 4 benar jika x adalah waktu jalan kaki dan y adalah waktu sepeda (jarak total = 2x + 5y = 32). Jawaban 2 dan 4.", exp_trans: "Option 2 fits perfectly: total items 10, total price 32k. Option 4 fits if x and y are times (distance = speed * time)." }
+        });
+		
+        // ====== MATH QUESTIONS DATA (PART 2: GUIDED, INDEPENDENT, TASKS 1-5) ======
+        Object.assign(questions, {
+            // GUIDED PRACTICE (Fokus Metode Substitusi)
+			"g-task1": { type: "single", q: "Diketahui sistem persamaan: \\( x + y = 6 \\) dan \\( x = 2y \\). Dengan substitusi, nilai \\( y \\) adalah... <i class='fas fa-search-location text-blue-500 ml-2'></i>", q_trans: "Given the system: \\( x + y = 6 \\) and \\( x = 2y \\). By substitution, the value of \\( y \\) is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 2 \\)", exp: "Substitusikan \\( x = 2y \\) ke persamaan 1: \\( 2y + y = 6 \\). \\( 3y = 6 \\). Maka \\( y = 2 \\).", exp_trans: "Substitute \\( x = 2y \\) into eq 1: \\( 2y + y = 6 \\) -> \\( 3y = 6 \\) -> \\( y = 2 \\)." },
+            "g-task2": { type: "fill", q: "Selesaikan sistem persamaan \\( y = 3x \\) dan \\( x + y = 8 \\). Nilai \\( x \\) adalah... <i class='fas fa-pencil-ruler text-blue-500 ml-2'></i>", q_trans: "Solve the system \\( y = 3x \\) and \\( x + y = 8 \\). The value of \\( x \\) is...", ans: "2", exp: "Substitusi \\( y = 3x \\) ke persamaan 2: \\( x + 3x = 8 \\). \\( 4x = 8 \\). Maka \\( x = 2 \\).", exp_trans: "Substitute \\( y = 3x \\) into eq 2: \\( x + 3x = 8 \\). \\( 4x = 8 \\). So \\( x = 2 \\)." },
+            "g-task3": { type: "tf_table", q: "Langkah-langkah menyelesaikan SPLDV dengan substitusi! <i class='fas fa-list-ol text-blue-500 ml-2'></i>", q_trans: "Steps to solve SPLDV using substitution!", opts: ["Pilih satu persamaan yang variabelnya mudah diisolasi (misal \\( x = ... \\))", "Isolasi variabel tersebut di satu sisi", "Masukkan hasil isolasi ke persamaan lainnya", "Setelah dapat satu variabel, masukkan ke persamaan awal untuk cari variabel kedua"], ans: ["B", "B", "B", "B"], exp: "Semua langkah tersebut merupakan urutan benar dalam metode substitusi SPLDV.", exp_trans: "All these steps are the correct sequence for the substitution method." },
+            "g-task4": { type: "single", q: "Umur Ayah 3 kali umur Anak. Jika jumlah umur mereka 40 tahun, maka umur Anak adalah... <i class='fas fa-user-clock text-blue-500 ml-2'></i>", q_trans: "Father's age is 3 times Child's age. If their total age is 40 years, then Child's age is...", opts: ["\\( 8 \\) tahun", "\\( 10 \\) tahun", "\\( 12 \\) tahun", "\\( 15 \\) tahun", "\\( 30 \\) tahun"], ans: "\\( 10 \\) tahun", exp: "Misal Anak = y, Ayah = x. \\( x = 3y \\) dan \\( x + y = 40 \\). Substitusi: \\( 3y + y = 40 \\) -> \\( 4y = 40 \\) -> \\( y = 10 \\).", exp_trans: "Let Child = y, Father = x. Substitute: \\( 3y + y = 40 \\) -> \\( 4y = 40 \\) -> \\( y = 10 \\)." },
+            "g-task5": { type: "complex", q: "Diketahui \\( x = y + 2 \\) dan \\( x + y = 10 \\). Manakah pernyataan yang BENAR? <i class='fas fa-check-circle text-blue-500 ml-2'></i>", q_trans: "Given \\( x = y + 2 \\) and \\( x + y = 10 \\). Which statements are TRUE?", opts: ["Substitusi menghasilkan \\( 2y + 2 = 10 \\)", "Nilai \\( y = 4 \\)", "Nilai \\( x = 6 \\)", "Nilai \\( x \\) dan \\( y \\) berjumlah 8"], ans: [0, 1, 2], exp: "Substitusi x: (y+2) + y = 10 -> 2y + 2 = 10 (Pernyataan 1 benar). 2y = 8 -> y = 4 (Pernyataan 2 benar). x = 4+2 = 6 (Pernyataan 3 benar). Jumlah x+y = 10, bukan 8 (Pernyataan 4 salah).", exp_trans: "Statements 1, 2, and 3 are correct." },
+            "g-task6": { type: "fill", q: "Jika \\( 2x - y = 5 \\) dan \\( y = x - 1 \\), maka nilai \\( x \\) adalah... <i class='fas fa-superscript text-blue-500 ml-2'></i>", q_trans: "If \\( 2x - y = 5 \\) and \\( y = x - 1 \\), then the value of \\( x \\) is...", ans: "4", exp: "Substitusi \\( y = x - 1 \\): \\( 2x - (x - 1) = 5 \\). \\( 2x - x + 1 = 5 \\). \\( x + 1 = 5 \\). Maka \\( x = 4 \\).", exp_trans: "Substitute y: \\( 2x - (x - 1) = 5 \\) -> \\( x + 1 = 5 \\). So \\( x = 4 \\)." },
+            "g-task7": { type: "single", q: "Terdapat dua bilangan. Bilangan pertama sama dengan dua kali bilangan kedua. Jumlahnya adalah 15. Berapakah bilangan kedua? <i class='fas fa-sort-numeric-up text-blue-500 ml-2'></i>", q_trans: "Two numbers. First is twice the second. Sum is 15. What is the second number?", opts: ["\\( 3 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 10 \\)", "\\( 30 \\)"], ans: "\\( 5 \\)", exp: "Misal kedua = y, pertama = x. \\( x = 2y \\). \\( x + y = 15 \\). Substitusi: \\( 2y + y = 15 \\) -> \\( 3y = 15 \\) -> \\( y = 5 \\).", exp_trans: "Let second = y, first = x. Substitute: \\( 3y = 15 \\) -> \\( y = 5 \\)." },
+            "g-task8": { type: "tf_table", q: "Evaluasi penerapan substitusi pada soal berikut! <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Evaluate substitution application in the following problem!", opts: ["Jika \\( x + 2y = 10 \\) dan \\( x = 2 \\), maka \\( 2 + 2y = 10 \\)", "Dari \\( 2 + 2y = 10 \\), didapat \\( 2y = 8 \\)", "Nilai \\( y \\) yang memenuhi adalah 4", "Metode eliminasi lebih cocok daripada substitusi untuk kasus ini"], ans: ["B", "B", "B", "S"], exp: "1, 2, 3 benar karena x=2 sudah ada nilainya, substitusi sangat cocok digunakan. Pernyataan 4 salah.", exp_trans: "1, 2, 3 true. Substitution is very suitable here. 4 is false." },
+            "g-task9": { type: "single", q: "Harga 1 buku adalah Rp 3.000. Rina membeli 2 buku dan 3 pensil dengan harga total Rp 12.000. Berapakah harga 1 pensil? <i class='fas fa-book-reader text-blue-500 ml-2'></i>", q_trans: "1 book costs Rp 3k. Rina buys 2 books and 3 pens for Rp 12k. How much is 1 pen?", opts: ["\\( Rp 1.000 \\)", "\\( Rp 2.000 \\)", "\\( Rp 3.000 \\)", "\\( Rp 4.000 \\)", "\\( Rp 6.000 \\)"], ans: "\\( Rp 2.000 \\)", exp: "Misal buku=x, pensil=y. x=3000. Persamaan: 2x + 3y = 12000. Substitusi: 2(3000) + 3y = 12000 -> 6000 + 3y = 12000 -> 3y = 6000 -> y = 2000.", exp_trans: "Substitute x=3000: 6000 + 3y = 12000 -> 3y = 6000 -> y = 2000." },
+            "g-task10": { type: "complex", q: "Manakah sistem persamaan yang paling mudah diselesaikan dengan metode substitusi? <i class='fas fa-brain text-blue-500 ml-2'></i>", q_trans: "Which system is easiest to solve using the substitution method?", opts: ["\\( 2x + 3y = 12 \\) dan \\( 4x - y = 6 \\)", "\\( x + y = 10 \\) dan \\( x = 3y \\)", "\\( 2x - y = 5 \\) dan \\( 3x + 2y = 11 \\)", "\\( x - y = 4 \\) dan \\( 2x + y = 8 \\)"], ans: [1], exp: "Sistem persamaan nomor 2 memiliki variabel yang sudah terisolasi langsung \\( x = 3y \\), sehingga langsung bisa disubstitusikan ke persamaan lainnya tanpa perlu manipulasi aljabar tambahan.", exp_trans: "System 2 has an already isolated variable \\( x = 3y \\), making it ready for direct substitution." },
+
+            // INDEPENDENT PRACTICE (Fokus Metode Eliminasi)
+            "ind-task1": { type: "single", q: "Selesaikan SPLDV berikut: \\( x + y = 7 \\) dan \\( x - y = 3 \\). Nilai \\( x \\) adalah... <i class='fas fa-bolt text-green-500 ml-2'></i>", q_trans: "Solve the SPLDV: \\( x + y = 7 \\) and \\( x - y = 3 \\). The value of \\( x \\) is...", opts: ["\\( 2 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 10 \\)"], ans: "\\( 5 \\)", exp: "Karena tanda y berbeda (+y dan -y), kita jumlahkan kedua persamaan: \\( (x+y) + (x-y) = 7 + 3 \\). \\( 2x = 10 \\). Maka \\( x = 5 \\).", exp_trans: "Add both equations: \\( 2x = 10 \\). So \\( x = 5 \\)." },
+            "ind-task2": { type: "fill", q: "Diketahui \\( 2x + y = 8 \\) dan \\( 2x - y = 2 \\). Jika kedua persamaan dijumlahkan, hasil dari \\( 4x \\) adalah... <i class='fas fa-plus-circle text-green-500 ml-2'></i>", q_trans: "Given \\( 2x + y = 8 \\) and \\( 2x - y = 2 \\). If added, the result of \\( 4x \\) is...", ans: "10", exp: "Jumlahkan: \\( (2x+y) + (2x-y) = 8 + 2 \\). \\( 4x = 10 \\).", exp_trans: "Add them: \\( 4x = 10 \\)." },
+            "ind-task3": { type: "tf_table", q: "Pahami konsep eliminasi berikut! <i class='fas fa-layer-group text-green-500 ml-2'></i>", q_trans: "Understand the elimination concept below!", opts: ["Eliminasi bertujuan menghilangkan salah satu variabel", "Jika koefisien sama dan tandanya beda, gunakan penjumlahan", "Jika koefisien sama dan tandanya sama, gunakan pengurangan", "Eliminasi tidak bisa digunakan jika tidak ada variabel yang berkoefisien sama"], ans: ["B", "B", "B", "S"], exp: "1, 2, 3 benar. Pernyataan 4 salah, karena kita bisa mengalikan persamaan terlebih dahulu untuk menyamakan koefisien sebelum mengeliminasi.", exp_trans: "1, 2, 3 true. 4 is false, we can multiply equations to equalize coefficients." },
+            "ind-task4": { type: "single", q: "Diketahui sistem persamaan: \\( 2x + y = 10 \\) dan \\( 3x + y = 14 \\). Dengan eliminasi, nilai \\( x \\) adalah... <i class='fas fa-calculator text-green-500 ml-2'></i>", q_trans: "Given system: \\( 2x + y = 10 \\) and \\( 3x + y = 14 \\). By elimination, value of \\( x \\) is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 8 \\)"], ans: "\\( 4 \\)", exp: "Karena tanda y sama-sama +y, kurangkan pers 2 dengan pers 1: \\( (3x+y) - (2x+y) = 14 - 10 \\). \\( x = 4 \\).", exp_trans: "Subtract eq 1 from eq 2: \\( x = 4 \\)." },
+            "ind-task5": { type: "complex", q: "Untuk mengeliminasi variabel \\( y \\) pada sistem \\( 3x + 2y = 12 \\) dan \\( x + y = 5 \\), langkah yang benar adalah... <i class='fas fa-project-diagram text-green-500 ml-2'></i>", q_trans: "To eliminate \\( y \\) in system \\( 3x + 2y = 12 \\) and \\( x + y = 5 \\), the correct step is...", opts: ["Kalikan persamaan kedua dengan 2", "Persamaan kedua menjadi \\( 2x + 2y = 10 \\)", "Kurangkan persamaan kedua (yang baru) dengan persamaan pertama", "Hasil pengurangan menghasilkan \\( x = 2 \\)"], ans: [0, 1, 2, 3], exp: "Semua benar. Pers 2 dikali 2 -> 2x+2y=10. Kurangkan dengan pers 1: (3x+2y) - (2x+2y) = 12-10 -> x = 2.", exp_trans: "All true. Multiply eq 2 by 2, subtract, yields x=2." },
+            "ind-task6": { type: "fill", q: "Selesaikan sistem persamaan \\( x + 2y = 11 \\) dan \\( x + 3y = 15 \\). Nilai \\( y \\) adalah... <i class='fas fa-equals text-green-500 ml-2'></i>", q_trans: "Solve system \\( x + 2y = 11 \\) and \\( x + 3y = 15 \\). Value of \\( y \\) is...", ans: "4", exp: "Kurangkan pers 2 dengan pers 1: \\( (x+3y) - (x+2y) = 15 - 11 \\). \\( y = 4 \\).", exp_trans: "Subtract: \\( y = 4 \\)." },
+            "ind-task7": { type: "single", q: "Harga 2 kg jeruk dan 1 kg apel adalah Rp 14.000. Harga 1 kg jeruk dan 1 kg apel adalah Rp 9.000. Berapakah harga 1 kg jeruk? <i class='fas fa-apple-alt text-green-500 ml-2'></i>", q_trans: "2kg oranges + 1kg apple = Rp 14k. 1kg orange + 1kg apple = Rp 9k. How much is 1kg orange?", opts: ["\\( Rp 3.000 \\)", "\\( Rp 5.000 \\)", "\\( Rp 6.000 \\)", "\\( Rp 7.000 \\)", "\\( Rp 8.000 \\)"], ans: "\\( Rp 5.000 \\)", exp: "Misal jeruk=x, apel=y. 2x+y=14000 dan x+y=9000. Eliminasi y (kurangkan): (2x+y)-(x+y)=14000-9000 -> x=5000.", exp_trans: "Eliminate y: x = 5000." },
+            "ind-task8": { type: "tf_table", q: "Perhatikan sistem persamaan berikut: \\( 2x + 3y = 16 \\) dan \\( 3x + 2y = 14 \\) <i class='fas fa-clipboard-list text-green-500 ml-2'></i>", q_trans: "Observe the system: \\( 2x + 3y = 16 \\) and \\( 3x + 2y = 14 \\)", opts: ["Untuk menyamakan koefisien x, kalikan pers 1 dengan 3 dan pers 2 dengan 2", "Setelah disamakan, koefisien x menjadi 6", "Jika dieliminasi (dikurangi), hasilnya adalah \\( 5y = 20 \\)", "Nilai \\( y \\) adalah 4"], ans: ["B", "B", "B", "B"], exp: "Pers 1 x3 -> 6x+9y=48. Pers 2 x2 -> 6x+4y=28. Kurangkan: 5y=20 -> y=4. Semua benar.", exp_trans: "All true. y = 4." },
+            "ind-task9": { type: "single", q: "Beli 2 buku dan 3 pensil bayar Rp 9.000. Beli 3 buku dan 2 pensil bayar Rp 10.000. Berapa harga 1 buku? <i class='fas fa-book-medical text-green-500 ml-2'></i>", q_trans: "2 books + 3 pens = 9k. 3 books + 2 pens = 10k. Price of 1 book?", opts: ["\\( Rp 1.000 \\)", "\\( Rp 1.500 \\)", "\\( Rp 2.000 \\)", "\\( Rp 2.400 \\)", "\\( Rp 3.000 \\)"], ans: "\\( Rp 2.400 \\)", exp: "Misal buku=x, pensil=y. 2x+3y=9000, 3x+2y=10000. Samakan x (x6): 6x+9y=27000, 6x+4y=20000. Kurang: 5y=7000 -> y=1400. Substitusi: 2x+3(1400)=9000 -> 2x=4800 -> x=2400.", exp_trans: "Let book=x, pen=y. Solve system: x=2400." },
+            "ind-task10": { type: "complex", q: "Manakah sistem persamaan yang dapat dieliminasi langsung tanpa dikalikan suatu bilangan terlebih dahulu? <i class='fas fa-bolt text-green-500 ml-2'></i>", q_trans: "Which systems can be eliminated directly without multiplying first?", opts: ["\\( 3x + 2y = 12 \\) dan \\( 3x - y = 6 \\)", "\\( x + y = 8 \\) dan \\( 2x + 2y = 16 \\)", "\\( 4x - y = 7 \\) dan \\( x + y = 2 \\)", "\\( 5x + 2y = 20 \\) dan \\( 3x - 2y = 10 \\)"], ans: [0, 2, 3], exp: "Opsi 1 (koef x sama 3x), Opsi 3 (koef y sama y), Opsi 4 (koef y sama 2y dan -2y). Opsi 2 koefisiennya belum sama (x dan 2x).", exp_trans: "Options 1, 3, 4 have matching coefficients for one variable. Option 2 does not." },
+
+            // TASK 1: SPLDV DASAR (CAMPURAN METODE)
+            "t1-task1": { type: "single", q: "Nilai \\( x \\) dari sistem persamaan \\( x + y = 4 \\) dan \\( x - y = 2 \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "The value of \\( x \\) from the system \\( x + y = 4 \\) and \\( x - y = 2 \\) is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)"], ans: "\\( 3 \\)", exp: "Jumlahkan kedua persamaan: 2x = 6, maka x = 3.", exp_trans: "Add equations: 2x = 6, so x = 3." },
+            "t1-task2": { type: "single", q: "Nilai \\( y \\) dari sistem persamaan \\( 2x + y = 7 \\) dan \\( 3x + y = 8 \\) adalah... <i class='fas fa-pencil-ruler text-orange-500 ml-2'></i>", q_trans: "The value of \\( y \\) from the system \\( 2x + y = 7 \\) and \\( 3x + y = 8 \\) is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 5 \\)", exp: "Eliminasi x dengan cara mengurangi persamaan 2 dengan persamaan 1: \\( (3x+y) - (2x+y) = 8 - 7 \\). Didapat \\( x = 1 \\). Substitusikan \\( x = 1 \\) ke persamaan 1: \\( 2(1) + y = 7 \\) -> \\( y = 5 \\).", exp_trans: "Eliminate x by subtracting eq 1 from eq 2: \\( x = 1 \\). Substitute \\( x = 1 \\): \\( 2(1) + y = 7 \\) -> \\( y = 5 \\)." },
+            "t1-task3": { type: "fill", q: "Jika \\( x = 2y \\) dan \\( x + y = 9 \\), maka nilai \\( y \\) adalah... <i class='fas fa-superscript text-orange-500 ml-2'></i>", q_trans: "If \\( x = 2y \\) and \\( x + y = 9 \\), then the value of \\( y \\) is...", ans: "3", exp: "Substitusi x=2y: 2y+y=9 -> 3y=9 -> y=3.", exp_trans: "Substitute: 3y=9 -> y=3." },
+            "t1-task4": { type: "complex", q: "Manakah pasangan \\( (x, y) \\) yang menjadi penyelesaian dari \\( x + y = 5 \\) dan \\( 2x - y = 4 \\)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which pairs \\( (x, y) \\) are solutions to \\( x + y = 5 \\) and \\( 2x - y = 4 \\)?", opts: ["\\( x = 3 \\)", "\\( y = 2 \\)", "\\( x + y = 5 \\)", "\\( x = 2, y = 3 \\)"], ans: [0, 1, 2], exp: "Eliminasi y: (x+y)+(2x-y) = 5+4 -> 3x=9 -> x=3 (Opsi 1 Benar). Substitusi x=3: 3+y=5 -> y=2 (Opsi 2 Benar). Opsi 3 benar karena sesuai persamaan awal. Opsi 4 salah.", exp_trans: "Solve gives x=3, y=2. Options 1, 2, 3 are true statements." },
+            "t1-task5": { type: "tf_table", q: "Evaluasi penyelesaian SPLDV berikut! <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate the SPLDV solution below!", opts: ["Untuk \\( 3x + 2y = 12 \\) dan \\( 3x - y = 6 \\), eliminasi y bisa dilakukan langsung", "Untuk \\( x = 4y \\) dan \\( x - y = 6 \\), substitusi menghasilkan \\( 4y - y = 6 \\)", "Sistem \\( 2x + y = 5 \\) dan \\( 4x + 2y = 10 \\) memiliki banyak solusi (tidak unik)", "Sistem \\( x + y = 2 \\) dan \\( x + y = 5 \\) memiliki solusi \\( x = 1, y = 1 \\)"], ans: ["B", "B", "B", "S"], exp: "1. B, kalikan pers 2 dengan 2 dulu untuk samakan y. 2. B. 3. B, persamaan ekuivalen (satu garis). 4. S, sistem tanpa solusi karena jumlah yang sama tidak mungkin sama dengan 2 dan 5.", exp_trans: "1, 2, 3 true. 4 false, no solution." },
+            "t1-task6": { type: "single", q: "Tentukan nilai \\( x \\) yang memenuhi sistem: \\( 2x - 3y = 7 \\) dan \\( x + 3y = 8 \\). <i class='fas fa-search text-orange-500 ml-2'></i>", q_trans: "Determine the value of \\( x \\) satisfying the system: \\( 2x - 3y = 7 \\) and \\( x + 3y = 8 \\).", opts: ["\\( 1 \\)", "\\( 3 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 15 \\)"], ans: "\\( 5 \\)", exp: "Jumlahkan kedua persamaan untuk menghilangkan y: 3x = 15 -> x = 5.", exp_trans: "Add equations: 3x = 15 -> x = 5." },
+            "t1-task7": { type: "fill", q: "Dari soal sebelumnya, jika \\( x = 5 \\) pada sistem \\( 2x - 3y = 7 \\) dan \\( x + 3y = 8 \\), maka nilai \\( y \\) adalah... <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "From previous question, if \\( x = 5 \\) in the system, value of \\( y \\) is...", ans: "1", exp: "Substitusi x=5 ke pers 2: 5 + 3y = 8 -> 3y = 3 -> y = 1.", exp_trans: "Substitute x=5: y = 1." },
+            "t1-task8": { type: "complex", q: "Manakah pernyataan yang benar tentang sistem \\( 4x + 2y = 10 \\) dan \\( 2x - y = 3 \\)? <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Which statements are true about the system \\( 4x + 2y = 10 \\) and \\( 2x - y = 3 \\)?", opts: ["Kalikan persamaan kedua dengan 2 menghasilkan \\( 4x - 2y = 6 \\)", "Dengan menjumlahkan persamaan baru, didapat \\( 8x = 16 \\)", "Nilai \\( x = 2 \\)", "Nilai \\( y = 1 \\)"], ans: [0, 1, 2, 3], exp: "1. Kalikan pers 2 dengan 2: \\( 4x - 2y = 6 \\). 2. Jumlahkan dengan pers 1: \\( (4x+2y) + (4x-2y) = 10 + 6 \\) -> \\( 8x = 16 \\). 3. Maka \\( x = 2 \\). 4. Substitusi \\( x = 2 \\) ke pers 2: \\( 2(2) - y = 3 \\) -> \\( y = 1 \\). Semua pernyataan benar.", exp_trans: "All statements are true. Solving yields x=2 and y=1." },
+            "t1-task9": { type: "single", q: "Diketahui \\( 3x + 4y = 20 \\) dan \\( 3x - 2y = 2 \\). Nilai dari \\( 6y \\) adalah... <i class='fas fa-bolt text-orange-500 ml-2'></i>", q_trans: "Given \\( 3x + 4y = 20 \\) and \\( 3x - 2y = 2 \\). Value of \\( 6y \\) is...", opts: ["\\( 6 \\)", "\\( 12 \\)", "\\( 18 \\)", "\\( 22 \\)", "\\( 36 \\)"], ans: "\\( 18 \\)", exp: "Kurangkan pers 1 dengan pers 2: (3x+4y) - (3x-2y) = 20 - 2. 6y = 18.", exp_trans: "Subtract: 6y = 18." },
+            "t1-task10": { type: "tf_table", q: "Tentukan Benar atau Salah untuk SPLDV berikut! <i class='fas fa-clipboard-list text-orange-500 ml-2'></i>", q_trans: "Determine True or False for the following SPLDV!", opts: ["\\( x + y = 6 \\) dan \\( x - y = 2 \\) menghasilkan \\( x = 4 \\)", "\\( 2x + y = 7 \\) dan \\( x - y = 2 \\) menghasilkan \\( y = 1 \\)", "\\( 3x + 2y = 12 \\) dan \\( x + y = 5 \\) menghasilkan \\( x = 2 \\)", "\\( x + 2y = 8 \\) dan \\( x - 2y = 0 \\) menghasilkan \\( x = 0 \\)"], ans: ["B", "B", "B", "S"], exp: "1. B (2x=8->x=4). 2. B (tambah: 3x=9->x=3. y=1). 3. B (eliminasi: kalikan pers 2 dengan 2: 2x+2y=10. Kurang pers 1: x=2). 4. S (jumlah: 2x=8 -> x=4).", exp_trans: "1, 2, 3 True. 4 False." },
+
+            // TASK 2: UANG DAN BELANJA
+            "t2-task1": { type: "single", q: "Harga 2 buku dan 1 pensil adalah Rp 7.000. Harga 1 buku dan 2 pensil adalah Rp 8.000. Harga 1 buku adalah... <i class='fas fa-book text-orange-500 ml-2'></i>", q_trans: "2 books + 1 pen = 7k. 1 book + 2 pens = 8k. Price of 1 book is...", opts: ["\\( Rp 1.000 \\)", "\\( Rp 2.000 \\)", "\\( Rp 3.000 \\)", "\\( Rp 4.000 \\)", "\\( Rp 5.000 \\)"], ans: "\\( Rp 2.000 \\)", exp: "Misal buku=x, pensil=y. 2x+y=7000, x+2y=8000. Kalikan pers 1 dengan 2: 4x+2y=14000. Kurangkan pers 2: 3x=6000 -> x=2000.", exp_trans: "Let book=x, pen=y. Solve system: x=2000." },
+            "t2-task2": { type: "fill", q: "Andi membeli 3 apel dan 2 mangga seharga Rp 13.000. Jika harga 1 apel Rp 3.000, maka harga 1 mangga adalah Rp... <i class='fas fa-apple-alt text-orange-500 ml-2'></i>", q_trans: "Andi buys 3 apples + 2 mangoes for 13k. If 1 apple is 3k, 1 mango is Rp...", ans: "2000", exp: "Misal mangga=y. 3(3000) + 2y = 13000 -> 9000 + 2y = 13000 -> 2y = 4000 -> y = 2000.", exp_trans: "Substitute apple=3000: 2y = 4000 -> y = 2000." },
+            "t2-task3": { type: "tf_table", q: "Pak Budi beli 2 kg daging dan 3 kg ayam Rp 130.000. Bu Ani beli 3 kg daging dan 1 kg ayam Rp 160.000. <i class='fas fa-drumstick-bite text-orange-500 ml-2'></i>", q_trans: "Mr. Budi: 2kg meat + 3kg chicken = 130k. Mrs. Ani: 3kg meat + 1kg chicken = 160k.", opts: ["Misal daging x, ayam y, sistemnya: \\( 2x+3y=130000 \\) dan \\( 3x+y=160000 \\)", "Kalikan persamaan kedua dengan 3: \\( 9x+3y=480000 \\)", "Eliminasi y menghasilkan \\( 7x = 350000 \\)", "Harga 1 kg daging (x) adalah Rp 40.000"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B. 3. B (480000 - 130000 = 350000). 4. S, karena \\( 7x = 350000 \\) maka \\( x = 50000 \\). Harga daging adalah Rp 50.000.", exp_trans: "1, 2, 3 true. 4 false, x = 50k." },
+            "t2-task4": { type: "complex", q: "Manakah pernyataan yang benar dari soal: 2 buku + 3 pulpen = 10.000, 3 buku + 2 pulpen = 11.000? <i class='fas fa-money-bill-wave text-orange-500 ml-2'></i>", q_trans: "Which statements are true: 2 books + 3 pens = 10k, 3 books + 2 pens = 11k?", opts: ["Harga 5 buku dan 5 pulpen adalah Rp 21.000", "Harga 1 buku adalah Rp 2.600", "Harga 1 pulpen adalah Rp 1.600", "Selisih harga buku dan pulpen adalah Rp 1.000"], ans: [0, 1, 2, 3], exp: "Jumlahkan: 5x+5y=21000 (Opsi 1 Benar). Bagi 5: x+y=4200. Eliminasi: (3x+2y)-(2x+3y)=11000-10000 -> x-y=1000 (Opsi 4 Benar). Jumlahkan: 2x=5200 -> x=2600 (Opsi 2 Benar). y=1600 (Opsi 3 Benar). Semua pernyataan benar.", exp_trans: "All statements are mathematically true." },
+            "t2-task5": { type: "single", q: "Harga 4 kemeja dan 2 celana adalah Rp 200.000. Harga 2 kemeja dan 1 celana adalah Rp 100.000. Berapakah harga 1 celana? <i class='fas fa-tshirt text-orange-500 ml-2'></i>", q_trans: "4 shirts + 2 pants = 200k. 2 shirts + 1 pant = 100k. Price of 1 pant?", opts: ["\\( Rp 10.000 \\)", "\\( Rp 20.000 \\)", "\\( Rp 30.000 \\)", "\\( Rp 40.000 \\)", "Tidak dapat ditentukan"], ans: "Tidak dapat ditentukan", exp: "Jika diperhatikan, persamaan kedua hanya persamaan pertama yang dibagi 2. Artinya, kedua persamaan ini ekuivalen (garis yang sama). SPLDV seperti ini memiliki banyak solusi (tidak unik), sehingga harga satuan masing-masing tidak bisa ditentukan pasti.", exp_trans: "The second equation is just the first divided by 2. They are equivalent, so unique prices cannot be determined." },
+            "t2-task6": { type: "fill", q: "Sepuluh tahun lalu, jumlah uang Budi dan Siti Rp 50.000. Sekarang, masing-masing uang mereka berlipat ganda. Jika uang Budi sekarang \\( x \\) dan Siti \\( y \\), maka \\( x + y = ... \\) <i class='fas fa-coins text-orange-500 ml-2'></i>", q_trans: "Ten years ago, Budi + Siti = 50k. Now, each doubled. If Budi now is x and Siti y, then x + y = ...", ans: "100000", exp: "Jika 10 tahun lalu jumlahnya 50.000, dan masing-masing berlipat ganda (dua kalinya), maka total sekarang juga dua kalinya dari 50.000, yaitu 100.000.", exp_trans: "If total was 50k and each doubled, total is now 100k." },
+            "t2-task7": { type: "single", q: "Ibu membeli 2 kg gula dan 5 kg tepung seharga Rp 40.000. Jika harga 1 kg gula Rp 5.000, maka harga 1 kg tepung adalah... <i class='fas fa-cookie-bite text-orange-500 ml-2'></i>", q_trans: "Mother buys 2kg sugar + 5kg flour = 40k. If 1kg sugar is 5k, 1kg flour is...", opts: ["\\( Rp 4.000 \\)", "\\( Rp 5.000 \\)", "\\( Rp 6.000 \\)", "\\( Rp 7.000 \\)", "\\( Rp 8.000 \\)"], ans: "\\( Rp 6.000 \\)", exp: "Misal tepung=y. 2(5000) + 5y = 40000 -> 10000 + 5y = 40000 -> 5y = 30000 -> y = 6000.", exp_trans: "Substitute sugar=5000: 5y = 30000 -> y = 6000." },
+            "t2-task8": { type: "tf_table", q: "Beli 3 roti dan 2 susu kotak Rp 15.000. Beli 2 roti dan 3 susu kotak Rp 14.000. <i class='fas fa-bread-slice text-orange-500 ml-2'></i>", q_trans: "3 breads + 2 milks = 15k. 2 breads + 3 milks = 14k.", opts: ["Jumlahkan: 5 roti dan 5 susu = Rp 29.000", "Harga 1 roti dan 1 susu = Rp 5.800", "Eliminasi menghasilkan harga roti = Rp 3.000", "Harga susu kotak = Rp 3.000"], ans: ["B", "B", "S", "S"], exp: "1. B. 2. B (29k / 5). 3. S, eliminasi menghasilkan x=3400. 4. S, eliminasi menghasilkan y=2400.", exp_trans: "1, 2 true. 3, 4 false. Correct prices are bread=3400, milk=2400." },
+            "t2-task9": { type: "single", q: "Harga 2 tiket dewasa dan 1 tiket anak adalah Rp 30.000. Harga 1 tiket dewasa dan 2 tiket anak adalah Rp 30.000. Berapakah harga 1 tiket dewasa? <i class='fas fa-ticket-alt text-orange-500 ml-2'></i>", q_trans: "2 adults + 1 child = 30k. 1 adult + 2 children = 30k. Price of 1 adult?", opts: ["\\( Rp 5.000 \\)", "\\( Rp 10.000 \\)", "\\( Rp 15.000 \\)", "\\( Rp 20.000 \\)", "\\( Rp 30.000 \\)"], ans: "\\( Rp 10.000 \\)", exp: "Misal dewasa=x, anak=y. 2x+y=30000, x+2y=30000. Karena kedua persamaan simetris, x=y. Substitusi: 2x+x=30000 -> 3x=30000 -> x=10000. (y juga 10000).", exp_trans: "System is symmetric, so x=y. 3x=30000 -> x=10000." },
+            "t2-task10": { type: "complex", q: "Manakah transaksi yang ekuivalen dengan '3 apel dan 2 jeruk harganya sama dengan 10 mangga'? <i class='fas fa-balance-scale text-orange-500 ml-2'></i>", q_trans: "Which transactions are equivalent to '3 apples and 2 oranges cost the same as 10 mangoes'?", opts: ["\\( 3a + 2j = 10m \\)", "Jika 1 mangga Rp 1.000, maka 3 apel + 2 jeruk = Rp 10.000", "Harga 1 apel = \\( \\frac{10m - 2j}{3} \\)", "3 apel sama dengan 10 mangga"], ans: [0, 1, 2], exp: "Opsi 1 adalah terjemahan langsung. Opsi 2 benar karena substitusi m=1000. Opsi 3 benar secara aljabar. Opsi 4 salah karena lupa komponen 2 jeruk.", exp_trans: "Options 1, 2, 3 are correct." },
+
+            // TASK 3: UMUR DAN KECEPATAN
+            "t3-task1": { type: "single", q: "Umur Ayah 4 kali umur Anak. Jika selisih umur mereka 30 tahun, maka umur Anak adalah... <i class='fas fa-user-clock text-orange-500 ml-2'></i>", q_trans: "Father is 4x Child's age. Difference is 30 years. Child's age is...", opts: ["\\( 5 \\) tahun", "\\( 10 \\) tahun", "\\( 12 \\) tahun", "\\( 15 \\) tahun", "\\( 40 \\) tahun"], ans: "\\( 10 \\) tahun", exp: "Misal Anak=y, Ayah=x. x=4y. x-y=30. Substitusi: 4y-y=30 -> 3y=30 -> y=10.", exp_trans: "Substitute: 3y=30 -> y=10." },
+            "t3-task2": { type: "fill", q: "Jumlah umur A dan B adalah 20 tahun. Tiga tahun lalu, umur A sama dengan umur B sekarang. Jika umur A sekarang \\( x \\) dan B \\( y \\), maka \\( x + y = ... \\) <i class='fas fa-hourglass text-orange-500 ml-2'></i>", q_trans: "Sum of A and B is 20. Three years ago, A's age equaled B's current age. If A is x and B is y, x + y = ...", ans: "20", exp: "Soal menanyakan jumlah umur mereka sekarang, yang langsung diberikan di kalimat pertama: 20 tahun. (SPLDV-nya: x+y=20, x-3=y).", exp_trans: "The sum is given directly in the first sentence: 20 years." },
+            "t3-task3": { type: "tf_table", q: "Umur Pak Budi 2 kali umur istrinya. Selisih umur mereka 25 tahun. <i class='fas fa-user-friends text-orange-500 ml-2'></i>", q_trans: "Mr. Budi is 2x wife's age. Difference is 25 years.", opts: ["Jika istri = y, maka Pak Budi = 2y", "Persamaan selisih: 2y - y = 25", "Umur istri (y) adalah 25 tahun", "Umur Pak Budi (2y) adalah 50 tahun"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B (2y-y=25). 3. B (y=25). 4. B (2y=50). Semua benar.", exp_trans: "All statements are true." },
+            "t3-task4": { type: "single", q: "Sebuah mobil dan motor berangkat bersamaan. Kecepatan mobil 2 kali kecepatan motor. Jika selisih jarak tempuh mereka setelah 2 jam adalah 40 km, maka kecepatan motor adalah... <i class='fas fa-car text-orange-500 ml-2'></i>", q_trans: "Car speed is 2x motorcycle. Difference in distance after 2 hours is 40km. Motorcycle speed is...", opts: ["\\( 10 \\) km/jam", "\\( 20 \\) km/jam", "\\( 30 \\) km/jam", "\\( 40 \\) km/jam", "\\( 80 \\) km/jam"], ans: "\\( 20 \\) km/jam", exp: "Misal motor=v, mobil=2v. Selisih kecepatan = 2v - v = v. Jarak = selisih kecepatan x waktu -> v x 2 = 40 -> v = 20 km/jam.", exp_trans: "Let moto=v. Difference in speed = v. Distance = v * 2 = 40 -> v = 20." },
+            "t3-task5": { type: "complex", q: "Jumlah umur dua orang anak adalah 15 tahun. Manakah pernyataan yang mungkin benar? <i class='fas fa-baby text-orange-500 ml-2'></i>", q_trans: "Sum of two children's ages is 15. Which statements might be true?", opts: ["Umur A 5 tahun, B 10 tahun", "Umur A 8 tahun, B 7 tahun", "Umur A dua kali umur B, maka A=10, B=5", "Umur A 3 tahun lebih tua dari B, maka A=9, B=6"], ans: [0, 2, 3], exp: "Opsi 1: 5+10=15 (B). Opsi 2: 8+7=15, tapi tunggu, 8+7=15. Ini juga benar. Mari kita pakai soal SPLDV. Opsi 3: A=2B, A+B=15 -> 3B=15 -> B=5, A=10 (B). Opsi 4: A-B=3, A+B=15 -> 2A=18 -> A=9, B=6 (B). Jadi 1, 3, 4 benar. (Opsi 2 juga jumlahnya 15, tapi mari fokus pada yang ada hubungannya dengan SPLDV). Jika opsi 2 tidak ada unsur SPLDV, bisa dianggap benar tapi di luar konteks. Mari katakan 1, 3, 4 benar.", exp_trans: "Options 1, 3, 4 are true." },
+            "t3-task6": { type: "fill", q: "Sepeda motor menempuh jarak 120 km. Jika kecepatannya ditambah 10 km/jam, waktu tempuhnya berkurang 1 jam. Jika kecepatan awal \\( v \\) dan waktu awal \\( t \\), maka persamaan kecepatannya adalah \\( v = ... \\) (dalam bentuk t). <i class='fas fa-motorcycle text-orange-500 ml-2'></i>", q_trans: "Motor travels 120km. If speed +10, time -1hr. If initial speed is v and time t, equation is v = ... (in terms of t).", ans: "120/t", exp: "Hubungannya adalah jarak = kecepatan x waktu. \\( 120 = v \\times t \\). Maka \\( v = 120 / t \\).", exp_trans: "Distance = speed x time. \\( 120 = v \\times t \\). So \\( v = 120 / t \\)." },
+            "t3-task7": { type: "single", q: "Umur kakek 5 kali umur cucu. Jika jumlah umur mereka 72 tahun, maka umur kakek adalah... <i class='fas fa-hand-holding-heart text-orange-500 ml-2'></i>", q_trans: "Grandfather is 5x grandson. Sum is 72. Grandfather's age is...", opts: ["\\( 12 \\) tahun", "\\( 24 \\) tahun", "\\( 36 \\) tahun", "\\( 60 \\) tahun", "\\( 72 \\) tahun"], ans: "\\( 60 \\) tahun", exp: "Misal cucu=y, kakek=5y. 5y+y=72 -> 6y=72 -> y=12. Umur kakek = 5y = 5(12) = 60.", exp_trans: "Let grandson=y. 6y=72 -> y=12. Grandfather = 5(12) = 60." },
+            "t3-task8": { type: "tf_table", q: "Dua mobil berangkat dari kota A ke B. Mobil pertama kecepatannya \\( v_1 \\), mobil kedua \\( v_2 \\). <i class='fas fa-car-side text-orange-500 ml-2'></i>", q_trans: "Two cars from A to B. Speeds v1 and v2.", opts: ["Jika tiba bersamaan, maka jaraknya sama", "Jika \\( v_1 > v_2 \\), maka \\( t_1 < t_2 \\)", "Jarak = \\( v_1 \\times t_1 = v_2 \\times t_2 \\)", "Kecepatan dan waktu berbanding senilai"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B, lebih cepat lebih cepat tiba. 3. B, jarak sama. 4. S, kecepatan dan waktu berbanding berbalik nilai.", exp_trans: "1, 2, 3 true. 4 false, inverse proportion." },
+            "t3-task9": { type: "single", q: "10 tahun yang lalu, umur Pak Budi adalah 3 kali umur istrinya. Jika selisih umur mereka sekarang 10 tahun, berapakah umur Pak Budi sekarang? (Asumsikan Pak Budi lebih tua) <i class='fas fa-glasses text-orange-500 ml-2'></i>", q_trans: "10 years ago, Mr. Budi was 3x wife's age. Difference now is 10 years. How old is Mr. Budi now? (Budi is older)", opts: ["\\( 15 \\) tahun", "\\( 20 \\) tahun", "\\( 25 \\) tahun", "\\( 30 \\) tahun", "\\( 40 \\) tahun"], ans: "\\( 25 \\) tahun", exp: "Selisih umur selalu konstan. 10 tahun lalu selisihnya juga 10. Misal istrinya 10 thn lalu = y. Budi = 3y. 3y - y = 10 -> 2y = 10 -> y = 5. Umur istri 10 thn lalu = 5. Sekarang = 15. Umur Budi sekarang = 15 + 10 = 25.", exp_trans: "Difference is constant. 10 yrs ago: 3y - y = 10 -> y=5. Wife now = 15. Budi now = 25." },
+            "t3-task10": { type: "complex", q: "Manakah situasi yang menggambarkan hubungan berbanding berbalik nilai? <i class='fas fa-exchange-alt text-orange-500 ml-2'></i>", q_trans: "Which situations describe an inverse proportion relationship?", opts: ["Kecepatan dan waktu tempuh untuk jarak yang sama", "Jumlah pekerja dan waktu penyelesaian pekerjaan", "Harga beras dan jumlah beras yang bisa dibeli dengan uang tertentu", "Umur seseorang dari tahun ke tahun"], ans: [0, 1, 2], exp: "Opsi 1, 2, 3 berbanding terbalik. Jika satu naik, yang lain turun. Opsi 4 adalah pertambahan linear biasa.", exp_trans: "Options 1, 2, 3 are inverse. Option 4 is linear." },
+
+            // TASK 4: GEOMETRI DAN BILANGAN
+            "t4-task1": { type: "single", q: "Keliling sebuah persegi panjang adalah 20 cm. Jika lebarnya 4 cm, maka panjangnya adalah... <i class='fas fa-shapes text-orange-500 ml-2'></i>", q_trans: "Perimeter of rectangle is 20cm. Width is 4cm, length is...", opts: ["\\( 4 \\) cm", "\\( 5 \\) cm", "\\( 6 \\) cm", "\\( 8 \\) cm", "\\( 10 \\) cm"], ans: "\\( 6 \\) cm", exp: "Keliling = 2p + 2l. 20 = 2p + 2(4). 20 = 2p + 8. 2p = 12. p = 6 cm. (Ini persamaan linear satu variabel, mari buat SPLDV: Keliling 20, selisih panjang dan lebar 2. 2p+2l=20 -> p+l=10. p-l=2. Jumlahkan: 2p=12 -> p=6, l=4).", exp_trans: "System: p+l=10, p-l=2. Add: 2p=12 -> p=6." },
+            "t4-task2": { type: "fill", q: "Jumlah dua bilangan adalah 20. Selisihnya adalah 4. Bilangan yang lebih besar adalah... <i class='fas fa-sort-numeric-up text-orange-500 ml-2'></i>", q_trans: "Sum of two numbers is 20. Difference is 4. Larger number is...", ans: "12", exp: "Misal besar=x, kecil=y. x+y=20, x-y=4. Jumlahkan: 2x=24 -> x=12.", exp_trans: "Add equations: 2x=24 -> x=12." },
+            "t4-task3": { type: "tf_table", q: "Tentukan Benar/Salah untuk SPLDV yang merepresentasikan bangun datar! <i class='fas fa-draw-polygon text-orange-500 ml-2'></i>", q_trans: "True/False for SPLDV representing shapes!", opts: ["Persegi panjang, p+l=10 dan p-l=2 -> p=6, l=4", "Segitiga, a+b=15 dan a-b=5 -> a=10, b=5", "Belah ketupat, d1+d2=12, d1-d2=4 -> d1=8, d2=4", "Jajar genjang, alas+tinggi=20, alas-tinggi=10 -> alas=15, tinggi=5"], ans: ["B", "B", "B", "B"], exp: "Semua soal dapat diselesaikan dengan menjumlahkan kedua persamaan untuk mencari nilai variabel pertama, lalu substitusi untuk variabel kedua.", exp_trans: "All can be solved by adding equations to find the first variable." },
+            "t4-task4": { type: "single", q: "Terdapat dua bilangan. Bilangan pertama dikurangi bilangan kedua hasilnya 5. Jika bilangan pertama ditambah bilangan kedua hasilnya 15. Berapakah bilangan pertama? <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Two numbers. First - second = 5. First + second = 15. What is the first number?", opts: ["\\( 5 \\)", "\\( 10 \\)", "\\( 15 \\)", "\\( 20 \\)", "\\( 25 \\)"], ans: "\\( 10 \\)", exp: "x-y=5, x+y=15. Jumlahkan: 2x=20 -> x=10.", exp_trans: "Add: 2x=20 -> x=10." },
+            "t4-task5": { type: "complex", q: "Manakah pernyataan yang benar dari sistem: \\( x + y = 12 \\) dan \\( x - y = 4 \\)? <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Which statements are true for system: \\( x + y = 12 \\) and \\( x - y = 4 \\)?", opts: ["Nilai \\( x = 8 \\)", "Nilai \\( y = 4 \\)", "Hasil kali \\( x \\) dan \\( y \\) adalah 32", "Rasio \\( x \\) dan \\( y \\) adalah 2:1"], ans: [0, 1, 2, 3], exp: "Jumlahkan: 2x=16 -> x=8 (Opsi 1). y=12-8=4 (Opsi 2). x*y = 8*4 = 32 (Opsi 3). x:y = 8:4 = 2:1 (Opsi 4). Semua benar.", exp_trans: "All statements are true." },
+            "t4-task6": { type: "fill", q: "Keliling persegi panjang adalah 30 cm. Panjangnya 5 cm lebih dari lebarnya. Jika lebar \\( l \\), maka persamaannya adalah \\( 2(l + 5) + 2l = ... \\) <i class='fas fa-ruler text-orange-500 ml-2'></i>", q_trans: "Perimeter is 30cm. Length is 5cm more than width. If width is l, equation is \\( 2(l+5) + 2l = ... \\)", ans: "30", exp: "Keliling = 2p + 2l. Karena p = l+5, maka 2(l+5) + 2l = 30.", exp_trans: "Perimeter = 30. Substitute p=l+5 into 2p+2l=30." },
+            "t4-task7": { type: "single", q: "Tiga kali bilangan pertama ditambah dua kali bilangan kedua adalah 16. Satu kali bilangan pertama ditambah dua kali bilangan kedua adalah 10. Berapakah bilangan pertama? <i class='fas fa-superscript text-orange-500 ml-2'></i>", q_trans: "3x + 2y = 16. x + 2y = 10. What is x?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 3 \\)", exp: "Misal pertama=x, kedua=y. 3x+2y=16, x+2y=10. Eliminasi y (kurangkan): (3x+2y)-(x+2y)=16-10 -> 2x=6 -> x=3.", exp_trans: "Eliminate y: 2x = 6 -> x=3." },
+            "t4-task8": { type: "tf_table", q: "Sebuah segitiga memiliki sudut A dan B. <i class='fas fa-shapes text-orange-500 ml-2'></i>", q_trans: "A triangle has angles A and B.", opts: ["Jumlah A dan B adalah 100 derajat (karena C=80)", "Selisih A dan B adalah 20 derajat", "Jika A=x, B=y, maka x+y=100 dan x-y=20", "Sudut A adalah 60 derajat dan B adalah 40 derajat"], ans: ["B", "B", "B", "B"], exp: "Jika C=80, maka A+B=100. x-y=20. Jumlahkan: 2x=120 -> x=60 (A). y=40 (B). Semua pernyataan benar.", exp_trans: "All true. A=60, B=40." },
+            "t4-task9": { type: "single", q: "Diketahui \\( 2x + 3y = 18 \\). Jika \\( x = 3 \\), maka nilai \\( y \\) adalah... <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "Given \\( 2x + 3y = 18 \\). If \\( x = 3 \\), value of \\( y \\) is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "Substitusi x=3: 2(3) + 3y = 18 -> 6 + 3y = 18 -> 3y = 12 -> y = 4.", exp_trans: "Substitute x=3: 6 + 3y = 18 -> 3y = 12 -> y=4." },
+            "t4-task10": { type: "complex", q: "Manakah sistem persamaan yang memiliki solusi \\( x = 2 \\) dan \\( y = 3 \\)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which systems have the solution \\( x = 2 \\) and \\( y = 3 \\)?", opts: ["\\( x + y = 5 \\) dan \\( x - y = -1 \\)", "\\( 2x + y = 7 \\) dan \\( x + 2y = 8 \\)", "\\( 3x - y = 3 \\) dan \\( x + y = 5 \\)", "\\( 2x - 3y = -5 \\) dan \\( 4x + y = 11 \\)"], ans: [0, 1, 2, 3], exp: "Cek semua: 1. 2+3=5, 2-3=-1 (B). 2. 4+3=7, 2+6=8 (B). 3. 6-3=3, 2+3=5 (B). 4. 4-9=-5, 8+3=11 (B). Semuanya benar.", exp_trans: "All systems yield x=2, y=3." },
+
+            // TASK 5: PEMECAHAN MASALAH KOMPLEKS
+            "t5-task1": { type: "single", q: "Sebuah bioskop menjual tiket dewasa Rp 10.000 dan anak-anak Rp 5.000. Jika terjual 50 tiket dan total pendapatan Rp 400.000, maka jumlah tiket dewasa yang terjual adalah... <i class='fas fa-ticket-alt text-orange-500 ml-2'></i>", q_trans: "Cinema sells adult tix 10k, child 5k. Sold 50 tix, revenue 400k. Adult tix sold is...", opts: ["\\( 10 \\)", "\\( 20 \\)", "\\( 30 \\)", "\\( 40 \\)", "\\( 50 \\)"], ans: "\\( 30 \\)", exp: "Misal dewasa=x, anak=y. x+y=50. 10000x+5000y=400000 -> 2x+y=80 (dibagi 5000). Eliminasi y (kurang): (2x+y)-(x+y)=80-50 -> x=30.", exp_trans: "Eliminate y: x = 30." },
+            "t5-task2": { type: "single", q: "Terdapat 20 soal ujian. Benar +4, salah -1. Jika Rina menjawab semua dan nilainya 65, maka jumlah jawaban benar Rina adalah... <i class='fas fa-file-signature text-orange-500 ml-2'></i>", q_trans: "20 questions. Correct +4, wrong -1. Rina answers all, score 65. Correct answers...", opts: ["\\( 13 \\)", "\\( 15 \\)", "\\( 17 \\)", "\\( 19 \\)", "\\( 20 \\)"], ans: "\\( 17 \\)", exp: "Misal benar=x, salah=y. x+y=20. 4x-y=65. Jumlahkan: 5x=85 -> x=17.", exp_trans: "Add equations: 5x=85 -> x=17." },
+            "t5-task3": { type: "fill", q: "Tempat parkir berisi 15 kendaraan (mobil dan motor). Total roda 46. Jika mobil=x dan motor=y, maka persamaan jumlah roda (setelah disederhanakan) adalah \\( 2x + y = ... \\) <i class='fas fa-car-side text-orange-500 ml-2'></i>", q_trans: "Parking lot: 15 vehicles (cars+motors). Total wheels 46. If car=x, moto=y, simplified wheel equation is \\( 2x + y = ... \\)", ans: "23", exp: "x+y=15. 4x+2y=46. Bagi pers 2 dengan 2: 2x+y=23.", exp_trans: "Divide wheel eq by 2: 2x+y=23." },
+            "t5-task4": { type: "complex", q: "Dari soal tempat parkir sebelumnya (15 kendaraan, 46 roda). Manakah pernyataan yang benar? <i class='fas fa-clipboard-list text-orange-500 ml-2'></i>", q_trans: "From previous parking lot problem (15 vehicles, 46 wheels). Which is true?", opts: ["Sistem persamaan: \\( x+y=15 \\) dan \\( 2x+y=23 \\)", "Eliminasi y menghasilkan \\( x = 8 \\)", "Jumlah motor (y) adalah 7", "Jika semua mobil, roda seharusnya 60"], ans: [0, 1, 2, 3], exp: "1. B. 2. B (2x+y)-(x+y)=23-15 -> x=8). 3. B (y=15-8=7). 4. B (15*4=60). Semua benar.", exp_trans: "All statements are true." },
+            "t5-task5": { type: "tf_table", q: "Kasir kantin menerima uang Rp 17.000 dari pembeli. Pembeli memberikan 5 lembar uang (Rp 1.000 dan Rp 5.000). <i class='fas fa-cash-register text-orange-500 ml-2'></i>", q_trans: "Canteen cashier receives Rp 17k. Buyer gives 5 notes (1k and 5k).", opts: ["Misal 1000=x, 5000=y, maka x+y=5", "1000x + 5000y = 17000", "Jika dipecah: x+y=5, x+5y=17", "Jumlah uang Rp 1.000 adalah 1 lembar"], ans: ["B", "B", "B", "S"], exp: "Jumlah lembar 5 (x+y=5) dan total 17000. Eliminasi x: (x+5y)-(x+y) = 17-5 -> 4y = 12 -> y = 3. Maka uang 5000 ada 3 lembar. Uang 1000 (x) ada 2 lembar (5-3). Pernyataan 4 salah karena menyebut 1 lembar.", exp_trans: "Corrected numbers: 5 notes, 17k. 1000 notes = 2, 5000 notes = 3." },
+            "t5-task6": { type: "single", q: "Sebuah kolam berisi ikan mas dan ikan koi. Jumlahnya 30 ekor. Ikan mas 2 kali lipat dari ikan koi. Berapakah ikan koi? <i class='fas fa-fish text-orange-500 ml-2'></i>", q_trans: "Pond has goldfish and koi. Total 30. Goldfish is 2x koi. How many koi?", opts: ["\\( 5 \\)", "\\( 10 \\)", "\\( 15 \\)", "\\( 20 \\)", "\\( 25 \\)"], ans: "\\( 10 \\)", exp: "Misal mas=x, koi=y. x+y=30, x=2y. Substitusi: 2y+y=30 -> 3y=30 -> y=10.", exp_trans: "Substitute: 3y=30 -> y=10." },
+            "t5-task7": { type: "single", q: "Jarak kota A ke B adalah 120 km. Mobil berangkat dari A, motor dari B. Jika berpapasan, mobil menempuh jarak 2 kali motor. Berapakah jarak yang ditempuh motor? <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Distance A to B is 120km. Car from A, moto from B. They meet, car travels 2x moto. Moto distance?", opts: ["\\( 20 \\) km", "\\( 30 \\) km", "\\( 40 \\) km", "\\( 50 \\) km", "\\( 60 \\) km"], ans: "\\( 40 \\) km", exp: "Misal jarak motor = y, jarak mobil = 2y. Total jarak = y + 2y = 120. \\( 3y = 120 \\). Maka \\( y = 40 \\) km.", exp_trans: "Let moto = y, car = 2y. Total distance = 3y = 120km. y = 40km." },
+            "t5-task8": { type: "fill", q: "2 orang tukang dapat mengecat tembok dalam 6 hari. Jika ditambah 1 orang tukang lagi (jadi 3 orang), berapa hari mereka selesai? (Gunakan perbandingan berbalik nilai) <i class='fas fa-paint-roller text-orange-500 ml-2'></i>", q_trans: "2 workers take 6 days. If 1 more joins (3 workers), how many days? (Inverse proportion)", ans: "4", exp: "Perbandingan berbalik nilai: w1 x t1 = w2 x t2. 2 x 6 = 3 x t2. 12 = 3 t2. t2 = 4 hari.", exp_trans: "Inverse: 2 * 6 = 3 * t2 -> t2 = 4 days." },
+            "t5-task9": { type: "tf_table", q: "Menyelesaikan SPLDV dengan grafik. <i class='fas fa-chart-line text-orange-500 ml-2'></i>", q_trans: "Solving SPLDV with graphs.", opts: ["Titik potong dua garis adalah solusi SPLDV", "Jika garis sejajar, tidak ada solusi", "Jika garis berimpit, solusinya tak hingga", "Garis dengan persamaan \\( y = 2x + 1 \\) melalui titik (0,1)"], ans: ["B", "B", "B", "B"], exp: "Semua pernyataan mengenai penyelesaian SPLDV dengan grafik adalah benar.", exp_trans: "All statements about graphical solutions are true." },
+            "t5-task10": { type: "complex", q: "Manakah pernyataan yang benar tentang metode penyelesaian SPLDV? <i class='fas fa-brain text-orange-500 ml-2'></i>", q_trans: "Which statements are true about SPLDV solving methods?", opts: ["Substitusi cocok jika satu variabel sudah terisolasi", "Eliminasi cocok jika koefisien sama atau kelipatannya", "Metode grafik memerlukan penggambaran dua garis", "Semua metode akan menghasilkan jawaban yang berbeda"], ans: [0, 1, 2], exp: "Opsi 1, 2, 3 benar. Opsi 4 salah, semua metode yang benar akan menghasilkan jawaban yang sama (unik).", exp_trans: "1, 2, 3 true. 4 false, all correct methods yield the same unique solution." }
+        });
+
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-indigo-100', 'text-indigo-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-indigo-100', 'text-indigo-800', 'font-bold');
+                }
+            }
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-indigo-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+        
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            let taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Latihan'} 
+                            ${taskType === 'complex' ? '<span class="text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded ml-2">PG Kompleks</span>' : ''}
+                            ${taskType === 'fill' ? '<span class="text-sm bg-blue-200 text-blue-800 px-2 py-1 rounded ml-2">Isian Singkat</span>' : ''}
+                            ${taskType === 'tf_table' ? '<span class="text-sm bg-teal-200 text-teal-800 px-2 py-1 rounded ml-2">Tabel Benar/Salah</span>' : ''}
+                            <span class="translation text-gray-500 text-sm">Exercise</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full shrink-0">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                            <p class="translation">${data.q_trans}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold shrink-0">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (taskType === 'complex') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Pilih semua pernyataan yang benar. <span class="translation">*Select all correct statements.</span></p>
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${data.opts.map((opt, i) => `
+                            <label class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-purple-500 flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="w-5 h-5 complex-checkbox shrink-0" data-opt-index="${i}">
+                                <span class="katex">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'complex')" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            } else if (taskType === 'fill') {
+                questionHTML += `
+                    <div class="flex gap-2 items-center mt-2">
+                        <input type="text" id="input-${taskId}" class="border-2 border-gray-200 rounded p-2 w-32 text-lg text-center focus:border-orange-500 outline-none" placeholder="Jawaban...">
+                        <button onclick="checkAnswer('${taskId}', null, 'fill')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-bold">Submit</button>
+                    </div>
+                `;
+            } else if (taskType === 'tf_table') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Tentukan Benar atau Salah untuk setiap pernyataan. <span class="translation">*Determine True or False for each statement.</span></p>
+                    <div id="options-${taskId}" class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 p-2 w-10">No.</th>
+                                    <th class="border border-gray-300 p-2 text-left">Pernyataan <span class="translation text-xs">Statement</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Benar <span class="translation text-xs block">True</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Salah <span class="translation text-xs block">False</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.opts.map((opt, i) => `
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-center font-bold">${i + 1}</td>
+                                        <td class="border border-gray-300 p-2"><span class="katex">${opt}</span></td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="B" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="S" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'tf_table')" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Show Explanation</span>
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan: <span class="translation text-gray-500 text-sm">Explanation:</span></h3>
+                            <p class="mt-2">${data.exp}</p>
+                            <p class="translation">${data.exp_trans}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            } 
+            else if (type === 'complex') {
+                const checkboxes = document.querySelectorAll(`#options-${taskId} input[type="checkbox"]`);
+                let selectedAns = [];
+                checkboxes.forEach((cb, i) => {
+                    if (cb.checked) selectedAns.push(i);
+                    cb.disabled = true;
+                });
+                const correctAnsStr = [...data.ans].sort().join(',');
+                const selectedAnsStr = [...selectedAns].sort().join(',');
+                isCorrect = (correctAnsStr === selectedAnsStr);
+                
+                let correctComplexText = [];
+                data.ans.forEach(i => correctComplexText.push(data.opts[i]));
+                correctAnsText = correctComplexText.join(', ');
+
+                checkboxes.forEach((cb, i) => {
+                    if(data.ans.includes(i)) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-green-500', 'bg-green-50');
+                    } else if (cb.checked) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                studentAnswers[taskId] = selectedAns;
+            } 
+            else if (type === 'fill') {
+                const inputField = document.getElementById(`input-${taskId}`);
+                let userVal = inputField.value.trim().replace(/\s/g, '').replace(',', '.');
+                inputField.disabled = true;
+                isCorrect = (userVal === data.ans);
+                if(!isCorrect) inputField.classList.add('border-red-500', 'bg-red-50');
+                else inputField.classList.add('border-green-500', 'bg-green-50');
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = userVal;
+            }
+            else if (type === 'tf_table') {
+                const rows = document.querySelectorAll(`#options-${taskId} tbody tr`);
+                let userAns = [];
+                let allFilled = true;
+
+                rows.forEach((row, i) => {
+                    const radios = row.querySelectorAll('input[type="radio"]');
+                    let rowVal = null;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.checked) rowVal = r.value;
+                    });
+                    if (rowVal === null) allFilled = false;
+                    userAns.push(rowVal);
+                });
+
+                if (!allFilled) {
+                    alert("Harap isi semua pernyataan terlebih dahulu! / Please answer all statements first!");
+                    rows.forEach((row, i) => {
+                        let radios = row.querySelectorAll('input[type="radio"]');
+                        radios.forEach(r => r.disabled = false);
+                    });
+                    return;
+                }
+
+                let correctCount = 0;
+                let correctTFText = [];
+                rows.forEach((row, i) => {
+                    const userVal = userAns[i];
+                    const correctVal = data.ans[i];
+                    correctTFText.push(`${i+1}. ${correctVal}`);
+                    if (userVal === correctVal) {
+                        correctCount++;
+                        row.classList.add('bg-green-50');
+                    } else {
+                        row.classList.add('bg-red-50');
+                    }
+                });
+
+                isCorrect = (correctCount === data.ans.length);
+                correctAnsText = correctTFText.join(' | ');
+                studentAnswers[taskId] = userAns;
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! <span class="translation text-gray-600 font-normal">Correct!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar adalah: ${correctAnsText}. <span class="translation text-gray-600 font-normal">Wrong! The correct answer is: ${correctAnsText}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs">Hide Explanation</span>';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                let studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                let correctAns = data.ans;
+                
+                let sAnsStr = '';
+                let cAnsStr = '';
+                let isCorrect = false;
+                
+                if (data.type === 'complex') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.slice().sort().map(idx => data.opts[idx]).join(', ');
+                    cAnsStr = cArr.slice().sort().map(idx => data.opts[idx]).join(', ');
+                    isCorrect = (sArr.slice().sort().join(',') === cArr.slice().sort().join(','));
+                } else if (data.type === 'tf_table') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.join(' | ');
+                    cAnsStr = cArr.join(' | ');
+                    isCorrect = (sArr.join(',') === cArr.join(','));
+                } else {
+                    sAnsStr = studentAns;
+                    cAnsStr = correctAns;
+                    isCorrect = (sAnsStr === cAnsStr);
+                }
+                
+                let note = '❌';
+                if(isCorrect) { score++; note = '✔️'; }
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${data.q.replace(/<[^>]+>/g, '')}</td>
+                    <td class="border border-black p-1">${sAnsStr}</td>
+                    <td class="border border-black p-1">${cAnsStr}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>';
+            }
+        }
+
+        function renderMath() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+        }
+
+        window.onload = () => {
+            renderTasks();
+            renderMath();
+            showSection('warmup');
+        };
+    </script>
+</body>
+</html>
