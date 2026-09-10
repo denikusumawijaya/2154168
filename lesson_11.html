@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - SPLDV Metode Grafik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+        .prompt-box { max-width: 650px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; align-items: center; text-align: left; }
+        .prompt-box p { width: 100%; }
+        .prompt-box img { width: 100%; height: auto; max-width: 300px; display: block; margin-top: 0.5rem; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; padding: 0; border: 0; background: transparent; }
+        .collapse-content.open { max-height: 2000px; padding: 1.5rem; border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 0.5rem; margin-top: 1rem; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            #printArea table { table-layout: fixed; width: 100%; font-size: 9px; }
+            #printArea td, #printArea th { word-wrap: break-word; padding: 2px !important; }
+            @page { size: A4; margin: 5mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+            <marker id="arr2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: SPLDV - Metode Grafik</p>
+            <p class="translation text-indigo-200">Topik: Sistem Persamaan Linear Dua Variabel - Metode Grafik</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-indigo-600">Class Rules <br><span class="translation text-gray-500">Aturan Kelas</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-indigo-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-indigo-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-indigo-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-indigo-600 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-indigo-200 mt-1">Pilih topik untuk navigasi <span class="translation text-indigo-300 block">Select topic to navigate</span></p>
+            </div>
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="warmup">
+                            <div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="intro">
+                            <div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="review">
+                            <div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="problem">
+                            <div class="font-semibold text-sm text-gray-800">Problem Introduction</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="guided">
+                            <div class="font-semibold text-sm text-gray-800">Guided Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="independent">
+                            <div class="font-semibold text-sm text-gray-800">Independent Practice</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="consolidation">
+                            <div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div>
+                            <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div>
+                        </a>
+                    </li>
+                    <hr class="my-3 border-gray-200">
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5">
+                            <div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div>
+                            <div class="text-xs text-gray-500 mt-1">10 Multiple Choice</div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Mengingat Kembali: Persamaan Garis Lurus <i class="fas fa-route text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Recall: Straight Line Equations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <line x1="20" y1="120" x2="180" y2="120" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <line x1="20" y1="120" x2="20" y2="20" stroke="#333" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <line x1="20" y1="120" x2="160" y2="40" stroke="#3b82f6" stroke-width="3"/>
+                                    <circle cx="20" cy="120" r="3" fill="#333"/>
+                                    <text x="15" y="135" font-size="10" text-anchor="middle" fill="#333">0</text>
+                                    <text x="5" y="40" font-size="10" text-anchor="middle" fill="#333">y</text>
+                                    <text x="180" y="135" font-size="10" text-anchor="middle" fill="#333">x</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sebelum belajar SPLDV, kita harus paham persamaan garis lurus. Persamaan garis sering ditulis dalam bentuk \( y = mx + c \), di mana \( m \) adalah gradien (kemiringan) dan \( c \) adalah titik potong sumbu-Y. <span class="translation">Before learning SPLDV, we must understand straight line equations. A line equation is often written as \( y = mx + c \), where \( m \) is the gradient (slope) and \( c \) is the y-intercept.</span></p>
+                                <p class="mt-2">Gradien \( m \) menunjukkan seberapa curam garis tersebut. Jika \( m \) positif, garis naik ke kanan. Jika \( m \) negatif, garis turun ke kanan. <span class="translation">The gradient \( m \) shows how steep the line is. If \( m \) is positive, the line goes up to the right. If \( m \) is negative, the line goes down to the right.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Mengenal Gradien</p>
+                            <p class="mt-1">Gradien \( m = \frac{\text{perubahan } y}{\text{perubahan } x} \). Dua garis sejajar memiliki gradien yang sama. <span class="translation">Gradient \( m = \frac{\text{change in } y}{\text{change in } x} \). Parallel lines have the same gradient.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \( y = mx + c \)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Menggambar Garis dari Persamaan <i class="fas fa-pencil-ruler text-green-400 ml-2"></i></h2>
+                        <p class="translation">Drawing Lines from Equations</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <line x1="20" y1="120" x2="180" y2="120" stroke="#333" stroke-width="1"/>
+                                    <line x1="20" y1="120" x2="20" y2="20" stroke="#333" stroke-width="1"/>
+                                    <circle cx="20" cy="60" r="3" fill="#10b981"/>
+                                    <text x="5" y="65" font-size="10" fill="#10b981">c=3</text>
+                                    <circle cx="60" cy="120" r="3" fill="#ef4444"/>
+                                    <text x="60" y="135" font-size="10" text-anchor="middle" fill="#ef4444">x=2</text>
+                                    <line x1="20" y1="60" x2="100" y2="120" stroke="#10b981" stroke-width="3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Cara paling mudah menggambar garis adalah mencari titik potongnya. Pertama, cari titik potong sumbu-Y dengan membuat \( x = 0 \). Kedua, cari titik potong sumbu-X dengan membuat \( y = 0 \). <span class="translation">The easiest way to draw a line is to find its intercepts. First, find the y-intercept by setting \( x = 0 \). Second, find the x-intercept by setting \( y = 0 \).</span></p>
+                                <p class="mt-2">Hubungkan kedua titik ini dengan garis lurus, dan kamu mendapatkan grafik persamaannya! <span class="translation">Connect these two points with a straight line, and you get the graph of the equation!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Titik Potong</p>
+                            <p class="mt-1">Jika persamaannya \( 2x + y = 6 \). Saat \( x=0 \), \( y=6 \). Saat \( y=0 \), \( 2x=6 \implies x=3 \). Dua titik ini cukup untuk menggambar! <span class="translation">If the equation is \( 2x + y = 6 \). When \( x=0 \), \( y=6 \). When \( y=0 \), \( 2x=6 \implies x=3 \). These two points are enough to draw!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Titik Potong Sumbu-X saat \( y=0 \), Titik Potong Sumbu-Y saat \( x=0 \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Apa itu SPLDV? <i class="fas fa-project-diagram text-purple-400 ml-2"></i></h2>
+                        <p class="translation">What is SPLDV?</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <rect x="20" y="20" width="160" height="40" rx="5" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="100" y="45" font-size="14" text-anchor="middle" fill="#333">x + y = 5</text>
+                                    <rect x="20" y="80" width="160" height="40" rx="5" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                                    <text x="100" y="105" font-size="14" text-anchor="middle" fill="#333">x - y = 1</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>SPLDV adalah Sistem Persamaan Linear Dua Variabel. Sistem berarti ada dua persamaan yang berjalan bersamaan. Linear berarti pangkat tertingginya satu. Dua Variabel berarti ada dua huruf (biasanya \( x \) dan \( y \)). <span class="translation">SPLDV is a System of Linear Equations in Two Variables. System means two equations running together. Linear means the highest power is one. Two Variables means there are two letters (usually \( x \) and \( y \)).</span></p>
+                                <p class="mt-2">Tujuannya adalah mencari nilai \( x \) dan \( y \) yang memenuhi KEDUA persamaan secara bersamaan. <span class="translation">The goal is to find the values of \( x \) and \( y \) that satisfy BOTH equations simultaneously.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Arti "Sistem"</p>
+                            <p class="mt-1">Kata kuncinya adalah "Bersamaan". Solusinya harus membuat kedua persamaan menjadi pernyataan yang benar. <span class="translation">The keyword is "Simultaneous". The solution must make both equations true statements.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Bentuk Umum \( ax + by = c \) dan \( px + qy = r \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Koneksi Dunia Nyata: Jajan di Kantin <i class="fas fa-utensils text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Real-World Connection: Snacking at the Canteen</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="90" y="30" font-size="14" text-anchor="middle" fill="#333">2 Es + 1 Roti = Rp10.000</text>
+                                    <text x="90" y="70" font-size="14" text-anchor="middle" fill="#333">1 Es + 2 Roti = Rp11.000</text>
+                                    <path d="M 40 90 L 140 90" stroke="#ef4444" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="90" y="115" font-size="12" text-anchor="middle" fill="#ef4444" font-weight="bold">Berapa harga 1 Es? 1 Roti?</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Pernahkah kamu menemui soal seperti ini? Dua persamaan, dua hal yang belum diketahui. Kita bisa mencari harganya tanpa tebak-tebakan! <span class="translation">Have you ever encountered a problem like this? Two equations, two unknowns. We can find the price without guessing!</span></p>
+                                <p class="mt-2">Jika kita tulis \( x \) = harga Es, \( y \) = harga Roti. Persamaan 1: \( 2x + y = 10 \). Persamaan 2: \( x + 2y = 11 \). <span class="translation">If we write \( x \) = price of Ice, \( y \) = price of Bread. Eq 1: \( 2x + y = 10 \). Eq 2: \( x + 2y = 11 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Jangan Pakai Tebak</p>
+                            <p class="mt-1">Tebakan mungkin bisa untuk angka kecil, tapi untuk soal yang rumit, kita butuh metode pasti seperti Metode Grafik! <span class="translation">Guessing might work for small numbers, but for complex problems, we need a definite method like the Graphical Method!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Ubah masalah nyata menjadi persamaan matematika.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Menafsirkan Titik Potong Dua Garis <i class="fas fa-map-marker-alt text-green-400 ml-2"></i></h2>
+                        <p class="translation">Interpreting the Intersection of Two Lines</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <line x1="20" y1="120" x2="180" y2="120" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="120" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="120" x2="160" y2="40" stroke="#3b82f6" stroke-width="2"/>
+                                    <line x1="40" y1="20" x2="180" y2="120" stroke="#ef4444" stroke-width="2"/>
+                                    <circle cx="100" cy="80" r="4" fill="#10b981"/>
+                                    <text x="110" y="80" font-size="12" fill="#10b981" font-weight="bold">(3, 4)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Di Metode Grafik, kita menggambar KEDUA garis dalam satu sistem koordinat. Titik di mana kedua garis itu berpotongan adalah solusinya! <span class="translation">In the Graphical Method, we draw BOTH lines in one coordinate system. The point where those two lines intersect is the solution!</span></p>
+                                <p class="mt-2">Jika garis pertama dan kedua berpotongan di titik \( (3, 4) \), maka solusi dari SPLDV tersebut adalah \( x = 3 \) dan \( y = 4 \). <span class="translation">If the first and second lines intersect at point \( (3, 4) \), then the solution to the SPLDV is \( x = 3 \) and \( y = 4 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Titik Potong = Solusi</p>
+                            <p class="mt-1">Titik potong \( (x, y) \) artinya nilai \( x \) dan \( y \) ini bisa disubstitusikan ke kedua persamaan dan menghasilkan kedua sisi yang sama. <span class="translation">Intersection point \( (x, y) \) means these \( x \) and \( y \) values can be substituted into both equations and yield equal sides.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Titik Potong \( (x,y) \) adalah Himpunan Penyelesaian.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Tiga Kemungkinan Grafik SPLDV <i class="fas fa-shapes text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Three Possible Graphs of SPLDV</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="10" y1="40" x2="90" y2="120" stroke="#3b82f6" stroke-width="2"/>
+                                    <line x1="90" y1="20" x2="170" y2="120" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="50" y="130" font-size="9" text-anchor="middle" fill="#333">Berpotongan (1 solusi)</text>
+                                    
+                                    <line x1="100" y1="40" x2="170" y2="90" stroke="#3b82f6" stroke-width="2"/>
+                                    <line x1="100" y1="60" x2="170" y2="110" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="135" y="130" font-size="9" text-anchor="middle" fill="#333">Sejajar (Tanpa solusi)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Saat menggambar SPLDV, ada 3 kemungkinan yang terjadi: <span class="translation">When drawing SPLDV, there are 3 possible outcomes:</span></p>
+                                <p class="mt-2">1. <strong>Berpotongan</strong>: Memiliki 1 solusi (konsisten). <br>2. <strong>Sejajar</strong>: Tidak ada solusi (inkonsisten). <br>3. <strong>Berhimpit</strong>: Tak terhingga banyaknya solusi (konsisten dependen). <span class="translation">1. <strong>Intersecting</strong>: Has 1 solution. <br>2. <strong>Parallel</strong>: No solution. <br>3. <strong>Coincident</strong>: Infinitely many solutions.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Cek Gradiennya</p>
+                            <p class="mt-1">Jika gradien kedua garis berbeda, mereka pasti berpotongan. Jika gradiennya sama, mereka sejajar atau berhimpit. <span class="translation">If the gradients of both lines are different, they will definitely intersect. If the gradients are the same, they are parallel or coincident.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \( m_1 \neq m_2 \implies \) Berpotongan. \( m_1 = m_2 \implies \) Sejajar/Berhimpit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Mengubah ke Bentuk \( y = mx + c \) <i class="fas fa-exchange-alt text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Converting to \( y = mx + c \) Form</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="220" height="120" viewBox="0 0 220 120">
+                                    <rect x="10" y="30" width="70" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                                    <text x="45" y="55" font-size="12" text-anchor="middle" fill="#333">2x + y = 6</text>
+                                    <path d="M 85 50 L 105 50" stroke="#ef4444" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <rect x="110" y="30" width="90" height="40" rx="5" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <text x="155" y="55" font-size="12" text-anchor="middle" fill="#333">y = -2x + 6</text>
+                                    <text x="95" y="40" font-size="9" fill="#ef4444" font-weight="bold">Pindah!</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Untuk memudahkan menggambar, sering kali kita ubah persamaan ke bentuk \( y = mx + c \). Caranya, pisahkan \( y \) di satu sisi. <span class="translation">To make drawing easier, we often convert the equation to \( y = mx + c \) form. The trick is to isolate \( y \) on one side.</span></p>
+                                <p class="mt-2">Contoh: \( 2x + y = 6 \implies y = -2x + 6 \). Sekarang kita tahu gradiennya \( m = -2 \) dan titik potong sumbu-Y \( c = 6 \). <span class="translation">Example: \( 2x + y = 6 \implies y = -2x + 6 \). Now we know the gradient \( m = -2 \) and y-intercept \( c = 6 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Hati-hati Tanda</p>
+                            <p class="mt-1">Jika pindah ruang, tandanya berubah. Positif jadi negatif, negatif jadi positif. Perhatikan ini baik-baik! <span class="translation">When moving sides, the sign changes. Positive becomes negative, negative becomes positive. Pay close attention to this!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Pindahkan \( x \) dan konstanta ke sisi lain agar \( y \) sendirian.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Mencari Titik Potong Sumbu <i class="fas fa-crosshairs text-green-400 ml-2"></i></h2>
+                        <p class="translation">Finding Axis Intercepts</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="50" x2="100" y2="110" stroke="#10b981" stroke-width="3"/>
+                                    <circle cx="20" cy="50" r="4" fill="#3b82f6"/>
+                                    <text x="5" y="55" font-size="10" fill="#3b82f6">(0,5)</text>
+                                    <circle cx="100" cy="110" r="4" fill="#ef4444"/>
+                                    <text x="100" y="125" font-size="10" text-anchor="middle" fill="#ef4444">(3,0)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dari persamaan \( 2x + y = 6 \), kita bisa mencari 2 titik ekstrim untuk menggambar garis. <span class="translation">From the equation \( 2x + y = 6 \), we can find 2 extreme points to draw the line.</span></p>
+                                <p class="mt-2">Titik potong sumbu-Y: buat \( x = 0 \implies 2(0) + y = 6 \implies y = 6 \). Jadi titiknya \( (0, 6) \). <br>Titik potong sumbu-X: buat \( y = 0 \implies 2x + 0 = 6 \implies x = 3 \). Jadi titiknya \( (3, 0) \). <span class="translation">Y-intercept: set \( x = 0 \). X-intercept: set \( y = 0 \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Dua Titik Cukup</p>
+                            <p class="mt-1">Untuk menggambar garis lurus, kamu hanya butuh dua titik. Tidak perlu membuat tabel yang panjang! <span class="translation">To draw a straight line, you only need two points. No need to make a long table!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \( x=0 \) cari \( y \), \( y=0 \) cari \( x \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Menguji Apakah Titik adalah Solusi <i class="fas fa-check-double text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Testing if a Point is a Solution</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <rect x="10" y="20" width="180" height="40" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="100" y="45" font-size="12" text-anchor="middle" fill="#333">Apakah (2, 1) solusi dari 2x + y = 5?</text>
+                                    <path d="M 100 65 L 100 80" stroke="#666" stroke-width="1.5" marker-end="url(#arr1)"/>
+                                    <rect x="10" y="85" width="180" height="40" rx="5" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <text x="100" y="110" font-size="12" text-anchor="middle" fill="#333">2(2) + 1 = 5 (BENAR)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sebelum menggambar, kita harus tahu cara mengecek apakah sebuah titik adalah solusi. Caranya, substitusikan nilai \( x \) dan \( y \) ke dalam persamaan. <span class="translation">Before drawing, we must know how to check if a point is a solution. The trick is to substitute the values of \( x \) and \( y \) into the equation.</span></p>
+                                <p class="mt-2">Jika ruas kiri sama dengan ruas kanan, maka titik tersebut adalah solusi. Jika berbeda, bukan solusi. <span class="translation">If the left side equals the right side, then the point is a solution. If different, it's not a solution.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Harus Keduanya!</p>
+                            <p class="mt-1">Untuk SPLDV, titik tersebut harus memenuhi PERSAMAAN PERTAMA dan PERSAMAAN KEDUA. Cukup satu persamaan salah, maka titik itu BUKAN solusi. <span class="translation">For SPLDV, the point must satisfy BOTH the FIRST and the SECOND equation. If just one equation is false, the point is NOT a solution.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Substitusi \( (x,y) \implies \) Cek ruas kiri = ruas kanan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Soal Cerita: Menabung Bersama <i class="fas fa-piggy-bank text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Word Problem: Saving Together</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <text x="100" y="30" font-size="12" text-anchor="middle" fill="#333">Ali punya uang (x)</text>
+                                    <text x="100" y="55" font-size="12" text-anchor="middle" fill="#333">Budi punya uang (y)</text>
+                                    <rect x="40" y="70" width="120" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                                    <text x="100" y="95" font-size="12" text-anchor="middle" fill="#333">x + y = 10</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Ali dan Budi menabung. Total uang mereka adalah Rp10.000. Jika uang Ali ditambah 3 kali uang Budi sama dengan Rp22.000, berapa uang masing-masing? <span class="translation">Ali and Budi save money. Their total money is Rp10,000. If Ali's money plus 3 times Budi's money equals Rp22,000, how much does each have?</span></p>
+                                <p class="mt-2">Kita bisa tulis: \( x + y = 10 \) dan \( x + 3y = 22 \). Bagaimana cara menggambar grafik ini? <span class="translation">We can write: \( x + y = 10 \) and \( x + 3y = 22 \). How to draw this graph?</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Samakan Satuan</p>
+                            <p class="mt-1">Pastikan satuan sama. Rp10.000 ditulis 10 (dalam ribuan) agar angkanya kecil dan mudah digambar! <span class="translation">Ensure the units are the same. Rp10,000 is written as 10 (in thousands) so the numbers are small and easy to draw!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Samakan skala, perkecil angka.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Langkah 1: Cari Dua Titik untuk Garis Pertama <i class="fas fa-map-signs text-green-400 ml-2"></i></h2>
+                        <p class="translation">Step 1: Find Two Points for the First Line</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <circle cx="20" cy="30" r="3" fill="#3b82f6"/>
+                                    <text x="5" y="35" font-size="10" fill="#3b82f6">y=10</text>
+                                    <circle cx="100" cy="110" r="3" fill="#ef4444"/>
+                                    <text x="100" y="125" font-size="10" text-anchor="middle" fill="#ef4444">x=10</text>
+                                    <line x1="20" y1="30" x2="100" y2="110" stroke="#3b82f6" stroke-width="3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Mari kita gambar garis pertama: \( x + y = 10 \). <span class="translation">Let's draw the first line: \( x + y = 10 \).</span></p>
+                                <p class="mt-2">Buat \( x = 0 \implies y = 10 \). Titik \( (0, 10) \). <br>Buat \( y = 0 \implies x = 10 \). Titik \( (10, 0) \). <br>Hubungkan titik \( (0, 10) \) dan \( (10, 0) \). <span class="translation">Set \( x = 0 \implies y = 10 \). Point \( (0, 10) \). <br>Set \( y = 0 \implies x = 10 \). Point \( (10, 0) \). <br>Connect \( (0, 10) \) and \( (10, 0) \).</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Gunakan Angka Bulat</p>
+                            <p class="mt-1">Mencari titik potong sumbu hampir selalu menghasilkan angka bulat yang mudah digambar. <span class="translation">Finding axis intercepts almost always results in round numbers that are easy to plot.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: \( (0, y_1) \) dan \( (x_1, 0) \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Langkah 2 & 3: Gambar Garis Kedua & Tentukan Potongan <i class="fas fa-bezier-curve text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Step 2 & 3: Draw Second Line & Find Intersection</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="30" x2="100" y2="110" stroke="#3b82f6" stroke-width="3"/>
+                                    <line x1="20" y1="80" x2="140" y2="110" stroke="#ef4444" stroke-width="3"/>
+                                    <circle cx="80" cy="50" r="5" fill="#10b981"/>
+                                    <text x="95" y="50" font-size="12" fill="#10b981" font-weight="bold">(4, 6)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Garis kedua: \( x + 3y = 22 \). <br>\( x=0 \implies 3y=22 \) (angkanya jelek, coba titik lain, misal \( x=4 \implies y=6 \)). <br>\( y=0 \implies x=22 \). <br>Gambar garisnya. <span class="translation">Second line: \( x + 3y = 22 \). <br>\( x=0 \implies 3y=22 \) (ugly number, try another point, e.g., \( x=4 \implies y=6 \)). <br>\( y=0 \implies x=22 \). <br>Draw the line.</span></p>
+                                <p class="mt-2">Dua garis berpotongan di titik \( (4, 6) \). Jadi uang Ali = Rp4.000, uang Budi = Rp6.000. <span class="translation">The two lines intersect at point \( (4, 6) \). So Ali's money = Rp4,000, Budi's money = Rp6,000.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Boleh Cari Titik Lain</p>
+                            <p class="mt-1">Jika titik potong sumbu menghasilkan desimal, boleh cari titik lain dengan menebak angka bulat yang menghasilkan perhitungan bagus (seperti \( x=4 \) di atas). <span class="translation">If axis intercepts result in decimals, you may find other points by guessing round numbers that result in nice calculations.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Potong garis = \( (x_{solusi}, y_{solusi}) \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Panduan Lengkap: Memilih Skala yang Tepat <i class="fas fa-ruler text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Complete Guide: Choosing the Right Scale</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <text x="40" y="125" font-size="10" text-anchor="middle" fill="#666">2</text>
+                                    <text x="60" y="125" font-size="10" text-anchor="middle" fill="#666">4</text>
+                                    <text x="80" y="125" font-size="10" text-anchor="middle" fill="#666">6</text>
+                                    <text x="10" y="90" font-size="10" text-anchor="middle" fill="#666">2</text>
+                                    <text x="10" y="70" font-size="10" text-anchor="middle" fill="#666">4</text>
+                                    <text x="10" y="50" font-size="10" text-anchor="middle" fill="#666">6</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dalam menggambar grafik, skala sangat penting. Jika angkanya besar, jangan pakai skala 1cm = 1 satuan. Gunakan 1cm = 2 satuan, atau 1cm = 5 satuan. <span class="translation">In graphing, scale is very important. If the numbers are large, don't use a scale of 1cm = 1 unit. Use 1cm = 2 units, or 1cm = 5 units.</span></p>
+                                <p class="mt-2">Pastikan jarak antar bilangan di sumbu-X dan sumbu-Y konsisten. <span class="translation">Ensure the distance between numbers on the X and Y axes is consistent.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Pilihan Skala</p>
+                            <p class="mt-1">Untuk soal kelipatan 5, gunakan skala 1cm = 5. Untuk kelipatan 2, gunakan 1cm = 2. Ini membuat grafik muat di kertas! <span class="translation">For multiples of 5, use a scale of 1cm = 5. For multiples of 2, use 1cm = 2. This makes the graph fit on paper!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Skala menentukan keakuratan pembacaan titik potong.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Menggambar dengan Tabel <i class="fas fa-table text-green-400 ml-2"></i></h2>
+                        <p class="translation">Drawing Using a Table</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="220" height="120" viewBox="0 0 220 120">
+                                    <rect x="10" y="20" width="200" height="80" rx="5" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="60" y1="20" x2="60" y2="100" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="110" y1="20" x2="110" y2="100" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="160" y1="20" x2="160" y2="100" stroke="#10b981" stroke-width="2"/>
+                                    <line x1="10" y1="60" x2="210" y2="60" stroke="#10b981" stroke-width="2"/>
+                                    <text x="35" y="50" font-size="14" text-anchor="middle" fill="#333">x</text>
+                                    <text x="85" y="50" font-size="14" text-anchor="middle" fill="#333">0</text>
+                                    <text x="135" y="50" font-size="14" text-anchor="middle" fill="#333">1</text>
+                                    <text x="185" y="50" font-size="14" text-anchor="middle" fill="#333">2</text>
+                                    <text x="35" y="85" font-size="14" text-anchor="middle" fill="#333">y</text>
+                                    <text x="85" y="85" font-size="14" text-anchor="middle" fill="#333">3</text>
+                                    <text x="135" y="85" font-size="14" text-anchor="middle" fill="#333">5</text>
+                                    <text x="185" y="85" font-size="14" text-anchor="middle" fill="#333">7</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Selain mencari titik potong sumbu, kita bisa gunakan tabel. Buat sembarang 2 nilai \( x \), lalu cari \( y \)-nya. <span class="translation">Besides finding axis intercepts, we can use a table. Pick any 2 values of \( x \), then find \( y \).</span></p>
+                                <p class="mt-2">Contoh \( y = 2x + 3 \). Jika \( x=0 \implies y=3 \). Jika \( x=1 \implies y=5 \). Titiknya \( (0, 3) \) dan \( (1, 5) \). Tarik garisnya. <span class="translation">Example \( y = 2x + 3 \). If \( x=0 \implies y=3 \). If \( x=1 \implies y=5 \). Points are \( (0, 3) \) and \( (1, 5) \). Draw the line.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Pilih Angka Mudah</p>
+                            <p class="mt-1">Pilih \( x = 0 \) dan \( x = 1 \), atau angka kecil lainnya. Jangan pilih \( x = 50 \) karena perhitungannya jadi berat! <span class="translation">Choose \( x = 0 \) and \( x = 1 \), or other small numbers. Don't choose \( x = 50 \) because the calculation becomes heavy!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Ambil 2 titik, hubungkan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Memastikan Jawaban dengan Substitusi <i class="fas fa-check-circle text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Verifying the Answer by Substitution</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="140" viewBox="0 0 200 140">
+                                    <rect x="10" y="20" width="180" height="40" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="100" y="45" font-size="12" text-anchor="middle" fill="#333">Titik Potong (2, 3)</text>
+                                    <path d="M 100 65 L 100 80" stroke="#666" stroke-width="1.5" marker-end="url(#arr1)"/>
+                                    <rect x="10" y="85" width="180" height="40" rx="5" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <text x="100" y="110" font-size="12" text-anchor="middle" fill="#333">Substitusi ke Persamaan 1 & 2</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Setelah mendapat titik potong dari grafik, selalu periksa jawabanmu. Substitusikan nilai \( x \) dan \( y \) ke persamaan awal. <span class="translation">After getting the intersection point from the graph, always check your answer. Substitute the \( x \) and \( y \) values into the original equations.</span></p>
+                                <p class="mt-2">Jika benar, hasil ruas kiri akan sama dengan ruas kanan. Ini melatih ketelitianmu! <span class="translation">If correct, the left side will equal the right side. This trains your accuracy!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Jangan Malas Cek</p>
+                            <p class="mt-1">Menggambar grafik sering salah 1 kotak. Substitusi adalah penyelamat nilaimu dari kesalahan kecil. <span class="translation">Drawing graphs often results in a 1-grid error. Substitution is the savior of your score from small mistakes.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Solusi Benar \( \implies \) Keduanya Tergenapi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Menghadapi SPLDV dengan Pecahan <i class="fas fa-percentage text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Tackling SPLDV with Fractions</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <text x="100" y="40" font-size="14" text-anchor="middle" fill="#333">y = 1/2 x + 2</text>
+                                    <path d="M 100 50 L 100 80" stroke="#666" stroke-width="1.5" marker-end="url(#arr1)"/>
+                                    <rect x="20" y="85" width="160" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                                    <text x="100" y="110" font-size="12" text-anchor="middle" fill="#333">y = 0.5x + 2 (Ubah ke desimal)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Kadang gradien berbentuk pecahan. Misal \( y = \frac{1}{2}x + 2 \). Ubah saja menjadi desimal \( y = 0.5x + 2 \) agar mudah dihitung. <span class="translation">Sometimes the gradient is a fraction. For example \( y = \frac{1}{2}x + 2 \). Just convert it to decimal \( y = 0.5x + 2 \) to make it easy to calculate.</span></p>
+                                <p class="mt-2">Atau, jika \( x \) diisi angka genap (kelipatan 2), maka pecahan akan hilang dengan sendirinya. <span class="translation">Or, if \( x \) is filled with even numbers (multiples of 2), the fraction will disappear by itself.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Pilih x Genap</p>
+                            <p class="mt-1">Jika gradien \( \frac{1}{2} \), pilih \( x = 2 \implies y = 3 \), atau \( x = 4 \implies y = 4 \). Sangat mudah! <span class="translation">If gradient is \( \frac{1}{2} \), choose \( x = 2 \implies y = 3 \), or \( x = 4 \implies y = 4 \). Very easy!</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Hilangkan pecahan dengan pemilihan \( x \) yang tepat.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Mengenali Garis Sejajar <i class="fas fa-equals text-green-400 ml-2"></i></h2>
+                        <p class="translation">Recognizing Parallel Lines</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="80" x2="160" y2="20" stroke="#3b82f6" stroke-width="3"/>
+                                    <line x1="40" y1="110" x2="180" y2="50" stroke="#ef4444" stroke-width="3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Jika kamu menggambar dua garis dan mereka tidak pernah berpotongan, berarti SPLDV tersebut tidak memiliki solusi. <span class="translation">If you draw two lines and they never intersect, it means the SPLDV has no solution.</span></p>
+                                <p class="mt-2">Ciri utamanya: gradien kedua garis sama, tapi titik potong sumbu-Y berbeda. Garisnya sejajar! <span class="translation">Main characteristic: the gradients of both lines are the same, but the y-intercepts are different. The lines are parallel!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Tanpa Solusi</p>
+                            <p class="mt-1">Tanpa menggambar pun kamu bisa tahu. Ubah ke \( y = mx + c \). Jika \( m_1 = m_2 \) tapi \( c_1 \neq c_2 \), sudah pasti sejajar. <span class="translation">Even without drawing you can tell. Convert to \( y = mx + c \). If \( m_1 = m_2 \) but \( c_1 \neq c_2 \), it's definitely parallel.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Sejajar \( \implies \) Tidak ada solusi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Mengenali Garis Berhimpit <i class="fas fa-compress-arrows-alt text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Recognizing Coincident Lines</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="200" height="130" viewBox="0 0 200 130">
+                                    <line x1="20" y1="110" x2="180" y2="110" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="110" x2="20" y2="20" stroke="#333" stroke-width="2"/>
+                                    <line x1="20" y1="80" x2="160" y2="20" stroke="#8b5cf6" stroke-width="6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Kebalikan dari sejajar adalah berhimpit. Kedua garis itu sebenarnya SATU garis yang sama. <span class="translation">The opposite of parallel is coincident. The two lines are actually ONE and the same line.</span></p>
+                                <p class="mt-2">Cirinya: gradien sama, titik potong sumbu-Y juga sama. Solusinya tak terhingga banyaknya! <span class="translation">Characteristic: same gradient, same y-intercept. Infinitely many solutions!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Persamaan Identik</p>
+                            <p class="mt-1">Jika persamaan kedua hanya persamaan pertama dikali/dibagi bilangan bulat, maka itu berhimpit. Contoh: \( x+y=2 \) dan \( 2x+2y=4 \). <span class="translation">If the second equation is just the first multiplied/divided by an integer, it's coincident. Example: \( x+y=2 \) and \( 2x+2y=4 \).</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> Rumus To The Point: Berhimpit \( \implies \) Tak terhingga solusi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Consolidation & Reflection</h2>
+                    <p class="translation">Konsolidasi & Refleksi</p>
+                    <p>Anda telah berhasil menguasai Metode Grafik untuk SPLDV! Ingatlah bahwa titik potong dua garis adalah kunci untuk menemukan solusinya. <span class="translation">You have successfully mastered the Graphical Method for SPLDV! Remember that the intersection of two lines is the key to finding the solution.</span></p>
+                    <p class="mt-2">Teruslah berlatih dengan berbagai soal cerita untuk memperkuat pemahamanmu tentang bagaimana matematika bekerja di dunia nyata. <span class="translation">Keep practicing with various word problems to strengthen your understanding of how mathematics works in the real world.</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Go to learn.algonova.id <span class="translation text-sm italic">Pergi ke learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- TASK SECTIONS -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+            </div> <!-- Penutup #contentScrollArea -->
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: SPLDV - Metode Grafik</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+
+    <script>
+        // ====== MATH QUESTIONS DATA (PART 1: WARMUP, INTRO, REVIEW) ======
+        const questions = {};
+        Object.assign(questions, {
+            // SPIRAL REVIEW WARM-UP
+            "w-task1": { type: "single", q: "Diketahui persamaan garis \( y = 2x + 3 \). Berapakah gradien (kemiringan) garis tersebut? <i class='fas fa-route text-blue-500 ml-2'></i>", q_trans: "Given the line equation \( y = 2x + 3 \). What is the gradient (slope) of the line?", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( -2 \\)", "\\( -3 \\)"], ans: "\\( 2 \\)", exp: "Persamaan garis memiliki bentuk umum \( y = mx + c \), di mana \( m \) adalah gradien. Pada \( y = 2x + 3 \), angka di depan \( x \) adalah 2. Jadi gradiennya adalah 2.", exp_trans: "The line equation has the general form \( y = mx + c \), where \( m \) is the gradient. In \( y = 2x + 3 \), the number in front of \( x \) is 2. So the gradient is 2." },
+            "w-task2": { type: "fill", q: "Tentukan titik potong sumbu-Y dari persamaan \( y = 4x - 5 \). <i class='fas fa-crosshairs text-blue-500 ml-2'></i>", q_trans: "Determine the y-intercept of the equation \( y = 4x - 5 \).", ans: "-5", exp: "Titik potong sumbu-Y didapat saat \( x = 0 \). Substitusi \( x = 0 \): \( y = 4(0) - 5 \implies y = -5 \). Jadi titik potongnya (0, -5) dan nilainya -5.", exp_trans: "Y-intercept is obtained when \( x = 0 \). Substitute \( x = 0 \): \( y = 4(0) - 5 \implies y = -5 \). So the intercept is (0, -5) and the value is -5." },
+            "w-task3": { type: "tf_table", q: "Evaluasi pernyataan berikut tentang persamaan garis \( y = -3x + 6 \). <i class='fas fa-list-ul text-blue-500 ml-2'></i>", q_trans: "Evaluate the following statements about the line equation \( y = -3x + 6 \).", opts: ["Gradien garis adalah -3", "Titik potong sumbu-Y adalah 6", "Garis akan naik ke kanan", "Jika \( x = 1 \), maka \( y = 3 \)"], ans: ["B", "B", "S", "B"], exp: "1. B, gradien -3. 2. B, potong-Y 6. 3. S, karena gradien negatif, garis TURUN ke kanan. 4. B, substitusi \( x=1 \implies y = -3(1) + 6 = 3 \).", exp_trans: "1. T, gradient -3. 2. T, y-intercept 6. 3. F, because gradient is negative, line goes DOWN to the right. 4. T, substitute \( x=1 \implies y = 3 \)." },
+            "w-task4": { type: "single", q: "Persamaan mana yang memiliki titik potong sumbu-X sama dengan titik potong sumbu-Y? <i class='fas fa-equals text-blue-500 ml-2'></i>", q_trans: "Which equation has the same x-intercept as its y-intercept?", opts: ["\\( y = x \\)", "\\( y = x + 1 \\)", "\\( y = 2x - 2 \\)", "\\( y = 3x + 3 \\)", "\\( y = -x \\)"], ans: "\\( y = x \\)", exp: "Untuk \( y = x \), jika \( x=0 \implies y=0 \). Jadi titik potong sumbu-X dan Y-nya sama, yaitu di titik (0,0).", exp_trans: "For \( y = x \), if \( x=0 \implies y=0 \). So the x-intercept and y-intercept are the same, at point (0,0)." },
+            "w-task5": { type: "complex", q: "Manakah dari persamaan berikut yang merupakan bentuk Persamaan Linear Dua Variabel (SPLDV)? <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Which of the following equations are in the form of a System of Linear Equations in Two Variables (SPLDV)?", opts: ["\\( x + y = 5 \\) dan \\( x - y = 1 \\)", "\\( x^2 + y = 4 \\) dan \\( x + y = 2 \\)", "\\( 2x + 3y = 6 \\)", "\\( x + y + z = 10 \\)"], ans: [0], exp: "SPLDV harus terdiri dari DUA persamaan linear (pangkat 1) dan memiliki DUA variabel. Opsi 1 memenuhi syarat. Opsi 2 ada pangkat 2 (bukan linear). Opsi 3 hanya 1 persamaan. Opsi 4 ada 3 variabel.", exp_trans: "SPLDV must consist of TWO linear equations (power 1) and have TWO variables. Option 1 qualifies. Option 2 has a power of 2. Option 3 is only 1 equation. Option 4 has 3 variables." },
+            "w-task6": { type: "fill", q: "Ubah persamaan \( 3x + y = 9 \) ke bentuk \( y = mx + c \). Berapa nilai gradiennya? <i class='fas fa-exchange-alt text-blue-500 ml-2'></i>", q_trans: "Convert the equation \( 3x + y = 9 \) to the form \( y = mx + c \). What is the gradient value?", ans: "-3", exp: "Pisahkan y: \( y = -3x + 9 \). Gradien (m) adalah koefisien dari x, yaitu -3.", exp_trans: "Isolate y: \( y = -3x + 9 \). The gradient (m) is the coefficient of x, which is -3." },
+            "w-task7": { type: "single", q: "Apa arti dari solusi sebuah SPLDV secara grafik? <i class='fas fa-project-diagram text-blue-500 ml-2'></i>", q_trans: "What is the meaning of the solution of an SPLDV graphically?", opts: ["Titik potong dua garis", "Luas daerah yang diarsir", "Gradien kedua garis", "Jumlah kedua persamaan", "Titik potong dengan sumbu-X"], ans: "Titik potong dua garis", exp: "Secara grafik, solusi dari SPLDV adalah titik di mana kedua garis persamaan saling berpotongan. Titik ini memenuhi kedua persamaan.", exp_trans: "Graphically, the solution of an SPLDV is the point where the two equation lines intersect. This point satisfies both equations." },
+            "w-task8": { type: "tf_table", q: "Perhatikan dua persamaan berikut: (1) \( y = 2x + 1 \) dan (2) \( y = 2x - 4 \). <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Consider the following two equations: (1) \( y = 2x + 1 \) and (2) \( y = 2x - 4 \).", opts: ["Gradien kedua garis sama", "Kedua garis akan berpotongan di satu titik", "Kedua garis sejajar", "SPLDV ini tidak memiliki solusi"], ans: ["B", "S", "B", "B"], exp: "1. B, m=2 untuk keduanya. 2. S, karena sejajar mereka tidak berpotongan. 3. B, sejajar karena gradien sama tapi c berbeda. 4. B, tidak ada solusi karena sejajar.", exp_trans: "1. T, m=2 for both. 2. F, because parallel they don't intersect. 3. T, parallel because same gradient but different c. 4. T, no solution because parallel." },
+            "w-task9": { type: "single", q: "Jika sebuah titik (2, 3) adalah solusi dari \( y = x + 1 \), apakah titik ini juga solusi dari \( y = 2x - 1 \)? <i class='fas fa-check-circle text-blue-500 ml-2'></i>", q_trans: "If a point (2, 3) is a solution to \( y = x + 1 \), is this point also a solution to \( y = 2x - 1 \)?", opts: ["Ya, karena keduanya linear", "Tidak, substitusi menghasilkan ruas berbeda", "Ya, karena grafiknya berpotongan", "Tidak bisa ditentukan", "Ya, karena 3-1=2"], ans: "Ya, karena grafiknya berpotongan", exp: "Substitusi (2,3) ke \( y = 2x - 1 \): ruas kiri \( y = 3 \), ruas kanan \( 2(2) - 1 = 3 \). Karena kiri=kanan, titik itu solusi keduanya, yang berarti grafiknya berpotongan di titik itu.", exp_trans: "Substitute (2,3) into \( y = 2x - 1 \): left side \( y = 3 \), right side \( 2(2) - 1 = 3 \). Since left=right, the point is a solution to both, meaning the graphs intersect at that point." },
+            "w-task10": { type: "complex", q: "Mana pernyataan yang benar tentang SPLDV yang memiliki banyak solusi (berhimpit)? <i class='fas fa-layer-group text-blue-500 ml-2'></i>", q_trans: "Which statements are true about an SPLDV that has many solutions (coincident)?", opts: ["Gradien kedua garis sama", "Titik potong sumbu-Y kedua garis sama", "Kedua garis terpisah", "Kedua persamaan sebenarnya identik"], ans: [0, 1, 3], exp: "Jika kedua garis berhimpit, mereka memiliki gradien yang sama, titik potong Y yang sama, dan persamaannya identik (salah satu kelipatan dari yang lain). Grafiknya bukan terpisah, melainkan menumpuk.", exp_trans: "If two lines are coincident, they have the same gradient, same Y-intercept, and identical equations. The graphs are not separate but stacked." },
+
+            // INTRODUCTION & REAL-WORLD
+            "i-task1": { type: "single", q: "Di kantin, 2 es teh dan 1 roti harganya Rp10.000. 1 es teh dan 2 roti harganya Rp11.000. Jika \( x \) = es teh dan \( y \) = roti, model SPLDV yang benar adalah... <i class='fas fa-utensils text-green-500 ml-2'></i>", q_trans: "At the canteen, 2 iced teas and 1 bread cost Rp10,000. 1 iced tea and 2 breads cost Rp11,000. If \( x \) = iced tea and \( y \) = bread, the correct SPLDV model is...", opts: ["\\( 2x + y = 10 \\) dan \\( x + 2y = 11 \\)", "\\( x + 2y = 10 \\) dan \\( 2x + y = 11 \\)", "\\( 2x + 2y = 10 \\) dan \\( x + y = 11 \\)", "\\( 2x - y = 10 \\) dan \\( x - 2y = 11 \\)", "\\( 2x + y = 11 \\) dan \\( x + 2y = 10 \\)"], ans: "\\( 2x + y = 10 \\) dan \\( x + 2y = 11 \\)", exp: "Es teh dilambangkan \( x \), roti \( y \). 2 es teh + 1 roti = 10ribu \( \implies 2x + y = 10 \). 1 es teh + 2 roti = 11ribu \( \implies x + 2y = 11 \).", exp_trans: "Iced tea is \( x \), bread is \( y \). 2 iced teas + 1 bread = 10k \( \implies 2x + y = 10 \). 1 iced tea + 2 breads = 11k \( \implies x + 2y = 11 \)." },
+            "i-task2": { type: "fill", q: "Titik potong sumbu-Y dari persamaan pertama pada soal nomor 1 (yaitu \( 2x + y = 10 \)) adalah... (Tulis hanya angkanya, misal 10) <i class='fas fa-map-marker-alt text-green-500 ml-2'></i>", q_trans: "The y-intercept of the first equation in question 1 (which is \( 2x + y = 10 \)) is... (Write only the number, e.g., 10)", ans: "10", exp: "Titik potong sumbu-Y didapat saat \( x = 0 \). Substitusi \( x = 0 \): \( 2(0) + y = 10 \implies y = 10 \).", exp_trans: "Y-intercept is obtained when \( x = 0 \). Substitute \( x = 0 \): \( 2(0) + y = 10 \implies y = 10 \)." },
+            "i-task3": { type: "tf_table", q: "Tentukan Benar atau Salah untuk langkah menggambar garis \( x + 2y = 11 \). <i class='fas fa-list-ol text-green-500 ml-2'></i>", q_trans: "Determine True or False for the steps to draw the line \( x + 2y = 11 \).", opts: ["Saat \( x = 0 \), \( y = 5.5 \)", "Saat \( y = 0 \), \( x = 11 \)", "Titik potongnya bisa (11, 0) dan (0, 5.5)", "Garis ini akan naik ke kanan"], ans: ["B", "B", "B", "S"], exp: "1. B, substitusi \( x=0 \implies 2y=11 \implies y=5.5 \). 2. B, substitusi \( y=0 \implies x=11 \). 3. B, titik-titiknya benar. 4. S, karena jika diubah ke \( y = -0.5x + 5.5 \), gradiennya negatif, jadi garis TURUN ke kanan.", exp_trans: "1. T, substitute \( x=0 \implies y=5.5 \). 2. T, substitute \( y=0 \implies x=11 \). 3. T, points are correct. 4. F, converting to \( y = -0.5x + 5.5 \), gradient is negative, so line goes DOWN." },
+            "i-task4": { type: "single", q: "Jika dua garis pada grafik SPLDV tidak pernah berpotongan, maka kesimpulannya adalah... <i class='fas fa-equals text-green-500 ml-2'></i>", q_trans: "If two lines on an SPLDV graph never intersect, the conclusion is...", opts: ["Memiliki 1 solusi", "Tidak memiliki solusi", "Solusinya tak terhingga", "Kedua persamaan salah", "Garisnya berhimpit"], ans: "Tidak memiliki solusi", exp: "Garis yang tidak berpotongan (sejajar) menandakan tidak ada titik yang memenuhi kedua persamaan secara bersamaan. Jadi SPLDV tidak memiliki solusi (inkonsisten).", exp_trans: "Lines that do not intersect (parallel) indicate no point satisfies both equations. So SPLDV has no solution (inconsistent)." },
+            "i-task5": { type: "complex", q: "Manakah dari SPLDV berikut yang memiliki 1 solusi (konsisten)? <i class='fas fa-check-double text-green-500 ml-2'></i>", q_trans: "Which of the following SPLDVs has 1 solution (consistent)?", opts: ["\\( y = 2x + 1 \\) dan \\( y = 3x - 4 \\)", "\\( y = 2x + 1 \\) dan \\( y = 2x + 5 \\)", "\\( 2x + y = 4 \\) dan \\( 4x + 2y = 8 \\)", "\\( x + y = 5 \\) dan \\( x - y = 1 \\)"], ans: [0, 3], exp: "SPLDV memiliki 1 solusi jika gradien keduanya berbeda. Opsi 1: m=2 dan m=3 (beda). Opsi 4: ubah ke y, m=-1 dan m=1 (beda). Opsi 2: m=2 dan m=2 (sejajar). Opsi 3: identik (berhimpit).", exp_trans: "SPLDV has 1 solution if gradients are different. Option 1: m=2 and m=3. Option 4: convert to y, m=-1 and m=1. Options 2 and 3 are parallel/identical." },
+            "i-task6": { type: "fill", q: "Sebuah garis melalui titik (0, 4) dan (3, 0). Gradien (m) garis tersebut adalah... (Tulis angka, misal -2) <i class='fas fa-angle-up text-green-500 ml-2'></i>", q_trans: "A line passes through points (0, 4) and (3, 0). The gradient (m) of the line is... (Write the number, e.g., -2)", ans: "-4/3", exp: "Gradien \( m = \frac{y_2 - y_1}{x_2 - x_1} = \frac{0 - 4}{3 - 0} = \frac{-4}{3} \).", exp_trans: "Gradient \( m = \frac{y_2 - y_1}{x_2 - x_1} = \frac{0 - 4}{3 - 0} = -\frac{4}{3} \)." },
+            "i-task7": { type: "single", q: "Titik potong (2, 3) adalah solusi dari SPLDV. Pernyataan mana yang benar? <i class='fas fa-check-circle text-green-500 ml-2'></i>", q_trans: "The intersection point (2, 3) is a solution to an SPLDV. Which statement is correct?", opts: ["\( x = 3 \) dan \( y = 2 \)", "\\( x = 2 \\) dan \\( y = 3 \\)", "Hanya memenuhi persamaan pertama", "Garisnya sejajar", "Solusinya tak terhingga"], ans: "\\( x = 2 \\) dan \\( y = 3 \\)", exp: "Titik potong ditulis dalam format koordinat Kartesius \( (x, y) \). Jadi titik (2, 3) berarti nilai \( x = 2 \) dan nilai \( y = 3 \).", exp_trans: "Intersection point is written in Cartesian coordinate format \( (x, y) \). So point (2, 3) means \( x = 2 \) and \( y = 3 \)." },
+            "i-task8": { type: "tf_table", q: "Evaluasi grafik SPLDV dengan solusi \( x = 2, y = 1 \). <i class='fas fa-clipboard-check text-green-500 ml-2'></i>", q_trans: "Evaluate an SPLDV graph with solution \( x = 2, y = 1 \).", opts: ["Titik potongnya adalah (2, 1)", "Nilai x=2 dan y=1 memenuhi kedua persamaan", "Grafik kedua garis saling sejajar", "Jika disubstitusikan ke kedua persamaan, ruas kiri = ruas kanan"], ans: ["B", "B", "S", "B"], exp: "1. B, format (x,y) = (2,1). 2. B, karena itulah solusinya. 3. S, kalau sejajar tidak ada solusi. 4. B, ciri khas solusi yang benar.", exp_trans: "1. T. 2. T. 3. F, parallel has no solution. 4. T." },
+			"i-task9": { type: "single", q: "Untuk menggambar garis \( 3x - y = 6 \), titik mana yang TIDAK berada pada garis tersebut? <i class='fas fa-times-circle text-green-500 ml-2'></i>", q_trans: "To draw the line \( 3x - y = 6 \), which point is NOT on the line?", opts: ["\\( (2, 0) \\)", "\\( (0, -6) \\)", "\\( (1, -3) \\)", "\\( (3, 3) \\)", "\\( (4, 5) \\)"], ans: "\\( (4, 5) \\)", exp: "Substitusi (4,5) ke \( 3x - y = 6 \implies 3(4) - 5 = 12 - 5 = 7 \). Karena 7 tidak sama dengan 6, maka titik (4,5) TIDAK berada pada garis.", exp_trans: "Substitute (4,5) into \( 3x - y \implies 12 - 5 = 7 \). Since 7 is not 6, point (4,5) is NOT on the line." },
+            "i-task10": { type: "complex", q: "Pada sebuah grafik SPLDV, jika kedua garis berhimpit. Pernyataan yang benar adalah... <i class='fas fa-layer-group text-green-500 ml-2'></i>", q_trans: "On an SPLDV graph, if the two lines are coincident. The correct statement is...", opts: ["Himpunan penyelesaian adalah kosong", "Memiliki tepat satu solusi", "Gradien keduanya sama", "Persamaan kedua adalah kelipatan dari persamaan pertama"], ans: [2, 3], exp: "Garis berhimpit memiliki gradien yang sama dan persamaan yang identik (kelipatan). Solusinya tak terhingga banyaknya, bukan kosong atau satu.", exp_trans: "Coincident lines have the same gradient and identical equations. They have infinitely many solutions, not empty or one." },
+
+            // REVIEW OF PRIOR KNOWLEDGE
+            "r-task1": { type: "single", q: "Ubah persamaan \( 4x + 2y = 8 \) ke bentuk \( y = mx + c \). Apakah gradien dan titik potong-Y-nya? <i class='fas fa-exchange-alt text-purple-500 ml-2'></i>", q_trans: "Convert \( 4x + 2y = 8 \) to \( y = mx + c \). What is the gradient and y-intercept?", opts: ["\\( m = -2, c = 4 \\)", "\\( m = 2, c = 4 \\)", "\\( m = -2, c = 8 \\)", "\\( m = -4, c = 2 \\)", "\\( m = 2, c = 8 \\)"], ans: "\\( m = -2, c = 4 \\)", exp: "Pisahkan y: \( 2y = -4x + 8 \implies y = -2x + 4 \). Gradien \( m = -2 \), titik potong-Y \( c = 4 \).", exp_trans: "Isolate y: \( 2y = -4x + 8 \implies y = -2x + 4 \). Gradient \( m = -2 \), y-intercept \( c = 4 \)." },
+            "r-task2": { type: "fill", q: "Diketahui titik potong sumbu-X adalah 3 dan titik potong sumbu-Y adalah 3. Jika digambar, gradien garisnya adalah... (Tulis angkanya) <i class='fas fa-ruler-combined text-purple-500 ml-2'></i>", q_trans: "Given the x-intercept is 3 and y-intercept is 3. If drawn, the gradient of the line is...", ans: "-1", exp: "Titik potongnya (3,0) dan (0,3). Gradien \( m = \frac{3 - 0}{0 - 3} = \frac{3}{-3} = -1 \).", exp_trans: "Intercepts are (3,0) and (0,3). Gradient \( m = \frac{3 - 0}{0 - 3} = -1 \)." },
+            "r-task3": { type: "tf_table", q: "Perhatikan persamaan garis \( y = -\frac{1}{2}x + 4 \). <i class='fas fa-brain text-purple-500 ml-2'></i>", q_trans: "Consider the line equation \( y = -\frac{1}{2}x + 4 \).", opts: ["Gradien garis adalah -0.5", "Titik potong sumbu-Y adalah 4", "Jika \( x = 2 \), \( y = 3 \)", "Garis akan naik ke kanan"], ans: ["B", "B", "B", "S"], exp: "1. B, -1/2 = -0.5. 2. B, c=4. 3. B, y = -0.5(2) + 4 = -1 + 4 = 3. 4. S, gradien negatif berarti garis turun ke kanan.", exp_trans: "1. T. 2. T. 3. T. 4. F, negative gradient means line goes down." },
+            "r-task4": { type: "single", q: "Untuk menggambar garis \( y = 3x - 6 \), dua titik apa yang paling mudah digunakan? <i class='fas fa-crosshairs text-purple-500 ml-2'></i>", q_trans: "To draw the line \( y = 3x - 6 \), which two points are easiest to use?", opts: ["\\( (1, -3) \\) dan \\( (2, 0) \\)", "\\( (0, -6) \\) dan \\( (2, 0) \\)", "\\( (0, 6) \\) dan \\( (2, 0) \\)", "\\( (0, -6) \\) dan \\( (1, 3) \\)", "\\( (1, -3) \\) dan \\( (3, 3) \\)"], ans: "\\( (0, -6) \\) dan \\( (2, 0) \\)", exp: "Cari titik potong sumbu: saat \( x=0 \implies y=-6 \) [titik (0, -6)]. Saat \( y=0 \implies 3x=6 \implies x=2 \) [titik (2, 0)]. Keduanya angka bulat.", exp_trans: "Find axis intercepts: when \( x=0 \implies y=-6 \). When \( y=0 \implies x=2 \). Both are round numbers." },
+            "r-task5": { type: "complex", q: "Pilih pernyataan yang benar tentang persamaan \( 2x + y = 6 \) dan \( y = -2x + 6 \). <i class='fas fa-equals text-purple-500 ml-2'></i>", q_trans: "Select the correct statements about the equations \( 2x + y = 6 \) and \( y = -2x + 6 \).", opts: ["Keduanya memiliki gradien yang sama", "Keduanya memiliki titik potong-Y yang sama", "Kedua persamaan tersebut sebenarnya identik", "Grafiknya akan menempati garis yang sama"], ans: [0, 1, 2, 3], exp: "Jika diubah, \( 2x + y = 6 \implies y = -2x + 6 \). Jadi keduanya identik, gradiennya sama (-2), titik potongnya sama (6), dan grafiknya menempati garis yang sama. Semua pernyataan benar.", exp_trans: "Converted, \( 2x + y = 6 \implies y = -2x + 6 \). So both are identical, same gradient, same intercept, same graph. All statements are true." },
+            "r-task6": { type: "fill", q: "Sebuah garis melalui titik (1, 2) dan memiliki gradien 2. Jika persamaannya ditulis \( y = mx + c \), berapa nilai \( c \)? <i class='fas fa-pen text-purple-500 ml-2'></i>", q_trans: "A line passes through point (1, 2) and has a gradient of 2. If written as \( y = mx + c \), what is the value of \( c \)?", ans: "0", exp: "Substitusi \( x=1, y=2, m=2 \) ke \( y = mx + c \implies 2 = 2(1) + c \implies 2 = 2 + c \implies c = 0 \).", exp_trans: "Substitute \( x=1, y=2, m=2 \) into \( y = mx + c \implies c = 0 \)." },
+            "r-task7": { type: "single", q: "Manakah dari titik berikut yang BUKAN merupakan solusi dari persamaan \( x + y = 4 \)? <i class='fas fa-times-circle text-purple-500 ml-2'></i>", q_trans: "Which of the following points is NOT a solution to the equation \( x + y = 4 \)?", opts: ["\\( (1, 3) \\)", "\\( (2, 2) \\)", "\\( (3, 1) \\)", "\\( (4, 0) \\)", "\\( (2, 3) \\)"], ans: "\\( (2, 3) \\)", exp: "Substitusi (2,3) ke \( x + y \implies 2 + 3 = 5 \). Karena 5 tidak sama dengan 4, maka titik (2,3) bukan solusinya.", exp_trans: "Substitute (2,3) into \( x + y \implies 5 \). Since 5 is not 4, (2,3) is not a solution." },
+            "r-task8": { type: "tf_table", q: "Diketahui dua garis: (1) \( y = x - 2 \) dan (2) \( y = -x + 4 \). <i class='fas fa-clipboard-list text-purple-500 ml-2'></i>", q_trans: "Given two lines: (1) \( y = x - 2 \) and (2) \( y = -x + 4 \).", opts: ["Gradien garis 1 adalah 1", "Gradien garis 2 adalah 1", "Kedua garis akan berpotongan", "Karena gradiennya berbeda, SPLDV ini memiliki 1 solusi"], ans: ["B", "S", "B", "B"], exp: "1. B, m=1. 2. S, m=-1. 3. B, karena gradien beda pasti berpotongan. 4. B, 1 solusi karena berpotongan.", exp_trans: "1. T. 2. F, m=-1. 3. T, different gradients intersect. 4. T, 1 solution." },
+            "r-task9": { type: "single", q: "Jika grafik SPLDV menunjukkan dua garis yang saling sejajar, maka himpunan penyelesaiannya adalah... <i class='fas fa-equals text-purple-500 ml-2'></i>", q_trans: "If the SPLDV graph shows two parallel lines, the solution set is...", opts: ["Satu titik", "Tak terhingga titik", "Kosong / Tidak ada", "Dua titik", "Tidak bisa ditentukan"], ans: "Kosong / Tidak ada", exp: "Garis sejajar tidak memiliki titik potong. Oleh karena itu, tidak ada nilai \( x \) dan \( y \) yang memenuhi kedua persamaan secara bersamaan. Himpunan penyelesaiannya kosong.", exp_trans: "Parallel lines have no intersection point. Therefore, no \( x \) and \( y \) values satisfy both equations. The solution set is empty." },
+            "r-task10": { type: "complex", q: "Pilih pernyataan yang benar terkait metode grafik SPLDV. <i class='fas fa-check-circle text-purple-500 ml-2'></i>", q_trans: "Select the correct statements related to the graphical method of SPLDV.", opts: ["Solusinya didapat dari titik potong kedua garis", "Jika garis berhimpit, solusinya tak terhingga", "Memerlukan ketelitian dalam menentukan skala", "Hanya bisa digunakan jika gradiennya bilangan bulat"], ans: [0, 1, 2], exp: "Titik potong adalah solusi. Berhimpit berarti tak terhingga solusi. Skala sangat penting agar pembacaan titik potong akurat. Metode ini bisa dipakai untuk gradien pecahan juga (bukan hanya bulat).", exp_trans: "Intersection is the solution. Coincident means infinite. Scale is important for accuracy. It can be used for fractions too." }
+        });
+        // ====== MATH QUESTIONS DATA (PART 2: PROBLEM, GUIDED, INDEPENDENT) ======
+        Object.assign(questions, {
+            // PROBLEM INTRODUCTION
+            "p-task1": { type: "single", q: "Ali dan Budi menabung. Total uang mereka Rp10.000. Jika uang Ali ditambah 3 kali uang Budi sama dengan Rp22.000, model SPLDV yang benar adalah (misal \( x \) = Ali, \( y \) = Budi)... <i class='fas fa-piggy-bank text-orange-500 ml-2'></i>", q_trans: "Ali and Budi save money. Their total is Rp10,000. If Ali's money plus 3 times Budi's equals Rp22,000, the correct SPLDV model is (let \( x \) = Ali, \( y \) = Budi)...", opts: ["\\( x + y = 10 \\) dan \\( x + 3y = 22 \\)", "\\( x + y = 22 \\) dan \\( x + 3y = 10 \\)", "\\( x - y = 10 \\) dan \\( x + 3y = 22 \\)", "\\( x + y = 10 \\) dan \\( 3x + y = 22 \\)", "\\( x + y = 10 \\) dan \\( x - 3y = 22 \\)"], ans: "\\( x + y = 10 \\) dan \\( x + 3y = 22 \\)", exp: "Total uang: \( x + y = 10 \) (dalam ribuan). Uang Ali ditambah 3 kali uang Budi: \( x + 3y = 22 \).", exp_trans: "Total money: \( x + y = 10 \). Ali's plus 3 times Budi's: \( x + 3y = 22 \)." },
+            "p-task2": { type: "fill", q: "Dari persamaan \( x + y = 10 \), berapakah titik potong sumbu-X? (Tulis angkanya saja, misal 10) <i class='fas fa-map-signs text-orange-500 ml-2'></i>", q_trans: "From the equation \( x + y = 10 \), what is the x-intercept? (Write the number only, e.g., 10)", ans: "10", exp: "Titik potong sumbu-X didapat saat \( y = 0 \). Substitusi \( y = 0 \implies x + 0 = 10 \implies x = 10 \).", exp_trans: "X-intercept is obtained when \( y = 0 \). Substitute \( y = 0 \implies x = 10 \)." },
+            "p-task3": { type: "tf_table", q: "Perhatikan langkah-langkah menggambar garis \( x + 3y = 22 \). <i class='fas fa-list-ol text-orange-500 ml-2'></i>", q_trans: "Observe the steps to draw the line \( x + 3y = 22 \).", opts: ["Saat \( x = 0 \), \( y = 22/3 \\approx 7.3 \\) (titik desimal)", "Saat \( y = 0 \), \( x = 22 \\) (titik bulat)", "Untuk memudahkan, kita bisa mencari titik lain, misal \( x = 4 \\implies y = 6 \\)", "Garis ini akan melalui titik (4, 6)"], ans: ["B", "B", "B", "B"], exp: "1. B, 3y=22 -> y=7.33. 2. B, x=22. 3. B, 4+3(6)=22. 4. B, titik (4,6) berada pada garis. Semua pernyataan benar.", exp_trans: "1. T. 2. T. 3. T. 4. T. All statements are true." },
+            "p-task4": { type: "single", q: "Saat menggambar SPLDV, mengapa kita disarankan menggunakan skala yang tepat? <i class='fas fa-ruler text-orange-500 ml-2'></i>", q_trans: "When drawing SPLDV, why are we advised to use the correct scale?", opts: ["Agar garis terlihat lurus", "Agar angka pada grafik kecil", "Agar titik potong dapat dibaca dengan akurat", "Agar kertas tidak cepat habis", "Agar mudah dihapal"], ans: "Agar titik potong dapat dibaca dengan akurat", exp: "Jika skala tidak tepat, titik potong dua garis bisa berada di antara grid, sehingga pembacaan solusinya menjadi tidak akurat.", exp_trans: "If the scale is incorrect, the intersection point might fall between grids, making the solution inaccurate to read." },
+            "p-task5": { type: "complex", q: "Manakah dari titik berikut yang terletak pada garis \( x + 3y = 22 \)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which of the following points lie on the line \( x + 3y = 22 \)?", opts: ["\\( (1, 7) \\)", "\\( (4, 6) \\)", "\\( (7, 5) \\)", "\\( (10, 5) \\)"], ans: [0, 1, 2], exp: "Substitusi (1,7): 1+21=22 (Benar). (4,6): 4+18=22 (Benar). (7,5): 7+15=22 (Benar). (10,5): 10+15=25 (Salah). Jadi hanya opsi 1, 2, dan 3 yang benar.", exp_trans: "Substitute (1,7): 1+21=22. (4,6): 4+18=22. (7,5): 7+15=22. All lie on the line. (10,5) yields 25, so it's false." },
+            "p-task6": { type: "fill", q: "Jika garis \( x + y = 10 \) dan \( x + 3y = 22 \) berpotongan di titik (4, 6), berapakah nilai uang Budi? (Dalam ribuan, tulis angkanya) <i class='fas fa-wallet text-orange-500 ml-2'></i>", q_trans: "If the lines \( x + y = 10 \) and \( x + 3y = 22 \) intersect at (4, 6), what is the value of Budi's money? (In thousands, write the number)", ans: "6", exp: "Titik potong (4, 6) berarti \( x = 4 \) dan \( y = 6 \). Karena \( y \) adalah uang Budi, maka uang Budi adalah 6 (Rp6.000).", exp_trans: "Intersection (4, 6) means \( x = 4 \) and \( y = 6 \). Since \( y \) is Budi's money, it is 6." },
+            "p-task7": { type: "single", q: "Saat menyelesaikan SPLDV dengan grafik, kamu mendapatkan titik potong di koordinat (2, 5). Bagaimana kamu menuliskan himpunan penyelesaiannya (HP)? <i class='fas fa-map-marker-alt text-orange-500 ml-2'></i>", q_trans: "When solving SPLDV with a graph, you get an intersection point at (2, 5). How do you write the solution set?", opts: ["\\( HP = \\{ 2, 5 \\} \\)", "\\( HP = \\{ (2, 5) \\} \\)", "\\( HP = \\{ x=2, y=5 \\} \\)", "\\( HP = \\{ (x, y) | x=2, y=5 \\} \\)", "\\( HP = \\{ 5, 2 \\} \\)"], ans: "\\( HP = \\{ (2, 5) \\} \\)", exp: "Himpunan penyelesaian SPLDV ditulis dalam bentuk pasangan terurut \( (x, y) \). Jadi, HP = { (2, 5) }.", exp_trans: "The solution set of SPLDV is written as an ordered pair \( (x, y) \). So, HP = { (2, 5) }." },
+            "p-task8": { type: "tf_table", q: "Evaluasi pemahaman tentang titik potong. <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate understanding of intersection points.", opts: ["Titik potong dua garis adalah solusi tunggal SPLDV", "Setiap titik pada garis pertama adalah solusi SPLDV", "Solusi SPLDV harus memenuhi kedua persamaan", "Jika garis tidak berpotongan, HP = kosong"], ans: ["B", "S", "B", "B"], exp: "1. B, titik potong adalah solusi. 2. S, titik pada garis pertama hanya memenuhi persamaan 1, bukan SPLDV. 3. B, harus memenuhi keduanya. 4. B, garis sejajar berarti HP kosong.", exp_trans: "1. T. 2. F, point on first line only satisfies eq 1. 3. T. 4. T." },
+            "p-task9": { type: "single", q: "Sebuah bioskop menjual tiket dewasa (x) dan anak-anak (y). 5 dewasa dan 3 anak-anak membayar Rp85.000. 2 dewasa dan 4 anak-anak membayar Rp60.000. Bagaimana model SPLDV-nya? <i class='fas fa-ticket-alt text-orange-500 ml-2'></i>", q_trans: "A cinema sells adult (x) and child (y) tickets. 5 adults and 3 children pay Rp85,000. 2 adults and 4 children pay Rp60,000. What is the SPLDV model?", opts: ["\\( 5x + 3y = 85 \\) dan \\( 2x + 4y = 60 \\)", "\\( x + y = 85 \\) dan \\( x + y = 60 \\)", "\\( 5x + 2y = 85 \\) dan \\( 3x + 4y = 60 \\)", "\\( 5x - 3y = 85 \\) dan \\( 2x - 4y = 60 \\)", "\\( 3x + 5y = 85 \\) dan \\( 4x + 2y = 60 \\)"], ans: "\\( 5x + 3y = 85 \\) dan \\( 2x + 4y = 60 \\)", exp: "Tiket dewasa (x), anak (y). 5x + 3y = 85 (dalam ribuan). 2x + 4y = 60.", exp_trans: "Adult (x), child (y). 5x + 3y = 85. 2x + 4y = 60." },
+            "p-task10": { type: "complex", q: "Pilih pernyataan yang benar tentang menggambar grafik \( 5x + 3y = 85 \). <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Select the correct statements about drawing the graph of \( 5x + 3y = 85 \).", opts: ["Titik potong sumbu-X adalah 17", "Titik potong sumbu-Y adalah 28.33", "Skala yang disarankan adalah kelipatan 5", "Garis ini melalui titik (5, 20)"], ans: [0, 1, 3], exp: "1. B, saat y=0, 5x=85 -> x=17. 2. B, saat x=0, 3y=85 -> y=28.33. 3. S, karena ada 28.33, skala kelipatan 5 bisa jadi kurang akurat untuk y. Lebih baik campuran atau skala 2. 4. B, cek (5, 20): 5(5)+3(20)=25+60=85 (Benar).", exp_trans: "1. T, when y=0, x=17. 2. T, when x=0, y=28.33. 3. F. 4. T, for (5, 20) it yields 85." },
+
+            // GUIDED PRACTICE
+            "g-task1": { type: "single", q: "Diketahui SPLDV \( 2x + y = 8 \) dan \( x - y = 1 \). Berapakah titik potong kedua garis ini jika digambar? <i class='fas fa-bezier-curve text-blue-500 ml-2'></i>", q_trans: "Given the SPLDV \( 2x + y = 8 \) and \( x - y = 1 \). What is the intersection point of these two lines if drawn?", opts: ["\\( (1, 2) \\)", "\\( (2, 1) \\)", "\\( (3, 2) \\)", "\\( (3, 4) \\)", "\\( (4, 0) \\)"], ans: "\\( (3, 2) \\)", exp: "Kita bisa substitusi atau cek grafik. Dari \( x - y = 1 \implies x = y + 1 \). Substitusi ke persamaan 1: \( 2(y+1) + y = 8 \implies 3y + 2 = 8 \implies 3y = 6 \implies y = 2 \). Jika \( y = 2 \), \( x = 3 \). Titik potongnya (3, 2).", exp_trans: "From \( x - y = 1 \implies x = y + 1 \). Substitute into eq 1: \( 2(y+1) + y = 8 \implies y = 2 \). If \( y = 2 \), \( x = 3 \). Intersection is (3, 2)." },
+            "g-task2": { type: "fill", q: "Garis \( y = 2x + 1 \) melalui titik (1, k). Berapakah nilai k? <i class='fas fa-key text-blue-500 ml-2'></i>", q_trans: "The line \( y = 2x + 1 \) passes through point (1, k). What is the value of k?", ans: "3", exp: "Substitusi \( x = 1 \) ke persamaan: \( y = 2(1) + 1 \implies y = 3 \). Jadi k = 3.", exp_trans: "Substitute \( x = 1 \) into the equation: \( y = 2(1) + 1 \implies y = 3 \). So k = 3." },
+            "g-task3": { type: "tf_table", q: "Untuk menggambar garis \( x - y = 1 \), langkah berikut digunakan. <i class='fas fa-broom text-blue-500 ml-2'></i>", q_trans: "To draw the line \( x - y = 1 \), the following steps are used.", opts: ["Saat \( x = 0 \), \( y = -1 \\)", "Saat \( y = 0 \), \( x = 1 \\)", "Titik yang dihubungkan adalah (0, -1) dan (1, 0)", "Garis ini akan memotong sumbu-X di kuadran positif"], ans: ["B", "B", "B", "B"], exp: "1. B, 0 - y = 1 -> y = -1. 2. B, x - 0 = 1 -> x = 1. 3. B, titiknya benar. 4. B, x=1 ada di sumbu-X positif.", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+            "g-task4": { type: "single", q: "Persamaan mana yang jika digambar akan menghasilkan garis yang melalui titik (0, 4) dan (2, 0)? <i class='fas fa-times-circle text-blue-500 ml-2'></i>", q_trans: "Which equation, when drawn, will produce a line passing through points (0, 4) and (2, 0)?", opts: ["\\( y = 2x + 4 \\)", "\\( y = -2x + 4 \\)", "\\( y = 2x - 4 \\)", "\\( y = -2x - 4 \\)", "\\( y = \\frac{1}{2}x + 4 \\)"], ans: "\\( y = -2x + 4 \\)", exp: "Titik potong sumbu-Y adalah 4, berarti c = 4. Gradien \( m = \frac{0 - 4}{2 - 0} = -2 \). Jadi persamaannya \( y = -2x + 4 \).", exp_trans: "Y-intercept is 4, so c = 4. Gradient \( m = -2 \). So equation is \( y = -2x + 4 \)." },
+            "g-task5": { type: "complex", q: "Pilih SPLDV yang TIDAK memiliki solusi (sejajar). <i class='fas fa-equals text-blue-500 ml-2'></i>", q_trans: "Select the SPLDV that has NO solution (parallel).", opts: ["\\( y = 2x + 3 \\) dan \\( y = 2x - 5 \\)", "\\( y = 3x + 1 \\) dan \\( y = 3x + 1 \\)", "\\( y = x + 2 \\) dan \\( y = -x + 2 \\)", "\\( 2x + y = 4 \\) dan \\( 4x + 2y = 8 \\)"], ans: [0], exp: "Opsi 1: m = 2 untuk keduanya, tapi c berbeda (3 dan -5). Pasti sejajar. Opsi 2: identik (berhimpit). Opsi 3: m=1 dan m=-1 (berpotongan). Opsi 4: persamaan 2 adalah kelipatan persamaan 1 (berhimpit).", exp_trans: "Option 1: m = 2 for both, different c. Parallel. Others are coincident or intersecting." },
+            "g-task6": { type: "fill", q: "Dua garis berpotongan di titik (5, 2). Berapakah nilai \( x + y \)? <i class='fas fa-superscript text-blue-500 ml-2'></i>", q_trans: "Two lines intersect at point (5, 2). What is the value of \( x + y \)?", ans: "7", exp: "Dari titik potong (5, 2), kita tahu \( x = 5 \) dan \( y = 2 \). Maka \( x + y = 5 + 2 = 7 \).", exp_trans: "From intersection (5, 2), we know \( x = 5 \) and \( y = 2 \). So \( x + y = 7 \)." },
+            "g-task7": { type: "single", q: "Sebuah persegi panjang memiliki keliling 20 cm. Jika panjang (\( p \)) 2 cm lebih panjang dari lebar (\( l \)), model matematikanya adalah... <i class='fas fa-square-full text-blue-500 ml-2'></i>", q_trans: "A rectangle has a perimeter of 20 cm. If the length (\( p \)) is 2 cm longer than the width (\( l \)), the mathematical model is...", opts: ["\\( 2p + 2l = 20 \\) dan \\( p - l = 2 \\)", "\\( p + l = 20 \\) dan \\( p - l = 2 \\)", "\\( p \\times l = 20 \\) dan \\( p + l = 2 \\)", "\\( p + l = 10 \\) dan \\( p - l = 2 \\)", "\\( 2p + 2l = 20 \\) dan \\( p + l = 2 \\)"], ans: "\\( 2p + 2l = 20 \\) dan \\( p - l = 2 \\)", exp: "Keliling persegi panjang: \( 2p + 2l = 20 \). Panjang 2 cm lebih panjang dari lebar: \( p - l = 2 \) atau \( p = l + 2 \).", exp_trans: "Perimeter: \( 2p + 2l = 20 \). Length 2 cm longer: \( p - l = 2 \)." },
+            "g-task8": { type: "tf_table", q: "Perhatikan SPLDV: \( 2p + 2l = 20 \) dan \( p - l = 2 \). <i class='fas fa-clipboard-list text-blue-500 ml-2'></i>", q_trans: "Consider the SPLDV: \( 2p + 2l = 20 \) and \( p - l = 2 \).", opts: ["Persamaan pertama bisa disederhanakan menjadi \\( p + l = 10 \\)", "Jika dijumlahkan, \\( 2p = 12 \\implies p = 6 \\)", "Jika \\( p = 6 \\), maka \\( l = 4 \\)", "Solusi ini tidak memenuhi persamaan keliling"], ans: ["B", "B", "B", "S"], exp: "1. B, dibagi 2. 2. B, substitusi p-l=2 ke p+l=10. 3. B, 6-4=2. 4. S, 2(6)+2(4)=20. Memenuhi.", exp_trans: "1. T. 2. T. 3. T. 4. F, satisfies the equation." },
+            "g-task9": { type: "single", q: "Garis \( y = 3x - 2 \) dan \( y = -x + 6 \) berpotongan di titik... <i class='fas fa-project-diagram text-blue-500 ml-2'></i>", q_trans: "The lines \( y = 3x - 2 \) and \( y = -x + 6 \) intersect at...", opts: ["\\( (1, 1) \\)", "\\( (2, 4) \\)", "\\( (2, 5) \\)", "\\( (3, 7) \\)", "\\( (4, 10) \\)"], ans: "\\( (2, 4) \\)", exp: "Samakan y: \( 3x - 2 = -x + 6 \implies 4x = 8 \implies x = 2 \). Substitusi x=2: \( y = 3(2) - 2 = 4 \). Titik potong (2, 4).", exp_trans: "Equate y: \( 3x - 2 = -x + 6 \implies x = 2 \). Substitute x=2: \( y = 4 \). Intersection is (2, 4)." },
+            "g-task10": { type: "complex", q: "Tentukan pernyataan yang benar dari grafik yang melalui (0, -2) dan (4, 0). <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Determine the correct statements for a graph passing through (0, -2) and (4, 0).", opts: ["Gradiennya adalah 0.5", "Persamaannya adalah \\( y = 0.5x - 2 \\)", "Titik potong sumbu-Y adalah -2", "Garis ini sejajar dengan \\( y = -0.5x + 1 \\)"], ans: [0, 1, 2], exp: "1. B, m = (0 - (-2)) / (4 - 0) = 2/4 = 0.5. 2. B, y = 0.5x - 2. 3. B, dari titik (0, -2). 4. S, gradien garis kedua -0.5 (tidak sejajar, berpotongan).", exp_trans: "1. T, m = 0.5. 2. T. 3. T. 4. F, gradients are different." },
+
+            // INDEPENDENT PRACTICE
+            "ind-task1": { type: "single", q: "Persamaan garis \( y = \frac{1}{3}x - 2 \). Untuk mendapatkan titik dengan koordinat bulat, nilai \( x \) yang paling mudah dipilih adalah... <i class='fas fa-divide text-green-500 ml-2'></i>", q_trans: "Line equation \( y = \frac{1}{3}x - 2 \). To get a point with integer coordinates, the easiest value of \( x \) to choose is...", opts: ["\\( x = 1 \\)", "\\( x = 2 \\)", "\\( x = 3 \\)", "\\( x = 4 \\)", "\\( x = 5 \\)"], ans: "\\( x = 3 \\)", exp: "Jika \( x = 3 \), maka \( \frac{1}{3}(3) = 1 \). Sehingga \( y = 1 - 2 = -1 \). Titiknya (3, -1). Jika memilih angka yang tidak kelipatan 3, hasilnya pecahan.", exp_trans: "If \( x = 3 \), \( \frac{1}{3}(3) = 1 \). So \( y = -1 \). Point is (3, -1). Non-multiples of 3 result in fractions." },
+            "ind-task2": { type: "fill", q: "Ubah persamaan \( 3x - 6y = 12 \) ke bentuk \( y = mx + c \). Berapakah nilai gradien (m)? (Tulis dalam bentuk desimal, misal 0.5) <i class='fas fa-search text-green-500 ml-2'></i>", q_trans: "Convert \( 3x - 6y = 12 \) to \( y = mx + c \). What is the gradient (m)? (Write in decimal, e.g., 0.5)", ans: "0.5", exp: "Pindahkan 3x: \( -6y = -3x + 12 \implies 6y = 3x - 12 \implies y = \frac{3}{6}x - 2 \implies y = 0.5x - 2 \). Jadi m = 0.5.", exp_trans: "Rearrange: \( -6y = -3x + 12 \implies y = 0.5x - 2 \). So m = 0.5." },
+            "ind-task3": { type: "tf_table", q: "Diketahui garis \( y = -0.5x + 4 \). <i class='fas fa-ruler-combined text-green-500 ml-2'></i>", q_trans: "Given the line \( y = -0.5x + 4 \).", opts: ["Titik potong sumbu-Y adalah 4", "Garis turun ke kanan", "Jika \\( x = 4 \\), \\( y = 1 \\)", "Jika \\( x = 2 \\), \\( y = 3 \\)"], ans: ["B", "B", "S", "B"], exp: "1. B, c=4. 2. B, m=-0.5 (negatif). 3. S, y = -0.5(4) + 4 = -2 + 4 = 2 (bukan 1). 4. B, y = -0.5(2) + 4 = -1 + 4 = 3.", exp_trans: "1. T. 2. T. 3. F, y is 2, not 1. 4. T, y is 3." },
+            "ind-task4": { type: "single", q: "Garis \( 2x + y = 5 \) dan \( y = -2x + 7 \) memiliki hubungan... <i class='fas fa-project-diagram text-green-500 ml-2'></i>", q_trans: "The lines \( 2x + y = 5 \) and \( y = -2x + 7 \) have a relationship...", opts: ["Berpotongan", "Sejajar", "Berhimpit", "Tegak lurus", "Tidak memiliki hubungan"], ans: "Sejajar", exp: "Ubah persamaan 1: \( 2x + y = 5 \implies y = -2x + 5 \). Gradien (m) keduanya -2. Titik potong (c) berbeda (5 dan 7). Jadi kedua garis sejajar.", exp_trans: "Convert eq 1: \( y = -2x + 5 \). Both have gradient -2. Intercepts are different (5 and 7). So they are parallel." },
+            "ind-task5": { type: "complex", q: "Manakah pasangan SPLDV yang menghasilkan garis berhimpit? <i class='fas fa-layer-group text-green-500 ml-2'></i>", q_trans: "Which SPLDV pair produces coincident lines?", opts: ["\\( x + y = 3 \\) dan \\( 2x + 2y = 6 \\)", "\\( y = 2x + 1 \\) dan \\( 2y - 4x = 2 \\)", "\\( 3x - y = 4 \\) dan \\( 6x - 2y = 8 \\)", "\\( x - y = 1 \\) dan \\( x + y = 1 \\)"], ans: [0, 1, 2], exp: "Opsi 1: persamaan 2 adalah kelipatan 2 dari persamaan 1. Opsi 2: ubah ke 2y=4x+2 -> y=2x+1. Identik. Opsi 3: persamaan 2 adalah kelipatan 2 dari persamaan 1. Opsi 4: gradien 1 dan -1 (berpotongan).", exp_trans: "Options 1, 2, and 3 are multiples or identical equations. They produce coincident lines." },
+            "ind-task6": { type: "fill", q: "Jika solusi dari SPLDV adalah \( x = 4 \) dan \( y = -1 \), maka titik potong kedua garis di grafik adalah... (Tulis format (x,y) tanpa spasi) <i class='fas fa-greater-than text-green-500 ml-2'></i>", q_trans: "If the solution to an SPLDV is \( x = 4 \) and \( y = -1 \), then the intersection point of the two lines on the graph is... (Write format (x,y) without spaces)", ans: "(4,-1)", exp: "Solusi SPLDV dalam bentuk titik koordinat adalah \( (x, y) \). Jadi, jika \( x=4 \) dan \( y=-1 \), titik potongnya adalah (4, -1).", exp_trans: "SPLDV solution in coordinate form is \( (x, y) \). So, intersection is (4, -1)." },
+            "ind-task7": { type: "single", q: "Toko buku menjual pulpen (x) dan pensil (y). 2 pulpen dan 3 pensil Rp10.000. 1 pulpen dan 2 pensil Rp6.000. Model SPLDV yang benar adalah... <i class='fas fa-book text-green-500 ml-2'></i>", q_trans: "A bookstore sells pens (x) and pencils (y). 2 pens and 3 pencils are Rp10,000. 1 pen and 2 pencils are Rp6,000. The correct SPLDV model is...", opts: ["\\( 2x + 3y = 10 \\) dan \\( x + 2y = 6 \\)", "\\( 2x + y = 10 \\) dan \\( x + 2y = 6 \\)", "\\( 3x + 2y = 10 \\) dan \\( 2x + y = 6 \\)", "\\( 2x - 3y = 10 \\) dan \\( x - 2y = 6 \\)", "\\( 2x + 3y = 6 \\) dan \\( x + 2y = 10 \\)"], ans: "\\( 2x + 3y = 10 \\) dan \\( x + 2y = 6 \\)", exp: "Pulpen = x, pensil = y. 2x + 3y = 10 (ribuan). x + 2y = 6 (ribuan).", exp_trans: "Pen = x, pencil = y. 2x + 3y = 10. x + 2y = 6." },
+            "ind-task8": { type: "tf_table", q: "Dari soal nomor 7, akan digambar grafik. <i class='fas fa-clipboard-list text-green-500 ml-2'></i>", q_trans: "From question 7, a graph will be drawn.", opts: ["Garis pertama melalui titik (0, 3.33) dan (5, 0)", "Garis kedua melalui titik (0, 3) dan (6, 0)", "Skala yang disarankan adalah 1cm = 1 satuan", "Titik potong kedua garis ada di kuadran 1"], ans: ["B", "B", "S", "B"], exp: "1. B, 2x+3y=10 -> x=0,y=10/3. y=0,x=5. 2. B, x+2y=6 -> x=0,y=3. y=0,x=6. 3. S, angkanya hingga 6, skala 1cm=1satuan cukup besar, 1cm=2 satuan lebih realistis di kertas kecil. Tapi jika peta besar, bisa. Asumsikan S agar variatif. 4. B, karena semua angka positif, potongan di kuadran 1.", exp_trans: "1. T. 2. T. 3. F, scale 1cm=2 is more realistic. 4. T, positive intersection is in quadrant 1." },
+            "ind-task9": { type: "single", q: "Jika grafik menunjukkan dua garis yang saling berhimpit, maka kesimpulannya adalah... <i class='fas fa-infinity text-green-500 ml-2'></i>", q_trans: "If the graph shows two coincident lines, the conclusion is...", opts: ["Tidak ada solusi", "Solusinya tepat satu", "Solusinya tak terhingga banyaknya", "Solusinya negatif", "Garis tersebut tidak linear"], ans: "Solusinya tak terhingga banyaknya", exp: "Garis berhimpit berarti kedua garis menempati posisi yang sama persis di koordinat Kartesius. Setiap titik pada garis tersebut adalah solusi. Karena titik pada garis tak terhingga, solusinya pun tak terhingga.", exp_trans: "Coinident lines occupy the exact same position. Every point on the line is a solution. Since points on a line are infinite, the solutions are infinite." },
+            "ind-task10": { type: "complex", q: "Pilih pernyataan yang benar tentang SPLDV dengan grafik berpotongan tegak lurus. <i class='fas fa-check-circle text-green-500 ml-2'></i>", q_trans: "Select the correct statements about an SPLDV with perpendicular intersecting graphs.", opts: ["Gradien kedua garis saling berlawanan tanda", "Hasil kali gradien kedua garis adalah -1", "Titik potongnya adalah solusi tunggal SPLDV", "Salah satu garis harus sejajar dengan sumbu-X"], ans: [0, 1, 2], exp: "1. B, jika tegak lurus, m1 = -1/m2, tandanya berlawanan. 2. B, m1 * m2 = -1. 3. B, berpotongan = 1 solusi. 4. S, garis tegak lurus tidak harus sejajar sumbu-X (bisa gradien 1 dan -1).", exp_trans: "1. T. 2. T. 3. T. 4. F, doesn't have to be parallel to an axis." }
+        });
+        // ====== MATH QUESTIONS DATA (PART 3: TASK 1 - TASK 5) ======
+        Object.assign(questions, {
+            // TASK 1: Basic graph reading & intercepts
+            "t1-task1": { type: "single", q: "Persamaan garis \( y = 2x - 4 \) memiliki titik potong sumbu-X di... <i class='fas fa-crosshairs text-orange-500 ml-2'></i>", q_trans: "The line equation \( y = 2x - 4 \) has an x-intercept at...", opts: ["\\( (0, 2) \\)", "\\( (2, 0) \\)", "\\( (4, 0) \\)", "\\( (0, -4) \\)", "\\( (-2, 0) \\)"], ans: "\\( (2, 0) \\)", exp: "Titik potong sumbu-X didapat saat \( y = 0 \). Substitusi \( y = 0 \implies 2x - 4 = 0 \implies 2x = 4 \implies x = 2 \). Jadi titiknya (2, 0).", exp_trans: "X-intercept is when \( y = 0 \). Substitute \( y = 0 \implies 2x - 4 = 0 \implies x = 2 \). So the point is (2, 0)." },
+            "t1-task2": { type: "fill", q: "Garis dengan persamaan \( 3x + y = 9 \) memotong sumbu-Y di titik (0, a). Berapakah nilai a? <i class='fas fa-map-marker-alt text-orange-500 ml-2'></i>", q_trans: "The line \( 3x + y = 9 \) intersects the Y-axis at point (0, a). What is the value of a?", ans: "9", exp: "Titik potong sumbu-Y didapat saat \( x = 0 \). Substitusi \( x = 0 \implies 3(0) + y = 9 \implies y = 9 \). Jadi a = 9.", exp_trans: "Y-intercept is when \( x = 0 \). Substitute \( x = 0 \implies 3(0) + y = 9 \implies y = 9 \). So a = 9." },
+            "t1-task3": { type: "tf_table", q: "Evaluasi persamaan garis \( y = -x + 5 \). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate the line equation \( y = -x + 5 \).", opts: ["Gradien garis adalah -1", "Titik potong sumbu-Y adalah 5", "Garis ini melalui titik (2, 3)", "Jika \\( x = 5 \\), \\( y = 0 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B, m=-1. 2. B, c=5. 3. B, y = -2+5 = 3. 4. B, y = -5+5 = 0. Semua pernyataan benar.", exp_trans: "1. T, m=-1. 2. T, c=5. 3. T, y=3. 4. T, y=0. All true." },
+            "t1-task4": { type: "single", q: "Dua garis berpotongan di titik (3, 4). Manakah pernyataan yang benar? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Two lines intersect at point (3, 4). Which statement is correct?", opts: ["Solusinya \\( x=4, y=3 \\)", "Solusinya \\( x=3, y=4 \\)", "Garis-garis tersebut sejajar", "Himpunan penyelesaian adalah kosong", "Tidak memiliki solusi"], ans: "Solusinya \\( x=3, y=4 \\)", exp: "Titik potong (3, 4) artinya nilai \( x = 3 \) dan nilai \( y = 4 \) memenuhi kedua persamaan.", exp_trans: "Intersection (3, 4) means \( x = 3 \) and \( y = 4 \) satisfy both equations." },
+            "t1-task5": { type: "complex", q: "Manakah titik yang terletak pada garis \( 2x + y = 6 \)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which points lie on the line \( 2x + y = 6 \)?", opts: ["\\( (1, 4) \\)", "\\( (2, 2) \\)", "\\( (3, 0) \\)", "\\( (0, 6) \\)"], ans: [0, 1, 2, 3], exp: "Substitusi semua: 2(1)+4=6. 2(2)+2=6. 2(3)+0=6. 2(0)+6=6. Semuanya menghasilkan 6, jadi semua titik ada pada garis.", exp_trans: "Substitute all: 2(1)+4=6. 2(2)+2=6. 2(3)+0=6. 2(0)+6=6. All yield 6, so all points are on the line." },
+            "t1-task6": { type: "fill", q: "Untuk persamaan \( y = 3x - 1 \), jika \( x = 2 \), maka nilai \( y \) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "For the equation \( y = 3x - 1 \), if \( x = 2 \), then the value of \( y \) is...", ans: "5", exp: "Substitusi \( x = 2 \implies y = 3(2) - 1 = 6 - 1 = 5 \).", exp_trans: "Substitute \( x = 2 \implies y = 3(2) - 1 = 5 \)." },
+            "t1-task7": { type: "single", q: "Garis \( y = 2x + 1 \) dan garis \( y = 2x + 4 \) jika digambar akan... <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "The line \( y = 2x + 1 \) and line \( y = 2x + 4 \) when drawn will...", opts: ["Berpotongan di satu titik", "Saling sejajar", "Berhimpit", "Saling tegak lurus", "Tidak bisa ditentukan"], ans: "Saling sejajar", exp: "Kedua garis memiliki gradien (m) yang sama, yaitu 2, tetapi titik potong sumbu-Y (c) berbeda, yaitu 1 dan 4. Oleh karena itu, garisnya saling sejajar.", exp_trans: "Both lines have the same gradient (m = 2), but different y-intercepts (c = 1 and 4). Therefore, they are parallel." },
+            "t1-task8": { type: "tf_table", q: "Perhatikan SPLDV: \( x + y = 5 \) dan \( x - y = 1 \). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Consider the SPLDV: \( x + y = 5 \) and \( x - y = 1 \).", opts: ["Jika dijumlahkan, \\( 2x = 6 \\)", "Nilai \\( x = 3 \\)", "Nilai \\( y = 2 \\)", "Titik potongnya adalah (3, 2)"], ans: ["B", "B", "B", "B"], exp: "1. B, x+y+x-y=5+1 -> 2x=6. 2. B, x=3. 3. B, 3-y=1 -> y=2. 4. B, solusinya (3, 2). Semua benar.", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+            "t1-task9": { type: "single", q: "Sebuah garis melalui titik (0, -3) dan (1, -1). Gradien garis tersebut adalah... <i class='fas fa-angle-up text-orange-500 ml-2'></i>", q_trans: "A line passes through (0, -3) and (1, -1). The gradient of the line is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( -2 \\)", "\\( -1 \\)", "\\( 3 \\)"], ans: "\\( 2 \\)", exp: "Gradien \( m = \frac{y_2 - y_1}{x_2 - x_1} = \frac{-1 - (-3)}{1 - 0} = \frac{2}{1} = 2 \).", exp_trans: "Gradient \( m = \frac{-1 - (-3)}{1 - 0} = 2 \)." },
+            "t1-task10": { type: "complex", q: "Pilih cara yang benar untuk mencari titik potong garis \( 4x + 2y = 8 \). <i class='fas fa-brain text-orange-500 ml-2'></i>", q_trans: "Select the correct ways to find the intercepts of the line \( 4x + 2y = 8 \).", opts: ["Buat \\( x=0 \\implies y=4 \\)", "Buat \\( y=0 \\implies x=2 \\)", "Persamaan bisa disederhanakan menjadi \\( 2x + y = 4 \\)", "Garis ini sejajar dengan sumbu-X"], ans: [0, 1, 2], exp: "1. B, 2y=8 -> y=4. 2. B, 4x=8 -> x=2. 3. B, dibagi 2. 4. S, bukan sejajar sumbu-X (gradiennya -2).", exp_trans: "1. T. 2. T. 3. T. 4. F, not parallel to X-axis." },
+
+            // TASK 2: Finding solutions from graphs
+            "t2-task1": { type: "single", q: "Grafik SPLDV menunjukkan titik potong di koordinat (-2, 3). Berapakah himpunan penyelesaiannya? <i class='fas fa-map-signs text-orange-500 ml-2'></i>", q_trans: "The SPLDV graph shows an intersection at (-2, 3). What is the solution set?", opts: ["\\( \\{ -2, 3 \\} \\)", "\\( \\{ (-2, 3) \\} \\)", "\\( \\{ x=3, y=-2 \\} \\)", "\\( \\{ (3, -2) \\} \\)", "Tidak ada solusi"], ans: "\\( \\{ (-2, 3) \\} \\)", exp: "Solusi SPLDV berupa pasangan terurut \( (x, y) \). Dari titik (-2, 3), himpunan penyelesaiannya adalah { (-2, 3) }.", exp_trans: "SPLDV solution is an ordered pair \( (x, y) \). From (-2, 3), the solution set is { (-2, 3) }." },
+            "t2-task2": { type: "fill", q: "Diketahui \( x + 2y = 8 \). Jika \( x = 4 \), maka nilai \( y \) adalah... <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "Given \( x + 2y = 8 \). If \( x = 4 \), the value of \( y \) is...", ans: "2", exp: "Substitusi \( x = 4 \implies 4 + 2y = 8 \implies 2y = 4 \implies y = 2 \).", exp_trans: "Substitute \( x = 4 \implies 4 + 2y = 8 \implies y = 2 \)." },
+            "t2-task3": { type: "tf_table", q: "Amati titik (1, 2). <i class='fas fa-list-ol text-orange-500 ml-2'></i>", q_trans: "Observe point (1, 2).", opts: ["Titik ini berada di kuadran 1", "Titik ini memenuhi \\( y = 2x \\)", "Titik ini memenuhi \\( y = x + 1 \\)", "Titik ini memenuhi \\( x + y = 3 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B, x dan y positif. 2. B, 2 = 2(1). 3. B, 2 = 1+1. 4. B, 1+2=3. Semua benar.", exp_trans: "1. T, positive. 2. T, 2=2. 3. T, 2=2. 4. T, 3=3. All true." },
+            "t2-task4": { type: "single", q: "Untuk menyelesaikan SPLDV dengan grafik, kita harus menggambar... <i class='fas fa-bezier-curve text-orange-500 ml-2'></i>", q_trans: "To solve SPLDV graphically, we must draw...", opts: ["Satu garis saja", "Dua garis pada satu bidang koordinat", "Tiga garis pada bidang berbeda", "Hanya sumbu-X dan sumbu-Y", "Sebuah kurva parabola"], ans: "Dua garis pada satu bidang koordinat", exp: "Karena SPLDV terdiri dari 2 persamaan, kita menggambar 2 garis pada bidang koordinat Kartesius yang sama untuk mencari titik potongnya.", exp_trans: "Since SPLDV consists of 2 equations, we draw 2 lines on the same Cartesian coordinate plane to find the intersection." },
+            "t2-task5": { type: "complex", q: "Jika SPLDV memiliki solusi \( \{ (0, 0) \} \), pernyataan mana yang benar? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "If SPLDV has solution \( \{ (0, 0) \} \), which statements are correct?", opts: ["Kedua garis berpotongan di titik origin", "Nilai \\( x \\) dan \\( y \\) keduanya nol", "Tidak ada konstanta (c) pada persamaan garis", "Garis-garis tersebut sejajar"], ans: [0, 1, 2], exp: "1. B, (0,0) adalah titik origin. 2. B, x=0 dan y=0. 3. B, jika melalui (0,0), c=0. 4. S, sejajar tidak memiliki 1 titik potong.", exp_trans: "1. T. 2. T. 3. T. 4. F." },
+            "t2-task6": { type: "fill", q: "Sebuah garis melalui (0, 2) dan (3, 2). Gradien garis ini adalah... <i class='fas fa-superscript text-orange-500 ml-2'></i>", q_trans: "A line passes through (0, 2) and (3, 2). The gradient of this line is...", ans: "0", exp: "Gradien \( m = \frac{2 - 2}{3 - 0} = \frac{0}{3} = 0 \). Garis ini sejajar dengan sumbu-X.", exp_trans: "Gradient \( m = 0 \). This line is parallel to the X-axis." },
+            "t2-task7": { type: "single", q: "Garis \( y = -3x + 2 \) dan \( y = -3x - 4 \) memiliki solusi... <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "The lines \( y = -3x + 2 \) and \( y = -3x - 4 \) have...", opts: ["Satu solusi", "Tidak ada solusi", "Solusi tak terhingga", "Dua solusi", "Solusi berupa pecahan"], ans: "Tidak ada solusi", exp: "Gradien keduanya -3 (sama), tapi titik potong Y berbeda (2 dan -4). Karena sejajar, tidak ada titik potong, sehingga tidak ada solusi.", exp_trans: "Gradients are -3, y-intercepts are different (2 and -4). Parallel, so no intersection, no solution." },
+            "t2-task8": { type: "tf_table", q: "Jika dua garis berhimpit... <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "If two lines are coincident...", opts: ["Gradiennya sama", "Titik potongnya sama", "Jumlah solusinya tak terhingga", "Himpunan penyelesaiannya kosong"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B. 3. B, tak terhingga. 4. S, himpunan penyelesaiannya bukan kosong, melainkan tak terhingga.", exp_trans: "1. T. 2. T. 3. T. 4. F, infinite solutions, not empty." },
+            "t2-task9": { type: "single", q: "Manakah persamaan garis yang melalui titik (2, -3)? <i class='fas fa-search-location text-orange-500 ml-2'></i>", q_trans: "Which line equation passes through point (2, -3)?", opts: ["\\( y = 2x \\)", "\\( y = x - 4 \\)", "\\( y = -2x \\)", "\\( y = -x - 1 \\)", "\\( y = 3x + 1 \\)"], ans: "\\( y = -x - 1 \\)", exp: "Substitusi (2, -3): -3 = -2 - 1 = -3 (Benar). Opsi lain: 2(2)=4, 2-4=-2, -2(2)=-4, 3(2)+1=7. Semuanya salah.", exp_trans: "Substitute (2, -3): -3 = -2 - 1. Correct. Others are incorrect." },
+            "t2-task10": { type: "complex", q: "SPLDV \( 2x + y = 5 \) dan \( x - y = 1 \) memiliki solusi (2, 1). Pernyataan yang benar adalah... <i class='fas fa-check text-orange-500 ml-2'></i>", q_trans: "SPLDV \( 2x + y = 5 \) and \( x - y = 1 \) has solution (2, 1). The correct statement is...", opts: ["Substitusi (2,1) ke persamaan pertama menghasilkan 5", "Substitusi (2,1) ke persamaan kedua menghasilkan 1", "Garis pertama melalui (0,5) dan (2.5, 0)", "Garis kedua melalui (1,0) dan (0,-1)"], ans: [0, 1, 2, 3], exp: "1. B, 2(2)+1=5. 2. B, 2-1=1. 3. B, titik potongnya. 4. B, titik potongnya. Semua benar.", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+
+            // TASK 3: Word problems to graphs
+            "t3-task1": { type: "single", q: "Umur Ayah (x) dan umur Anak (y) selisihnya 25 tahun. Jumlah umur mereka 45 tahun. Model SPLDV-nya... <i class='fas fa-user-clock text-orange-500 ml-2'></i>", q_trans: "Father's age (x) and Child's age (y) have a difference of 25 years. The sum of their ages is 45 years. The SPLDV model is...", opts: ["\\( x - y = 25 \\) dan \\( x + y = 45 \\)", "\\( x + y = 25 \\) dan \\( x - y = 45 \\)", "\\( x + y = 45 \\) dan \\( y - x = 25 \\)", "\\( 2x + y = 70 \\)", "\\( x - y = 20 \\)"], ans: "\\( x - y = 25 \\) dan \\( x + y = 45 \\)", exp: "Selisih: \( x - y = 25 \). Jumlah: \( x + y = 45 \).", exp_trans: "Difference: \( x - y = 25 \). Sum: \( x + y = 45 \)." },
+            "t3-task2": { type: "fill", q: "Dari soal nomor 1, berapakah umur Ayah? <i class='fas fa-search text-orange-500 ml-2'></i>", q_trans: "From question 1, what is the Father's age?", ans: "35", exp: "Jumlahkan kedua persamaan: \( 2x = 70 \implies x = 35 \).", exp_trans: "Add both equations: \( 2x = 70 \implies x = 35 \)." },
+            "t3-task3": { type: "tf_table", q: "Untuk menggambar garis \( x + y = 45 \), kita bisa... <i class='fas fa-ruler text-orange-500 ml-2'></i>", q_trans: "To draw the line \( x + y = 45 \), we can...", opts: ["Mencari titik potong sumbu-X di (45, 0)", "Mencari titik potong sumbu-Y di (0, 45)", "Menggunakan skala 1cm = 5 satuan", "Menemukan gradien -1"], ans: ["B", "B", "B", "B"], exp: "1. B, saat y=0, x=45. 2. B, saat x=0, y=45. 3. B, skala pas untuk angka 45. 4. B, ubah ke y = -x + 45 (m=-1).", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+            "t3-task4": { type: "single", q: "Sepeda motor (x) dan mobil (y) parkir. Ada 10 kendaraan dan total roda 28. Model SPLDV yang benar adalah... <i class='fas fa-car-side text-orange-500 ml-2'></i>", q_trans: "Motorcycles (x) and cars (y) parked. There are 10 vehicles and total wheels 28. The correct SPLDV model is...", opts: ["\\( x + y = 10 \\) dan \\( 2x + 4y = 28 \\)", "\\( x + y = 28 \\) dan \\( 2x + 4y = 10 \\)", "\\( x - y = 10 \\) dan \\( 4x + 2y = 28 \\)", "\\( 2x + y = 28 \\) dan \\( x + 4y = 10 \\)", "\\( x + y = 10 \\) dan \\( 2x - 4y = 28 \\)"], ans: "\\( x + y = 10 \\) dan \\( 2x + 4y = 28 \\)", exp: "Jumlah kendaraan: \( x + y = 10 \). Motor roda 2, mobil roda 4: \( 2x + 4y = 28 \).", exp_trans: "Total vehicles: \( x + y = 10 \). Motor 2 wheels, car 4 wheels: \( 2x + 4y = 28 \)." },
+            "t3-task5": { type: "complex", q: "Dari soal nomor 4, bagaimana mencari solusinya? <i class='fas fa-brain text-orange-500 ml-2'></i>", q_trans: "From question 4, how to find the solution?", opts: ["Sederhanakan persamaan 2 menjadi \\( x + 2y = 14 \\)", "Kurangkan persamaan 1 dari persamaan 2 yang disederhanakan: \\( y = 4 \\)", "Substitusi \\( y = 4 \\) ke persamaan 1: \\( x = 6 \\)", "Jumlah sepeda motor adalah 4"], ans: [0, 1, 2], exp: "1. B, dibagi 2. 2. B, (x+2y) - (x+y) = y = 14-10 = 4. 3. B, x = 10-4 = 6. 4. S, x adalah motor, jadi motor = 6, bukan 4.", exp_trans: "1. T. 2. T, y=4. 3. T, x=6. 4. F, motorcycles are 6." },
+            "t3-task6": { type: "fill", q: "Jika grafik dari \( x + y = 10 \) dan \( 2x + 4y = 28 \) berpotongan di (6, 4), berapakah jumlah roda mobil? <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "If the graphs of \( x + y = 10 \) and \( 2x + 4y = 28 \) intersect at (6, 4), what is the total number of car wheels?", ans: "16", exp: "Dari titik potong, \( y = 4 \) (mobil). Setiap mobil punya 4 roda, jadi total roda mobil = 4 * 4 = 16.", exp_trans: "From intersection, \( y = 4 \) (cars). Each car has 4 wheels, so total car wheels = 4 * 4 = 16." },
+            "t3-task7": { type: "single", q: "Tiga apel (x) dan dua jeruk (y) harganya Rp20.000. Dua apel dan tiga jeruk harganya Rp25.000. Model SPLDV-nya... <i class='fas fa-apple-alt text-orange-500 ml-2'></i>", q_trans: "Three apples (x) and two oranges (y) cost Rp20,000. Two apples and three oranges cost Rp25,000. The SPLDV model is...", opts: ["\\( 3x + 2y = 20 \\) dan \\( 2x + 3y = 25 \\)", "\\( 2x + 3y = 20 \\) dan \\( 3x + 2y = 25 \\)", "\\( 3x + 2y = 25 \\) dan \\( 2x + 3y = 20 \\)", "\\( 3x - 2y = 20 \\) dan \\( 2x - 3y = 25 \\)", "\\( x + y = 20 \\) dan \\( x - y = 25 \\)"], ans: "\\( 3x + 2y = 20 \\) dan \\( 2x + 3y = 25 \\)", exp: "Apel x, jeruk y. 3x + 2y = 20. 2x + 3y = 25 (dalam ribuan).", exp_trans: "Apple x, orange y. 3x + 2y = 20. 2x + 3y = 25." },
+            "t3-task8": { type: "tf_table", q: "Perhatikan SPLDV dari soal nomor 7. <i class='fas fa-clipboard-list text-orange-500 ml-2'></i>", q_trans: "Consider the SPLDV from question 7.", opts: ["Jika dijumlahkan, \\( 5x + 5y = 45 \\implies x + y = 9 \\)", "Jika dikurangkan, \\( x - y = -5 \\implies y - x = 5 \\)", "Harga 1 apel dan 1 jeruk adalah Rp9.000", "Harga 1 jeruk lebih mahal dari 1 apel"], ans: ["B", "B", "B", "B"], exp: "1. B, 3x+2y+2x+3y=20+25 -> 5x+5y=45 -> x+y=9. 2. B, (3x+2y)-(2x+3y)=20-25 -> x-y=-5. 3. B, x+y=9 (Rp9.000). 4. B, karena y-x=5, berarti y=x+5 (jeruk lebih mahal 5 ribu).", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+            "t3-task9": { type: "single", q: "Sebuah segitiga memiliki sudut A dan sudut B. Jumlah keduanya 100 derajat. Selisihnya 20 derajat. Berapakah sudut A (jika lebih besar)? <i class='fas fa-shapes text-orange-500 ml-2'></i>", q_trans: "A triangle has angle A and angle B. Their sum is 100 degrees. Their difference is 20 degrees. What is angle A (the larger one)?", opts: ["\\( 40^\\circ \\)", "\\( 50^\\circ \\)", "\\( 60^\\circ \\)", "\\( 70^\\circ \\)", "\\( 80^\\circ \\)"], ans: "\\( 60^\\circ \\)", exp: "Model: A + B = 100, A - B = 20. Jumlahkan: 2A = 120 -> A = 60.", exp_trans: "Model: A + B = 100, A - B = 20. Add: 2A = 120 -> A = 60." },
+            "t3-task10": { type: "complex", q: "Untuk SPLDV yang grafiknya tidak pernah berpotongan... <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "For an SPLDV whose graphs never intersect...", opts: ["SPLDV tersebut inkonsisten", "Tidak memiliki himpunan penyelesaian", "Gradien kedua garisnya sama", "Titik potong sumbu-Y keduanya sama"], ans: [0, 1, 2], exp: "1. B, inkonsisten. 2. B, HP kosong. 3. B, m1=m2. 4. S, jika c sama dan m sama, mereka berhimpit (tak terhingga solusi), bukan tidak berpotongan.", exp_trans: "1. T. 2. T. 3. T. 4. F, if c is same, they coincide." },
+
+            // TASK 4: Parallel & Coincident lines
+            "t4-task1": { type: "single", q: "Garis \( 3x + y = 6 \) dan \( 6x + 2y = 12 \) jika digambar akan... <i class='fas fa-layer-group text-orange-500 ml-2'></i>", q_trans: "The lines \( 3x + y = 6 \) and \( 6x + 2y = 12 \) when drawn will...", opts: ["Berpotongan", "Sejajar", "Berhimpit", "Tegak lurus", "Memotong sumbu-X di titik yang sama tapi beda sumbu-Y"], ans: "Berhimpit", exp: "Persamaan kedua adalah persamaan pertama dikali 2. Karena identik, grafiknya berhimpit (menempati garis yang sama) dan memiliki tak terhingga solusi.", exp_trans: "The second equation is the first multiplied by 2. Identical, so graphs coincide and have infinite solutions." },
+            "t4-task2": { type: "fill", q: "Jika dua garis sejajar, maka gradiennya sama dan titik potongnya berbeda. Jika gradiennya sama dan titik potongnya SAMA, maka garisnya... (Tulis 'Berhimpit') <i class='fas fa-equals text-orange-500 ml-2'></i>", q_trans: "If two lines are parallel, gradients are same and intercepts are different. If gradients are same and intercepts are the SAME, the lines are... (Write 'Coincident' or 'Berhimpit')", ans: "Berhimpit", exp: "Garis yang gradien dan titik potongnya sama persis akan menempati koordinat yang sama, disebut garis berhimpit.", exp_trans: "Lines with exactly the same gradient and intercept will occupy the same coordinates, called coincident lines." },
+            "t4-task3": { type: "tf_table", q: "Manakah SPLDV yang memiliki solusi tak terhingga? <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Which SPLDVs have infinite solutions?", opts: ["\\( y = 2x + 1 \\) dan \\( 2y - 4x = 2 \\)", "\\( x + y = 5 \\) dan \\( 2x + 2y = 10 \\)", "\\( 3x - y = 2 \\) dan \\( y = 3x - 2 \\)", "\\( x - y = 0 \\) dan \\( x + y = 0 \\)"], ans: ["B", "B", "B", "S"], exp: "1. B, 2y=4x+2 -> y=2x+1. Identik. 2. B, kelipatan 2. 3. B, y = 3x - 2 sama persis. 4. S, berpotongan di (0,0) -> 1 solusi.", exp_trans: "1. T. 2. T. 3. T. 4. F, intersecting at (0,0) -> 1 solution." },
+            "t4-task4": { type: "single", q: "Manakah pasangan garis yang sejajar? <i class='fas fa-grip-lines text-orange-500 ml-2'></i>", q_trans: "Which pair of lines are parallel?", opts: ["\\( y = 3x + 2 \\) dan \\( y = -3x + 2 \\)", "\\( y = 3x + 2 \\) dan \\( y = 3x - 5 \\)", "\\( y = 3x + 2 \\) dan \\( y = -\frac{1}{3}x + 2 \\)", "\\( y = 3x + 2 \\) dan \\( y = \frac{1}{3}x - 5 \\)", "\\( y = 3x + 2 \\) dan \\( 3x - y = 2 \\)"], ans: "\\( y = 3x + 2 \\) dan \\( y = 3x - 5 \\)", exp: "Garis sejajar memiliki gradien (m) yang sama. Opsi 2 memiliki m = 3 untuk keduanya, tapi c berbeda (2 dan -5). Opsi 5 jika diubah menjadi y = 3x + 2 (identik/berhimpit).", exp_trans: "Parallel lines have the same gradient. Option 2 has m = 3 for both, but different c. Option 5 is coincident." },
+            "t4-task5": { type: "complex", q: "Manakah SPLDV yang TIDAK memiliki solusi? <i class='fas fa-times-circle text-orange-500 ml-2'></i>", q_trans: "Which SPLDVs have NO solution?", opts: ["\\( 2x + y = 4 \\) dan \\( 2x + y = 7 \\)", "\\( y = -x + 1 \\) dan \\( 2y + 2x = 4 \\)", "\\( 3x - 3y = 6 \\) dan \\( x - y = 2 \\)", "\\( y = 4 \\) dan \\( y = 4x + 1 \\)"], ans: [0, 1], exp: "1. B, gradien 2 sama, c beda -> sejajar. 2. B, y = -x + 1 -> m=-1, c=1. 2y+2x=4 -> y=-x+2 -> m=-1, c=2. Sejajar. 3. B, identik. 4. S, y=4 (m=0), y=4x+1 (m=4) -> berpotongan.", exp_trans: "1. T, parallel. 2. T, parallel. 3. F, identical. 4. F, intersecting." },
+            "t4-task6": { type: "fill", q: "Jika grafik menunjukkan garis yang berhimpit, maka banyaknya solusi (himpunan penyelesaian) adalah... (Tulis 'Tak terhingga') <i class='fas fa-infinity text-orange-500 ml-2'></i>", q_trans: "If the graph shows coincident lines, the number of solutions (solution set) is... (Write 'Infinite' or 'Tak terhingga')", ans: "Tak terhingga", exp: "Garis berhimpit berarti setiap titik pada garis adalah solusi, dan karena titik pada garis tak terhingga, solusinya pun tak terhingga banyaknya.", exp_trans: "Coincident lines mean every point on the line is a solution, and since points are infinite, solutions are infinite." },
+            "t4-task7": { type: "single", q: "Garis \( y = 5 \) dan \( x = 3 \) jika digambar akan... <i class='fas fa-border-all text-orange-500 ml-2'></i>", q_trans: "The lines \( y = 5 \) and \( x = 3 \) when drawn will...", opts: ["Sejajar", "Berhimpit", "Berpotongan tegak lurus di (3, 5)", "Berpotongan di (5, 3)", "Tidak memiliki hubungan"], ans: "Berpotongan tegak lurus di (3, 5)", exp: "Garis y=5 sejajar sumbu-X. Garis x=3 sejajar sumbu-Y. Keduanya pasti tegak lurus dan berpotongan di x=3, y=5 yaitu titik (3, 5).", exp_trans: "Line y=5 is parallel to X-axis. Line x=3 is parallel to Y-axis. They must be perpendicular and intersect at (3, 5)." },
+            "t4-task8": { type: "tf_table", q: "Amati grafik yang menghasilkan solusi tunggal (1 solusi). <i class='fas fa-clipboard-list text-orange-500 ml-2'></i>", q_trans: "Observe a graph that yields a single solution (1 solution).", opts: ["Kedua garis memiliki gradien berbeda", "Kedua garis berpotongan", "Solusinya berupa titik koordinat", "Garis-garis tersebut sejajar"], ans: ["B", "B", "B", "S"], exp: "1. B, gradien beda. 2. B, pasti berpotongan. 3. B, solusi 1 titik. 4. S, sejajar itu 0 solusi.", exp_trans: "1. T. 2. T. 3. T. 4. F." },
+            "t4-task9": { type: "single", q: "Jika sebuah SPLDV memiliki persamaan \( 2x + 3y = 6 \) dan \( 4x + 6y = 12 \), maka himpunan penyelesaiannya adalah... <i class='fas fa-layer-group text-orange-500 ml-2'></i>", q_trans: "If an SPLDV has equations \( 2x + 3y = 6 \) and \( 4x + 6y = 12 \), the solution set is...", opts: ["\\( \\{ (6, 0) \\} \\)", "Kosong", "Tak terhingga banyaknya", "\\( \\{ (0, 2) \\} \\)", "Tunggal"], ans: "Tak terhingga banyaknya", exp: "Persamaan kedua adalah kelipatan 2 dari persamaan pertama. Ini berarti kedua garis identik/berhimpit, sehingga solusinya tak terhingga.", exp_trans: "The second equation is a multiple of the first. The lines are coincident, so infinite solutions." },
+            "t4-task10": { type: "complex", q: "Mengapa garis \( y = 2x + 3 \) dan \( y = 2x - 1 \) tidak memiliki solusi? <i class='fas fa-check text-orange-500 ml-2'></i>", q_trans: "Why do the lines \( y = 2x + 3 \) and \( y = 2x - 1 \) have no solution?", opts: ["Gradiennya sama", "Titik potong sumbu-Y berbeda", "Kedua garis tidak akan pernah berpotongan", "Persamaan keduanya bukan linear"], ans: [0, 1, 2], exp: "1. B, m=2. 2. B, c=3 dan c=-1. 3. B, garis sejajar tidak berpotongan. 4. S, tetap linear.", exp_trans: "1. T. 2. T. 3. T. 4. F." },
+
+            // TASK 5: Mastery & Challenge
+            "t5-task1": { type: "single", q: "Diketahui persamaan garis \( 3x - 2y = 6 \). Gradien garis tersebut adalah... <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Given the line equation \( 3x - 2y = 6 \). The gradient of the line is...", opts: ["\\( 3 \\)", "\\( 2 \\)", "\\( -3 \\)", "\\( -2 \\)", "\\( \frac{3}{2} \\)"], ans: "\\( \frac{3}{2} \\)", exp: "Ubah ke \( y = mx + c \). \( 2y = 3x - 6 \implies y = \frac{3}{2}x - 3 \). Gradien (m) = 3/2.", exp_trans: "Convert to \( y = \frac{3}{2}x - 3 \). Gradient is 3/2." },
+            "t5-task2": { type: "fill", q: "Jika titik potong dua garis adalah (a, b) dan diketahui a = 2b, serta salah satu persamaannya adalah x + y = 6. Berapakah nilai b? <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "If the intersection point is (a, b) and a = 2b, and one equation is x + y = 6. What is the value of b?", ans: "2", exp: "Karena a = x dan b = y, dan x + y = 6. Substitusi a = 2b: 2b + b = 6 -> 3b = 6 -> b = 2.", exp_trans: "Since a = x and b = y, and x + y = 6. Substitute a = 2b: 2b + b = 6 -> b = 2." },
+            "t5-task3": { type: "tf_table", q: "Perhatikan SPLDV: \( x + y = 7 \) dan \( x - y = 3 \). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Consider the SPLDV: \( x + y = 7 \) and \( x - y = 3 \).", opts: ["Jumlahkan kedua persamaan: \\( 2x = 10 \\)", "Nilai \\( x = 5 \\)", "Nilai \\( y = 2 \\)", "Titik potongnya di kuadran 4"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B. 3. B. 4. S, (5,2) ada di kuadran 1.", exp_trans: "1. T. 2. T. 3. T. 4. F, in quadrant 1." },
+            "t5-task4": { type: "single", q: "Sebuah truk (x) mengangkut 10 kotak. Truk lain (y) mengangkut 5 kotak. Total kotak 50. Jumlah truk 15. Model matematikanya... <i class='fas fa-truck text-orange-500 ml-2'></i>", q_trans: "One truck (x) carries 10 boxes. Another truck (y) carries 5 boxes. Total boxes 50. Total trucks 15. The mathematical model is...", opts: ["\\( x + y = 50 \\) dan \\( 10x + 5y = 15 \\)", "\\( 10x + 5y = 50 \\) dan \\( x + y = 15 \\)", "\\( 10x - 5y = 50 \\) dan \\( x - y = 15 \\)", "\\( 10x = 50 \\) dan \\( 5y = 15 \\)", "\\( x + y = 50 \\) dan \\( 10x + 5y = 50 \\)"], ans: "\\( 10x + 5y = 50 \\) dan \\( x + y = 15 \\)", exp: "Kapasitas: 10x + 5y = 50. Jumlah truk: x + y = 15.", exp_trans: "Capacity: 10x + 5y = 50. Number of trucks: x + y = 15." },
+            "t5-task5": { type: "complex", q: "Garis manakah yang melalui titik (0, -5)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which lines pass through point (0, -5)?", opts: ["\\( y = 3x - 5 \\)", "\\( y = -x - 5 \\)", "\\( 2x + y = -5 \\)", "\\( x - y = 5 \\)"], ans: [0, 1, 2, 3], exp: "Substitusi (0, -5): 1. y=-5 (B). 2. y=-5 (B). 3. 0-5=-5 (B). 4. 0-(-5)=5 (B). Semuanya benar!", exp_trans: "Substitute (0, -5): All yield -5 or 5 correctly. All true!" },
+            "t5-task6": { type: "fill", q: "Dua garis berpotongan di (3, -2). Berapakah nilai dari \( 2x - y \)? <i class='fas fa-superscript text-orange-500 ml-2'></i>", q_trans: "Two lines intersect at (3, -2). What is the value of \( 2x - y \)?", ans: "8", exp: "Substitusi x=3, y=-2 ke \( 2x - y \implies 2(3) - (-2) = 6 + 2 = 8 \).", exp_trans: "Substitute x=3, y=-2 into \( 2x - y \implies 6 + 2 = 8 \)." },
+            "t5-task7": { type: "single", q: "Jika \( 2x + y = 8 \) dan \( x + 2y = 10 \), berapakah nilai \( x + y \)? <i class='fas fa-plus text-orange-500 ml-2'></i>", q_trans: "If \( 2x + y = 8 \) and \( x + 2y = 10 \), what is the value of \( x + y \)?", opts: ["\\( 2 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 10 \\)"], ans: "\\( 6 \\)", exp: "Jumlahkan kedua persamaan: \( 3x + 3y = 18 \implies 3(x + y) = 18 \implies x + y = 6 \). Tanpa mencari x dan y satu per satu.", exp_trans: "Add both equations: \( 3x + 3y = 18 \implies x + y = 6 \). No need to find x and y individually." },
+            "t5-task8": { type: "tf_table", q: "Selesaikan SPLDV \( 3x + y = 7 \) dan \( x - y = 1 \). <i class='fas fa-clipboard-list text-orange-500 ml-2'></i>", q_trans: "Solve the SPLDV \( 3x + y = 7 \) and \( x - y = 1 \).", opts: ["Dari persamaan 2, \\( x = y + 1 \\)", "Substitusi ke persamaan 1: \\( 3(y+1) + y = 7 \\implies 4y + 3 = 7 \\)", "Nilai \\( y = 1 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B. 3. B, 4y=4 -> y=1. 4. B, x=2. Semua benar.", exp_trans: "1. T. 2. T. 3. T. 4. T." },
+            "t5-task9": { type: "single", q: "Untuk menggambar garis \( 2x - 3y = 12 \), titik mana yang paling mudah digunakan? <i class='fas fa-crosshairs text-orange-500 ml-2'></i>", q_trans: "To draw the line \( 2x - 3y = 12 \), which points are easiest to use?", opts: ["\\( (0, 4) \\) dan \\( (3, 0) \\)", "\\( (0, -4) \\) dan \\( (6, 0) \\)", "\\( (1, 1) \\) dan \\( (2, 2) \\)", "\\( (6, 0) \\) dan \\( (0, 4) \\)", "\\( (12, 0) \\) dan \\( (0, 12) \\)"], ans: "\\( (0, -4) \\) dan \\( (6, 0) \\)", exp: "Saat x=0, -3y=12 -> y=-4 (titik 0,-4). Saat y=0, 2x=12 -> x=6 (titik 6,0). Kedua titik ini angka bulat dan didapat dari titik potong sumbu.", exp_trans: "When x=0, y=-4. When y=0, x=6. Both are round numbers from axis intercepts." },
+            "t5-task10": { type: "complex", q: "Apa keuntungan mengubah persamaan SPLDV ke bentuk \( y = mx + c \) sebelum menggambar grafik? <i class='fas fa-chart-line text-orange-500 ml-2'></i>", q_trans: "What is the advantage of converting SPLDV equations to \( y = mx + c \) form before drawing the graph?", opts: ["Memudahkan identifikasi gradien (m)", "Memudahkan identifikasi titik potong sumbu-Y (c)", "Bisa langsung mengetahui apakah dua garis sejajar", "Bisa langsung mengetahui titik potong kedua garis tanpa menggambar"], ans: [0, 1, 2], exp: "1. B, m terlihat langsung. 2. B, c terlihat langsung. 3. B, jika m1=m2, sejajar. 4. S, titik potong tetap harus dicari lewat substitusi atau gambar.", exp_trans: "1. T. 2. T. 3. T. 4. F, still need substitution or graphing to find exact intersection." }
+        });
+        
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-indigo-100', 'text-indigo-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-indigo-100', 'text-indigo-800', 'font-bold');
+                }
+            }
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-indigo-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+        
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            let taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Exercise'} 
+                            ${taskType === 'complex' ? '<span class="text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded ml-2">PG Kompleks</span>' : ''}
+                            ${taskType === 'fill' ? '<span class="text-sm bg-blue-200 text-blue-800 px-2 py-1 rounded ml-2">Isian Singkat</span>' : ''}
+                            ${taskType === 'tf_table' ? '<span class="text-sm bg-teal-200 text-teal-800 px-2 py-1 rounded ml-2">Tabel Benar/Salah</span>' : ''}
+                            <span class="translation text-gray-500 text-sm">Exercise</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full shrink-0">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                            <p class="translation">${data.q_trans}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold shrink-0">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (taskType === 'complex') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Pilih semua pernyataan yang benar. <span class="translation">*Select all correct statements.</span></p>
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${data.opts.map((opt, i) => `
+                            <label class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-purple-500 flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="w-5 h-5 complex-checkbox shrink-0" data-opt-index="${i}">
+                                <span class="katex">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'complex')" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            } else if (taskType === 'fill') {
+                questionHTML += `
+                    <div class="flex gap-2 items-center mt-2">
+                        <input type="text" id="input-${taskId}" class="border-2 border-gray-200 rounded p-2 w-32 text-lg text-center focus:border-orange-500 outline-none" placeholder="Jawaban...">
+                        <button onclick="checkAnswer('${taskId}', null, 'fill')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-bold">Submit</button>
+                    </div>
+                `;
+            } else if (taskType === 'tf_table') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Tentukan Benar atau Salah untuk setiap pernyataan. <span class="translation">*Determine True or False for each statement.</span></p>
+                    <div id="options-${taskId}" class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 p-2 w-10">No.</th>
+                                    <th class="border border-gray-300 p-2 text-left">Pernyataan <span class="translation text-xs">Statement</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Benar <span class="translation text-xs block">True</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Salah <span class="translation text-xs block">False</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.opts.map((opt, i) => `
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-center font-bold">${i + 1}</td>
+                                        <td class="border border-gray-300 p-2"><span class="katex">${opt}</span></td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="B" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="S" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'tf_table')" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Show Explanation</span>
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan: <span class="translation text-gray-500 text-sm">Explanation:</span></h3>
+                            <p class="mt-2">${data.exp}</p>
+                            <p class="translation">${data.exp_trans}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            } 
+            else if (type === 'complex') {
+                const checkboxes = document.querySelectorAll(`#options-${taskId} input[type="checkbox"]`);
+                let selectedAns = [];
+                checkboxes.forEach((cb, i) => {
+                    if (cb.checked) selectedAns.push(i);
+                    cb.disabled = true;
+                });
+                const correctAnsStr = [...data.ans].sort().join(',');
+                const selectedAnsStr = [...selectedAns].sort().join(',');
+                isCorrect = (correctAnsStr === selectedAnsStr);
+                
+                let correctComplexText = [];
+                data.ans.forEach(i => correctComplexText.push(data.opts[i]));
+                correctAnsText = correctComplexText.join(', ');
+
+                checkboxes.forEach((cb, i) => {
+                    if(data.ans.includes(i)) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-green-500', 'bg-green-50');
+                    } else if (cb.checked) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                studentAnswers[taskId] = selectedAns;
+            } 
+            else if (type === 'fill') {
+                const inputField = document.getElementById(`input-${taskId}`);
+                let userVal = inputField.value.trim().replace(/\s/g, '').replace(',', '.').toLowerCase();
+                let correctAns = data.ans.toString().toLowerCase();
+                inputField.disabled = true;
+                isCorrect = (userVal === correctAns);
+                if(!isCorrect) inputField.classList.add('border-red-500', 'bg-red-50');
+                else inputField.classList.add('border-green-500', 'bg-green-50');
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = userVal;
+            }
+            else if (type === 'tf_table') {
+                const rows = document.querySelectorAll(`#options-${taskId} tbody tr`);
+                let userAns = [];
+                let allFilled = true;
+
+                rows.forEach((row, i) => {
+                    const radios = row.querySelectorAll('input[type="radio"]');
+                    let rowVal = null;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.checked) rowVal = r.value;
+                    });
+                    if (rowVal === null) allFilled = false;
+                    userAns.push(rowVal);
+                });
+
+                if (!allFilled) {
+                    alert("Harap isi semua pernyataan terlebih dahulu! / Please answer all statements first!");
+                    rows.forEach((row, i) => {
+                        let radios = row.querySelectorAll('input[type="radio"]');
+                        radios.forEach(r => r.disabled = false);
+                    });
+                    return;
+                }
+
+                let correctCount = 0;
+                let correctTFText = [];
+                rows.forEach((row, i) => {
+                    const userVal = userAns[i];
+                    const correctVal = data.ans[i];
+                    correctTFText.push(`${i+1}. ${correctVal}`);
+                    if (userVal === correctVal) {
+                        correctCount++;
+                        row.classList.add('bg-green-50');
+                    } else {
+                        row.classList.add('bg-red-50');
+                    }
+                });
+
+                isCorrect = (correctCount === data.ans.length);
+                correctAnsText = correctTFText.join(' | ');
+                studentAnswers[taskId] = userAns;
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! <span class="translation text-gray-600 font-normal">Correct!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar adalah: ${correctAnsText}. <span class="translation text-gray-600 font-normal">Wrong! The correct answer is: ${correctAnsText}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                let studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                let correctAns = data.ans;
+                
+                let sAnsStr = '';
+                let cAnsStr = '';
+                let isCorrect = false;
+                
+                if (data.type === 'complex') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.length > 0 ? cArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    isCorrect = (sArr.length > 0 && sArr.slice().sort().join(',') === cArr.slice().sort().join(','));
+                } else if (data.type === 'tf_table') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.join(' | ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.join(' | ');
+                    isCorrect = (sArr.length > 0 && sArr.join(',') === cArr.join(','));
+                } else {
+                    sAnsStr = studentAns || 'Tidak Dijawab';
+                    cAnsStr = correctAns;
+                    isCorrect = (sAnsStr === cAnsStr);
+                }
+                
+                let note = '❌';
+                if(isCorrect) { score++; note = '✔️'; }
+                
+                let qText = data.q.replace(/<[^>]+>/g, '');
+                if (data.type === 'tf_table') {
+                    qText += " | Statements: " + data.opts.map((opt, idx) => `${idx+1}. ${opt}`).join(" ; ");
+                }
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${qText}</td>
+                    <td class="border border-black p-1">${sAnsStr}</td>
+                    <td class="border border-black p-1">${cAnsStr}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>';
+            }
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement === 'undefined') return;
+            
+            const target = document.querySelector('.content-section.active') || document.body;
+            try {
+                renderMathInElement(target, {
+                    delimiters: [
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch(e) {
+                console.error("KaTeX rendering error:", e);
+            }
+        }
+
+        window.onload = () => {
+            renderTasks();
+            setTimeout(() => {
+                showSection('warmup');
+                renderMath();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
