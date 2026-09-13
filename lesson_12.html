@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring by Deni - SPLDV Metode Substitusi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+        .prompt-box { max-width: 650px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; align-items: center; text-align: left; }
+        .prompt-box p { width: 100%; }
+        .prompt-box img { width: 100%; height: auto; max-width: 300px; display: block; margin-top: 0.5rem; }
+        .translation { font-style: italic; font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover { transform: translateX(5px); }
+        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.4s, border 0.4s, background 0.4s; padding: 0; border: 0; background: transparent; }
+        .collapse-content.open { max-height: 2000px; padding: 1.5rem; border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 0.5rem; margin-top: 1rem; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10px; box-sizing: border-box; }
+            .no-print { display: none !important; }
+            #printArea table { table-layout: fixed; width: 100%; font-size: 9px; }
+            #printArea td, #printArea th { word-wrap: break-word; padding: 2px !important; }
+            @page { size: A4; margin: 5mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md no-print shrink-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p class="text-sm">Topic: Sistem Persamaan Linear Dua Variabel (Metode Substitusi)</p>
+            <p class="translation text-indigo-200">Topik: Systems of Linear Equations in Two Variables (Substitution Method)</p>
+        </div>
+        <div>
+            <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold py-2 px-4 rounded flex items-center gap-2">
+                <i class="fas fa-gavel"></i> Class Rules
+            </button>
+        </div>
+    </header>
+
+    <!-- Modal Class Rules -->
+    <div id="classRulesModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-lg p-6 w-80 max-w-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-indigo-600">Class Rules <br><span class="translation text-gray-500">Aturan Kelas</span></h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-comments text-indigo-500 mt-1"></i>
+                    <div>Berbicara secara bergantian. <span class="translation">Take turns speaking.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-door-open text-indigo-500 mt-1"></i>
+                    <div>Meminta izin jika ingin meninggalkan kelas. <span class="translation">Ask permission if you want to leave the class.</span></div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-video text-indigo-500 mt-1"></i>
+                    <div>Menyalakan kamera dan microphone jika diperlukan. <span class="translation">Turn on camera and microphone if needed.</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg no-print border-r border-gray-200 flex flex-col">
+            <div class="p-4 bg-indigo-600 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fas fa-book-open"></i> Class Agenda</h3>
+                <p class="text-xs text-indigo-200 mt-1">Select topic to navigate <span class="translation text-indigo-300 block">Pilih topik untuk navigasi</span></p>
+            </div>
+            <nav class="flex-1 overflow-y-auto p-2">
+                <ul class="space-y-1">
+                    <li><a href="javascript:void(0)" onclick="showSection('warmup')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="warmup"><div class="font-semibold text-sm text-gray-800">Spiral Review Warm-up</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:00 - 00:10</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('intro')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="intro"><div class="font-semibold text-sm text-gray-800">Introduction & Real-World</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:10 - 00:15</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('review')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="review"><div class="font-semibold text-sm text-gray-800">Review of Prior Knowledge</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:15 - 00:20</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('problem')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="problem"><div class="font-semibold text-sm text-gray-800">Problem Introduction</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:20 - 00:30</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('guided')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="guided"><div class="font-semibold text-sm text-gray-800">Guided Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:30 - 00:45</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('independent')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="independent"><div class="font-semibold text-sm text-gray-800">Independent Practice</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:45 - 00:55</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('consolidation')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-800 transition-colors cursor-pointer" data-section="consolidation"><div class="font-semibold text-sm text-gray-800">Consolidation & Reflection</div><div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="far fa-clock"></i> 00:55 - 01:00</div></a></li>
+                    <hr class="my-3 border-gray-200">
+                    <li><a href="javascript:void(0)" onclick="showSection('task1')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task1"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 1</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task2')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task2"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 2</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task3')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task3"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 3</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task4')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task4"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 4</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('task5')" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-800 transition-colors cursor-pointer" data-section="task5"><div class="font-bold text-sm text-indigo-800 flex items-center gap-2"><i class="fas fa-clipboard-list text-xs"></i> Task 5</div><div class="text-xs text-gray-500 mt-1">10 Mixed Questions</div></a></li>
+                </ul>
+            </nav>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p class="text-xs text-gray-500 font-medium">Math Tutoring System</p>
+                <p class="text-xs text-gray-400">by Deni</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-6">
+
+            <!-- ========================================== -->
+            <!-- SECTION: SPIRAL REVIEW WARM-UP             -->
+            <!-- ========================================== -->
+            <div id="warmup" class="content-section active">
+                <!-- PAGE 1: THEORY 1 -->
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Apa itu SPLDV? <i class="fas fa-plus-circle text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">What is a System of Linear Equations in Two Variables?</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <line x1="90" y1="20" x2="90" y2="100" stroke="#333" stroke-width="3"/>
+                                    <line x1="40" y1="40" x2="140" y2="40" stroke="#333" stroke-width="3"/>
+                                    <path d="M90 100 L80 110 L100 110 Z" fill="#333"/>
+                                    <line x1="50" y1="40" x2="50" y2="70" stroke="#333" stroke-width="2"/>
+                                    <line x1="130" y1="40" x2="130" y2="80" stroke="#333" stroke-width="2"/>
+                                    <rect x="30" y="70" width="40" height="20" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                                    <rect x="110" y="80" width="40" height="20" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+                                    <text x="50" y="85" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">x</text>
+                                    <text x="130" y="95" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sistem Persamaan Linear Dua Variabel (SPLDV) adalah dua persamaan garis lurus yang memiliki dua variabel (misalnya \( x \) dan \( y \)) dan berlaku secara bersamaan. <span class="translation">A system of linear equations in two variables is two straight line equations that have two variables and apply simultaneously.</span></p>
+                                <p class="mt-2">Bentuk umumnya adalah: <br> \( a_1x + b_1y = c_1 \) <br> \( a_2x + b_2y = c_2 \) <br> <span class="translation">The general form is shown above.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Arti "Sistem"</p>
+                            <p class="mt-1">Kata "sistem" berarti persamaan-persamaan ini bekerja sama. Nilai \( x \) dan \( y \) harus benar untuk KEDUA persamaan, bukan cuma satu. <span class="translation">The word "system" means these equations work together. The values must be true for BOTH equations.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( x \) dan \( y \) harus sama di dua persamaan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="w-task1"></div>
+                <div class="page" data-page="3" data-task-id="w-task2"></div>
+                <div class="page" data-page="4" data-task-id="w-task3"></div>
+
+                <!-- PAGE 5: THEORY 2 -->
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Mengetahui Bagian Persamaan <i class="fas fa-puzzle-piece text-green-400 ml-2"></i></h2>
+                        <p class="translation">Identifying Parts of an Equation</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="30" width="140" height="80" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="50" y="75" font-size="20" text-anchor="middle" fill="#333" font-weight="bold">2x</text>
+                                    <text x="70" y="75" font-size="20" text-anchor="middle" fill="#333">+</text>
+                                    <text x="95" y="75" font-size="20" text-anchor="middle" fill="#333" font-weight="bold">3y</text>
+                                    <text x="115" y="75" font-size="20" text-anchor="middle" fill="#333">=</text>
+                                    <text x="140" y="75" font-size="20" text-anchor="middle" fill="#333" font-weight="bold">12</text>
+                                    <path d="M 40 80 L 40 100" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="40" y="115" font-size="10" text-anchor="middle" fill="#ef4444">Koefisien</text>
+                                    <path d="M 95 80 L 95 100" stroke="#10b981" stroke-width="2"/>
+                                    <text x="95" y="115" font-size="10" text-anchor="middle" fill="#10b981">Variabel</text>
+                                    <path d="M 140 80 L 140 100" stroke="#f59e0b" stroke-width="2"/>
+                                    <text x="140" y="115" font-size="10" text-anchor="middle" fill="#f59e0b">Konstanta</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Dalam persamaan \( 2x + 3y = 12 \), angka 2 dan 3 adalah <b>koefisien</b>, huruf \( x \) dan \( y \) adalah <b>variabel</b>, dan 12 adalah <b>konstanta</b>. <span class="translation">In the equation, numbers are coefficients, letters are variables, and standalone numbers are constants.</span></p>
+                                <p class="mt-2">Memahami bagian ini sangat penting untuk metode substitusi nanti! <span class="translation">Understanding this is crucial for the substitution method later!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Angka di Depan Huruf</p>
+                            <p class="mt-1">Jika sebuah variabel tidak memiliki angka di depannya (seperti \( x \) atau \( y \)), maka koefisiennya adalah 1. <span class="translation">If a variable has no number in front, its coefficient is 1.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( x = 1x \) dan \( y = 1y \)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="w-task4"></div>
+                <div class="page" data-page="7" data-task-id="w-task5"></div>
+                <div class="page" data-page="8" data-task-id="w-task6"></div>
+
+                <!-- PAGE 9: THEORY 3 -->
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Himpunan Penyelesaian <i class="fas fa-check-circle text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Solution Set</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="40" width="140" height="60" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="65" font-size="14" text-anchor="middle" fill="#333">x = 2</text>
+                                    <text x="90" y="85" font-size="14" text-anchor="middle" fill="#333">y = 3</text>
+                                    <path d="M 20 70 L 10 70 L 10 20 L 90 20" stroke="#ef4444" stroke-width="2" fill="none"/>
+                                    <text x="45" y="15" font-size="10" text-anchor="middle" fill="#ef4444">Pasangan (2, 3)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Penyelesaian dari SPLDV adalah sepasang nilai \( x \) dan \( y \) yang membuat KEDUA persamaan menjadi pernyataan yang benar. <span class="translation">The solution is a pair of values that makes BOTH equations true.</span></p>
+                                <p class="mt-2">Jika \( x = 2 \) dan \( y = 3 \), kita menulisnya sebagai pasangan \( (2, 3) \). <span class="translation">We write the solution as an ordered pair.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Cara Cepat Cek Jawaban</p>
+                            <p class="mt-1">Setelah dapat jawaban, selalu substitusikan kembali ke persamaan awal. Jika kiri = kanan, jawabanmu benar! <span class="translation">Always substitute your answer back into the original equations to check.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Substitusi \( x \) dan \( y \) ke persamaan, cek apakah kiri = kanan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="w-task7"></div>
+                <div class="page" data-page="11" data-task-id="w-task8"></div>
+                <div class="page" data-page="12" data-task-id="w-task9"></div>
+                <div class="page" data-page="13" data-task-id="w-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INTRODUCTION & REAL-WORLD         -->
+            <!-- ========================================== -->
+            <div id="intro" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Belanja di Toko Buah <i class="fas fa-apple-whole text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Shopping at the Fruit Store</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <circle cx="40" cy="70" r="15" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+                                    <path d="M40 55 L45 45" stroke="#333" stroke-width="2"/>
+                                    <text x="40" y="105" font-size="10" text-anchor="middle" fill="#333">Apel</text>
+                                    <circle cx="90" cy="70" r="15" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+                                    <path d="M90 55 L95 45" stroke="#333" stroke-width="2"/>
+                                    <text x="90" y="105" font-size="10" text-anchor="middle" fill="#333">Jeruk</text>
+                                    <text x="140" y="70" font-size="12" text-anchor="middle" fill="#333">= Rp 5.000</text>
+                                    <text x="140" y="85" font-size="12" text-anchor="middle" fill="#333">= Rp 7.000</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Bayangkan kamu membeli 2 apel dan 1 jeruk dengan harga Rp 5.000. Keesokan harinya, kamu membeli 1 apel dan 2 jeruk dengan harga Rp 7.000. <span class="translation">Imagine buying fruits with different total prices.</span></p>
+                                <p class="mt-2">Berapa harga 1 apel dan 1 jeruk? Ini adalah masalah SPLDV! <span class="translation">What is the price of one apple and one orange? This is an SPLDV problem!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Ubah Kata ke Simbol</p>
+                            <p class="mt-1">"2 apel dan 1 jeruk" ditulis sebagai \( 2x + y \). "Harga total" berarti tanda sama dengan (=). <span class="translation">Translate words to symbols.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Barang = Variabel, Harga = Konstanta.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="i-task1"></div>
+                <div class="page" data-page="3" data-task-id="i-task2"></div>
+                <div class="page" data-page="4" data-task-id="i-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Konsep Substitusi <i class="fas fa-exchange-alt text-green-400 ml-2"></i></h2>
+                        <p class="translation">The Concept of Substitution</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="50" width="50" height="40" rx="5" fill="#10b981" stroke="#059669" stroke-width="2"/>
+                                    <text x="45" y="75" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">x = 3</text>
+                                    <path d="M 75 70 L 105 70" stroke="#ef4444" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <rect x="110" y="50" width="50" height="40" rx="5" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                                    <text x="135" y="75" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">3</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>"Substitusi" berarti mengganti satu hal dengan hal lain yang nilainya sama. Jika kita tahu \( x = 3 \), maka kita bisa mengganti tulisan \( x \) dengan angka 3 di persamaan lain. <span class="translation">"Substitution" means replacing one thing with another of equal value.</span></p>
+                                <p class="mt-2">Inilah inti dari metode substitusi! Kita ganti variabel dengan persamaan lain yang sudah diekstrak. <span class="translation">This is the core of the substitution method!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Satu Pengganti</p>
+                            <p class="mt-1">Pastikan kamu sudah mengetahui nilai satu variabel (misal \( y = 2 \)) sebelum menggantikannya ke persamaan lain. <span class="translation">Ensure you know one variable's value before substituting.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Jika \( x = k \), ganti \( x \) dengan \( k \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="i-task4"></div>
+                <div class="page" data-page="7" data-task-id="i-task5"></div>
+                <div class="page" data-page="8" data-task-id="i-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Membentuk Model Matematika <i class="fas fa-flask text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Forming a Mathematical Model</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="20" y="40" font-size="12" text-anchor="middle" fill="#333">2 Apel + 1 Jeruk = 5rb</text>
+                                    <path d="M 40 50 L 80 80" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="140" y="80" font-size="14" text-anchor="middle" fill="#333">2x + y = 5</text>
+                                    <path d="M 140 90 L 100 120" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="40" y="120" font-size="12" text-anchor="middle" fill="#333">Model Matematika</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sebelum menyelesaikan, kita harus mengubah soal cerita menjadi model matematika. <span class="translation">We must convert word problems into mathematical models.</span></p>
+                                <p class="mt-2">Apel = \( x \), Jeruk = \( y \). Maka: <br> \( 2x + y = 5 \) <br> \( x + 2y = 7 \) <span class="translation">Assign variables to items.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Tetapkan Variabel dengan Jelas</p>
+                            <p class="mt-1">Tentukan di awal: "Misal harga 1 apel = \( x \)". Jangan tertukar dengan \( y \). <span class="translation">Clearly define your variables at the start.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Baca soal -> Tentukan \( x \) & \( y \) -> Buat persamaan.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="i-task7"></div>
+                <div class="page" data-page="11" data-task-id="i-task8"></div>
+                <div class="page" data-page="12" data-task-id="i-task9"></div>
+                <div class="page" data-page="13" data-task-id="i-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: REVIEW OF PRIOR KNOWLEDGE         -->
+            <!-- ========================================== -->
+            <div id="review" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Persamaan Linear Satu Variabel <i class="fas fa-calculator text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Linear Equations in One Variable</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="50" font-size="16" text-anchor="middle" fill="#333">x + 2 = 5</text>
+                                    <path d="M 50 60 L 50 100 L 130 100" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                                    <text x="100" y="120" font-size="16" text-anchor="middle" fill="#10b981" font-weight="bold">x = 3</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Sebelum belajar SPLDV, kita harus paham persamaan satu variabel. Untuk mencari \( x \) pada \( x + 2 = 5 \), kita pindahkan 2 ke ruas kanan sehingga menjadi \( x = 5 - 2 = 3 \). <span class="translation">Understand one-variable equations first. Move constants to isolate variables.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Lawan dari Operasi</p>
+                            <p class="mt-1">Jika di sisi \( x \) ada \( +2 \), pindahkan ke kanan menjadi \( -2 \). Lawan dari tambah adalah kurang. <span class="translation">Addition becomes subtraction when moved across the equals sign.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( x + a = b \implies x = b - a \)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="r-task1"></div>
+                <div class="page" data-page="3" data-task-id="r-task2"></div>
+                <div class="page" data-page="4" data-task-id="r-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Substitusi Angka Sederhana <i class="fas fa-arrows-to-dot text-green-400 ml-2"></i></h2>
+                        <p class="translation">Simple Number Substitution</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="30" width="140" height="80" rx="5" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <text x="90" y="55" font-size="14" text-anchor="middle" fill="#333">Jika y = 2</text>
+                                    <text x="90" y="80" font-size="14" text-anchor="middle" fill="#333">3x + y = 8</text>
+                                    <path d="M 90 90 L 90 100" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="90" y="120" font-size="12" text-anchor="middle" fill="#ef4444" font-weight="bold">3x + 2 = 8</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Ketika kita sudah tahu nilai satu variabel, kita bisa langsung substitusi. Jika \( y = 2 \) dan persamaannya \( 3x + y = 8 \), maka ganti \( y \) dengan 2 menjadi \( 3x + 2 = 8 \). <span class="translation">Substitute known values directly into equations.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Ganti dengan Tepat</p>
+                            <p class="mt-1">Pastikan setiap kemunculan variabel \( y \) diganti dengan nilainya. Jangan ada yang terlewat. <span class="translation">Replace every occurrence of the variable.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( y = k \implies ax + y = b \) berubah menjadi \( ax + k = b \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="r-task4"></div>
+                <div class="page" data-page="7" data-task-id="r-task5"></div>
+                <div class="page" data-page="8" data-task-id="r-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Memisahkan Variabel <i class="fas fa-people-arrows text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Isolating a Variable</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="50" font-size="14" text-anchor="middle" fill="#333">x + y = 5</text>
+                                    <path d="M 40 60 L 40 100 L 130 100" stroke="#8b5cf6" stroke-width="2" fill="none"/>
+                                    <text x="100" y="120" font-size="14" text-anchor="middle" fill="#10b981" font-weight="bold">x = 5 - y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Kadang, kita belum tahu nilai variabelnya. Tapi kita bisa menulis ulang persamaan agar satu variabel berada sendiri di satu sisi. Dari \( x + y = 5 \), kita bisa peroleh \( x = 5 - y \). <span class="translation">Rearrange equations to isolate a variable.</span></p>
+                                <p class="mt-2">Inilah kunci dari metode substitusi yang sebenarnya! <span class="translation">This is the real key to the substitution method!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Pilih yang Paling Mudah</p>
+                            <p class="mt-1">Pilih variabel yang koefisiennya 1 (misal \( 1x \) atau \( 1y \)) agar lebih mudah dipindahkan. <span class="translation">Choose variables with a coefficient of 1.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( x + y = c \implies x = c - y \) atau \( y = c - x \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="r-task7"></div>
+                <div class="page" data-page="11" data-task-id="r-task8"></div>
+                <div class="page" data-page="12" data-task-id="r-task9"></div>
+                <div class="page" data-page="13" data-task-id="r-task10"></div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- SECTION: PROBLEM INTRODUCTION              -->
+            <!-- ========================================== -->
+            <div id="problem" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Langkah 1: Ekstrak Satu Persamaan <i class="fas fa-hand-rock text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Step 1: Extract One Equation</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="140" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                                    <text x="90" y="45" font-size="14" text-anchor="middle" fill="#333">x + y = 5</text>
+                                    <path d="M 90 65 L 90 95" stroke="#ef4444" stroke-width="3" marker-end="url(#arr1)"/>
+                                    <rect x="30" y="100" width="120" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                                    <text x="90" y="120" font-size="14" text-anchor="middle" fill="#333" font-weight="bold">x = 5 - y</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Mari kita mulai metode substitusi! Langkah pertama adalah memilih salah satu persamaan yang paling mudah, lalu memisahkan satu variabelnya. <span class="translation">Start by choosing the easiest equation to isolate a variable.</span></p>
+                                <p class="mt-2">Misal dari sistem: <br> \( x + y = 5 \) <br> \( 2x - y = 4 \) <br> Kita ambil persamaan pertama dan ubah jadi \( x = 5 - y \). <span class="translation">Take the first equation and isolate x.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Cari Koefisien 1</p>
+                            <p class="mt-1">Persamaan yang memiliki variabel berskoefisien 1 (seperti \( x \) atau \( y \)) adalah kandidat terbaik untuk diekstrak. <span class="translation">Equations with variables having a coefficient of 1 are best.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Pilih \( x + y = c \) -> ubah jadi \( x = c - y \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="p-task1"></div>
+                <div class="page" data-page="3" data-task-id="p-task2"></div>
+                <div class="page" data-page="4" data-task-id="p-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Langkah 2: Substitusi ke Persamaan Lain <i class="fas fa-plug text-green-400 ml-2"></i></h2>
+                        <p class="translation">Step 2: Substitute into the Other Equation</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="30" font-size="12" text-anchor="middle" fill="#333">x = 5 - y</text>
+                                    <path d="M 40 40 L 90 70" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="120" y="60" font-size="12" text-anchor="middle" fill="#333">2x - y = 4</text>
+                                    <rect x="30" y="80" width="120" height="40" rx="5" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+                                    <text x="90" y="105" font-size="12" text-anchor="middle" fill="#333">2(5 - y) - y = 4</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Setelah dapat \( x = 5 - y \), masukkan bentuk ini ke dalam persamaan kedua. Ganti setiap huruf \( x \) di persamaan kedua dengan \( (5 - y) \). <span class="translation">Plug the isolated variable form into the other equation.</span></p>
+                                <p class="mt-2">Persamaan kedua \( 2x - y = 4 \) berubah menjadi \( 2(5 - y) - y = 4 \). Sekarang ini hanya punya satu variabel! <span class="translation">It now has only one variable!</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Pakai Tanda Kurung</p>
+                            <p class="mt-1">Saat substitusi, bungkus bentuk penggantinya dengan tanda kurung, misal \( 2(5 - y) \), agar operasi perkalian tidak salah. <span class="translation">Use parentheses when substituting to avoid errors.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Ganti \( x \) dengan \( ( \text{persamaan} ) \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="p-task4"></div>
+                <div class="page" data-page="7" data-task-id="p-task5"></div>
+                <div class="page" data-page="8" data-task-id="p-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Langkah 3: Selesaikan & Langkah 4: Substitusi Balik <i class="fas fa-flag-checkered text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Step 3: Solve & Step 4: Back-Substitute</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="140" height="40" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="45" font-size="14" text-anchor="middle" fill="#333">2(5 - y) - y = 4</text>
+                                    <path d="M 90 65 L 90 90" stroke="#ef4444" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="90" y="105" font-size="14" text-anchor="middle" fill="#333">y = 2</text>
+                                    <path d="M 90 115 L 140 115 L 140 130" stroke="#10b981" stroke-width="2"/>
+                                    <text x="160" y="135" font-size="12" text-anchor="middle" fill="#10b981">x = 3</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Selesaikan persamaan satu variabel tadi: \( 10 - 2y - y = 4 \implies 10 - 3y = 4 \implies y = 2 \). <span class="translation">Solve for the single variable.</span></p>
+                                <p class="mt-2">Setelah dapat \( y = 2 \), substitusi kembali ke persamaan awal (misal \( x = 5 - y \)) untuk dapat \( x = 5 - 2 = 3 \). <span class="translation">Substitute back into the isolated equation to find the other variable.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Urutan Bebas</p>
+                            <p class="mt-1">Kamu bisa cari \( y \) dulu lalu \( x \), atau sebaliknya. Yang penting hasil akhirnya adalah pasangan \( (x, y) \). <span class="translation">Order doesn't matter, the final pair does.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Dapat 1 variabel -> masukkan ke persamaan telah dipisah -> Dapat variabel ke-2.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="p-task7"></div>
+                <div class="page" data-page="11" data-task-id="p-task8"></div>
+                <div class="page" data-page="12" data-task-id="p-task9"></div>
+                <div class="page" data-page="13" data-task-id="p-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: GUIDED PRACTICE                   -->
+            <!-- ========================================== -->
+            <div id="guided" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Latihan Terbimbing: Koefisien 1 <i class="fas fa-chalkboard-teacher text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Guided Practice: Coefficient of 1</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="40" font-size="14" text-anchor="middle" fill="#333">y = 2x</text>
+                                    <path d="M 40 50 L 90 70" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="120" y="60" font-size="14" text-anchor="middle" fill="#333">x + y = 9</text>
+                                    <path d="M 120 70 L 120 100" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="90" y="120" font-size="14" text-anchor="middle" fill="#333">x + 2x = 9</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Mari coba soal mudah. Jika persamaan sudah berbentuk \( y = 2x \), kita bisa langsung substitusikan ke persamaan lain. <span class="translation">Substitute when a variable is already isolated.</span></p>
+                                <p class="mt-2">Pada sistem: <br> \( y = 2x \) <br> \( x + y = 9 \) <br> Substitusi \( y \) ke persamaan 2 menjadi \( x + 2x = 9 \). <span class="translation">Plug y into the second equation.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Sistem Sudah Terpisah</p>
+                            <p class="mt-1">Jika salah satu persamaan sudah dalam bentuk \( y = \dots \), langkah pertama (ekstrak) dilewati. Langsung substitusi! <span class="translation">If a variable is already isolated, skip step 1.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( y = kx \implies ax + (kx) = c \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="g-task1"></div>
+                <div class="page" data-page="3" data-task-id="g-task2"></div>
+                <div class="page" data-page="4" data-task-id="g-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Latihan Terbimbing: Tanda Kurung <i class="fas fa-square text-green-400 ml-2"></i></h2>
+                        <p class="translation">Guided Practice: Parentheses</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <text x="40" y="40" font-size="14" text-anchor="middle" fill="#333">x = y + 1</text>
+                                    <path d="M 40 50 L 90 70" stroke="#10b981" stroke-width="2" marker-end="url(#arr1)"/>
+                                    <text x="120" y="60" font-size="14" text-anchor="middle" fill="#333">2x + y = 10</text>
+                                    <path d="M 120 70 L 120 100" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="90" y="120" font-size="14" text-anchor="middle" fill="#333">2(y + 1) + y = 10</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Perhatikan penggunaan kurung. Jika \( x = y + 1 \) dimasukkan ke \( 2x + y = 10 \), hasilnya adalah \( 2(y + 1) + y = 10 \). <span class="translation">Pay attention to parentheses during substitution.</span></p>
+                                <p class="mt-2">Kemudian distribusikan: \( 2y + 2 + y = 10 \implies 3y + 2 = 10 \implies y = \frac{8}{3} \). Tunggu, mari kita buat angka yang lebih rapi! <span class="translation">Distribute and combine like terms.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Hati-hati Distribusi</p>
+                            <p class="mt-1">Angka di luar kurung harus dikalikan dengan semua angka di dalam kurung. \( 2(y + 1) \) berarti \( 2y + 2 \). <span class="translation">Distribute the outside number to inside terms.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( a(b + c) = ab + ac \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="g-task4"></div>
+                <div class="page" data-page="7" data-task-id="g-task5"></div>
+                <div class="page" data-page="8" data-task-id="g-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Cerita: Uang Saku <i class="fas fa-wallet text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Story: Pocket Money</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <circle cx="60" cy="70" r="25" fill="#a78bfa" stroke="#7c3aed" stroke-width="2"/>
+                                    <text x="60" y="75" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">Ali</text>
+                                    <circle cx="120" cy="70" r="25" fill="#8b5cf6" stroke="#6d28d9" stroke-width="2"/>
+                                    <text x="120" y="75" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">Budi</text>
+                                    <text x="90" y="120" font-size="12" text-anchor="middle" fill="#333">Total = Rp 15.000</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Ali dan Budi punya uang. Jumlah uang mereka berdua adalah Rp 15.000. Ali punya uang Rp 1.000 lebih banyak dari Budi. <span class="translation">Ali and Budi have money totaling Rp 15,000. Ali has Rp 1,000 more than Budi.</span></p>
+                                <p class="mt-2">Jika uang Budi = \( y \) dan Ali = \( x \), maka: <br> \( x + y = 15 \) <br> \( x = y + 1 \) <br> Substitusi persamaan 2 ke 1! <span class="translation">Set up the equations and substitute.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Ubah Kata "Lebih" Jadi Persamaan</p>
+                            <p class="mt-1">"Ali lebih 1000 dari Budi" berarti \( x = y + 1000 \). Atau bisa juga "Budi kurang 1000 dari Ali" jadi \( y = x - 1000 \). <span class="translation">Translate phrases carefully.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: A lebih dari B -> \( A = B + \text{selisih} \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="g-task7"></div>
+                <div class="page" data-page="11" data-task-id="g-task8"></div>
+                <div class="page" data-page="12" data-task-id="g-task9"></div>
+                <div class="page" data-page="13" data-task-id="g-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: INDEPENDENT PRACTICE               -->
+            <!-- ========================================== -->
+            <div id="independent" class="content-section">
+                <div class="page active" data-page="1">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-indigo-600 mb-2">Memilih Strategi Substitusi <i class="fas fa-route text-indigo-400 ml-2"></i></h2>
+                        <p class="translation">Choosing the Substitution Strategy</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-indigo-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <path d="M20 70 L60 40" stroke="#3b82f6" stroke-width="3"/>
+                                    <text x="70" y="40" font-size="12" text-anchor="middle" fill="#3b82f6">Jalan A (x=...)</text>
+                                    <path d="M20 70 L60 100" stroke="#ef4444" stroke-width="3"/>
+                                    <text x="70" y="110" font-size="12" text-anchor="middle" fill="#ef4444">Jalan B (y=...)</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Tidak semua soal memberi persamaan yang sudah terpisah. Kamu harus pintar memilih variabel mana yang akan dipisahkan. <span class="translation">You must choose wisely which variable to isolate.</span></p>
+                                <p class="mt-2">Pilih variabel yang koefisiennya 1! Mengubah \( x + 2y = 5 \) menjadi \( x = 5 - 2y \) jauh lebih mudah daripada mengubah \( 3x - y = 4 \). <span class="translation">Choose the variable with a coefficient of 1.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Hindari Pecahan Awal</p>
+                            <p class="mt-1">Jika memungkinkan, hindari memisahkan variabel yang menghasilkan pecahan di awal, kecuali tidak ada pilihan lain. <span class="translation">Avoid creating fractions early on.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Cari variabel berskoefisien 1 atau -1.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="2" data-task-id="ind-task1"></div>
+                <div class="page" data-page="3" data-task-id="ind-task2"></div>
+                <div class="page" data-page="4" data-task-id="ind-task3"></div>
+
+                <div class="page" data-page="5">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Soal Cerita: Tiket Bioskop <i class="fas fa-ticket text-green-400 ml-2"></i></h2>
+                        <p class="translation">Word Problem: Cinema Tickets</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-green-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="50" width="140" height="40" rx="5" fill="#10b981" stroke="#059669" stroke-width="2"/>
+                                    <text x="90" y="75" font-size="14" text-anchor="middle" fill="#fff" font-weight="bold">TIKET</text>
+                                    <path d="M60 50 L60 30" stroke="#333" stroke-width="2"/>
+                                    <path d="M120 50 L120 30" stroke="#333" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Tiket dewasa seharga \( x \) dan tiket anak seharga \( y \). Pak Daud membeli 2 dewasa dan 2 anak dengan harga Rp 30.000. Bu Sari membeli 1 dewasa dan 3 anak dengan harga Rp 25.000. <span class="translation">Adult ticket is x, child ticket is y.</span></p>
+                                <p class="mt-2">Model: <br> \( 2x + 2y = 30 \) (bisa disederhanakan jadi \( x + y = 15 \)) <br> \( x + 3y = 25 \) <br> Dari sini kelihatan, substitusi mana yang paling mudah? <span class="translation">Which is easiest to substitute?</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Sederhanakan Dulu</p>
+                            <p class="mt-1">Jika koefisien-koefisien dalam satu persamaan memiliki faktor persekutuan (seperti 2, 2, 30), bagi semua dengan faktor itu! <span class="translation">Simplify equations by dividing by common factors.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: \( 2x + 2y = 30 \implies x + y = 15 \).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="6" data-task-id="ind-task4"></div>
+                <div class="page" data-page="7" data-task-id="ind-task5"></div>
+                <div class="page" data-page="8" data-task-id="ind-task6"></div>
+
+                <div class="page" data-page="9">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500">
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Alur Lengkap Metode Substitusi <i class="fas fa-stream text-purple-400 ml-2"></i></h2>
+                        <p class="translation">Complete Flow of Substitution Method</p>
+                        <div class="flex gap-4 my-4 items-center">
+                            <div class="bg-purple-50 p-4 rounded flex justify-center shrink-0">
+                                <svg width="180" height="140" viewBox="0 0 180 140">
+                                    <rect x="20" y="20" width="140" height="20" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="35" font-size="10" text-anchor="middle" fill="#333">1. Ubah jadi x = ... atau y = ...</text>
+                                    <path d="M 90 45 L 90 55" stroke="#333" stroke-width="2"/>
+                                    <rect x="20" y="60" width="140" height="20" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="75" font-size="10" text-anchor="middle" fill="#333">2. Substitusi ke persamaan lain</text>
+                                    <path d="M 90 85 L 90 95" stroke="#333" stroke-width="2"/>
+                                    <rect x="20" y="100" width="140" height="20" rx="5" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+                                    <text x="90" y="115" font-size="10" text-anchor="middle" fill="#333">3. Cari variabel 1, lalu cari variabel 2</text>
+                                </svg>
+                            </div>
+                            <div>
+                                <p>Ringkasan cara menyelesaikan SPLDV dengan substitusi: <br> 1. Pilih dan isolasi satu variabel. <br> 2. Substitusikan ke persamaan yang belum disentuh. <br> 3. Selesaikan persamaan satu variabel tersebut. <br> 4. Substitusi balik untuk cari variabel kedua. <span class="translation">Summary of substitution steps.</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4">
+                            <p class="font-bold text-yellow-800"><i class="fas fa-lightbulb mr-1"></i> Tips & Tricks: Selalu Cek</p>
+                            <p class="mt-1">Langkah kelima yang tak tertulis di buku adalah "Cek Jawaban". Pastikan kedua persamaan asli terpenuhi. <span class="translation">Always check your answers in the original equations.</span></p>
+                            <p class="mt-1 font-bold"><i class="fas fa-flag mr-1"></i> To The Point Formula: Isolasi -> Substitusi -> Selesaikan -> Kembali -> Cek.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page" data-page="10" data-task-id="ind-task7"></div>
+                <div class="page" data-page="11" data-task-id="ind-task8"></div>
+                <div class="page" data-page="12" data-task-id="ind-task9"></div>
+                <div class="page" data-page="13" data-task-id="ind-task10"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SECTION: CONSOLIDATION & REFLECTION         -->
+            <!-- ========================================== -->
+            <div id="consolidation" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Consolidation & Reflection</h2>
+                    <p class="translation">Konsolidasi & Refleksi</p>
+                    <p>Kerja bagus! Anda telah menyelesaikan materi SPLDV Metode Substitusi. Teruslah berlatih agar semakin mahir menyelesaikan sistem persamaan. <span class="translation">Excellent work! You've completed the SPLDV Substitution Method material. Keep practicing!</span></p>
+                    <p class="mt-2">Untuk menguji pemahaman Anda lebih lanjut, silakan kerjakan Task 1 hingga Task 5. <span class="translation">To test your understanding further, please complete Tasks 1 to 5.</span></p>
+                    <a href="https://learn.algonova.id" target="_blank" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded">
+                        Go to learn.algonova.id <span class="translation text-sm italic">Pergi ke learn.algonova.id</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- TASK SECTIONS -->
+            <div id="task1" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t1-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t1-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t1-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t1-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t1-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t1-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t1-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t1-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t1-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t1-task10"></div></div>
+            </div>
+            <div id="task2" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t2-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t2-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t2-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t2-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t2-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t2-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t2-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t2-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t2-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t2-task10"></div></div>
+            </div>
+            <div id="task3" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t3-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t3-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t3-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t3-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t3-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t3-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t3-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t3-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t3-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t3-task10"></div></div>
+            </div>
+            <div id="task4" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t4-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t4-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t4-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t4-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t4-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t4-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t4-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t4-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t4-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t4-task10"></div></div>
+            </div>
+            <div id="task5" class="content-section">
+                <div class="page active" data-page="1"><div data-task-id="t5-task1"></div></div>
+                <div class="page" data-page="2"><div data-task-id="t5-task2"></div></div>
+                <div class="page" data-page="3"><div data-task-id="t5-task3"></div></div>
+                <div class="page" data-page="4"><div data-task-id="t5-task4"></div></div>
+                <div class="page" data-page="5"><div data-task-id="t5-task5"></div></div>
+                <div class="page" data-page="6"><div data-task-id="t5-task6"></div></div>
+                <div class="page" data-page="7"><div data-task-id="t5-task7"></div></div>
+                <div class="page" data-page="8"><div data-task-id="t5-task8"></div></div>
+                <div class="page" data-page="9"><div data-task-id="t5-task9"></div></div>
+                <div class="page" data-page="10"><div data-task-id="t5-task10"></div></div>
+            </div>
+            </div> <!-- Penutup #contentScrollArea -->
+            <div id="paginationBar" class="shrink-0 bg-white p-3 border-t border-gray-200 flex justify-center items-center gap-1 no-print z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"></div>
+        </main>
+    </div>
+    
+    <!-- Print Area -->
+    <div id="printArea" class="hidden p-8">
+        <div class="text-center border-b-2 border-black pb-4 mb-4">
+            <h1 class="text-xl font-bold">Math Tutoring by Deni</h1>
+            <p>Topic: SPLDV Metode Substitusi</p>
+            <div class="flex justify-around mt-4 text-sm">
+                <p>Name: ..............................</p>
+                <p>Date: ..............................</p>
+                <p>Task: <span id="printTaskNum">1</span></p>
+                <p>Score: <span id="printScore">0</span>/10</p>
+            </div>
+        </div>
+        <table class="w-full border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-black p-1">No.</th>
+                    <th class="border border-black p-1">Question</th>
+                    <th class="border border-black p-1">Student Answer</th>
+                    <th class="border border-black p-1">Correct Answer</th>
+                    <th class="border border-black p-1">Note (❌/✔️)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody"></tbody>
+        </table>
+        <div class="mt-8 text-right">
+            <p>Checked by,</p>
+            <br><br>
+            <p class="font-bold">Deni</p>
+        </div>
+    </div>
+    
+    <script>
+        // ====== MATH QUESTIONS DATA (PART 1) ======
+        const questions = {};
+        Object.assign(questions, {
+            // SPIRAL REVIEW WARM-UP
+            "w-task1": { type: "single", q: "Manakah dari berikut ini yang merupakan bentuk umum Persamaan Linear Dua Variabel (SPLDV)? <i class='fas fa-shapes text-blue-500 ml-2'></i>", q_trans: "Which of the following is the general form of a Two-Variable Linear Equation?", opts: ["\\( x = 5 \\)", "\\( ax + by = c \\)", "\\( x^2 + y = 4 \\)", "\\( x + y \\)", "\\( \\frac{1}{x} + y = 2 \\)"], ans: "\\( ax + by = c \\)", exp: "SPLDV harus memiliki dua variabel (misal x dan y) dan pangkat tertingginya 1. Bentuk umumnya adalah ax + by = c.", exp_trans: "A two-variable linear equation must have two variables and a maximum power of 1. The general form is ax + by = c." },
+            "w-task2": { type: "fill", q: "Jika \\( x = 2 \\) dan \\( y = 3 \\), apakah pasangan ini memenuhi persamaan \\( x + y = 5 \\)? Jawab 'Ya' atau 'Tidak'. <i class='fas fa-check text-blue-500 ml-2'></i>", q_trans: "If x=2 and y=3, does this pair satisfy x + y = 5? Answer 'Yes' or 'No'.", ans: "Ya", exp: "Substitusi x=2 dan y=3 ke persamaan: 2 + 3 = 5. Karena ruas kiri sama dengan ruas kanan (5=5), maka jawabannya Ya.", exp_trans: "Substitute x=2 and y=3 into the equation: 2 + 3 = 5. Since LHS equals RHS (5=5), the answer is Yes." },
+            "w-task3": { type: "tf_table", q: "Evaluasi pernyataan tentang persamaan \\( 2x - 3y = 6 \\). <i class='fas fa-list-ul text-blue-500 ml-2'></i>", q_trans: "Evaluate statements about the equation 2x - 3y = 6.", opts: ["Koefisien dari x adalah 2", "Variabel pada persamaan adalah 6", "Konstanta pada persamaan adalah -3", "Bentuk ini termasuk persamaan linear"], ans: ["B", "S", "S", "B"], exp: "1. Benar, koefisien x adalah 2. 2. Salah, variabelnya adalah x dan y, bukan 6. 3. Salah, konstantanya adalah 6 (bukan -3, karena -3 adalah koefisien y). 4. Benar, karena pangkat tertingginya 1.", exp_trans: "1. True. 2. False, variables are x and y. 3. False, constant is 6. 4. True, max power is 1." },
+            "w-task4": { type: "single", q: "Jika \\( x = 4 \\), berapakah nilai dari \\( x + 5 \\)? <i class='fas fa-plus-circle text-blue-500 ml-2'></i>", q_trans: "If x = 4, what is the value of x + 5?", opts: ["\\( 1 \\)", "\\( 8 \\)", "\\( 9 \\)", "\\( 12 \\)", "\\( 20 \\)"], ans: "\\( 9 \\)", exp: "Substitusikan x = 4 ke persamaan x + 5. Maka hasilnya adalah 4 + 5 = 9.", exp_trans: "Substitute x = 4 into the expression. The result is 4 + 5 = 9." },
+            "w-task5": { type: "complex", q: "Manakah persamaan berikut yang merupakan persamaan linear dua variabel? <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Which of the following are two-variable linear equations?", opts: ["\\( x + y = 5 \\)", "\\( 2x - 3y = 4 \\)", "\\( x^2 = 9 \\)", "\\( 3z = 6 \\)"], ans: [0, 1], exp: "Persamaan linear dua variabel harus memiliki dua variabel (huruf) dan pangkat 1. Opsi 1 dan 2 memenuhi syarat. Opsi 3 pangkatnya 2 (bukan linear). Opsi 4 hanya satu variabel.", exp_trans: "A two-variable linear equation must have two variables and power of 1. Options 1 and 2 qualify. Option 3 has power 2. Option 4 has only one variable." },
+            "w-task6": { type: "fill", q: "Dari persamaan \\( x + 2 = 7 \\), nilai \\( x \\) adalah ... <i class='fas fa-key text-blue-500 ml-2'></i>", q_trans: "From the equation x + 2 = 7, the value of x is...", ans: "5", exp: "Untuk mencari x, pindahkan +2 ke ruas kanan menjadi -2. Maka x = 7 - 2 = 5.", exp_trans: "To find x, move +2 to the right side as -2. So x = 7 - 2 = 5." },
+            "w-task7": { type: "single", q: "Jika \\( x = 3 \\), berapakah nilai \\( y \\) pada persamaan \\( x + y = 8 \\)? <i class='fas fa-calculator text-blue-500 ml-2'></i>", q_trans: "If x = 3, what is the value of y in the equation x + y = 8?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 5 \\)", "\\( 8 \\)", "\\( 11 \\)"], ans: "\\( 5 \\)", exp: "Substitusi x = 3 ke persamaan: 3 + y = 8. Pindahkan 3 ke ruas kanan: y = 8 - 3 = 5.", exp_trans: "Substitute x = 3 into the equation: 3 + y = 8. Move 3 to the right side: y = 8 - 3 = 5." },
+            "w-task8": { type: "tf_table", q: "Apakah pasangan berikut merupakan penyelesaian dari \\( 2x + y = 5 \\)? <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Are the following pairs solutions to 2x + y = 5?", opts: ["(1, 3)", "(2, 1)", "(3, 0)", "(0, 5)"], ans: ["B", "B", "S", "B"], exp: "1. B (2(1)+3=5). 2. B (2(2)+1=5). 3. S (2(3)+0=6, bukan 5). 4. B (2(0)+5=5).", exp_trans: "1. True (2(1)+3=5). 2. True (2(2)+1=5). 3. False (2(3)+0=6, not 5). 4. True (2(0)+5=5)." },
+            "w-task9": { type: "single", q: "\"Jumlah dua bilangan adalah 10\". Jika bilangan pertama adalah \\( x \\) dan bilangan kedua adalah \\( y \\), persamaan matematisnya adalah... <i class='fas fa-pen text-blue-500 ml-2'></i>", q_trans: "\"The sum of two numbers is 10\". If the first number is x and the second is y, the mathematical equation is...", opts: ["\\( x - y = 10 \\)", "\\( x + y = 10 \\)", "\\( x \\times y = 10 \\)", "\\( x = 10 + y \\)", "\\( y = x - 10 \\)"], ans: "\\( x + y = 10 \\)", exp: "Kata \"jumlah\" dalam matematika berarti operasi penjumlahan (+). Jadi, persamaannya adalah x + y = 10.", exp_trans: "The word \"sum\" in mathematics means addition (+). So, the equation is x + y = 10." },
+            "w-task10": { type: "complex", q: "Manakah persamaan yang ekuivalen (memiliki nilai sama) dengan \\( x + y = 6 \\)? <i class='fas fa-check-circle text-blue-500 ml-2'></i>", q_trans: "Which equations are equivalent to x + y = 6?", opts: ["\\( x = 6 - y \\)", "\\( y = 6 - x \\)", "\\( x = y - 6 \\)", "\\( x + y - 6 = 0 \\)"], ans: [0, 1, 3], exp: "1. B, memindahkan y ke kanan. 2. B, memindahkan x ke kanan. 3. S, seharusnya x = 6 - y. 4. B, memindahkan 6 ke ruas kiri.", exp_trans: "1. True. 2. True. 3. False. 4. True." },
+
+            // INTRODUCTION & REAL-WORLD
+            "i-task1": { type: "single", q: "Andi membeli 2 apel dan 1 jeruk seharga Rp 5.000. Jika harga apel = \\( x \\) dan jeruk = \\( y \\) (dalam ribuan), persamaannya adalah... <i class='fas fa-apple-whole text-green-500 ml-2'></i>", q_trans: "Andi buys 2 apples and 1 orange for Rp 5,000. If apple = x and orange = y (in thousands), the equation is...", opts: ["\\( x + 2y = 5 \\)", "\\( 2x + y = 5 \\)", "\\( 2x - y = 5 \\)", "\\( x + y = 5 \\)", "\\( 2x + 2y = 5 \\)"], ans: "\\( 2x + y = 5 \\)", exp: "2 apel berarti 2x, 1 jeruk berarti 1y (atau y). Total harga 5 (ribuan). Jadi persamaannya 2x + y = 5.", exp_trans: "2 apples means 2x, 1 orange means y. Total price is 5 (thousands). So the equation is 2x + y = 5." },
+            "i-task2": { type: "fill", q: "Jika harga 1 apel adalah Rp 2.000 (\\( x = 2 \\)), maka harga 3 apel adalah ... (dalam ribuan). <i class='fas fa-coins text-green-500 ml-2'></i>", q_trans: "If 1 apple costs Rp 2,000 (x=2), then 3 apples cost... (in thousands).", ans: "6", exp: "Substitusi x = 2 ke persamaan harga 3 apel: 3x = 3(2) = 6. Jadi harganya Rp 6.000.", exp_trans: "Substitute x = 2 into the expression for 3 apples: 3x = 3(2) = 6. So the price is Rp 6,000." },
+            "i-task3": { type: "tf_table", q: "Evaluasi terjemahan kalimat matematika. <i class='fas fa-list-ul text-green-500 ml-2'></i>", q_trans: "Evaluate mathematical sentence translations.", opts: ["Jumlah dua bilangan = x + y", "Selisih dua bilangan = x - y", "Kali dua bilangan = x / y", "Dua kali sebuah bilangan = 2x"], ans: ["B", "B", "S", "B"], exp: "1. B, jumlah = penjumlahan. 2. B, selisih = pengurangan. 3. S, kali = perkalian (x * y), bukan pembagian. 4. B, dua kali = dikali 2.", exp_trans: "1. True, sum = addition. 2. True, difference = subtraction. 3. False, product = multiplication. 4. True, twice = times 2." },
+            "i-task4": { type: "single", q: "Ali memiliki uang 2 kali lipat dari uang Budi. Jika uang Budi adalah \\( y \\), maka uang Ali (\( x \)) adalah... <i class='fas fa-money-bill text-green-500 ml-2'></i>", q_trans: "Ali has twice as much money as Budi. If Budi's money is y, then Ali's money (x) is...", opts: ["\\( x = y + 2 \\)", "\\( x = 2y \\)", "\\( y = 2x \\)", "\\( x = \\frac{y}{2} \\)", "\\( x = y - 2 \\)"], ans: "\\( x = 2y \\)", exp: "\"2 kali lipat dari Budi\" berarti uang Ali adalah uang Budi dikalikan 2. Karena Budi = y, maka Ali (x) = 2y.", exp_trans: "\"Twice as much as Budi\" means Ali's money is Budi's money times 2. Since Budi = y, Ali (x) = 2y." },
+            "i-task5": { type: "complex", q: "Jumlah uang A dan B adalah Rp 10.000. A punya uang Rp 2.000 lebih banyak dari B. Persamaan yang terbentuk adalah... <i class='fas fa-check-double text-green-500 ml-2'></i>", q_trans: "The sum of A and B's money is Rp 10,000. A has Rp 2,000 more than B. The equations are...", opts: ["\\( A + B = 10 \\)", "\\( A - B = 2 \\)", "\\( A \\times B = 10 \\)", "\\( A = B + 2 \\)"], ans: [0, 1, 3], exp: "1. B, jumlah = 10. 2. B, A lebih 2 dari B -> A - B = 2. 3. S, bukan perkalian. 4. B, persamaan ke-2 bisa ditulis ulang menjadi A = B + 2.", exp_trans: "1. True, sum is 10. 2. True, A is 2 more than B. 3. False, not multiplication. 4. True, equation 2 can be rewritten." },
+            "i-task6": { type: "fill", q: "Jika \\( x + y = 10 \\) dan \\( x = 4 \\), maka nilai \\( y \\) adalah ... <i class='fas fa-equals text-green-500 ml-2'></i>", q_trans: "If x + y = 10 and x = 4, then the value of y is...", ans: "6", exp: "Substitusi x = 4 ke persamaan: 4 + y = 10. Pindahkan 4 ke kanan: y = 10 - 4 = 6.", exp_trans: "Substitute x = 4 into the equation: 4 + y = 10. Move 4 to the right: y = 10 - 4 = 6." },
+            "i-task7": { type: "single", q: "Mengapa kita menggunakan metode substitusi pada SPLDV? <i class='fas fa-lightbulb text-green-500 ml-2'></i>", q_trans: "Why do we use the substitution method for SPLDV?", opts: ["Untuk menambah jumlah variabel", "Untuk mengubah persamaan menjadi pecahan", "Untuk mengurangi jumlah variabel menjadi satu", "Untuk membuat soal terlihat sulit", "Untuk mengalikan dua persamaan"], ans: "Untuk mengurangi jumlah variabel menjadi satu", exp: "Metode substitusi bertujuan untuk mengganti satu variabel sehingga persamaan yang awalnya memiliki dua variabel (x dan y) berubah menjadi hanya satu variabel, sehingga mudah diselesaikan.", exp_trans: "The substitution method aims to replace one variable so an equation with two variables becomes one with a single variable, making it easy to solve." },
+            "i-task8": { type: "tf_table", q: "Cek validitas pasangan penyelesaian untuk sistem \\( x+y=5 \\) dan \\( x-y=1 \\). <i class='fas fa-clipboard-check text-green-500 ml-2'></i>", q_trans: "Check the validity of solution pairs for the system x+y=5 and x-y=1.", opts: ["Pasangan (3,2) memenuhi keduanya", "Pasangan (2,3) memenuhi keduanya", "Pasangan (3,2) hanya memenuhi x+y=5", "Sistem ini hanya memiliki satu penyelesaian"], ans: ["B", "S", "S", "B"], exp: "1. B (3+2=5, 3-2=1). 2. S (2+3=5 benar, tapi 2-3=-1 salah). 3. S, karena memenuhi keduanya. 4. B, SPLDV linear pasti punya satu penyelesaian jika garis memotong.", exp_trans: "1. True. 2. False (2-3 is -1, not 1). 3. False, it satisfies both. 4. True, intersecting lines have one solution." },
+            "i-task9": { type: "single", q: "Harga 2 buku sama dengan harga 3 pulpen. Jika buku = \\( b \\) dan pulpen = \\( p \\), persamaannya adalah... <i class='fas fa-book text-green-500 ml-2'></i>", q_trans: "The price of 2 books equals the price of 3 pens. If book = b and pen = p, the equation is...", opts: ["\\( b + p = 5 \\)", "\\( 2b = 3p \\)", "\\( 3b = 2p \\)", "\\( b = p \\)", "\\( 2b + 3p = 0 \\)"], ans: "\\( 2b = 3p \\)", exp: "\"Harga 2 buku\" = 2b. \"Harga 3 pulpen\" = 3p. Karena harganya sama, maka 2b = 3p.", exp_trans: "\"Price of 2 books\" = 2b. \"Price of 3 pens\" = 3p. Since they are equal, 2b = 3p." },
+            "i-task10": { type: "complex", q: "Dari persamaan \\( x + y = 7 \\), bentuk mana yang bisa digunakan untuk substitusi? <i class='fas fa-check-circle text-green-500 ml-2'></i>", q_trans: "From the equation x + y = 7, which forms can be used for substitution?", opts: ["\\( x = 7 - y \\)", "\\( y = 7 - x \\)", "\\( x = y - 7 \\)", "\\( y = x + 7 \\)"], ans: [0, 1], exp: "Untuk substitusi, kita harus mengisolasi variabel. Dari x + y = 7, kita bisa peroleh x = 7 - y ATAU y = 7 - x. Kedua-duanya benar.", exp_trans: "For substitution, we must isolate a variable. From x + y = 7, we can get x = 7 - y OR y = 7 - x. Both are correct." },
+
+            // REVIEW OF PRIOR KNOWLEDGE
+            "r-task1": { type: "single", q: "Tentukan nilai \\( x \\) dari persamaan \\( 2x + 1 = 9 \\). <i class='fas fa-calculator text-purple-500 ml-2'></i>", q_trans: "Determine the value of x from the equation 2x + 1 = 9.", opts: ["\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 8 \\)", "\\( 10 \\)"], ans: "\\( 4 \\)", exp: "Langkah 1: Pindahkan +1 ke kanan menjadi -1 -> 2x = 9 - 1 -> 2x = 8. Langkah 2: Bagi 2 -> x = 8 / 2 = 4.", exp_trans: "Step 1: Move +1 to the right as -1 -> 2x = 8. Step 2: Divide by 2 -> x = 4." },
+            "r-task2": { type: "fill", q: "Jika \\( \\frac{x}{2} = 4 \\), maka nilai \\( x \\) adalah ... <i class='fas fa-divide text-purple-500 ml-2'></i>", q_trans: "If x/2 = 4, then the value of x is...", ans: "8", exp: "Untuk menghilangkan pecahan, kalikan kedua ruas dengan penyebut (2). Maka 2 * (x/2) = 4 * 2. Hasilnya x = 8.", exp_trans: "To clear the fraction, multiply both sides by the denominator (2). So x = 8." },
+            "r-task3": { type: "tf_table", q: "Evaluasi aturan aljabar dasar. <i class='fas fa-list-ul text-purple-500 ml-2'></i>", q_trans: "Evaluate basic algebra rules.", opts: ["\\( a + a = 2a \\)", "\\( 3x - x = 2 \\)", "\\( 2(x+1) = 2x + 2 \\)", "\\( x \\times x = 2x \\)"], ans: ["B", "S", "B", "S"], exp: "1. B, penjumlahan variabel sejenis. 2. S, 3x - x = 2x, bukan 2. 3. B, distribusi perkalian. 4. S, x * x = x^2, bukan 2x.", exp_trans: "1. True. 2. False, 3x - x = 2x. 3. True, distribution. 4. False, x * x = x^2." },
+            "r-task4": { type: "single", q: "Ubah persamaan \\( y - 2 = 5 \\) ke bentuk \\( y = ... \\) <i class='fas fa-people-arrows text-purple-500 ml-2'></i>", q_trans: "Convert the equation y - 2 = 5 to the form y = ...", opts: ["\\( y = 3 \\)", "\\( y = 5 \\)", "\\( y = 7 \\)", "\\( y = 10 \\)", "\\( y = -3 \\)"], ans: "\\( y = 7 \\)", exp: "Pindahkan -2 ke ruas kanan menjadi +2. Maka y = 5 + 2 = 7.", exp_trans: "Move -2 to the right side as +2. So y = 5 + 2 = 7." },
+            "r-task5": { type: "complex", q: "Manakah persamaan yang ekuivalen (sama) dengan \\( x + 3 = 5 \\)? <i class='fas fa-check-double text-purple-500 ml-2'></i>", q_trans: "Which equations are equivalent to x + 3 = 5?", opts: ["\\( x = 5 - 3 \\)", "\\( x = 2 \\)", "\\( x = 8 \\)", "\\( 2x = 4 \\)"], ans: [0, 1, 3], exp: "1. B, memindahkan 3. 2. B, hasil akhirnya x=2. 3. S, x bukan 8. 4. B, jika x=2 maka 2(2)=4 benar. Semua ini ekuivalen.", exp_trans: "1. True. 2. True. 3. False. 4. True, 2x=4 simplifies to x=2." },
+            "r-task6": { type: "fill", q: "Jika \\( y = 3 \\), berapakah nilai dari \\( 2y + 1 \\)? <i class='fas fa-mirror text-purple-500 ml-2'></i>", q_trans: "If y = 3, what is the value of 2y + 1?", ans: "7", exp: "Substitusi y = 3 ke persamaan: 2(3) + 1 = 6 + 1 = 7.", exp_trans: "Substitute y = 3 into the expression: 2(3) + 1 = 7." },
+            "r-task7": { type: "single", q: "Jika \\( x + y = 10 \\), maka \\( x = ... \\) <i class='fas fa-arrows-left-right text-purple-500 ml-2'></i>", q_trans: "If x + y = 10, then x = ...", opts: ["\\( x = 10 + y \\)", "\\( x = 10 - y \\)", "\\( x = y - 10 \\)", "\\( x = 10y \\)", "\\( x = \\frac{10}{y} \\)"], ans: "\\( x = 10 - y \\)", exp: "Untuk mengisolasi x, pindahkan y ke ruas kanan. Karena y positif, berubah menjadi negatif. Jadi x = 10 - y.", exp_trans: "To isolate x, move y to the right side. Since y is positive, it becomes negative. So x = 10 - y." },
+            "r-task8": { type: "tf_table", q: "Evaluasi distribusi perkalian dalam aljabar. <i class='fas fa-clipboard-check text-purple-500 ml-2'></i>", q_trans: "Evaluate distribution in algebra.", opts: ["\\( 2(x-3) = 2x - 6 \\)", "\\( 3(y+2) = 3y + 2 \\)", "\\( -1(x) = -x \\)", "\\( 5(2x) = 10x \\)"], ans: ["B", "S", "B", "B"], exp: "1. B, 2 dikali keduanya. 2. S, seharusnya 3y + 6. 3. B, negatif dikali positif negatif. 4. B, 5 dikali 2x = 10x.", exp_trans: "1. True. 2. False, should be 3y + 6. 3. True. 4. True." },
+            "r-task9": { type: "single", q: "Dari \\( 2x + y = 6 \\), jika kita ingin mengisolasi \\( y \\), hasilnya adalah... <i class='fas fa-pen text-purple-500 ml-2'></i>", q_trans: "From 2x + y = 6, if we want to isolate y, the result is...", opts: ["\\( y = 6 + 2x \\)", "\\( y = 6 - 2x \\)", "\\( y = 2x - 6 \\)", "\\( y = \\frac{6}{2x} \\)", "\\( y = 6 - x \\)"], ans: "\\( y = 6 - 2x \\)", exp: "Pindahkan 2x ke ruas kanan. Karena 2x positif, berubah jadi negatif. Maka y = 6 - 2x.", exp_trans: "Move 2x to the right side. Since it's positive, it becomes negative. So y = 6 - 2x." },
+            "r-task10": { type: "complex", q: "Manakah langkah yang benar untuk menyelesaikan \\( 3x + 2 = 11 \\)? <i class='fas fa-check-circle text-purple-500 ml-2'></i>", q_trans: "Which are correct steps to solve 3x + 2 = 11?", opts: ["Kurangi 2 dari kedua sisi: \\( 3x = 9 \\)", "Bagi dengan 3: \\( x = 3 \\)", "Kurangi 11: \\( 3x = -9 \\)", "Bagi dengan 2: \\( \\frac{3x}{2} = 11 \\)"], ans: [0, 1], exp: "1. B, langkah pertama yang benar. 2. B, langkah kedua untuk mendapatkan x. 3. S, salah perhitungan. 4. S, langkah yang aneh dan tidak membantu.", exp_trans: "1. True, correct first step. 2. True, second step to get x. 3. False. 4. False." }
+        });
+		
+        Object.assign(questions, {
+            // PROBLEM INTRODUCTION
+            "p-task1": { type: "single", q: "Dari sistem persamaan \\( x + y = 5 \\) dan \\( 2x - y = 4 \\), bentuk mana yang paling mudah untuk disubstitusi? <i class='fas fa-hand-rock text-orange-500 ml-2'></i>", q_trans: "From the system x + y = 5 and 2x - y = 4, which form is easiest to substitute?", opts: ["\\( x = 5 - y \\)", "\\( x = 4 + y \\)", "\\( y = 5 - x \\)", "\\( y = 2x - 4 \\)", "\\( x = 2y \\)"], ans: "\\( x = 5 - y \\)", exp: "Dari persamaan pertama, x dan y memiliki koefisien 1. Kita bisa dengan mudah memindahkan y ke ruas kanan, sehingga menjadi x = 5 - y. Bentuk ini sangat siap untuk disubstitusi.", exp_trans: "From the first equation, x and y have a coefficient of 1. We can easily move y to the right side to get x = 5 - y. This form is ready for substitution." },
+            "p-task2": { type: "fill", q: "Jika \\( x = 2 \\) dan persamaan kedua adalah \\( 2x + y = 6 \\), maka persamaan baru setelah disubstitusi adalah \\( 4 + y = 6 \\). Berapakah nilai \\( y \\)? <i class='fas fa-plug text-orange-500 ml-2'></i>", q_trans: "If x = 2 and the second equation is 2x + y = 6, the new equation after substitution is 4 + y = 6. What is the value of y?", ans: "2", exp: "Dari persamaan 4 + y = 6, pindahkan 4 ke ruas kanan sehingga y = 6 - 4 = 2.", exp_trans: "From 4 + y = 6, move 4 to the right side so y = 6 - 4 = 2." },
+            "p-task3": { type: "tf_table", q: "Evaluasi langkah-langkah untuk mengisolasi \\( y \\) dari persamaan \\( 2x + y = 8 \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate the steps to isolate y from the equation 2x + y = 8.", opts: ["Kurangi 2x dari kedua sisi", "Hasilnya adalah y = 8 + 2x", "Hasilnya adalah y = 8 - 2x", "Persamaan ini tidak bisa diisolasi"], ans: ["B", "S", "B", "S"], exp: "1. B, langkah awal yang benar. 2. S, seharusnya 2x berpindah menjadi -2x. 3. B, y = 8 - 2x adalah bentuk yang benar. 4. S, semua persamaan linear bisa diisolasi.", exp_trans: "1. True. 2. False, it should be -2x. 3. True. 4. False, all linear equations can be isolated." },
+            "p-task4": { type: "single", q: "Jika \\( y = x + 1 \\) dan persamaan kedua adalah \\( 2x + y = 10 \\), persamaan apa yang dihasilkan setelah substitusi? <i class='fas fa-square text-orange-500 ml-2'></i>", q_trans: "If y = x + 1 and the second equation is 2x + y = 10, what is the resulting equation after substitution?", opts: ["\\( 2x + x + 1 = 10 \\)", "\\( 2x + 1 = 10 \\)", "\\( 2x - x = 10 \\)", "\\( 3x - 1 = 10 \\)", "\\( x + 1 = 10 \\)"], ans: "\\( 2x + x + 1 = 10 \\)", exp: "Kita ganti 'y' pada persamaan kedua dengan '(x + 1)'. Sehingga 2x + (x + 1) = 10, yang disederhanakan menjadi 2x + x + 1 = 10.", exp_trans: "We replace 'y' with '(x + 1)'. So 2x + (x + 1) = 10, simplified to 2x + x + 1 = 10." },
+            "p-task5": { type: "complex", q: "Diketahui \\( x = 3 - y \\) dan \\( 2x - y = 4 \\). Manakah di bawah ini yang merupakan persamaan benar setelah substitusi? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Given x = 3 - y and 2x - y = 4. Which of the following is a correct equation after substitution?", opts: ["\\( 2(3 - y) - y = 4 \\)", "\\( 6 - 2y - y = 4 \\)", "\\( 6 - 3y = 4 \\)", "\\( 2x - 3 = 4 \\)"], ans: [0, 1, 2], exp: "1. B, substitusi langsung. 2. B, hasil distribusi 2 ke (3-y). 3. B, penggabungan -2y - y menjadi -3y. 4. S, tidak relevan.", exp_trans: "1. True, direct substitution. 2. True, distribution result. 3. True, combining like terms. 4. False." },
+            "p-task6": { type: "fill", q: "Selesaikan persamaan hasil substitusi: \\( 3y + 2 = 11 \\). Maka nilai \\( y \\) adalah ... <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "Solve the resulting equation: 3y + 2 = 11. The value of y is...", ans: "3", exp: "Pindahkan 2 ke kanan: 3y = 11 - 2 -> 3y = 9. Bagi 3: y = 9 / 3 = 3.", exp_trans: "Move 2 to the right: 3y = 9. Divide by 3: y = 3." },
+            "p-task7": { type: "single", q: "Jika dari suatu SPLDV kita peroleh \\( y = 2 \\), dan persamaan awal yang sudah diisolasi adalah \\( x = 5 - y \\). Maka nilai \\( x \\) adalah... <i class='fas fa-flag-checkered text-orange-500 ml-2'></i>", q_trans: "If y = 2, and the isolated equation is x = 5 - y. Then the value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 10 \\)"], ans: "\\( 3 \\)", exp: "Substitusi balik: masukkan y = 2 ke x = 5 - y. Maka x = 5 - 2 = 3.", exp_trans: "Back-substitute: plug y = 2 into x = 5 - y. So x = 5 - 2 = 3." },
+            "p-task8": { type: "tf_table", q: "Cek apakah pasangan ini memenuhi sistem \\( x+y=5 \\) dan \\( x-y=1 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Check if these pairs satisfy the system x+y=5 and x-y=1.", opts: ["Pasangan (3,2) memenuhi keduanya", "Pasangan (2,3) memenuhi keduanya", "Sistem ini memiliki 2 penyelesaian", "Substitusi balik digunakan untuk mencari variabel kedua"], ans: ["B", "S", "S", "B"], exp: "1. B, 3+2=5 dan 3-2=1. 2. S, 2-3 bukan 1. 3. S, SPLDV linear hanya punya 1 penyelesaian. 4. B, langkah terakhir substitusi balik.", exp_trans: "1. True. 2. False. 3. False, only 1 solution. 4. True, last step is back-substitution." },
+            "p-task9": { type: "single", q: "Dari sistem \\( 2x - 3y = 6 \\) dan \\( x + y = 4 \\), persamaan mana yang sebaiknya dipilih untuk isolasi variabel? <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "From the system 2x - 3y = 6 and x + y = 4, which equation should be chosen for isolation?", opts: ["\\( 2x - 3y = 6 \\)", "\\( x + y = 4 \\)", "Keduanya sama baiknya", "Tidak ada yang bisa diisolasi", "\\( 2x = 6 \\)"], ans: "\\( x + y = 4 \\)", exp: "Persamaan x + y = 4 lebih baik dipilih karena koefisiennya 1. Mengisolasi dari sini tidak akan menghasilkan pecahan (seperti x = 4 - y).", exp_trans: "x + y = 4 is better because coefficients are 1. Isolating here won't create fractions." },
+            "p-task10": { type: "complex", q: "Manakah sistem berikut yang sudah memiliki variabel terisolasi dan siap untuk langsung disubstitusi? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Which systems already have an isolated variable and are ready for direct substitution?", opts: ["\\( y = 2x \\) dan \\( x + y = 8 \\)", "\\( x = 4 - y \\) dan \\( 2x - y = 3 \\)", "\\( 2x + y = 5 \\) dan \\( x - y = 2 \\)", "\\( x + y = 7 \\) dan \\( x - y = 1 \\)"], ans: [0, 1], exp: "1. B, y sudah isolasi. 2. B, x sudah isolasi. 3. S, keduanya belum isolasi. 4. S, keduanya belum isolasi.", exp_trans: "1. True, y is isolated. 2. True, x is isolated. 3. False. 4. False." },
+
+            // GUIDED PRACTICE
+            "g-task1": { type: "single", q: "Selesaikan sistem \\( y = 2x \\) dan \\( x + y = 9 \\). Nilai \\( x \\) adalah... <i class='fas fa-chalkboard-teacher text-blue-500 ml-2'></i>", q_trans: "Solve the system y = 2x and x + y = 9. The value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 9 \\)"], ans: "\\( 3 \\)", exp: "Substitusi y = 2x ke persamaan kedua: x + 2x = 9 -> 3x = 9. Maka x = 9 / 3 = 3.", exp_trans: "Substitute y = 2x into the second equation: x + 2x = 9 -> 3x = 9. So x = 3." },
+            "g-task2": { type: "fill", q: "Dari soal sebelumnya, jika \\( x = 3 \\) dan \\( y = 2x \\), maka nilai \\( y \\) adalah ... <i class='fas fa-square text-blue-500 ml-2'></i>", q_trans: "From the previous question, if x = 3 and y = 2x, then the value of y is...", ans: "6", exp: "Substitusi balik: y = 2(3) = 6.", exp_trans: "Back-substitution: y = 2(3) = 6." },
+            "g-task3": { type: "tf_table", q: "Evaluasi langkah penyelesaian untuk \\( x = y + 1 \\) dan \\( 2x - y = 5 \\). <i class='fas fa-list-ul text-blue-500 ml-2'></i>", q_trans: "Evaluate the solution steps for x = y + 1 and 2x - y = 5.", opts: ["Substitusi menghasilkan: \\( 2(y + 1) - y = 5 \\)", "Sederhanakan menjadi: \\( y + 2 = 5 \\)", "Nilai \\( y = 3 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "S"], exp: "1. B, substitusi benar. 2. B, 2y - y = y, dan 2 tetap. 3. B, y = 5 - 2 = 3. 4. S, x = y + 1 = 3 + 1 = 4, bukan 2.", exp_trans: "1. True. 2. True. 3. True, y = 3. 4. False, x = 4." },
+            "g-task4": { type: "single", q: "Selesaikan sistem \\( x = 2y \\) dan \\( x - y = 2 \\). Nilai \\( y \\) adalah... <i class='fas fa-plug text-blue-500 ml-2'></i>", q_trans: "Solve the system x = 2y and x - y = 2. The value of y is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 2 \\)", exp: "Substitusi x = 2y ke persamaan 2: 2y - y = 2 -> y = 2.", exp_trans: "Substitute x = 2y into eq 2: 2y - y = 2 -> y = 2." },
+            "g-task5": { type: "complex", q: "Manakah langkah penyelesaian yang benar untuk \\( y = x \\) dan \\( 3x + y = 8 \\)? <i class='fas fa-check-double text-blue-500 ml-2'></i>", q_trans: "Which are correct solution steps for y = x and 3x + y = 8?", opts: ["Substitusi: \\( 3x + x = 8 \\)", "Sederhanakan: \\( 4x = 8 \\)", "Nilai \\( x = 2 \\)", "Nilai \\( x = 4 \\)"], ans: [0, 1, 2], exp: "1. B, substitusi y dengan x. 2. B, 3x + x = 4x. 3. B, 4x = 8 -> x = 2. 4. S, x bukan 4.", exp_trans: "1. True. 2. True. 3. True, x = 2. 4. False." },
+            "g-task6": { type: "fill", q: "Jumlah uang Ali dan Budi 15rb. Ali punya 1rb lebih banyak. Jika \\( A = B + 1 \\) dan \\( A + B = 15 \\), maka uang Budi (\\( B \\)) adalah ... (dalam ribuan) <i class='fas fa-wallet text-blue-500 ml-2'></i>", q_trans: "Ali and Budi have 15k total. Ali has 1k more. If A = B + 1 and A + B = 15, Budi's money (B) is... (in thousands)", ans: "7", exp: "Substitusi: (B + 1) + B = 15 -> 2B + 1 = 15 -> 2B = 14 -> B = 7.", exp_trans: "Substitute: (B + 1) + B = 15 -> 2B = 14 -> B = 7." },
+            "g-task7": { type: "single", q: "Dari soal cerita sebelumnya, jika uang Budi 7rb, berapakah uang Ali? (dalam ribuan) <i class='fas fa-money-bill text-blue-500 ml-2'></i>", q_trans: "From the previous story, if Budi has 7k, how much is Ali's money? (in thousands)", opts: ["\\( 6 \\)", "\\( 7 \\)", "\\( 8 \\)", "\\( 14 \\)", "\\( 15 \\)"], ans: "\\( 8 \\)", exp: "Ali = B + 1 = 7 + 1 = 8. Jadi uang Ali 8rb.", exp_trans: "Ali = B + 1 = 7 + 1 = 8. So Ali has 8k." },
+            "g-task8": { type: "tf_table", q: "Cek langkah penyelesaian untuk \\( x + y = 10 \\) dan \\( x = y - 2 \\). <i class='fas fa-clipboard-check text-blue-500 ml-2'></i>", q_trans: "Check the solution steps for x + y = 10 and x = y - 2.", opts: ["Substitusi: \\( (y - 2) + y = 10 \\)", "Sederhanakan: \\( 2y - 2 = 10 \\)", "Nilai \\( y = 6 \\)", "Nilai \\( x = 4 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B, substitusi benar. 2. B, y + y = 2y. 3. B, 2y = 12 -> y = 6. 4. B, x = 6 - 2 = 4. Semua benar.", exp_trans: "1. True. 2. True. 3. True. 4. True. All correct." },
+            "g-task9": { type: "single", q: "Dari sistem \\( 2x + y = 8 \\) dan \\( x - y = 1 \\), bagaimana cara paling mudah untuk mengisolasi variabel? <i class='fas fa-route text-blue-500 ml-2'></i>", q_trans: "From the system 2x + y = 8 and x - y = 1, what is the easiest way to isolate a variable?", opts: ["Isolasi \\( y \\) dari persamaan 1: \\( y = 8 - 2x \\)", "Isolasi \\( x \\) dari persamaan 2: \\( x = y + 1 \\)", "Isolasi \\( y \\) dari persamaan 2: \\( y = x - 1 \\)", "Isolasi \\( x \\) dari persamaan 1: \\( x = \\frac{8-y}{2} \\)"], ans: "Isolasi \\( x \\) dari persamaan 2: \\( x = y + 1 \\)", exp: "Persamaan 2 (x - y = 1) memiliki koefisien 1. Memindahkan y ke kanan menghasilkan x = y + 1, bentuk yang sangat bersih tanpa pecahan.", exp_trans: "Equation 2 has coefficients of 1. Moving y gives x = y + 1, a clean form without fractions." },
+            "g-task10": { type: "complex", q: "Manakah pasangan penyelesaian yang benar untuk \\( x - y = 2 \\) dan \\( 2x + y = 7 \\)? <i class='fas fa-check-circle text-blue-500 ml-2'></i>", q_trans: "Which solution pairs are correct for x - y = 2 and 2x + y = 7?", opts: ["\\( x = 3 \\)", "\\( y = 1 \\)", "\\( x = 2 \\)", "\\( y = 2 \\)"], ans: [0, 1], exp: "Isolasi x = y + 2. Substitusi: 2(y+2) + y = 7 -> 2y + 4 + y = 7 -> 3y = 3 -> y = 1. Lalu x = 1 + 2 = 3.", exp_trans: "Isolate x = y + 2. Substitute: 2(y+2) + y = 7 -> 3y = 3 -> y = 1. Then x = 3." },
+
+            // INDEPENDENT PRACTICE
+            "ind-task1": { type: "single", q: "Selesaikan sistem \\( y = 3x \\) dan \\( x + y = 8 \\). Nilai \\( x \\) adalah... <i class='fas fa-route text-indigo-500 ml-2'></i>", q_trans: "Solve the system y = 3x and x + y = 8. The value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 2 \\)", exp: "Substitusi y = 3x ke persamaan 2: x + 3x = 8 -> 4x = 8. Maka x = 8 / 4 = 2.", exp_trans: "Substitute y = 3x into eq 2: x + 3x = 8 -> 4x = 8. So x = 2." },
+            "ind-task2": { type: "fill", q: "Dari soal sebelumnya, jika \\( x = 2 \\), maka nilai \\( y \\) adalah ... <i class='fas fa-equals text-indigo-500 ml-2'></i>", q_trans: "From the previous question, if x = 2, then the value of y is...", ans: "6", exp: "Substitusi balik: y = 3x = 3(2) = 6.", exp_trans: "Back-substitution: y = 3x = 3(2) = 6." },
+            "ind-task3": { type: "tf_table", q: "Evaluasi penyelesaian untuk \\( x + 2y = 5 \\) dan \\( x = 1 \\). <i class='fas fa-list-ul text-indigo-500 ml-2'></i>", q_trans: "Evaluate the solution for x + 2y = 5 and x = 1.", opts: ["Substitusi menghasilkan: \\( 1 + 2y = 5 \\)", "Persamaan menjadi: \\( 2y = 4 \\)", "Nilai \\( y = 2 \\)", "Pasangan penyelesaiannya adalah (1, 2)"], ans: ["B", "B", "B", "B"], exp: "1. B, masukkan x=1. 2. B, 1 dipindahkan. 3. B, 2y=4 -> y=2. 4. B, pasangan (x,y) = (1,2). Semua benar.", exp_trans: "1. True. 2. True. 3. True. 4. True. All correct." },
+            "ind-task4": { type: "single", q: "Selesaikan sistem \\( 2x + 2y = 12 \\) dan \\( x = y \\). Nilai \\( x \\) adalah... <i class='fas fa-calculator text-indigo-500 ml-2'></i>", q_trans: "Solve the system 2x + 2y = 12 and x = y. The value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 12 \\)"], ans: "\\( 3 \\)", exp: "Sederhanakan persamaan 1 dengan membagi 2: x + y = 6. Karena x = y, substitusi: x + x = 6 -> 2x = 6 -> x = 3.", exp_trans: "Simplify eq 1 by dividing by 2: x + y = 6. Since x = y, substitute: 2x = 6 -> x = 3." },
+            "ind-task5": { type: "complex", q: "Manakah langkah yang benar untuk menyelesaikan \\( x - y = 1 \\) dan \\( 3x + y = 11 \\)? <i class='fas fa-check-double text-indigo-500 ml-2'></i>", q_trans: "Which are correct steps to solve x - y = 1 and 3x + y = 11?", opts: ["Isolasi: \\( x = y + 1 \\)", "Substitusi: \\( 3(y + 1) + y = 11 \\)", "Sederhanakan: \\( 4y + 3 = 11 \\)", "Nilai \\( y = 2 \\)"], ans: [0, 1, 2, 3], exp: "1. B, isolasi x. 2. B, substitusi benar. 3. B, 3y + 3 + y = 4y + 3. 4. B, 4y = 8 -> y = 2. Semua benar.", exp_trans: "1. True. 2. True. 3. True. 4. True. All correct." },
+            "ind-task6": { type: "fill", q: "Tiket dewasa (\\( d \\)) dan anak (\\( a \\)). 2 dewasa + 2 anak = 30rb (jadi \\( d + a = 15 \\)). 1 dewasa + 3 anak = 25rb. Jika isolasi \\( d = 15 - a \\), substitusi menghasilkan \\( 15 - a + 3a = 25 \\). Berapa nilai \\( a \\)? <i class='fas fa-ticket text-indigo-500 ml-2'></i>", q_trans: "Adult (d) and child (a) tickets. 2d+2a=30 (so d+a=15). 1d+3a=25. If d=15-a, substitution gives 15-a+3a=25. What is a?", ans: "5", exp: "15 + 2a = 25 -> 2a = 10 -> a = 5. Jadi harga tiket anak adalah 5rb.", exp_trans: "15 + 2a = 25 -> 2a = 10 -> a = 5. So child ticket is 5k." },
+            "ind-task7": { type: "single", q: "Dari soal tiket sebelumnya, jika \\( a = 5 \\) (tiket anak 5rb), berapakah harga tiket dewasa (\\( d \\))? (dalam ribuan) <i class='fas fa-user-tie text-indigo-500 ml-2'></i>", q_trans: "From the previous ticket question, if a = 5 (child ticket 5k), what is the adult ticket price (d)? (in thousands)", opts: ["\\( 5 \\)", "\\( 8 \\)", "\\( 10 \\)", "\\( 15 \\)", "\\( 25 \\)"], ans: "\\( 10 \\)", exp: "Substitusi balik: d = 15 - a = 15 - 5 = 10. Jadi tiket dewasa 10rb.", exp_trans: "Back-substitution: d = 15 - a = 15 - 5 = 10. So adult ticket is 10k." },
+            "ind-task8": { type: "tf_table", q: "Evaluasi langkah substitusi untuk \\( 2x - y = 4 \\) dan \\( x + y = 5 \\). <i class='fas fa-clipboard-check text-indigo-500 ml-2'></i>", q_trans: "Evaluate substitution steps for 2x - y = 4 and x + y = 5.", opts: ["Isolasi y dari persamaan 2: \\( y = 5 - x \\)", "Substitusi: \\( 2x - (5 - x) = 4 \\)", "Sederhanakan: \\( 3x - 5 = 4 \\)", "Nilai \\( x = 3 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B, isolasi benar. 2. B, substitusi benar dengan kurung. 3. B, 2x - 5 + x = 3x - 5. 4. B, 3x = 9 -> x = 3. Semua benar.", exp_trans: "1. True. 2. True. 3. True. 4. True. All correct." },
+            "ind-task9": { type: "single", q: "Harga 2 pensil (\\( p \\)) dan 1 pulpen (\\( b \\)) adalah 8rb. 1 pensil dan 2 pulpen adalah 10rb. Persamaan yang benar adalah... <i class='fas fa-pen text-indigo-500 ml-2'></i>", q_trans: "Price of 2 pencils (p) and 1 pen (b) is 8k. 1 pencil and 2 pens is 10k. The correct equations are...", opts: ["\\( 2p + b = 8 \\) dan \\( p + 2b = 10 \\)", "\\( p + b = 8 \\) dan \\( p + b = 10 \\)", "\\( 2p + b = 10 \\) dan \\( p + 2b = 8 \\)", "\\( 2p - b = 8 \\) dan \\( p - 2b = 10 \\)", "\\( p + 2b = 8 \\) dan \\( 2p + b = 10 \\)"], ans: "\\( 2p + b = 8 \\) dan \\( p + 2b = 10 \\)", exp: "2 pensil berarti 2p, 1 pulpen berarti b. Total 8, jadi 2p + b = 8. Demikian pula p + 2b = 10.", exp_trans: "2 pencils means 2p, 1 pen means b. Total 8, so 2p + b = 8. Similarly p + 2b = 10." },
+            "ind-task10": { type: "complex", q: "Manakah pernyataan yang benar tentang metode substitusi? <i class='fas fa-check-circle text-indigo-500 ml-2'></i>", q_trans: "Which statements are true about the substitution method?", opts: ["Memerlukan isolasi minimal satu variabel terlebih dahulu", "Selalu menghasilkan pecahan jika tidak hati-hati", "Hanya bisa digunakan jika ada koefisien 1", "Mengurangi 2 variabel menjadi 1 variabel"], ans: [0, 1, 3], exp: "1. B, inti substitusi adalah isolasi. 2. B, jika isolasi variabel berskoefisien >1 (misal 2x), menghasilkan pecahan. 3. S, bisa pakai koefisien lain walau lebih susah. 4. B, itu tujuannya.", exp_trans: "1. True. 2. True, can create fractions. 3. False. 4. True, that's the goal." }
+        });
+		
+        Object.assign(questions, {
+            // TASK 1: Dasar-Dasar Substitusi Sederhana
+            "t1-task1": { type: "single", q: "Selesaikan sistem \\( y = x + 1 \\) dan \\( x + y = 3 \\). Nilai \\( x \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Solve the system y = x + 1 and x + y = 3. The value of x is...", opts: ["\\( 0 \\)", "\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)"], ans: "\\( 1 \\)", exp: "Substitusi y ke persamaan 2: x + (x + 1) = 3 -> 2x + 1 = 3 -> 2x = 2 -> x = 1.", exp_trans: "Substitute y into eq 2: x + (x + 1) = 3 -> 2x = 2 -> x = 1." },
+            "t1-task2": { type: "fill", q: "Dari soal sebelumnya, jika \\( x = 1 \\) dan \\( y = x + 1 \\), maka nilai \\( y \\) adalah ... <i class='fas fa-pencil text-orange-500 ml-2'></i>", q_trans: "From the previous question, if x = 1 and y = x + 1, then the value of y is...", ans: "2", exp: "Substitusi balik: y = x + 1 = 1 + 1 = 2.", exp_trans: "Back-substitution: y = 1 + 1 = 2." },
+            "t1-task3": { type: "tf_table", q: "Evaluasi penyelesaian sistem \\( x = 2y \\) dan \\( 2x - y = 3 \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate the solution of the system x = 2y and 2x - y = 3.", opts: ["Substitusi menghasilkan: \\( 2(2y) - y = 3 \\)", "Sederhanakan: \\( 3y = 3 \\)", "Nilai \\( y = 1 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B, substitusi x=2y. 2. B, 4y - y = 3y. 3. B, 3y=3 -> y=1. 4. B, x = 2(1) = 2. Semua benar.", exp_trans: "1. True. 2. True. 3. True. 4. True. All correct." },
+            "t1-task4": { type: "single", q: "Diketahui \\( y = 3 \\) dan \\( 2x - y = 5 \\). Nilai \\( x \\) adalah... <i class='fas fa-times text-orange-500 ml-2'></i>", q_trans: "Given y = 3 and 2x - y = 5. The value of x is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 4 \\)", exp: "Substitusi y = 3: 2x - 3 = 5 -> 2x = 8 -> x = 4.", exp_trans: "Substitute y = 3: 2x - 3 = 5 -> 2x = 8 -> x = 4." },
+            "t1-task5": { type: "complex", q: "Manakah yang merupakan bentuk ekuivalen dari \\( x + y = 4 \\)? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Which are equivalent forms of x + y = 4?", opts: ["\\( x = 4 - y \\)", "\\( y = 4 - x \\)", "\\( x - y = 4 \\)", "\\( 2x + 2y = 8 \\)"], ans: [0, 1, 3], exp: "1. B, isolasi x. 2. B, isolasi y. 3. S, tanda berubah. 4. B, dikali 2 di kedua sisi.", exp_trans: "1. True. 2. True. 3. False. 4. True." },
+            "t1-task6": { type: "fill", q: "Jumlah dua bilangan adalah 10. Selisihnya 2. Jika \\( A + B = 10 \\) dan \\( A - B = 2 \\), maka isolasi \\( A = B + 2 \\). Substitusi ke persamaan 1 menghasilkan \\( (B+2) + B = 10 \\). Berapakah nilai \\( B \\)? <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Sum is 10, difference is 2. A + B = 10, A - B = 2 -> A = B + 2. Substitution gives (B+2) + B = 10. What is B?", ans: "4", exp: "2B + 2 = 10 -> 2B = 8 -> B = 4.", exp_trans: "2B + 2 = 10 -> 2B = 8 -> B = 4." },
+            "t1-task7": { type: "single", q: "Dari soal sebelumnya, jika \\( B = 4 \\), berapakah nilai \\( A \\)? <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "From the previous question, if B = 4, what is A?", opts: ["\\( 2 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)", "\\( 10 \\)"], ans: "\\( 6 \\)", exp: "Substitusi balik: A = B + 2 = 4 + 2 = 6.", exp_trans: "Back-substitution: A = 4 + 2 = 6." },
+            "t1-task8": { type: "tf_table", q: "Evaluasi langkah isolasi dari persamaan \\( x + 2y = 5 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate the isolation steps from the equation x + 2y = 5.", opts: ["Isolasi x lebih mudah: \\( x = 5 - 2y \\)", "Isolasi y menghasilkan pecahan: \\( y = \\frac{5-x}{2} \\)", "Isolasi y lebih mudah karena tidak ada pecahan", "Bentuk \\( x = 5 - 2y \\) siap disubstitusi"], ans: ["B", "B", "S", "B"], exp: "1. B, isolasi x bersih. 2. B, membagi 2 menghasilkan pecahan. 3. S, justru y menghasilkan pecahan. 4. B, x sudah terisolasi.", exp_trans: "1. True. 2. True. 3. False. 4. True." },
+            "t1-task9": { type: "single", q: "Selesaikan \\( y = x \\) dan \\( 3x + y = 8 \\). Nilai \\( x \\) adalah... <i class='fas fa-times text-orange-500 ml-2'></i>", q_trans: "Solve y = x and 3x + y = 8. The value of x is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 2 \\)", exp: "Substitusi y = x: 3x + x = 8 -> 4x = 8 -> x = 2.", exp_trans: "Substitute y = x: 3x + x = 8 -> 4x = 8 -> x = 2." },
+            "t1-task10": { type: "complex", q: "Diketahui jumlah dua bilangan 12 dan selisihnya 4. Manakah persamaan dan langkah yang benar? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Given sum is 12 and difference is 4. Which equations and steps are correct?", opts: ["\\( x + y = 12 \\)", "\\( x - y = 4 \\)", "Isolasi: \\( x = y + 4 \\)", "Substitusi: \\( (y+4) + y = 12 \\)"], ans: [0, 1, 2, 3], exp: "Semua pernyataan adalah langkah awal yang tepat untuk masalah ini.", exp_trans: "All statements are correct initial steps for this problem." },
+
+            // TASK 2: Substitusi dengan Penyederhanaan
+            "t2-task1": { type: "single", q: "Dari sistem \\( x + y = 5 \\) dan \\( x - y = 1 \\), persamaan manakah yang lebih disarankan untuk diisolasi? <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "From x + y = 5 and x - y = 1, which is recommended to isolate?", opts: ["\\( x + y = 5 \\)", "\\( x - y = 1 \\)", "Keduanya sama buruknya", "Tidak bisa diisolasi", "Harus eliminasi"], ans: "\\( x - y = 1 \\)", exp: "Keduanya sebenarnya sama baiknya, namun x - y = 1 menghasilkan x = y + 1, bentuk yang sangat siap disubstitusi.", exp_trans: "Both are good, but x - y = 1 gives x = y + 1 directly." },
+            "t2-task2": { type: "fill", q: "Selesaikan \\( x + y = 6 \\) dan \\( x = 2y \\). Jika substitusi menghasilkan \\( 2y + y = 6 \\), maka nilai \\( y = ... \\) <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "Solve x + y = 6 and x = 2y. If 2y + y = 6, then y = ...", ans: "2", exp: "3y = 6. Bagi 3 di kedua sisi: y = 6 / 3 = 2.", exp_trans: "3y = 6. Divide by 3: y = 2." },
+            "t2-task3": { type: "tf_table", q: "Evaluasi penyelesaian \\( 2x + y = 5 \\) dan \\( x = y + 1 \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate the solution of 2x + y = 5 and x = y + 1.", opts: ["Substitusi: \\( 2(y+1) + y = 5 \\)", "Sederhanakan: \\( 3y + 2 = 5 \\)", "Nilai \\( y = 1 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B, 2y + 2 + y = 3y + 2. 3. B, 3y = 3 -> y=1. 4. B, x = 1+1 = 2. Semua benar.", exp_trans: "All correct." },
+            "t2-task4": { type: "single", q: "Selesaikan sistem \\( x + y = 7 \\) dan \\( 2x - y = 2 \\). Nilai \\( x \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Solve x + y = 7 and 2x - y = 2. The value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 7 \\)"], ans: "\\( 3 \\)", exp: "Isolasi y = 7 - x. Substitusi: 2x - (7 - x) = 2 -> 3x - 7 = 2 -> 3x = 9 -> x = 3.", exp_trans: "Isolate y = 7 - x. Substitute: 2x - (7 - x) = 2 -> 3x = 9 -> x = 3." },
+            "t2-task5": { type: "complex", q: "Untuk \\( 3x + y = 10 \\) dan \\( x = 2 \\), manakah yang benar? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "For 3x + y = 10 and x = 2, which are correct?", opts: ["Substitusi menghasilkan: \\( 3(2) + y = 10 \\)", "Sederhanakan: \\( 6 + y = 10 \\)", "Nilai \\( y = 4 \\)", "Nilai \\( y = 16 \\)"], ans: [0, 1, 2], exp: "1. B. 2. B. 3. B, y = 10 - 6 = 4. 4. S, salah hitungan.", exp_trans: "1. True. 2. True. 3. True. 4. False." },
+            "t2-task6": { type: "fill", q: "Jika \\( x + 2y = 7 \\) dan \\( x = 1 \\), maka persamaan menjadi \\( 1 + 2y = 7 \\). Nilai \\( y \\) = ... <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "If x + 2y = 7 and x = 1 -> 1 + 2y = 7. Value of y = ...", ans: "3", exp: "2y = 7 - 1 -> 2y = 6 -> y = 3.", exp_trans: "2y = 6 -> y = 3." },
+            "t2-task7": { type: "single", q: "Selesaikan \\( y = 2x - 1 \\) dan \\( x + y = 5 \\). Nilai \\( x \\) adalah... <i class='fas fa-times text-orange-500 ml-2'></i>", q_trans: "Solve y = 2x - 1 and x + y = 5. The value of x is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 2 \\)", exp: "Substitusi: x + (2x - 1) = 5 -> 3x - 1 = 5 -> 3x = 6 -> x = 2.", exp_trans: "Substitute: x + (2x - 1) = 5 -> 3x = 6 -> x = 2." },
+            "t2-task8": { type: "tf_table", q: "Cek langkah penyelesaian \\( 2x - y = 4 \\) dan \\( x + y = 5 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Check steps for 2x - y = 4 and x + y = 5.", opts: ["Isolasi y: \\( y = 5 - x \\)", "Substitusi: \\( 2x - (5 - x) = 4 \\)", "Sederhanakan: \\( 3x - 5 = 4 \\)", "Nilai \\( y = 3 \\)"], ans: ["B", "B", "B", "S"], exp: "1. B. 2. B. 3. B, 2x - 5 + x = 3x - 5. 4. S, 3x = 9 -> x = 3. Lalu y = 5 - 3 = 2, bukan 3.", exp_trans: "1. True. 2. True. 3. True. 4. False, x = 3, so y = 2." },
+            "t2-task9": { type: "single", q: "Jumlah dua bilangan 8. Bilangan pertama 2 lebih besar dari kedua. Jika \\( A + B = 8 \\) dan \\( A = B + 2 \\), berapa nilai \\( B \\)? <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Sum is 8. First is 2 more than second. A + B = 8, A = B + 2. What is B?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 6 \\)"], ans: "\\( 3 \\)", exp: "Substitusi: (B + 2) + B = 8 -> 2B + 2 = 8 -> 2B = 6 -> B = 3.", exp_trans: "Substitute: (B + 2) + B = 8 -> 2B = 6 -> B = 3." },
+            "t2-task10": { type: "complex", q: "Manakah pernyataan yang benar tentang metode substitusi? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Which statements are true about the substitution method?", opts: ["Mengurangi dua variabel menjadi satu", "Memerlukan isolasi minimal satu variabel", "Menghindari pecahan membuat perhitungan lebih mudah", "Hanya bekerja jika koefisien adalah 1"], ans: [0, 1, 2], exp: "1. B. 2. B. 3. B. 4. S, bisa bekerja untuk koefisien lain walau menghasilkan pecahan.", exp_trans: "1. True. 2. True. 3. True. 4. False." },
+
+            // TASK 3: Soal Cerita dan Penerapan
+            "t3-task1": { type: "single", q: "Harga 2 buku dan 1 pulpen adalah 10rb. 1 buku dan 2 pulpen adalah 8rb. Persamaan yang benar adalah... <i class='fas fa-book text-orange-500 ml-2'></i>", q_trans: "2 books and 1 pen cost 10k. 1 book and 2 pens cost 8k. The correct equations are...", opts: ["\\( 2b + p = 10 \\) dan \\( b + 2p = 8 \\)", "\\( b + p = 10 \\) dan \\( b + p = 8 \\)", "\\( 2b + p = 8 \\) dan \\( b + 2p = 10 \\)", "\\( 2b - p = 10 \\) dan \\( b - 2p = 8 \\)", "\\( 2b = 10 \\) dan \\( 2p = 8 \\)"], ans: "\\( 2b + p = 10 \\) dan \\( b + 2p = 8 \\)", exp: "2 buku = 2b, 1 pulpen = p, total 10. Persamaan 1: 2b + p = 10. Persamaan 2: b + 2p = 8.", exp_trans: "Equation 1: 2b + p = 10. Equation 2: b + 2p = 8." },
+            "t3-task2": { type: "fill", q: "Dari soal sebelumnya, isolasi \\( p = 10 - 2b \\). Substitusi ke persamaan 2 menghasilkan \\( b + 2(10 - 2b) = 8 \\). Sederhanakan menjadi \\( 20 - 3b = 8 \\). Maka nilai \\( b \\) (harga buku) adalah ... (ribuan) <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "From previous, isolate p = 10 - 2b. Sub into eq 2: b + 2(10 - 2b) = 8. Simplify to 20 - 3b = 8. Value of b is... (thousands)", ans: "4", exp: "20 - 3b = 8 -> 3b = 12 -> b = 4. Jadi harga 1 buku 4rb.", exp_trans: "20 - 3b = 8 -> 3b = 12 -> b = 4." },
+            "t3-task3": { type: "tf_table", q: "Evaluasi sistem \\( 3x + y = 8 \\) dan \\( x = y \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate system 3x + y = 8 and x = y.", opts: ["Substitusi: \\( 3y + y = 8 \\)", "Sederhanakan: \\( 4y = 8 \\)", "Nilai \\( y = 2 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua langkah perhitungan benar.", exp_trans: "All steps are correct." },
+            "t3-task4": { type: "single", q: "Selesaikan \\( 2x + y = 10 \\) dan \\( x - y = 2 \\). Nilai \\( y \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Solve 2x + y = 10 and x - y = 2. The value of y is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)"], ans: "\\( 2 \\)", exp: "Isolasi x = y + 2. Substitusi: 2(y+2) + y = 10 -> 3y + 4 = 10 -> 3y = 6 -> y = 2.", exp_trans: "Isolate x = y + 2. Sub: 2(y+2) + y = 10 -> 3y = 6 -> y = 2." },
+            "t3-task5": { type: "complex", q: "Diketahui \\( 2x + 2y = 10 \\) dan \\( x = y + 1 \\). Manakah langkah yang benar? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Given 2x + 2y = 10 and x = y + 1. Which steps are correct?", opts: ["Sederhanakan persamaan 1: \\( x + y = 5 \\)", "Substitusi: \\( (y+1) + y = 5 \\)", "Sederhanakan: \\( 2y + 1 = 5 \\)", "Nilai \\( y = 2 \\)"], ans: [0, 1, 2, 3], exp: "Semua benar. 2y + 1 = 5 -> 2y = 4 -> y = 2.", exp_trans: "All correct. 2y = 4 -> y = 2." },
+            "t3-task6": { type: "fill", q: "Selesaikan \\( x + y = 9 \\) dan \\( x = 2y \\). Maka nilai \\( y = ... \\) <i class='fas fa-pen text-orange-500 ml-2'></i>", q_trans: "Solve x + y = 9 and x = 2y. Then y = ...", ans: "3", exp: "Substitusi: 2y + y = 9 -> 3y = 9 -> y = 3.", exp_trans: "Substitute: 2y + y = 9 -> 3y = 9 -> y = 3." },
+            "t3-task7": { type: "single", q: "Selesaikan sistem \\( 2x - y = 3 \\) dan \\( x + y = 6 \\). Nilai \\( x \\) adalah... <i class='fas fa-times text-orange-500 ml-2'></i>", q_trans: "Solve 2x - y = 3 and x + y = 6. The value of x is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 9 \\)"], ans: "\\( 3 \\)", exp: "Isolasi y = 6 - x. Substitusi: 2x - (6 - x) = 3 -> 3x - 6 = 3 -> 3x = 9 -> x = 3.", exp_trans: "Isolate y = 6 - x. Sub: 2x - (6 - x) = 3 -> 3x = 9 -> x = 3." },
+            "t3-task8": { type: "tf_table", q: "Evaluasi sistem \\( y = 2x + 1 \\) dan \\( x + y = 7 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate system y = 2x + 1 and x + y = 7.", opts: ["Substitusi: \\( x + 2x + 1 = 7 \\)", "Sederhanakan: \\( 3x + 1 = 7 \\)", "Nilai \\( x = 2 \\)", "Nilai \\( y = 5 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B. 3. B, 3x = 6 -> x = 2. 4. B, y = 2(2) + 1 = 5. Semua benar.", exp_trans: "All correct." },
+            "t3-task9": { type: "single", q: "Umur Ayah 3 kali umur Anak. Jumlah umur mereka 40 tahun. Jika \\( A = 3B \\) dan \\( A + B = 40 \\), berapakah umur Anak (\\( B \\))? <i class='fas fa-user-clock text-orange-500 ml-2'></i>", q_trans: "Father's age is 3x child's. Sum is 40. If A = 3B and A + B = 40, what is child's age (B)?", opts: ["\\( 8 \\)", "\\( 10 \\)", "\\( 12 \\)", "\\( 13 \\)", "\\( 30 \\)"], ans: "\\( 10 \\)", exp: "Substitusi: 3B + B = 40 -> 4B = 40 -> B = 10.", exp_trans: "Substitute: 3B + B = 40 -> 4B = 40 -> B = 10." },
+            "t3-task10": { type: "complex", q: "Diketahui \\( 2x + y = 5 \\) dan \\( x = y + 1 \\). Manakah yang benar? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Given 2x + y = 5 and x = y + 1. Which are correct?", opts: ["Substitusi: \\( 2(y+1) + y = 5 \\)", "Sederhanakan: \\( 3y + 2 = 5 \\)", "Nilai \\( y = 1 \\)", "Nilai \\( x = 2 \\)"], ans: [0, 1, 2, 3], exp: "Semua langkah dan hasil perhitungan benar.", exp_trans: "All steps and results are correct." },
+
+            // TASK 4: Penguasaan Substitusi Penuh
+            "t4-task1": { type: "single", q: "Diketahui \\( 3x + y = 10 \\) dan \\( x = 2 \\). Nilai \\( y \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Given 3x + y = 10 and x = 2. The value of y is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 8 \\)"], ans: "\\( 4 \\)", exp: "Substitusi: 3(2) + y = 10 -> 6 + y = 10 -> y = 4.", exp_trans: "Substitute: 3(2) + y = 10 -> y = 4." },
+            "t4-task2": { type: "fill", q: "Selesaikan \\( 2x - y = 7 \\) dan \\( x + y = 5 \\). Isolasi y dari pers 2: \\( y = 5 - x \\). Substitusi menghasilkan \\( 2x - (5 - x) = 7 \\). Berapakah nilai \\( x \\)? <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "Solve 2x - y = 7 and x + y = 5. Isolate y = 5 - x. Sub: 2x - (5 - x) = 7. What is x?", ans: "4", exp: "2x - 5 + x = 7 -> 3x - 5 = 7 -> 3x = 12 -> x = 4.", exp_trans: "2x - 5 + x = 7 -> 3x = 12 -> x = 4." },
+            "t4-task3": { type: "tf_table", q: "Evaluasi penyelesaian \\( 2x + 3y = 10 \\) dan \\( x = y \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate solution of 2x + 3y = 10 and x = y.", opts: ["Substitusi: \\( 2y + 3y = 10 \\)", "Sederhanakan: \\( 5y = 10 \\)", "Nilai \\( y = 2 \\)", "Nilai \\( x = 2 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua langkah dan hasil benar.", exp_trans: "All steps and results are correct." },
+            "t4-task4": { type: "single", q: "Selesaikan \\( A + B = 15 \\) dan \\( A = 2B \\). Nilai \\( B \\) adalah... <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Solve A + B = 15 and A = 2B. The value of B is...", opts: ["\\( 3 \\)", "\\( 5 \\)", "\\( 7 \\)", "\\( 10 \\)", "\\( 15 \\)"], ans: "\\( 5 \\)", exp: "Substitusi: 2B + B = 15 -> 3B = 15 -> B = 5.", exp_trans: "Substitute: 2B + B = 15 -> 3B = 15 -> B = 5." },
+            "t4-task5": { type: "complex", q: "Diketahui \\( x + y = 6 \\) dan \\( 2x - y = 6 \\). Manakah yang benar? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Given x + y = 6 and 2x - y = 6. Which are correct?", opts: ["Isolasi: \\( y = 6 - x \\)", "Substitusi: \\( 2x - (6 - x) = 6 \\)", "Sederhanakan: \\( 3x - 6 = 6 \\)", "Nilai \\( x = 4 \\)"], ans: [0, 1, 2, 3], exp: "Semua langkah benar. 3x = 12 -> x = 4.", exp_trans: "All correct. 3x = 12 -> x = 4." },
+            "t4-task6": { type: "fill", q: "Soal cerita: 1 apel dan 1 jeruk harganya 5rb. 1 apel dan 2 jeruk harganya 8rb. Jika isolasi \\( a = 5 - j \\) dan disubstitusi ke persamaan 2, persamaannya menjadi \\( (5 - j) + 2j = 8 \\). Sederhanakan menjadi \\( 5 + j = 8 \\). Maka nilai \\( j \\) (harga jeruk) adalah ... <i class='fas fa-apple-whole text-orange-500 ml-2'></i>", q_trans: "Story: 1 apple and 1 orange cost 5k. 1 apple and 2 oranges cost 8k. If isolate a = 5 - j and substitute, it becomes (5 - j) + 2j = 8. Simplify to 5 + j = 8. Value of j is...", ans: "3", exp: "Substitusi: (5 - j) + 2j = 8 -> 5 + j = 8 -> j = 8 - 5 = 3. Jadi harga 1 jeruk adalah 3rb.", exp_trans: "Substitute: (5 - j) + 2j = 8 -> 5 + j = 8 -> j = 3." },
+            "t4-task7": { type: "single", q: "Dari soal cerita sebelumnya, jika harga jeruk (\\( j \\)) adalah 3rb, berapakah harga apel (\\( a \\))? (dalam ribuan) <i class='fas fa-lemon text-orange-500 ml-2'></i>", q_trans: "From previous story, if orange (j) is 3k, what is apple (a)? (in thousands)", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 2 \\)", exp: "Substitusi balik: a = 5 - j = 5 - 3 = 2. Jadi apel 2rb.", exp_trans: "Back-substitute: a = 5 - 3 = 2." },
+            "t4-task8": { type: "tf_table", q: "Evaluasi sistem \\( y = 3x \\) dan \\( 2x - y = 5 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate system y = 3x and 2x - y = 5.", opts: ["Substitusi: \\( 2x - 3x = 5 \\)", "Sederhanakan: \\( -x = 5 \\)", "Nilai \\( x = -5 \\)", "Nilai \\( y = -15 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua benar. 2x - 3x = -x. Jika -x = 5, maka x = -5. y = 3(-5) = -15.", exp_trans: "All correct. -x = 5 -> x = -5. y = -15." },
+            "t4-task9": { type: "single", q: "Diketahui \\( x + 2y = 9 \\) dan \\( x = 1 \\). Nilai \\( y \\) adalah... <i class='fas fa-times text-orange-500 ml-2'></i>", q_trans: "Given x + 2y = 9 and x = 1. The value of y is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 8 \\)"], ans: "\\( 4 \\)", exp: "Substitusi: 1 + 2y = 9 -> 2y = 8 -> y = 4.", exp_trans: "Substitute: 1 + 2y = 9 -> 2y = 8 -> y = 4." },
+            "t4-task10": { type: "complex", q: "Manakah pernyataan yang benar saat mengecek penyelesaian SPLDV? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Which statements are true when checking SPLDV solutions?", opts: ["Pasangan harus memenuhi kedua persamaan", "Ruas kiri harus sama dengan ruas kanan", "Cukup dicek di satu persamaan saja", "Garis yang berpotongan memiliki satu penyelesaian"], ans: [0, 1, 3], exp: "1. B. 2. B. 3. S, harus cek keduanya. 4. B, ciri SPLDV unik.", exp_trans: "1. True. 2. True. 3. False. 4. True." },
+
+            // TASK 5: Tantangan Akhir
+            "t5-task1": { type: "single", q: "Selesaikan \\( y = 2x + 3 \\) dan \\( x + y = 12 \\). Nilai \\( x \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "Solve y = 2x + 3 and x + y = 12. The value of x is...", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)", "\\( 9 \\)"], ans: "\\( 3 \\)", exp: "Substitusi: x + 2x + 3 = 12 -> 3x + 3 = 12 -> 3x = 9 -> x = 3.", exp_trans: "Substitute: x + 2x + 3 = 12 -> 3x = 9 -> x = 3." },
+            "t5-task2": { type: "fill", q: "Dari soal sebelumnya, jika \\( x = 3 \\), maka nilai \\( y \\) adalah ... <i class='fas fa-pencil text-orange-500 ml-2'></i>", q_trans: "From previous, if x = 3, then y is...", ans: "9", exp: "Substitusi balik: y = 2(3) + 3 = 6 + 3 = 9.", exp_trans: "Back-substitute: y = 2(3) + 3 = 9." },
+            "t5-task3": { type: "tf_table", q: "Evaluasi langkah penyelesaian \\( 2x - y = 4 \\) dan \\( x + y = 5 \\). <i class='fas fa-list-ul text-orange-500 ml-2'></i>", q_trans: "Evaluate steps for 2x - y = 4 and x + y = 5.", opts: ["Isolasi: \\( y = 5 - x \\)", "Substitusi: \\( 2x - (5 - x) = 4 \\)", "Sederhanakan: \\( 3x - 5 = 4 \\)", "Nilai \\( x = 3 \\)"], ans: ["B", "B", "B", "B"], exp: "Semua langkah benar.", exp_trans: "All correct." },
+            "t5-task4": { type: "single", q: "Selesaikan \\( 3x + y = 10 \\) dan \\( x = 3y \\). Nilai \\( y \\) adalah... <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Solve 3x + y = 10 and x = 3y. The value of y is...", opts: ["\\( 1 \\)", "\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 5 \\)"], ans: "\\( 1 \\)", exp: "Substitusi: 3(3y) + y = 10 -> 9y + y = 10 -> 10y = 10 -> y = 1.", exp_trans: "Substitute: 3(3y) + y = 10 -> 10y = 10 -> y = 1." },
+            "t5-task5": { type: "complex", q: "Diketahui \\( x + y = 9 \\) dan \\( x = 2y \\). Manakah yang benar? <i class='fas fa-check-double text-orange-500 ml-2'></i>", q_trans: "Given x + y = 9 and x = 2y. Which are correct?", opts: ["Substitusi: \\( 2y + y = 9 \\)", "Sederhanakan: \\( 3y = 9 \\)", "Nilai \\( y = 3 \\)", "Nilai \\( x = 6 \\)"], ans: [0, 1, 2, 3], exp: "Semua perhitungan benar.", exp_trans: "All correct." },
+			"t5-task6": { type: "fill", q: "Selesaikan \\( 2x + 2y = 12 \\) dan \\( x = y + 2 \\). Sederhanakan pers 1: \\( x + y = 6 \\). Substitusi: \\( (y+2) + y = 6 \\). Berapakah nilai \\( y \\)? <i class='fas fa-key text-orange-500 ml-2'></i>", q_trans: "Solve 2x+2y=12, x=y+2. Simplify eq 1: x+y=6. Sub: (y+2)+y=6. What is y?", ans: "2", exp: "2y + 2 = 6 -> 2y = 4 -> y = 2. (Bilangan bulat agar mudah).", exp_trans: "2y + 2 = 6 -> 2y = 4 -> y = 2." },
+			"t5-task7": { type: "single", q: "Dari soal sebelumnya, jika \\( y = 2 \\), maka nilai \\( x \\) adalah... <i class='fas fa-calculator text-orange-500 ml-2'></i>", q_trans: "From previous, if y = 2, then x is...", opts: ["\\( 2.5 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 4.5 \\)", "\\( 6 \\)"], ans: "\\( 4 \\)", exp: "Substitusi balik: x = y + 2 = 2 + 2 = 4.", exp_trans: "Back-substitute: x = 2 + 2 = 4." },
+            "t5-task8": { type: "tf_table", q: "Evaluasi sistem \\( y = x + 1 \\) dan \\( 2x + y = 7 \\). <i class='fas fa-clipboard-check text-orange-500 ml-2'></i>", q_trans: "Evaluate system y = x + 1 and 2x + y = 7.", opts: ["Substitusi: \\( 2x + (x + 1) = 7 \\)", "Sederhanakan: \\( 3x + 1 = 7 \\)", "Nilai \\( x = 2 \\)", "Nilai \\( y = 3 \\)"], ans: ["B", "B", "B", "B"], exp: "1. B. 2. B. 3. B, 3x = 6 -> x = 2. 4. B, y = 2 + 1 = 3. Semua benar.", exp_trans: "All correct." },
+            "t5-task9": { type: "single", q: "Jumlah dua bilangan 10. Bilangan pertama 4 lebih besar dari kedua. Jika \\( A + B = 10 \\) dan \\( A = B + 4 \\), berapakah nilai \\( B \\)? <i class='fas fa-route text-orange-500 ml-2'></i>", q_trans: "Sum is 10. First is 4 more. A + B = 10, A = B + 4. What is B?", opts: ["\\( 2 \\)", "\\( 3 \\)", "\\( 4 \\)", "\\( 6 \\)", "\\( 7 \\)"], ans: "\\( 3 \\)", exp: "Substitusi: (B + 4) + B = 10 -> 2B + 4 = 10 -> 2B = 6 -> B = 3.", exp_trans: "Substitute: (B + 4) + B = 10 -> 2B = 6 -> B = 3." },
+            "t5-task10": { type: "complex", q: "Manakah pernyataan yang benar tentang alur SPLDV Metode Substitusi? <i class='fas fa-check-circle text-orange-500 ml-2'></i>", q_trans: "Which statements are true about the SPLDV Substitution flow?", opts: ["Pilih persamaan dengan koefisien 1 untuk diisolasi", "Substitusi bentuk isolasi ke persamaan yang lain", "Selesaikan persamaan satu variabel yang terbentuk", "Lakukan substitusi balik untuk menemukan variabel kedua"], ans: [0, 1, 2, 3], exp: "Keempat langkah ini adalah rangkaian benar untuk menyelesaikan SPLDV dengan substitusi.", exp_trans: "These four steps are the correct sequence for solving SPLDV by substitution." }
+        });
+        
+        // ====== JAVASCRIPT LOGIC ======
+        let currentPage = 1;
+        let currentTaskSection = ""; 
+
+        function openModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeModal() {
+            const modal = document.getElementById('classRulesModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-indigo-100', 'text-indigo-800', 'font-bold', 'bg-orange-100', 'text-orange-800');
+            });
+            const activeLink = document.querySelector(`.sidebar-item[data-section="${sectionId}"]`);
+            if (activeLink) {
+                if(sectionId.startsWith('task')) {
+                    activeLink.classList.add('bg-orange-100', 'text-orange-800', 'font-bold');
+                } else {
+                    activeLink.classList.add('bg-indigo-100', 'text-indigo-800', 'font-bold');
+                }
+            }
+            currentPage = 1;
+            currentTaskSection = sectionId;
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const firstPage = document.querySelector(`#${sectionId} .page[data-page="1"]`);
+            if(firstPage) firstPage.classList.add('active');
+            
+            renderMath();
+            renderPagination(sectionId, currentPage);
+            document.getElementById('contentScrollArea').scrollTo(0, 0);
+        }
+
+        function changePage(direction) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            let newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[newPage - 1].classList.add('active');
+                currentPage = newPage;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+
+        function goToPage(pageNum) {
+            const activeSection = document.querySelector('.content-section.active');
+            if(!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            if(pageNum >= 1 && pageNum <= pages.length) {
+                pages[currentPage - 1].classList.remove('active');
+                pages[pageNum - 1].classList.add('active');
+                currentPage = pageNum;
+                renderMath();
+                renderPagination(currentTaskSection, currentPage);
+                document.getElementById('contentScrollArea').scrollTo(0, 0);
+            }
+        }
+        
+        function renderPagination(sectionId, pageNum) {
+            const activeSection = document.getElementById(sectionId);
+            if (!activeSection) return;
+            const pages = activeSection.querySelectorAll('.page');
+            const totalPages = pages.length;
+            let html = '';
+            const isMainTask = sectionId.startsWith('t');
+            const theoryPages = [1, 5, 9]; 
+            
+            html += `<button onclick="goToPage(${pageNum - 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Prev</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                let btnColor = 'bg-gray-100 hover:bg-gray-200 text-gray-700';
+                if (!isMainTask && theoryPages.includes(i)) {
+                    btnColor = 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'; 
+                } else {
+                    btnColor = 'bg-orange-100 hover:bg-orange-200 text-orange-800'; 
+                }
+                if (i === pageNum) {
+                    if (!isMainTask && theoryPages.includes(i)) {
+                        btnColor = 'bg-indigo-600 text-white shadow-md'; 
+                    } else {
+                        btnColor = 'bg-orange-500 text-white shadow-md'; 
+                    }
+                }
+                html += `<button onclick="goToPage(${i})" class="w-9 h-9 rounded-md text-sm font-semibold transition-all ${btnColor}">${i}</button>`;
+            }
+            
+            html += `<button onclick="goToPage(${pageNum + 1})" class="px-3 py-1.5 rounded-md text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 ${pageNum === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${pageNum === totalPages ? 'disabled' : ''}>Next <i class="fas fa-chevron-right"></i></button>`;
+            document.getElementById('paginationBar').innerHTML = html;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        let studentAnswers = {};
+        function renderTasks() {
+            document.querySelectorAll('[data-task-id]').forEach(div => {
+                const taskId = div.getAttribute('data-task-id');
+                renderSingleTask(taskId, div);
+            });
+            renderMath();
+        }
+        
+        function renderSingleTask(taskId, div) {
+            const data = questions[taskId];
+            if(!data) return;
+
+            const isMainTask = taskId.startsWith('t');
+            const taskNum = isMainTask ? taskId[1] : 0;
+            let taskType = data.type || 'single';
+            
+            let questionHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h2 class="text-xl font-bold text-orange-600">
+                            ${isMainTask ? `Task ${taskNum}` : 'Latihan'} 
+                            ${taskType === 'complex' ? '<span class="text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded ml-2">PG Kompleks</span>' : ''}
+                            ${taskType === 'fill' ? '<span class="text-sm bg-blue-200 text-blue-800 px-2 py-1 rounded ml-2">Isian Singkat</span>' : ''}
+                            ${taskType === 'tf_table' ? '<span class="text-sm bg-teal-200 text-teal-800 px-2 py-1 rounded ml-2">Tabel Benar/Salah</span>' : ''}
+                            <span class="translation text-gray-500 text-sm">Exercise</span>
+                        </h2>
+                        <div class="flex gap-2">
+                            <button onclick="resetTask('${taskId}')" class="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            ${isMainTask ? `<button onclick="printTask(${taskNum})" class="text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                <i class="fas fa-print"></i> Print
+                            </button>` : ''}
+                        </div>
+                    </div>
+                    <div class="mb-6 flex gap-4 items-start">
+                        <div class="bg-orange-100 p-3 rounded-full shrink-0">
+                            <i class="fas fa-question text-orange-500 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lg">${data.q}</p>
+                            <p class="translation">${data.q_trans}</p>
+                        </div>
+                    </div>
+            `;
+
+            if (taskType === 'single') {
+                const shuffledOpts = shuffleArray([...data.opts]);
+                questionHTML += `
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${shuffledOpts.map((opt, i) => `
+                            <button onclick="checkAnswer('${taskId}', this.getAttribute('data-opt'), 'single')" 
+                                    class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-orange-500 flex items-center gap-3" 
+                                    data-opt="${opt}">
+                                <span class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded-full font-bold shrink-0">${String.fromCharCode(65 + i)}</span>
+                                <span class="katex">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (taskType === 'complex') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Pilih semua jawaban yang benar. <span class="translation">*Select all correct answers.</span></p>
+                    <div id="options-${taskId}" class="space-y-3">
+                        ${data.opts.map((opt, i) => `
+                            <label class="option-btn w-full text-left p-3 border-2 border-gray-200 rounded hover:border-purple-500 flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" class="w-5 h-5 complex-checkbox shrink-0" data-opt-index="${i}">
+                                <span class="katex">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'complex')" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            } else if (taskType === 'fill') {
+                questionHTML += `
+                    <div class="flex gap-2 items-center mt-2">
+                        <input type="text" id="input-${taskId}" class="border-2 border-gray-200 rounded p-2 w-32 text-lg text-center focus:border-orange-500 outline-none" placeholder="Jawaban...">
+                        <button onclick="checkAnswer('${taskId}', null, 'fill')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-bold">Submit</button>
+                    </div>
+                `;
+            } else if (taskType === 'tf_table') {
+                questionHTML += `
+                    <p class="text-sm text-gray-600 mb-3">*Tentukan Benar atau Salah. <span class="translation">*Determine True or False.</span></p>
+                    <div id="options-${taskId}" class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 p-2 w-10">No.</th>
+                                    <th class="border border-gray-300 p-2 text-left">Pernyataan <span class="translation text-xs">Statement</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Benar <span class="translation text-xs block">True</span></th>
+                                    <th class="border border-gray-300 p-2 w-20">Salah <span class="translation text-xs block">False</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.opts.map((opt, i) => `
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-center font-bold">${i + 1}</td>
+                                        <td class="border border-gray-300 p-2"><span class="katex">${opt}</span></td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="B" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                        <td class="border border-gray-300 p-2 text-center">
+                                            <input type="radio" name="tf-${taskId}-${i}" value="S" class="tf-radio w-5 h-5 cursor-pointer">
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="checkAnswer('${taskId}', null, 'tf_table')" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded font-bold">Submit Jawaban</button>
+                `;
+            }
+
+            questionHTML += `
+                    <div id="result-${taskId}" class="mt-4 hidden p-4 rounded"></div>
+
+                    <div class="mt-4 no-print">
+                        <button onclick="toggleCollapse('${taskId}')" id="collapse-btn-${taskId}" class="hidden text-blue-600 underline">
+                            Tampilkan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Show Explanation</span>
+                        </button>
+                        <div id="collapse-${taskId}" class="collapse-content w-full">
+                            <h3 class="font-bold text-blue-800">Penjelasan: <span class="translation text-gray-500 text-sm">Explanation:</span></h3>
+                            <p class="mt-2">${data.exp}</p>
+                            <p class="translation">${data.exp_trans}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            div.innerHTML = questionHTML;
+        }
+
+        function checkAnswer(taskId, selectedOpt, type) {
+            const data = questions[taskId];
+            const resultDiv = document.getElementById(`result-${taskId}`);
+            const collapseBtn = document.getElementById(`collapse-btn-${taskId}`);
+            let isCorrect = false;
+            let correctAnsText = '';
+
+            if (type === 'single') {
+                const buttons = document.querySelectorAll(`#options-${taskId} button`);
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    if(btn.getAttribute('data-opt') === data.ans) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-green-500', 'bg-green-50');
+                    } else if (btn.getAttribute('data-opt') === selectedOpt) {
+                        btn.classList.remove('border-gray-200', 'hover:border-orange-500');
+                        btn.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                isCorrect = (selectedOpt === data.ans);
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = selectedOpt; 
+            } 
+            else if (type === 'complex') {
+                const checkboxes = document.querySelectorAll(`#options-${taskId} input[type="checkbox"]`);
+                let selectedAns = [];
+                checkboxes.forEach((cb, i) => {
+                    if (cb.checked) selectedAns.push(i);
+                    cb.disabled = true;
+                });
+                const correctAnsStr = [...data.ans].sort().join(',');
+                const selectedAnsStr = [...selectedAns].sort().join(',');
+                isCorrect = (correctAnsStr === selectedAnsStr);
+                
+                let correctComplexText = [];
+                data.ans.forEach(i => correctComplexText.push(data.opts[i]));
+                correctAnsText = correctComplexText.join(', ');
+
+                checkboxes.forEach((cb, i) => {
+                    if(data.ans.includes(i)) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-green-500', 'bg-green-50');
+                    } else if (cb.checked) {
+                        cb.parentElement.classList.remove('border-gray-200', 'hover:border-purple-500');
+                        cb.parentElement.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
+                studentAnswers[taskId] = selectedAns;
+            } 
+            else if (type === 'fill') {
+                const inputField = document.getElementById(`input-${taskId}`);
+                let userVal = inputField.value.trim().toLowerCase().replace(/\s/g, '').replace('rp', '').replace('rb', '').replace(',', '.');
+                let correctAns = data.ans.toString().toLowerCase().replace(/\s/g, '').replace('rp', '').replace('rb', '').replace(',', '.');
+                inputField.disabled = true;
+                isCorrect = (userVal === correctAns);
+                if(!isCorrect) inputField.classList.add('border-red-500', 'bg-red-50');
+                else inputField.classList.add('border-green-500', 'bg-green-50');
+                correctAnsText = data.ans;
+                studentAnswers[taskId] = inputField.value;
+            }
+            else if (type === 'tf_table') {
+                const rows = document.querySelectorAll(`#options-${taskId} tbody tr`);
+                let userAns = [];
+                let allFilled = true;
+
+                rows.forEach((row, i) => {
+                    const radios = row.querySelectorAll('input[type="radio"]');
+                    let rowVal = null;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.checked) rowVal = r.value;
+                    });
+                    if (rowVal === null) allFilled = false;
+                    userAns.push(rowVal);
+                });
+
+                if (!allFilled) {
+                    alert("Harap isi semua pernyataan terlebih dahulu! / Please answer all statements first!");
+                    rows.forEach((row, i) => {
+                        let radios = row.querySelectorAll('input[type="radio"]');
+                        radios.forEach(r => r.disabled = false);
+                    });
+                    return;
+                }
+
+                let correctCount = 0;
+                let correctTFText = [];
+                rows.forEach((row, i) => {
+                    const userVal = userAns[i];
+                    const correctVal = data.ans[i];
+                    correctTFText.push(`${i+1}. ${correctVal}`);
+                    if (userVal === correctVal) {
+                        correctCount++;
+                        row.classList.add('bg-green-50');
+                    } else {
+                        row.classList.add('bg-red-50');
+                    }
+                });
+
+                isCorrect = (correctCount === data.ans.length);
+                correctAnsText = correctTFText.join(' | ');
+                studentAnswers[taskId] = userAns;
+            }
+
+            if(isCorrect) {
+                resultDiv.innerHTML = `<p class="text-green-600 font-bold"><i class="fas fa-check-circle"></i> Benar! <span class="translation text-gray-600 font-normal" style="display: inline-block; margin-left: 4px;">Correct!</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-green-50 border border-green-200";
+            } else {
+                resultDiv.innerHTML = `<p class="text-red-600 font-bold"><i class="fas fa-times-circle"></i> Salah! Jawaban yang benar adalah: ${correctAnsText}. <span class="translation text-gray-600 font-normal" style="display: inline-block; margin-left: 4px;">Wrong! The correct answer is: ${correctAnsText}.</span></p>`;
+                resultDiv.className = "mt-4 p-4 rounded bg-red-50 border border-red-200";
+            }
+            resultDiv.classList.remove('hidden');
+            collapseBtn.classList.remove('hidden');
+            
+            const collapseContent = document.getElementById(`collapse-${taskId}`);
+            collapseContent.classList.add('open');
+            collapseBtn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            
+            renderMath();
+        }
+
+        function resetTask(taskId) {
+            delete studentAnswers[taskId];
+            const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+            if(taskDiv) {
+                renderSingleTask(taskId, taskDiv);
+                renderMath();
+            }
+        }
+
+        function printTask(taskNum) {
+            let score = 0;
+            let tableBody = '';
+            for(let i=1; i<=10; i++) {
+                const taskId = `t${taskNum}-task${i}`;
+                const data = questions[taskId];
+                if(!data) continue;
+                
+                let studentAns = studentAnswers[taskId] || 'Tidak Dijawab';
+                let correctAns = data.ans;
+                
+                let sAnsStr = '';
+                let cAnsStr = '';
+                let isCorrect = false;
+                
+                if (data.type === 'complex') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.length > 0 ? cArr.slice().sort().map(idx => data.opts[idx]).join(', ') : 'Tidak Dijawab';
+                    isCorrect = (sArr.length > 0 && sArr.slice().sort().join(',') === cArr.slice().sort().join(','));
+                } else if (data.type === 'tf_table') {
+                    let sArr = Array.isArray(studentAns) ? studentAns : [];
+                    let cArr = Array.isArray(correctAns) ? correctAns : [];
+                    sAnsStr = sArr.length > 0 ? sArr.join(' | ') : 'Tidak Dijawab';
+                    cAnsStr = cArr.join(' | ');
+                    isCorrect = (sArr.length > 0 && sArr.join(',') === cArr.join(','));
+                } else {
+                    sAnsStr = studentAns || 'Tidak Dijawab';
+                    cAnsStr = correctAns;
+                    let userValNorm = (studentAns || '').toString().toLowerCase().replace(/\s/g, '').replace('rp', '').replace('rb', '').replace(',', '.');
+                    let correctAnsNorm = correctAns.toString().toLowerCase().replace(/\s/g, '').replace('rp', '').replace('rb', '').replace(',', '.');
+                    isCorrect = (userValNorm === correctAnsNorm);
+                }
+                
+                let note = '❌';
+                if(isCorrect) { score++; note = '✔️'; }
+                
+                let qText = data.q.replace(/<[^>]+>/g, '');
+                if (data.type === 'tf_table') {
+                    qText += " | Statements: " + data.opts.map((opt, idx) => `${idx+1}. ${opt}`).join(" ; ");
+                }
+                
+                tableBody += `<tr>
+                    <td class="border border-black p-1 text-center">${i}</td>
+                    <td class="border border-black p-1">${qText}</td>
+                    <td class="border border-black p-1">${sAnsStr}</td>
+                    <td class="border border-black p-1">${cAnsStr}</td>
+                    <td class="border border-black p-1 text-center">${note}</td>
+                </tr>`;
+            }
+            document.getElementById('printTableBody').innerHTML = tableBody;
+            document.getElementById('printTaskNum').innerText = taskNum;
+            document.getElementById('printScore').innerText = score;
+            
+            renderMathInElement(document.getElementById('printArea'), {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ]
+            });
+            window.print();
+        }
+
+        function toggleCollapse(taskId) {
+            const content = document.getElementById(`collapse-${taskId}`);
+            const btn = document.getElementById(`collapse-btn-${taskId}`);
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Sembunyikan Penjelasan <span class="translation text-gray-500 text-xs" style="display: inline-block; margin-left: 4px;">Hide Explanation</span>';
+            } else {
+                btn.innerHTML = 'Tampilkan Penjelasan <span class="translation text-gray-500 text-xs">Show Explanation</span>';
+            }
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement === 'undefined') return;
+            
+            const target = document.querySelector('.content-section.active') || document.body;
+            try {
+                renderMathInElement(target, {
+                    delimiters: [
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch(e) {
+                console.error("KaTeX rendering error:", e);
+            }
+        }
+        
+        window.onload = () => {
+            renderTasks();
+            setTimeout(() => {
+                showSection('warmup');
+                renderMath();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
