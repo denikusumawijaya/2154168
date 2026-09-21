@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - SPLDV</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+
+.page-numbers {
+  display: flex;
+  gap: 3px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex: 1;
+  overflow-x: auto;
+  padding: 0 3px;
+}
+.page-num {
+  min-width: 28px;
+  height: 26px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: .7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-num.page-num-e { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+.page-num.page-num-t { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+.page-num.page-num-e:hover { background: #dbeafe; border-color: var(--primary); }
+.page-num.page-num-t:hover { background: #fef3c7; border-color: var(--secondary); }
+.page-num.page-num-e.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+.page-num.page-num-t.active { background: var(--secondary); color: #fff; border-color: var(--secondary); font-weight: 600; }
+.page-num:disabled { opacity: 1; cursor: default; }
+.page-num.page-num-e:disabled:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.page-num.page-num-t:disabled:hover { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+
+@media(max-width:1100px){
+  .main-container{grid-template-columns:180px 1fr}
+  .content-area{padding:18px 20px}
+}
+@media(max-width:760px){
+  .main-container{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .content-area{padding:16px}
+  header{font-size:.9em}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Sistem Persamaan Linear Dua Variabel <span class="tr">Topic: System of Two-Variable Linear Equations</span></div>
+  <button id="classRulesBtn">Class Rules <span class="tr">Aturan Kelas</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  // ================= CONTENT DATA =================
+  const sectionsData = {
+    a: {
+      title: 'Spiral Review Warm-up',
+      titleEn: 'Spiral Review Warm-up',
+      time: '00:00 - 00:10',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Persamaan Linear Satu Variabel', pageTitleEn:'One-Variable Linear Equation',
+          body:`
+            <p><strong>Persamaan Linear Satu Variabel (PLSV)</strong> adalah persamaan yang memuat satu variabel dengan pangkat tertinggi 1.
+              <span class="tr">A one-variable linear equation contains one variable with the highest power of 1.</span></p>
+            <div class="math-block"><strong>Bentuk umum:</strong> $ax + b = 0$, dengan $a \\neq 0$.
+              <span class="tr">General form</span></div>
+            <div class="example-box">
+              <h4>Contoh <span class="tr">Example</span></h4>
+              Selesaikan $2x + 3 = 7$. <span class="tr">Solve</span>
+              <ol>
+                <li>$2x + 3 = 7$ <span class="tr">Original equation</span></li>
+                <li>$2x = 7 - 3 = 4$ <span class="tr">Subtract 3 from both sides</span></li>
+                <li>$x = \\dfrac{4}{2} = 2$ <span class="tr">Divide both sides by 2</span></li>
+              </ol>
+              Jadi, $x = 2$.
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tips</span></h4>
+              Apapun operasi yang dilakukan di ruas kiri, lakukan juga di ruas kanan agar persamaan tetap seimbang.
+              <span class="tr">Whatever operation done on the left side must also be done on the right to keep balance.</span></div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Identifikasi PLSV', pageTitleEn:'Identify LEOV', taskType:'radio',
+          question:'Manakah yang merupakan persamaan linear satu variabel?', questionEn:'Which is a one-variable linear equation?',
+          options:[
+            {text:'$2x + 3 = 7$', correct:true},
+            {text:'$x + y = 5$', correct:false},
+            {text:'$x^2 = 4$', correct:false},
+            {text:'$3 = 5$', correct:false}
+          ],
+          explanation:`<p>$2x + 3 = 7$ memuat satu variabel ($x$) berpangkat 1 → PLSV. <span class="tr">Contains one variable $x$ with power 1.</span></p>
+            <ul><li>$x + y = 5$: dua variabel → bukan PLSV. <span class="tr">Two variables.</span></li>
+            <li>$x^2 = 4$: pangkat 2 → bukan linear. <span class="tr">Power 2, not linear.</span></li>
+            <li>$3 = 5$: tidak ada variabel. <span class="tr">No variable.</span></li></ul>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Selesaikan PLSV', pageTitleEn:'Solve LEOV', taskType:'fill',
+          question:'Selesaikan $3x - 5 = 10$. Nilai $x = \\dots$', questionEn:'Solve $3x - 5 = 10$. The value of $x = \\dots$',
+          correctAnswer:'5', acceptableAnswers:['5'],
+          explanation:`<p>Langkah penyelesaian: <span class="tr">Solution steps</span></p>
+            <ol><li>$3x - 5 = 10$</li><li>$3x = 10 + 5 = 15$ <span class="tr">Add 5 to both sides</span></li>
+            <li>$x = \\dfrac{15}{3} = 5$ <span class="tr">Divide by 3</span></li></ol>
+            <p>Jadi, $x = 5$.</p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Solusi dari $2(x + 1) = 8$ adalah $x = 3$.', questionEn:'True or false: The solution of $2(x + 1) = 8$ is $x = 3$.',
+          correctAnswer:'true',
+          explanation:`<p>Cek substitusi $x = 3$: <span class="tr">Check by substitution</span></p>
+            <ol><li>$2(x + 1) = 2(3 + 1) = 2 \\cdot 4 = 8$ ✓</li></ol>
+            <p>Atau selesaikan: <span class="tr">Or solve</span></p>
+            <ol><li>$2(x + 1) = 8$</li><li>$2x + 2 = 8$ <span class="tr">Distribute</span></li>
+            <li>$2x = 6$ <span class="tr">Subtract 2</span></li><li>$x = 3$ <span class="tr">Divide by 2</span></li></ol>
+            <p>Jadi pernyataan <strong>Benar</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Sistem Koordinat Kartesius', pageTitleEn:'Cartesian Coordinate System',
+          body:`
+            <p><strong>Sistem koordinat Kartesius</strong> menggunakan dua sumbu: horizontal ($x$) dan vertikal ($y$) untuk menentukan posisi titik.
+              <span class="tr">The Cartesian system uses two axes: horizontal ($x$) and vertical ($y$) to locate points.</span></p>
+            <div class="illustration">
+              <svg width="240" height="200" viewBox="0 0 240 200">
+                <line x1="20" y1="100" x2="220" y2="100" stroke="#333" stroke-width="2"/>
+                <line x1="120" y1="20" x2="120" y2="180" stroke="#333" stroke-width="2"/>
+                <text x="222" y="115" font-size="12">x</text>
+                <text x="125" y="22" font-size="12">y</text>
+                <text x="108" y="118" font-size="11">0</text>
+                <text x="170" y="90" font-size="12" fill="#2563eb">I</text>
+                <text x="60" y="90" font-size="12" fill="#2563eb">II</text>
+                <text x="60" y="125" font-size="12" fill="#2563eb">III</text>
+                <text x="170" y="125" font-size="12" fill="#2563eb">IV</text>
+                <circle cx="160" cy="70" r="4" fill="#ef4444"/>
+                <text x="166" y="65" font-size="11" fill="#ef4444">(2,3)</text>
+                <circle cx="90" cy="70" r="4" fill="#10b981"/>
+                <text x="40" y="65" font-size="11" fill="#10b981">(-3,3)</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:6px">Empat kuadran <span class="tr">Four quadrants</span></div>
+            </div>
+            <p>Setiap titik ditulis sebagai pasangan berurutan $(x, y)$. <span class="tr">Each point is an ordered pair $(x,y)$.</span></p>
+            <div class="math-block"><strong>Kuadran:</strong> <span class="tr">Quadrants</span>
+              <ul style="margin-top:6px">
+                <li>I: $x > 0,\\ y > 0$</li>
+                <li>II: $x < 0,\\ y > 0$</li>
+                <li>III: $x < 0,\\ y < 0$</li>
+                <li>IV: $x > 0,\\ y < 0$</li>
+              </ul>
+            </div>`
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Menentukan Kuadran', pageTitleEn:'Determine Quadrant', taskType:'radio',
+          question:'Di kuadran manakah titik $(-2, 3)$ berada?', questionEn:'In which quadrant is $(-2, 3)$?',
+          options:[
+            {text:'Kuadran I', correct:false},
+            {text:'Kuadran II', correct:true},
+            {text:'Kuadran III', correct:false},
+            {text:'Kuadran IV', correct:false}
+          ],
+          explanation:`<p>Titik $(-2, 3)$: $x = -2 < 0$ dan $y = 3 > 0$. <span class="tr">$x$ negative, $y$ positive.</span></p>
+            <p>Tanda $(-, +)$ ada di <strong>Kuadran II</strong>. <span class="tr">Quadrant II.</span></p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pasangkan Titik dengan Kuadran', pageTitleEn:'Match Points to Quadrants', taskType:'pairing',
+          question:'Pasangkan setiap titik dengan kuadrannya.', questionEn:'Match each point with its quadrant.',
+          pairs:[
+            {left:'$(2, 4)$', right:'Kuadran I'},
+            {left:'$(-3, 5)$', right:'Kuadran II'},
+            {left:'$(-1, -2)$', right:'Kuadran III'},
+            {left:'$(4, -1)$', right:'Kuadran IV'}
+          ],
+          explanation:`<p>Tanda $x$ dan $y$ menentukan kuadran: <span class="tr">Signs of $x$ and $y$ determine the quadrant</span></p>
+            <ul><li>$(+,+)$ → I</li><li>$(-,+)$ → II</li><li>$(-,-)$ → III</li><li>$(+,-)$ → IV</li></ul>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Urutkan Langkah Menentukan Titik', pageTitleEn:'Order Steps to Plot a Point', taskType:'sorting',
+          question:'Urutkan langkah menentukan posisi titik di koordinat Kartesius.', questionEn:'Order the steps to plot a point.',
+          items:[
+            'Identifikasi nilai $x$',
+            'Identifikasi nilai $y$',
+            'Bergerak horizontal sesuai $x$',
+            'Bergerak vertikal sesuai $y$',
+            'Tandai titik pertemuan'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan yang benar: <span class="tr">Correct order</span></p>
+            <ol><li>Identifikasi nilai $x$</li><li>Identifikasi nilai $y$</li>
+            <li>Bergerak horizontal sesuai $x$</li><li>Bergerak vertikal sesuai $y$</li>
+            <li>Tandai titik pertemuan</li></ol>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Substitusi & Penyederhanaan Aljabar', pageTitleEn:'Substitution & Simplifying Algebra',
+          body:`
+            <p><strong>Substitusi</strong> berarti mengganti variabel dengan nilai tertentu. <span class="tr"><strong>Substitution</strong> means replacing a variable with a value.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Jika $y = 2x + 1$ dan $x = 3$, maka:
+              $$y = 2(3) + 1 = 6 + 1 = 7$$</div>
+            <p><strong>Penyederhanaan aljabar</strong> meliputi distribusi dan menggabungkan suku sejenis. <span class="tr"><strong>Simplifying algebra</strong> includes distribution and combining like terms.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $$2(x + 3) = 2x + 6 \\quad \\text{(distribusi)}$$               $$3x + 2x = 5x \\quad \\text{(suku sejenis)}$$</div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tips</span></h4>
+              Untuk menyelesaikan persamaan, lakukan operasi yang sama di kedua ruas supaya tetap seimbang.
+              <span class="tr">Perform the same operation on both sides to maintain balance.</span></div>`
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Substitusi Nilai', pageTitleEn:'Substitute Value', taskType:'fill',
+          question:'Jika $y = 2x + 1$ dan $x = 3$, maka $y = \\dots$', questionEn:'If $y = 2x + 1$ and $x = 3$, then $y = \\dots$',
+          correctAnswer:'7', acceptableAnswers:['7'],
+          explanation:`<p>Substitusi $x = 3$: <span class="tr">Substitute</span></p>
+            <ol><li>$y = 2(3) + 1$</li><li>$y = 6 + 1 = 7$</li></ol>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Pilih yang Ekuivalen', pageTitleEn:'Choose Equivalent', taskType:'checkbox',
+          question:'Pilih semua ekspresi yang ekuivalen dengan $3(x + 2)$.', questionEn:'Select all expressions equivalent to $3(x + 2)$.',
+          options:[
+            {text:'$3x + 6$', correct:true},
+            {text:'$3x + 2$', correct:false},
+            {text:'$3(x + 1) + 3$', correct:true},
+            {text:'$x + 6$', correct:false}
+          ],
+          explanation:`<p>$3(x + 2) = 3x + 6$ (distribusi). <span class="tr">Distribution.</span></p>
+            <ul><li>$3x + 6$ ✓ ekuivalen</li>
+            <li>$3x + 2$ ✗ (harusnya $+6$)</li>
+            <li>$3(x+1) + 3 = 3x + 3 + 3 = 3x + 6$ ✓</li>
+            <li>$x + 6$ ✗ (koefisien $x$ salah)</li></ul>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Langkah Pertama', pageTitleEn:'First Step', taskType:'radio',
+          question:'Apakah langkah pertama yang tepat untuk menyelesaikan $2x + 3 = 11$?', questionEn:'What is the first step to solve $2x + 3 = 11$?',
+          options:[
+            {text:'Bagi kedua ruas dengan 2', correct:false},
+            {text:'Kurangi kedua ruas dengan 3', correct:true},
+            {text:'Kalikan kedua ruas dengan 2', correct:false},
+            {text:'Tambah 3 ke kedua ruas', correct:false}
+          ],
+          explanation:`<p>Untuk mengisolasi $x$, eliminasi konstanta $+3$ terlebih dahulu dengan mengurangi 3. <span class="tr">To isolate $x$, eliminate the constant $+3$ first.</span></p>
+            <ol><li>$2x + 3 = 11$</li><li>$2x = 11 - 3 = 8$ <span class="tr">Subtract 3</span></li>
+            <li>$x = \\dfrac{8}{2} = 4$ <span class="tr">Divide by 2</span></li></ol>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Urutkan Langkah Penyelesaian', pageTitleEn:'Order Solution Steps', taskType:'sorting',
+          question:'Urutkan langkah penyelesaian $2x + 3 = 11$.', questionEn:'Order the steps to solve $2x + 3 = 11$.',
+          items:[
+            '$2x + 3 = 11$',
+            '$2x = 11 - 3$',
+            '$2x = 8$',
+            '$x = \\dfrac{8}{2}$',
+            '$x = 4$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol><li>$2x + 3 = 11$ <span class="tr">Original</span></li>
+            <li>$2x = 11 - 3$ <span class="tr">Subtract 3</span></li>
+            <li>$2x = 8$ <span class="tr">Simplify</span></li>
+            <li>$x = \\dfrac{8}{2}$ <span class="tr">Divide by 2</span></li>
+            <li>$x = 4$ <span class="tr">Simplify</span></li></ol>`
+        }
+      ]
+    },
+    b: {
+      title: 'Introduction & Real-World Connection',
+      titleEn: 'Introduction & Real-World Connection',
+      time: '00:10 - 00:15',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Masalah Dunia Nyata', pageTitleEn:'Real-World Problem',
+          body:`
+            <div class="illustration">
+              <svg width="280" height="100" viewBox="0 0 280 100">
+                <circle cx="40" cy="42" r="18" fill="#ef4444"/><text x="40" y="47" text-anchor="middle" fill="white" font-size="13" font-weight="bold">A</text>
+                <text x="40" y="78" text-anchor="middle" font-size="11" fill="#666">2 ×</text>
+                <text x="80" y="50" font-size="16">+</text>
+                <circle cx="120" cy="42" r="18" fill="#f59e0b"/><text x="120" y="47" text-anchor="middle" fill="white" font-size="13" font-weight="bold">P</text>
+                <text x="120" y="78" text-anchor="middle" font-size="11" fill="#666">3 ×</text>
+                <text x="165" y="50" font-size="14">=</text>
+                <text x="190" y="50" font-size="14" font-weight="bold" fill="#10b981">Rp 5.000</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Belanja buah <span class="tr">Fruit shopping</span></div>
+            </div>
+            <p>Ibu membeli <strong>2 apel dan 3 pisang</strong> seharga <strong>Rp 5.000</strong>. Keesokan harinya, ibu membeli <strong>1 apel dan 2 pisang</strong> seharga <strong>Rp 3.000</strong>. Berapa harga 1 apel dan 1 pisang?
+              <span class="tr">Mother bought 2 apples and 3 bananas for Rp 5,000. The next day, 1 apple and 2 bananas for Rp 3,000. What is the price of one apple and one banana?</span></p>
+            <p>Misalkan: <span class="tr">Let</span></p>
+            <ul>
+              <li>$x$ = harga 1 apel (rupiah) <span class="tr">price of 1 apple</span></li>
+              <li>$y$ = harga 1 pisang (rupiah) <span class="tr">price of 1 banana</span></li>
+            </ul>
+            <div class="math-block">
+              Persamaan 1: $2x + 3y = 5000$ <span class="tr">Equation 1</span><br>
+              Persamaan 2: $x + 2y = 3000$ <span class="tr">Equation 2</span>
+            </div>
+            <div class="tip-box"><h4>Penting <span class="tr">Important</span></h4>
+              Dua persamaan linear dengan dua variabel yang harus dipenuhi bersamaan disebut <strong>Sistem Persamaan Linear Dua Variabel (SPLDV)</strong>.
+              <span class="tr">Two linear equations with two variables that must be satisfied together is called a System of Two-Variable Linear Equations.</span></div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Identifikasi Variabel', pageTitleEn:'Identify Variables', taskType:'radio',
+          question:'Pada masalah di atas, apa yang dimaksud dengan $x$ dan $y$?', questionEn:'What do $x$ and $y$ represent?',
+          options:[
+            {text:'Jumlah apel dan pisang yang dibeli', correct:false},
+            {text:'Harga 1 apel dan harga 1 pisang', correct:true},
+            {text:'Total belanja dua kali', correct:false},
+            {text:'Berat apel dan pisang', correct:false}
+          ],
+          explanation:`<p>Karena $x$ dan $y$ muncul dikalikan dengan jumlah buah ($2x + 3y$), maka $x$ dan $y$ adalah <strong>harga satuan</strong> masing-masing buah. <span class="tr">Since $x$ and $y$ are multiplied by quantities, they are unit prices.</span></p>
+            <p>$x$ = harga 1 apel, $y$ = harga 1 pisang.</p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Susun Persamaan', pageTitleEn:'Form the Equation', taskType:'fill',
+          question:'Tulis persamaan pertama: 2 apel dan 3 pisang seharga Rp 5.000. $2x + \\dots y = 5000$', questionEn:'Write the first equation.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>2 apel = $2x$, 3 pisang = $3y$, total Rp 5.000. <span class="tr">2 apples + 3 bananas = Rp 5,000.</span></p>
+            <p>Jadi: $2x + 3y = 5000$. Koefisien $y$ adalah <strong>3</strong>.</p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Dalam SPLDV, kita mencari pasangan nilai $(x, y)$ yang memenuhi kedua persamaan sekaligus.', questionEn:'True or false: In SPLDV, we look for the pair $(x, y)$ satisfying both equations simultaneously.',
+          correctAnswer:'true',
+          explanation:`<p>Definisi SPLDV: sistem yang mencari pasangan $(x, y)$ yang memenuhi <em>kedua</em> persamaan. <span class="tr">Definition of SPLDV.</span></p>
+            <p>Jawaban <strong>Benar</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Memodelkan Masalah', pageTitleEn:'Modeling the Problem',
+          body:`
+            <p><strong>Pemodelan masalah</strong> adalah menerjemahkan cerita menjadi persamaan matematika. <span class="tr"><strong>Modeling</strong> translates a story into equations.</span></p>
+            <div class="math-block"><strong>Langkah pemodelan:</strong> <span class="tr">Modeling steps</span>
+              <ol style="margin-top:6px">
+                <li>Baca soal dengan teliti.</li>
+                <li>Identifikasi variabel yang tidak diketahui.</li>
+                <li>Tulis persamaan dari setiap informasi.</li>
+                <li>Sederhanakan bila perlu.</li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              3 mangga dan 2 jeruk Rp 4.000; 1 mangga dan 1 jeruk Rp 1.500.<br>
+              <span class="tr">3 mangoes and 2 oranges cost Rp 4,000; 1 mango and 1 orange cost Rp 1,500.</span><br><br>
+              $x$ = harga 1 mangga, $y$ = harga 1 jeruk<br>
+              $3x + 2y = 4000$<br>
+              $x + y = 1500$             </div>`
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Pasangkan Cerita dengan Model', pageTitleEn:'Match Story to Model', taskType:'pairing',
+          question:'Pasangkan setiap cerita dengan sistem persamaan yang tepat.', questionEn:'Match each story with its system.',
+          pairs:[
+            {left:'2 buku + 1 pensil = Rp 5.000; 1 buku + 2 pensil = Rp 4.000', right:'$2x + y = 5000$; $x + 2y = 4000$'},
+            {left:'3 apel + 2 pisang = Rp 4.000; 1 apel + 1 pisang = Rp 1.500', right:'$3x + 2y = 4000$; $x + y = 1500$'},
+            {left:'5 ekor ayam & kelinci; 14 kaki total', right:'$x + y = 5$; $2x + 4y = 14$'},
+            {left:'Umur ayah = 2× umur anak; selisih 25 thn', right:'$a = 2b$; $a - b = 25$'}
+          ],
+          explanation:`<p>Setiap cerita menghasilkan dua persamaan: <span class="tr">Each story gives two equations</span></p>
+            <ul><li>Total biaya → koefisien = jumlah barang.</li>
+            <li>Total kaki → koefisien = jumlah kaki per jenis.</li>
+            <li>Hubungan umur → langsung dari kalimat.</li></ul>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pilih Model Tepat', pageTitleEn:'Choose Correct Model', taskType:'radio',
+          question:'Cerita: "2 mangga dan 3 jeruk Rp 4.000; 1 mangga dan 1 jeruk Rp 1.500." Pilih model yang tepat.', questionEn:'Choose the correct model.',
+          options:[
+            {text:'$2x + 3y = 4000$; $x + y = 1500$', correct:true},
+            {text:'$x + y = 4000$; $2x + 3y = 1500$', correct:false},
+            {text:'$2x + 3y = 1500$; $x + y = 4000$', correct:false},
+            {text:'$3x + 2y = 4000$; $x + y = 1500$', correct:false}
+          ],
+          explanation:`<p>2 mangga → $2x$, 3 jeruk → $3y$, total Rp 4.000 → $2x + 3y = 4000$. <span class="tr">Match quantities to coefficients.</span></p>
+            <p>1 mangga + 1 jeruk = Rp 1.500 → $x + y = 1500$.</p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Isi Koefisien', pageTitleEn:'Fill Coefficient', taskType:'fill',
+          question:'Cerita: "3 apel dan 2 jeruk Rp 7.000; 1 apel dan 1 jeruk Rp 3.000." Persamaan 1: $\\dots x + 2y = 7000$. Isi koefisien yang kosong.', questionEn:'Fill the missing coefficient.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>"3 apel" → koefisien $x$ adalah 3. <span class="tr">"3 apples" → coefficient of $x$ is 3.</span></p>
+            <p>Jadi: $3x + 2y = 7000$.</p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Apa Arti Solusi SPLDV?', pageTitleEn:'What is a Solution of SPLDV?',
+          body:`
+            <p><strong>Solusi SPLDV</strong> adalah pasangan $(x, y)$ yang memenuhi <em>kedua</em> persamaan sekaligus. <span class="tr">A solution is a pair $(x, y)$ satisfying both equations.</span></p>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Sistem: $2x + 3y = 5000$ dan $x + 2y = 3000$<br><br>
+              <strong>Cek $(1000, 1000)$:</strong><br>
+              $2(1000) + 3(1000) = 2000 + 3000 = 5000$ ✓<br>
+              $1000 + 2(1000) = 1000 + 2000 = 3000$ ✓<br>
+              → $(1000, 1000)$ adalah <strong>solusi</strong>.
+            </div>
+            <div class="tip-box"><h4>Tips Cepat <span class="tr">Quick Tip</span></h4>
+              Substitusi nilai $x$ dan $y$ ke <em>kedua</em> persamaan. Jika keduanya benar, maka itu solusi.
+              <span class="tr">Substitute into both equations; both must be true.</span></div>`
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Cek Solusi', pageTitleEn:'Check Solution', taskType:'checkbox',
+          question:'Sistem: $2x + 3y = 5000$ dan $x + 2y = 3000$. Pilih semua pernyataan yang benar untuk titik $(1000, 1000)$.', questionEn:'Select all true statements for $(1000, 1000)$.',
+          options:[
+            {text:'Memenuhi $2x + 3y = 5000$', correct:true},
+            {text:'Memenuhi $x + 2y = 3000$', correct:true},
+            {text:'Memenuhi $x + y = 4000$', correct:false},
+            {text:'Memenuhi $3x - y = 2000$', correct:true}
+          ],
+          explanation:`<p>Substitusi $x = 1000$, $y = 1000$: <span class="tr">Substitute</span></p>
+            <ul><li>$2(1000) + 3(1000) = 5000$ ✓</li>
+            <li>$1000 + 2(1000) = 3000$ ✓</li>
+            <li>$1000 + 1000 = 2000 \\neq 4000$ ✗</li>
+            <li>$3(1000) - 1000 = 2000$ ✓</li></ul>
+            <p>Tiga pernyataan benar.</p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Urutkan Langkah Cek Solusi', pageTitleEn:'Order Steps to Verify', taskType:'sorting',
+          question:'Urutkan langkah memeriksa apakah $(x, y)$ adalah solusi SPLDV.', questionEn:'Order steps to verify a solution.',
+          items:[
+            'Pilih nilai $(x, y)$ untuk diuji',
+            'Substitusi ke persamaan pertama',
+            'Substitusi ke persamaan kedua',
+            'Cek apakah kedua ruas seimbang',
+            'Jika keduanya benar, maka solusi'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan cek solusi: <span class="tr">Verification order</span></p>
+            <ol><li>Pilih nilai $(x, y)$ untuk diuji</li>
+            <li>Substitusi ke persamaan pertama</li>
+            <li>Substitusi ke persamaan kedua</li>
+            <li>Cek keseimbangan kedua ruas</li>
+            <li>Jika keduanya benar → solusi</li></ol>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Jika $(x, y)$ memenuhi persamaan pertama saja, maka itu sudah pasti solusi SPLDV.', questionEn:'True or false: Satisfying only the first equation guarantees a solution.',
+          correctAnswer:'false',
+          explanation:`<p>Solusi SPLDV harus memenuhi <em>kedua</em> persamaan, bukan hanya satu. <span class="tr">Must satisfy both equations.</span></p>
+            <p>Jawaban <strong>Salah</strong>.</p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Pasangkan Interpretasi', pageTitleEn:'Match Interpretation', taskType:'pairing',
+          question:'Sistem: $2x + 3y = 5000$; $x + 2y = 3000$ dengan solusi $x = 1000, y = 1000$. Pasangkan pernyataan dengan kebenarannya.', questionEn:'Match statements with truth values.',
+          pairs:[
+            {left:'Harga 1 apel = Rp 1.000', right:'BENAR'},
+            {left:'Harga 1 pisang = Rp 1.000', right:'BENAR'},
+            {left:'Total 2 apel + 2 pisang = Rp 4.000', right:'BENAR'},
+            {left:'Total 3 apel + 1 pisang = Rp 2.000', right:'SALAH'}
+          ],
+          explanation:`<p>Dengan $x = 1000$ (apel) dan $y = 1000$ (pisang): <span class="tr">With these prices</span></p>
+            <ul><li>1 apel = Rp 1.000 ✓</li>
+            <li>1 pisang = Rp 1.000 ✓</li>
+            <li>2 apel + 2 pisang = $2(1000) + 2(1000) = 4000$ ✓</li>
+            <li>3 apel + 1 pisang = $3(1000) + 1000 = 4000 \\neq 2000$ ✗ (seharusnya Rp 4.000)</li></ul>`
+        }
+      ]
+    },
+    c: {
+      title: 'Review of Prior Knowledge',
+      titleEn: 'Review of Prior Knowledge',
+      time: '00:15 - 00:20',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Persamaan Linear Dua Variabel', pageTitleEn:'Two-Variable Linear Equation',
+          body:`
+            <p><strong>Persamaan Linear Dua Variabel (PLDV)</strong> adalah persamaan yang memuat dua variabel, masing-masing berpangkat 1.
+              <span class="tr">A two-variable linear equation contains two variables, each with power 1.</span></p>
+            <div class="math-block"><strong>Bentuk umum:</strong> $ax + by = c$, dengan $a$ dan $b$ tidak nol secara bersamaan.
+              <span class="tr">General form</span></div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $2x + 3y = 12$ adalah PLDV dengan $a = 2$, $b = 3$, $c = 12$.</div>
+            <p><strong>Solusi PLDV</strong> adalah pasangan $(x, y)$ yang memenuhi persamaan. Sebuah PLDV memiliki <em>banyak solusi tak terhingga</em>.
+              <span class="tr">A PLDV has infinitely many solutions.</span></p>
+            <div class="example-box"><h4>Contoh mencari solusi <span class="tr">Example finding a solution</span></h4>
+              Tentukan solusi $2x + 3y = 12$ untuk $x = 3$.
+              <ol>
+                <li>Substitusi $x = 3$: $2(3) + 3y = 12$</li>
+                <li>Sederhanakan: $6 + 3y = 12$</li>
+                <li>$3y = 12 - 6 = 6$ <span class="tr">Subtract 6</span></li>
+                <li>$y = \\dfrac{6}{3} = 2$ <span class="tr">Divide by 3</span></li>
+              </ol>
+              Jadi, salah satu solusinya adalah $(3, 2)$.</div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Identifikasi PLDV', pageTitleEn:'Identify PLDV', taskType:'radio',
+          question:'Manakah yang merupakan persamaan linear dua variabel?', questionEn:'Which is a two-variable linear equation?',
+          options:[
+            {text:'$2x + 3y = 12$', correct:true},
+            {text:'$2x + 3 = 7$', correct:false},
+            {text:'$x^2 + y = 4$', correct:false},
+            {text:'$x + y + z = 5$', correct:false}
+          ],
+          explanation:`<p>PLDV harus memiliki <em>tepat dua variabel</em> dan keduanya berpangkat 1. <span class="tr">PLDV must have exactly two variables, both with power 1.</span></p>
+            <ul>
+              <li>$2x + 3 = 7$: hanya satu variabel → PLSV</li>
+              <li>$x^2 + y = 4$: ada $x^2$ → bukan linear</li>
+              <li>$x + y + z = 5$: tiga variabel</li>
+              <li>$2x + 3y = 12$ ✓ → dua variabel, keduanya pangkat 1</li>
+            </ul>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Mencari Solusi PLDV', pageTitleEn:'Find a Solution of PLDV', taskType:'fill',
+          question:'Diketahui $2x + 3y = 12$. Jika $x = 3$, maka $y = \\dots$', questionEn:'Given $2x + 3y = 12$. If $x = 3$, then $y = \\dots$',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>Substitusi $x = 3$: <span class="tr">Substitute</span></p>
+            <ol>
+              <li>$2(3) + 3y = 12$</li>
+              <li>$6 + 3y = 12$</li>
+              <li>$3y = 12 - 6 = 6$ <span class="tr">Subtract 6</span></li>
+              <li>$y = \\dfrac{6}{3} = 2$ <span class="tr">Divide by 3</span></li>
+            </ol>
+            <p>Jadi, $y = 2$.</p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Persamaan linear dua variabel hanya memiliki satu solusi.', questionEn:'True or false: A two-variable linear equation has only one solution.',
+          correctAnswer:'false',
+          explanation:`<p>PLDV memiliki <strong>banyak solusi tak terhingga</strong>, karena untuk setiap nilai $x$ yang dipilih, kita bisa mencari nilai $y$ yang sesuai.
+              <span class="tr">A PLDV has infinitely many solutions.</span></p>
+            <p>Contoh untuk $x + y = 5$: $(0,5),\\ (1,4),\\ (2,3),\\ (3,2),\\ \\dots$</p>
+            <p>Jawaban <strong>Salah</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Metode Grafik', pageTitleEn:'Graphical Method',
+          body:`
+            <p><strong>Metode grafik</strong> menyelesaikan SPLDV dengan menggambar kedua garis pada satu sistem koordinat. <span class="tr">The graphical method plots both lines on one coordinate system.</span></p>
+            <div class="math-block"><strong>Langkah:</strong> <span class="tr">Steps</span>
+              <ol style="margin-top:6px">
+                <li>Tulis kedua persamaan dalam bentuk $y = mx + c$ (atau tentukan dua titik pada tiap garis).</li>
+                <li>Gambar kedua garis pada koordinat yang sama.</li>
+                <li>Identifikasi titik potong kedua garis → itulah solusi SPLDV.</li>
+              </ol>
+            </div>
+            <div class="illustration">
+              <svg width="260" height="220" viewBox="0 0 260 220">
+                <line x1="20" y1="110" x2="240" y2="110" stroke="#333" stroke-width="2"/>
+                <line x1="130" y1="20" x2="130" y2="200" stroke="#333" stroke-width="2"/>
+                <text x="244" y="115" font-size="11">x</text>
+                <text x="135" y="22" font-size="11">y</text>
+                <line x1="130" y1="10" x2="230" y2="110" stroke="#2563eb" stroke-width="2.5"/>
+                <text x="200" y="100" font-size="10" fill="#2563eb">x+y=5</text>
+                <line x1="130" y1="130" x2="230" y2="30" stroke="#ef4444" stroke-width="2.5"/>
+                <text x="195" y="55" font-size="10" fill="#ef4444">x-y=1</text>
+                <circle cx="190" cy="70" r="5" fill="#10b981"/>
+                <text x="196" y="65" font-size="11" font-weight="bold" fill="#10b981">(3, 2)</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Titik potong = solusi SPLDV <span class="tr">Intersection point = solution</span></div>
+            </div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              Sistem: $x + y = 5$ dan $x - y = 1$<br>
+              Garis 1: melalui $(0, 5)$ dan $(5, 0)$<br>
+              Garis 2: melalui $(0, -1)$ dan $(1, 0)$<br>
+              Titik potong: $(3, 2)$<br>
+              <strong>Cek:</strong> $3 + 2 = 5$ ✓ dan $3 - 2 = 1$ ✓
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Baca Solusi dari Grafik', pageTitleEn:'Read Solution from Graph', taskType:'radio',
+          question:'Dua garis berpotongan di titik $(3, 2)$. Berapakah solusi SPLDV tersebut?', questionEn:'Two lines intersect at $(3, 2)$. What is the solution?',
+          options:[
+            {text:'$(3, 2)$', correct:true},
+            {text:'$(2, 3)$', correct:false},
+            {text:'$(3, 3)$', correct:false},
+            {text:'$(2, 2)$', correct:false}
+          ],
+          explanation:`<p>Solusi SPLDV yang diperoleh dari metode grafik adalah <strong>titik potong</strong> kedua garis. <span class="tr">Solution is the intersection point.</span></p>
+            <p>Karena berpotongan di $(3, 2)$, maka solusinya adalah $x = 3$ dan $y = 2$, ditulis $(3, 2)$.</p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pasangkan Sistem dengan Solusi', pageTitleEn:'Match System to Solution', taskType:'pairing',
+          question:'Pasangkan setiap sistem persamaan dengan solusinya.', questionEn:'Match each system with its solution.',
+          pairs:[
+            {left:'$x + y = 5$; $x - y = 1$', right:'$(3, 2)$'},
+            {left:'$2x + y = 7$; $x + y = 4$', right:'$(3, 1)$'},
+            {left:'$x + 2y = 8$; $x + y = 5$', right:'$(2, 3)$'},
+            {left:'$3x + 2y = 13$; $2x + y = 7$', right:'$(1, 5)$'}
+          ],
+          explanation:`<p>Cek setiap pasangan dengan substitusi: <span class="tr">Verify each pair</span></p>
+            <ul>
+              <li>$(3, 2)$: $3+2=5$ ✓, $3-2=1$ ✓</li>
+              <li>$(3, 1)$: $2(3)+1=7$ ✓, $3+1=4$ ✓</li>
+              <li>$(2, 3)$: $2+2(3)=8$ ✓, $2+3=5$ ✓</li>
+              <li>$(1, 5)$: $3(1)+2(5)=13$ ✓, $2(1)+5=7$ ✓</li>
+            </ul>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Urutkan Langkah Metode Grafik', pageTitleEn:'Order Graphical Method Steps', taskType:'sorting',
+          question:'Urutkan langkah metode grafik untuk menyelesaikan SPLDV.', questionEn:'Order the graphical method steps.',
+          items:[
+            'Tulis kedua persamaan dalam bentuk $y = mx + c$',
+            'Tentukan dua titik pada setiap garis',
+            'Gambar kedua garis pada koordinat yang sama',
+            'Identifikasi titik potong kedua garis',
+            'Tulis solusi sebagai pasangan $(x, y)$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol>
+              <li>Tulis kedua persamaan dalam bentuk $y = mx + c$</li>
+              <li>Tentukan dua titik pada setiap garis</li>
+              <li>Gambar kedua garis pada koordinat yang sama</li>
+              <li>Identifikasi titik potong kedua garis</li>
+              <li>Tulis solusi sebagai pasangan $(x, y)$</li>
+            </ol>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Metode Substitusi & Eliminasi', pageTitleEn:'Substitution & Elimination Methods',
+          body:`
+            <p>Selain metode grafik, ada dua metode aljabar: <strong>substitusi</strong> dan <strong>eliminasi</strong>.
+              <span class="tr">Besides graphing, there are substitution and elimination methods.</span></p>
+            <div class="math-block"><strong>Metode Substitusi:</strong> <span class="tr">Substitution</span>
+              <ol style="margin-top:6px">
+                <li>Isolasi satu variabel dari salah satu persamaan.</li>
+                <li>Substitusi ke persamaan lain.</li>
+                <li>Selesaikan persamaan satu variabel.</li>
+                <li>Substitusi kembali untuk variabel kedua.</li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh substitusi <span class="tr">Substitution example</span></h4>
+              Sistem: $2x + y = 7$ dan $x + y = 4$<br><br>
+              Dari persamaan 2: $y = 4 - x$<br>
+              Substitusi ke persamaan 1: $2x + (4 - x) = 7$<br>
+              Sederhanakan: $x + 4 = 7 \\Rightarrow x = 3$<br>
+              Substitusi kembali: $y = 4 - 3 = 1$<br>
+              <strong>Solusi: $(3, 1)$</strong>
+            </div>
+            <div class="math-block"><strong>Metode Eliminasi:</strong> <span class="tr">Elimination</span>
+              <ol style="margin-top:6px">
+                <li>Samakan koefisien salah satu variabel.</li>
+                <li>Jumlahkan atau kurangkan kedua persamaan.</li>
+                <li>Selesaikan persamaan satu variabel.</li>
+                <li>Substitusi kembali.</li>
+              </ol>
+            </div>
+            <div class="example-box"><h4>Contoh eliminasi <span class="tr">Elimination example</span></h4>
+              Sistem: $2x + y = 7$ dan $x + y = 4$<br><br>
+              Koefisien $y$ sudah sama (1). Kurangkan:<br>
+              $(2x + y) - (x + y) = 7 - 4$<br>
+              $x = 3$<br>
+              Substitusi: $y = 4 - 3 = 1$<br>
+              <strong>Solusi: $(3, 1)$</strong>
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Langkah Pertama Substitusi', pageTitleEn:'First Step of Substitution', taskType:'radio',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Apakah langkah pertama yang tepat dengan metode substitusi?', questionEn:'System: $x + y = 5$ and $x - y = 1$. What is the first step of substitution?',
+          options:[
+            {text:'Dari persamaan 2: $x = 1 + y$', correct:true},
+            {text:'Eliminasi variabel $y$', correct:false},
+            {text:'Bagi kedua persamaan dengan 2', correct:false},
+            {text:'Kalikan persamaan 1 dengan 3', correct:false}
+          ],
+          explanation:`<p>Substitusi dimulai dengan <strong>mengisolasi satu variabel</strong> dari salah satu persamaan. <span class="tr">Substitution begins by isolating one variable.</span></p>
+            <p>Persamaan 2: $x - y = 1 \\Rightarrow x = 1 + y$ ✓</p>
+            <p>Setelah itu, substitusi $x = 1 + y$ ke persamaan 1: $(1 + y) + y = 5 \\Rightarrow 1 + 2y = 5 \\Rightarrow y = 2$, lalu $x = 3$.</p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Kapan Substitusi Cocok?', pageTitleEn:'When is Substitution Suitable?', taskType:'checkbox',
+          question:'Pilih semua situasi di mana metode substitusi cocok digunakan.', questionEn:'Select all situations where substitution is suitable.',
+          options:[
+            {text:'Salah satu koefisien variabel bernilai 1', correct:true},
+            {text:'Salah satu persamaan sudah dalam bentuk $y = \\dots$', correct:true},
+            {text:'Koefisien besar dan sulit disamakan', correct:true},
+            {text:'Kita butuh visualisasi grafik', correct:false}
+          ],
+          explanation:`<p>Substitusi cocok ketika: <span class="tr">Substitution is suitable when</span></p>
+            <ul>
+              <li>Koefisien = 1 → mudah mengisolasi ✓</li>
+              <li>Persamaan sudah $y = \\dots$ → tinggal substitusi ✓</li>
+              <li>Koefisien sulit disamakan → eliminasi rumit, substitusi lebih mudah ✓</li>
+              <li>Visualisasi grafik → pakai metode grafik, bukan substitusi ✗</li>
+            </ul>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Hasil Substitusi', pageTitleEn:'Substitution Result', taskType:'fill',
+          question:'Sistem: $2x + y = 7$ dan $x + y = 4$. Jika $y = 4 - x$ disubstitusi ke persamaan pertama, hasilnya $2x + (\\dots) = 7$. Isi bagian kosong.', questionEn:'If $y = 4 - x$ is substituted, fill in the blank.',
+          correctAnswer:'4 - x', acceptableAnswers:['4-x','4 - x','4 -x','4- x','4-x'],
+          explanation:`<p>Substitusi $y = 4 - x$ ke $2x + y = 7$: <span class="tr">Substitute</span></p>
+            <p>$2x + (4 - x) = 7$</p>
+            <p>Bagian kosong diisi <strong>$4 - x$</strong>.</p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Urutkan Langkah Eliminasi', pageTitleEn:'Order Elimination Steps', taskType:'sorting',
+          question:'Urutkan langkah eliminasi untuk sistem: $x + y = 5$ dan $x - y = 1$.', questionEn:'Order the elimination steps for the system.',
+          items:[
+            'Tulis kedua persamaan sejajar',
+            'Jumlahkan kedua persamaan',
+            'Dapatkan $2x = 6$',
+            'Bagi 2: $x = 3$',
+            'Substitusi: $3 + y = 5 \\Rightarrow y = 2$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol>
+              <li>$x + y = 5$ dan $x - y = 1$ ditulis sejajar</li>
+              <li>Jumlahkan: $(x + y) + (x - y) = 5 + 1$ <span class="tr">Add</span></li>
+              <li>$2x = 6$ <span class="tr">Simplify</span></li>
+              <li>$x = \\dfrac{6}{2} = 3$ <span class="tr">Divide by 2</span></li>
+              <li>Substitusi $x = 3$ ke $x + y = 5$: $y = 5 - 3 = 2$</li>
+            </ol>
+            <p>Solusi: $(3, 2)$.</p>`
+        }
+      ]
+    },
+    d: {
+      title: 'Problem Introduction',
+      titleEn: 'Problem Introduction',
+      time: '00:20 - 00:30',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Mengenal Masalah SPLDV', pageTitleEn:'Understanding SPLDV Problems',
+          body:`
+            <p>Soal SPLDV biasanya berbentuk <strong>cerita</strong> yang mengandung dua informasi dan dua hal yang tidak diketahui.
+              <span class="tr">SPLDV problems are usually word problems with two pieces of information and two unknowns.</span></p>
+            <div class="illustration">
+              <svg width="280" height="80" viewBox="0 0 280 80">
+                <rect x="10" y="20" width="60" height="50" fill="#dbeafe" stroke="#2563eb" stroke-width="2" rx="4"/>
+                <text x="40" y="42" text-anchor="middle" font-size="11" fill="#1e40af">Buku</text>
+                <text x="40" y="58" text-anchor="middle" font-size="10" fill="#1e40af">2 × Rp</text>
+                <text x="85" y="50" font-size="14">+</text>
+                <rect x="105" y="20" width="60" height="50" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="4"/>
+                <text x="135" y="42" text-anchor="middle" font-size="11" fill="#92400e">Pensil</text>
+                <text x="135" y="58" text-anchor="middle" font-size="10" fill="#92400e">1 × Rp</text>
+                <text x="185" y="50" font-size="14">=</text>
+                <text x="200" y="50" font-size="13" font-weight="bold" fill="#10b981">Rp 7.000</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Soal cerita SPLDV <span class="tr">Word problem</span></div>
+            </div>
+            <div class="example-box"><h4>Contoh soal cerita <span class="tr">Example word problem</span></h4>
+              Andi membeli <strong>2 buku dan 1 pensil</strong> seharga <strong>Rp 7.000</strong>. Budi membeli <strong>1 buku dan 2 pensil</strong> seharga <strong>Rp 8.000</strong>. Berapa harga 1 buku dan 1 pensil?
+              <span class="tr">Andi bought 2 books and 1 pencil for Rp 7,000. Budi bought 1 book and 2 pencils for Rp 8,000. Find the price of each.</span>
+            </div>
+            <p><strong>Langkah memahami soal:</strong> <span class="tr">Steps to understand</span></p>
+            <ol>
+              <li>Identifikasi <em>apa yang diketahui</em> (dua informasi).</li>
+              <li>Identifikasi <em>apa yang ditanyakan</em> (dua hal yang tidak diketahui).</li>
+              <li>Tentukan variabel: $x$ dan $y$.</li>
+              <li>Tulis persamaan dari setiap informasi.</li>
+            </ol>
+            <div class="math-block">
+              $x$ = harga 1 buku, $y$ = harga 1 pensil<br>
+              Persamaan 1: $2x + y = 7000$<br>
+              Persamaan 2: $x + 2y = 8000$             </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Identifikasi Variabel', pageTitleEn:'Identify Variables', taskType:'radio',
+          question:'Pada soal cerita di atas, apa yang dimaksud $x$ dan $y$?', questionEn:'What do $x$ and $y$ represent?',
+          options:[
+            {text:'$x$ = harga 1 buku, $y$ = harga 1 pensil', correct:true},
+            {text:'$x$ = jumlah buku, $y$ = jumlah pensil', correct:false},
+            {text:'$x$ = total belanja Andi, $y$ = total belanja Budi', correct:false},
+            {text:'$x$ = berat buku, $y$ = berat pensil', correct:false}
+          ],
+          explanation:`<p>Karena $x$ dan $y$ dikalikan dengan jumlah barang (mis. $2x$ = 2 buku × harga), maka $x$ dan $y$ adalah <strong>harga satuan</strong>.
+              <span class="tr">Since multiplied by quantities, they are unit prices.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Tulis Persamaan', pageTitleEn:'Write the Equation', taskType:'fill',
+          question:'Andi membeli 2 buku dan 1 pensil seharga Rp 7.000. Tulis persamaan: $2x + \\dots = 7000$.', questionEn:'Write the equation. Fill the blank.',
+          correctAnswer:'y', acceptableAnswers:['y','1y','1 y'],
+          explanation:`<p>1 pensil = $1 \\cdot y = y$, jadi persamaan menjadi $2x + y = 7000$. <span class="tr">1 pencil = $y$.</span></p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Mengapa Dua Persamaan?', pageTitleEn:'Why Two Equations?', taskType:'truefalse',
+          question:'Benar atau salah: Untuk mencari dua variabel yang tidak diketahui, kita membutuhkan minimal dua persamaan.', questionEn:'True or false: To find two unknowns, we need at least two equations.',
+          correctAnswer:'true',
+          explanation:`<p>Setiap variabel membutuhkan satu persamaan independen. Untuk dua variabel, dibutuhkan minimal dua persamaan.
+              <span class="tr">Each variable needs one equation; two variables need two equations.</span></p>
+            <p>Jawaban <strong>Benar</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Memilih Metode yang Tepat', pageTitleEn:'Choosing the Right Method',
+          body:`
+            <p>Tidak semua SPLDV diselesaikan dengan cara yang sama. Pilih metode berdasarkan <em>bentuk</em> sistem:
+              <span class="tr">Choose the method based on the system's form:</span></p>
+            <div class="math-block">
+              <strong>Substitusi</strong> jika: <span class="tr">Substitution when</span>
+              <ul style="margin-top:6px">
+                <li>Salah satu koefisien = 1 (mudah diisolasi).</li>
+                <li>Persamaan sudah berbentuk $y = \\dots$ atau $x = \\dots$.</li>
+              </ul>
+            </div>
+            <div class="math-block">
+              <strong>Eliminasi</strong> jika: <span class="tr">Elimination when</span>
+              <ul style="margin-top:6px">
+                <li>Koefisien mudah disamakan (mis. $2$ dan $4$, atau $3$ dan $5$).</li>
+                <li>Koefisien salah satu variabel sudah sama.</li>
+              </ul>
+            </div>
+            <div class="math-block">
+              <strong>Grafik</strong> jika: <span class="tr">Graph when</span>
+              <ul style="margin-top:6px">
+                <li>Butuh visualisasi atau estimasi.</li>
+                <li>Ingin melihat bentuk garis dan titik potong.</li>
+              </ul>
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tips</span></h4>
+              Tidak ada metode yang "salah" — semuanya memberi jawaban yang sama. Pilih yang paling <em>efisien</em> untuk soal yang dihadapi.
+              <span class="tr">No method is wrong; choose the most efficient.</span></div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Pasangkan Karakteristik dengan Metode', pageTitleEn:'Match Characteristics to Method', taskType:'pairing',
+          question:'Pasangkan setiap karakteristik sistem dengan metode yang paling tepat.', questionEn:'Match each characteristic with the best method.',
+          pairs:[
+            {left:'Salah satu koefisien = 1', right:'Substitusi'},
+            {left:'Koefisien mudah disamakan', right:'Eliminasi'},
+            {left:'Butuh visualisasi grafik', right:'Grafik'},
+            {left:'Persamaan sudah berbentuk $y = \\dots$', right:'Substitusi'}
+          ],
+          explanation:`<p>Karakteristik sistem menentukan metode yang paling efisien: <span class="tr">System form determines the best method</span></p>
+            <ul>
+              <li>Koefisien 1 → isolasi variabel mudah → substitusi</li>
+              <li>Koefisien mudah disamakan → eliminasi</li>
+              <li>Visualisasi → grafik</li>
+              <li>Sudah $y = \\dots$ → tinggal substitusi</li>
+            </ul>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pilih Metode Terbaik', pageTitleEn:'Choose Best Method', taskType:'radio',
+          question:'Sistem: $y = 2x + 1$ dan $x + y = 7$. Metode apa yang paling efisien?', questionEn:'System: $y = 2x + 1$ and $x + y = 7$. Which method is most efficient?',
+          options:[
+            {text:'Substitusi (persamaan 1 sudah $y = \\dots$)', correct:true},
+            {text:'Eliminasi (perlu ubah bentuk dulu)', correct:false},
+            {text:'Grafik (perlu gambar dua garis)', correct:false},
+            {text:'Tidak bisa diselesaikan', correct:false}
+          ],
+          explanation:`<p>Persamaan 1 sudah berbentuk $y = 2x + 1$, jadi tinggal substitusi ke persamaan 2: <span class="tr">Equation 1 is already isolated; just substitute.</span></p>
+            <ol>
+              <li>$x + (2x + 1) = 7$</li>
+              <li>$3x + 1 = 7$</li>
+              <li>$3x = 6 \\Rightarrow x = 2$</li>
+              <li>$y = 2(2) + 1 = 5$</li>
+            </ol>
+            <p>Solusi: $(2, 5)$.</p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Samakan Koefisien', pageTitleEn:'Equalize Coefficient', taskType:'fill',
+          question:'Untuk eliminasi $x$ dari sistem $2x + y = 7$ dan $3x + y = 10$, koefisien $x$ perlu disamakan. KPK dari 2 dan 3 adalah $\\dots$', questionEn:'To eliminate $x$, find the LCM of 2 and 3.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>KPK dari 2 dan 3 adalah 6, karena 6 adalah bilangan terkecil yang habis dibagi 2 dan 3. <span class="tr">LCM of 2 and 3 is 6.</span></p>
+            <p>Sehingga: kalikan persamaan 1 dengan 3 → $6x + 3y = 21$; kalikan persamaan 2 dengan 2 → $6x + 2y = 20$. Lalu kurangkan untuk eliminasi $x$.</p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Langkah Substitusi Lengkap', pageTitleEn:'Complete Substitution Steps',
+          body:`
+            <p>Mari selesaikan SPLDV berikut dengan substitusi, langkah demi langkah:
+              <span class="tr">Let's solve the following SPLDV step by step:</span></p>
+            <div class="math-block">
+              Persamaan 1: $x + y = 5$<br>
+              Persamaan 2: $2x + y = 8$             </div>
+            <div class="example-box"><h4>Langkah penyelesaian <span class="tr">Solution steps</span></h4>
+              <ol>
+                <li><strong>Isolasi $y$ dari persamaan 1:</strong> $y = 5 - x$</li>
+                <li><strong>Substitusi ke persamaan 2:</strong> $2x + (5 - x) = 8$</li>
+                <li><strong>Sederhanakan:</strong> $2x + 5 - x = 8 \\Rightarrow x + 5 = 8$</li>
+                <li><strong>Selesaikan untuk $x$:</strong> $x = 8 - 5 = 3$</li>
+                <li><strong>Substitusi kembali untuk $y$:</strong> $y = 5 - 3 = 2$</li>
+              </ol>
+              <strong>Solusi: $(3, 2)$</strong>
+            </div>
+            <div class="tip-box"><h4>Cek jawaban <span class="tr">Check answer</span></h4>
+              Persamaan 1: $3 + 2 = 5$ ✓<br>
+              Persamaan 2: $2(3) + 2 = 6 + 2 = 8$ ✓<br>
+              Keduanya benar → solusi tepat!
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Langkah Pertama Substitusi', pageTitleEn:'First Step of Substitution', taskType:'radio',
+          question:'Sistem: $x + y = 5$ dan $2x + y = 8$. Apakah langkah pertama substitusi yang tepat?', questionEn:'What is the correct first step?',
+          options:[
+            {text:'Isolasi $y = 5 - x$ dari persamaan 1', correct:true},
+            {text:'Jumlahkan kedua persamaan', correct:false},
+            {text:'Eliminasi variabel $x$', correct:false},
+            {text:'Bagi persamaan 2 dengan 2', correct:false}
+          ],
+          explanation:`<p>Substitusi dimulai dengan <strong>mengisolasi satu variabel</strong> dari salah satu persamaan. <span class="tr">Substitution begins by isolating one variable.</span></p>
+            <p>Dari persamaan 1 ($x + y = 5$), isolasi $y$ paling mudah karena koefisien 1: $y = 5 - x$.</p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Pilih Langkah yang Benar', pageTitleEn:'Select Correct Steps', taskType:'checkbox',
+          question:'Pilih semua langkah yang benar dalam metode substitusi.', questionEn:'Select all correct steps in substitution.',
+          options:[
+            {text:'Isolasi satu variabel terlebih dahulu', correct:true},
+            {text:'Substitusi ke persamaan lain', correct:true},
+            {text:'Selesaikan persamaan satu variabel', correct:true},
+            {text:'Substitusi kembali untuk variabel kedua', correct:true},
+            {text:'Langsung tebak jawaban tanpa perhitungan', correct:false}
+          ],
+          explanation:`<p>Empat langkah substitusi yang benar: <span class="tr">Four correct steps</span></p>
+            <ol>
+              <li>Isolasi satu variabel</li>
+              <li>Substitusi ke persamaan lain</li>
+              <li>Selesaikan persamaan satu variabel</li>
+              <li>Substitusi kembali untuk variabel kedua</li>
+            </ol>
+            <p>Menebak jawaban tanpa perhitungan jelas bukan langkah yang benar ✗.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Hasil Substitusi', pageTitleEn:'Substitution Result', taskType:'fill',
+          question:'Jika $y = 5 - x$ disubstitusi ke $2x + y = 8$, hasil penyederhanaan: $\\dots = 8$. Isi bagian kosong.', questionEn:'After substituting $y = 5 - x$, simplify and fill the blank.',
+          correctAnswer:'x + 5', acceptableAnswers:['x+5','x +5','x+ 5','x + 5','5 + x','5+x','5 +x','5+ x','5 + x'],
+          explanation:`<p>Substitusi $y = 5 - x$ ke $2x + y = 8$: <span class="tr">Substitute</span></p>
+            <ol>
+              <li>$2x + (5 - x) = 8$</li>
+              <li>$2x + 5 - x = 8$</li>
+              <li>$x + 5 = 8$ <span class="tr">Combine like terms</span></li>
+            </ol>
+            <p>Bagian kosong diisi <strong>$x + 5$</strong>.</p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Urutkan Langkah Substitusi Lengkap', pageTitleEn:'Order Complete Substitution Steps', taskType:'sorting',
+          question:'Urutkan langkah substitusi untuk sistem: $x + y = 5$ dan $2x + y = 8$.', questionEn:'Order the substitution steps.',
+          items:[
+            'Isolasi $y = 5 - x$ dari persamaan 1',
+            'Substitusi: $2x + (5 - x) = 8$',
+            'Sederhanakan: $x + 5 = 8$',
+            'Selesaikan: $x = 3$',
+            'Substitusi kembali: $y = 5 - 3 = 2$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol>
+              <li>Isolasi $y = 5 - x$ dari persamaan 1</li>
+              <li>Substitusi: $2x + (5 - x) = 8$</li>
+              <li>Sederhanakan: $x + 5 = 8$</li>
+              <li>Selesaikan: $x = 3$</li>
+              <li>Substitusi kembali: $y = 5 - 3 = 2$</li>
+            </ol>
+            <p>Solusi: $(3, 2)$.</p>`
+        }
+      ]
+    },
+    e: {
+      title: 'Guided Practice',
+      titleEn: 'Guided Practice',
+      time: '00:30 - 00:45',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Substitusi — Contoh Terbimbing', pageTitleEn:'Substitution — Guided Example',
+          body:`
+            <p>Kita akan menyelesaikan SPLDV berikut langkah demi langkah dengan metode substitusi:
+              <span class="tr">Let's solve the following SPLDV step by step using substitution:</span></p>
+            <div class="math-block">
+              Persamaan 1: $x + y = 5$<br>
+              Persamaan 2: $2x + y = 8$             </div>
+            <div class="example-box"><h4>Langkah 1: Pilih variabel yang mudah diisolasi <span class="tr">Step 1</span></h4>
+              Kedua persamaan memiliki koefisien $y = 1$. Kita pilih isolasi $y$ dari persamaan 1:
+              $$y = 5 - x$$             </div>
+            <div class="example-box"><h4>Langkah 2: Substitusi ke persamaan lain <span class="tr">Step 2</span></h4>
+              Masukkan $y = 5 - x$ ke persamaan 2:
+              $$2x + (5 - x) = 8$$             </div>
+            <div class="example-box"><h4>Langkah 3: Sederhanakan dan selesaikan <span class="tr">Step 3</span></h4>
+              $$2x + 5 - x = 8 \\Rightarrow x + 5 = 8 \\Rightarrow x = 3$$             </div>
+            <div class="example-box"><h4>Langkah 4: Substitusi kembali <span class="tr">Step 4</span></h4>
+              $$y = 5 - x = 5 - 3 = 2$$             </div>
+            <div class="tip-box"><h4>Solusi & Cek <span class="tr">Solution & Check</span></h4>
+              <strong>Solusi: $(3, 2)$</strong><br>
+              Cek persamaan 1: $3 + 2 = 5$ ✓<br>
+              Cek persamaan 2: $2(3) + 2 = 6 + 2 = 8$ ✓
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Langkah Substitusi Berikutnya', pageTitleEn:'Next Substitution Step', taskType:'radio',
+          question:'Setelah $y = 5 - x$ diisolasi dari persamaan 1, apa langkah berikutnya?', questionEn:'After isolating $y = 5 - x$, what is the next step?',
+          options:[
+            {text:'Substitusi $y = 5 - x$ ke persamaan 2', correct:true},
+            {text:'Eliminasi variabel $x$', correct:false},
+            {text:'Jumlahkan kedua persamaan', correct:false},
+            {text:'Bagi persamaan 2 dengan 2', correct:false}
+          ],
+          explanation:`<p>Setelah mengisolasi satu variabel, langkah berikutnya adalah <strong>mensubstitusikannya</strong> ke persamaan lain untuk mendapatkan persamaan satu variabel. <span class="tr">After isolating, substitute into the other equation.</span></p>
+            <p>Substitusi $y = 5 - x$ ke $2x + y = 8$ → $2x + (5 - x) = 8$.</p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Selesaikan dengan Substitusi', pageTitleEn:'Solve by Substitution', taskType:'fill',
+          question:'Selesaikan sistem $2x + y = 7$ dan $x + y = 4$ dengan substitusi. Nilai $x = \\dots$', questionEn:'Solve the system by substitution. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Dari persamaan 2: $y = 4 - x$. <span class="tr">From equation 2</span></p>
+            <p>Substitusi ke persamaan 1:</p>
+            <ol>
+              <li>$2x + (4 - x) = 7$</li>
+              <li>$2x + 4 - x = 7$</li>
+              <li>$x + 4 = 7$</li>
+              <li>$x = 7 - 4 = 3$</li>
+            </ol>
+            <p>Substitusi kembali: $y = 4 - 3 = 1$. Solusi: $(3, 1)$.</p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Setelah menemukan nilai satu variabel dengan substitusi, kita harus substitusi kembali untuk menemukan variabel lainnya.', questionEn:'True or false: After finding one variable, we must substitute back to find the other.',
+          correctAnswer:'true',
+          explanation:`<p>SPLDV memiliki dua variabel. Setelah satu variabel ditemukan, kita perlu substitusi kembali ke salah satu persamaan untuk menemukan variabel kedua. <span class="tr">Both variables must be found.</span></p>
+            <p>Jawaban <strong>Benar</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Eliminasi — Contoh Terbimbing', pageTitleEn:'Elimination — Guided Example',
+          body:`
+            <p>Sekarang kita selesaikan SPLDV berikut dengan metode eliminasi:
+              <span class="tr">Now let's solve the following SPLDV using elimination:</span></p>
+            <div class="math-block">
+              Persamaan 1: $x + 2y = 7$<br>
+              Persamaan 2: $3x + 2y = 13$             </div>
+            <div class="example-box"><h4>Langkah 1: Identifikasi variabel yang bisa dieliminasi <span class="tr">Step 1</span></h4>
+              Koefisien $y$ sudah sama (2) di kedua persamaan. Kita akan <strong>eliminasi $y$</strong>.
+            </div>
+            <div class="example-box"><h4>Langkah 2: Kurangkan persamaan 1 dari persamaan 2 <span class="tr">Step 2</span></h4>
+              $$(3x + 2y) - (x + 2y) = 13 - 7$$               $$3x + 2y - x - 2y = 6$$               $$2x = 6$$             </div>
+            <div class="example-box"><h4>Langkah 3: Selesaikan untuk $x$ <span class="tr">Step 3</span></h4>
+              $$x = \\dfrac{6}{2} = 3$$             </div>
+            <div class="example-box"><h4>Langkah 4: Substitusi kembali untuk $y$ <span class="tr">Step 4</span></h4>
+              Gunakan persamaan 1: $x + 2y = 7$<br>
+              $3 + 2y = 7 \\Rightarrow 2y = 4 \\Rightarrow y = 2$             </div>
+            <div class="tip-box"><h4>Solusi & Cek <span class="tr">Solution & Check</span></h4>
+              <strong>Solusi: $(3, 2)$</strong><br>
+              Cek persamaan 1: $3 + 2(2) = 3 + 4 = 7$ ✓<br>
+              Cek persamaan 2: $3(3) + 2(2) = 9 + 4 = 13$ ✓
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Strategi Eliminasi', pageTitleEn:'Elimination Strategy', taskType:'radio',
+          question:'Untuk sistem $2x + 3y = 12$ dan $2x + y = 8$, apa cara tercepat untuk eliminasi?', questionEn:'For the system, what is the fastest way to eliminate?',
+          options:[
+            {text:'Kurangkan kedua persamaan untuk eliminasi $x$', correct:true},
+            {text:'Jumlahkan kedua persamaan untuk eliminasi $y$', correct:false},
+            {text:'Kalikan persamaan 2 dengan 3', correct:false},
+            {text:'Bagi persamaan 1 dengan 2', correct:false}
+          ],
+          explanation:`<p>Koefisien $x$ sudah sama (2) di kedua persamaan. Cukup <strong>kurangkan</strong> kedua persamaan untuk eliminasi $x$. <span class="tr">Same coefficient; just subtract.</span></p>
+            <p>$(2x + 3y) - (2x + y) = 12 - 8 \\Rightarrow 2y = 4 \\Rightarrow y = 2$.</p>
+            <p>Lalu $2x + 2 = 8 \\Rightarrow x = 3$.</p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Hasil Eliminasi', pageTitleEn:'Elimination Result', taskType:'fill',
+          question:'Untuk sistem $2x + 3y = 12$ dan $2x + y = 8$, hasil pengurangan kedua persamaan adalah $\\dots = 4$. Isi bagian kosong.', questionEn:'After subtraction, fill the blank.',
+          correctAnswer:'2y', acceptableAnswers:['2y','2 y','2*y'],
+          explanation:`<p>Kurangkan kedua persamaan: <span class="tr">Subtract</span></p>
+            <p>$(2x + 3y) - (2x + y) = 12 - 8$</p>
+            <p>$2x + 3y - 2x - y = 4$</p>
+            <p>$2y = 4$</p>
+            <p>Bagian kosong diisi <strong>$2y$</strong>.</p>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Pasangkan Langkah dengan Hasil', pageTitleEn:'Match Step to Result', taskType:'pairing',
+          question:'Untuk sistem $x + 2y = 7$ dan $3x + 2y = 13$, pasangkan setiap langkah dengan hasilnya.', questionEn:'Match each step with its result.',
+          pairs:[
+            {left:'Kurangkan pers. 1 dari pers. 2', right:'$2x = 6$'},
+            {left:'Bagi 2', right:'$x = 3$'},
+            {left:'Substitusi $x = 3$ ke pers. 1', right:'$3 + 2y = 7$'},
+            {left:'Selesaikan untuk $y$', right:'$y = 2$'}
+          ],
+          explanation:`<p>Urutan langkah eliminasi: <span class="tr">Elimination steps</span></p>
+            <ol>
+              <li>$(3x + 2y) - (x + 2y) = 13 - 7 \\Rightarrow 2x = 6$</li>
+              <li>$x = \\dfrac{6}{2} = 3$</li>
+              <li>Substitusi: $3 + 2y = 7$</li>
+              <li>$2y = 4 \\Rightarrow y = 2$</li>
+            </ol>
+            <p>Solusi: $(3, 2)$.</p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Praktik Campuran — Memilih Metode', pageTitleEn:'Mixed Practice — Choosing Method',
+          body:`
+            <p>Ketika menghadapi SPLDV, pilih metode yang paling efisien berdasarkan bentuk sistem:
+              <span class="tr">Choose the most efficient method based on the system's form:</span></p>
+            <div class="math-block">
+              <strong>Panduan:</strong> <span class="tr">Guide</span>
+              <ul style="margin-top:6px">
+                <li>Ada koefisien 1 atau persamaan sudah $y = \\dots$ → <strong>Substitusi</strong></li>
+                <li>Koefisien salah satu variabel sama atau mudah disamakan → <strong>Eliminasi</strong></li>
+                <li>Butuh visualisasi → <strong>Grafik</strong></li>
+              </ul>
+            </div>
+            <div class="example-box"><h4>Contoh 1: Cocok substitusi <span class="tr">Example 1: Substitution</span></h4>
+              $2x + 3y = 12$ dan $x - y = 1$<br>
+              Persamaan 2 punya koefisien 1 → isolasi $x = y + 1$, lalu substitusi.
+            </div>
+            <div class="example-box"><h4>Contoh 2: Cocok eliminasi <span class="tr">Example 2: Elimination</span></h4>
+              $2x + 3y = 12$ dan $2x + y = 8$<br>
+              Koefisien $x$ sama (2) → langsung kurangkan.
+            </div>
+            <div class="tip-box"><h4>Tips <span class="tr">Tips</span></h4>
+              Tidak ada jawaban yang "salah" — semua metode memberi hasil yang sama. Pilih yang paling cepat dan minim kesalahan.
+              <span class="tr">No wrong answer; choose the fastest.</span></div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Pilih Metode Terbaik', pageTitleEn:'Choose Best Method', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $x - y = 1$. Metode apa yang paling efisien?', questionEn:'Which method is most efficient?',
+          options:[
+            {text:'Substitusi (koefisien $x$ = 1 di persamaan 2)', correct:true},
+            {text:'Eliminasi (perlu kalikan persamaan 2 dengan 2)', correct:false},
+            {text:'Grafik (perlu gambar dua garis)', correct:false},
+            {text:'Tidak bisa diselesaikan', correct:false}
+          ],
+          explanation:`<p>Persamaan 2 ($x - y = 1$) memiliki koefisien $x = 1$, sehingga mudah diisolasi: $x = y + 1$. <span class="tr">Coefficient 1 → easy to isolate.</span></p>
+            <p>Substitusi ke persamaan 1: $2(y + 1) + 3y = 12 \\Rightarrow 2y + 2 + 3y = 12 \\Rightarrow 5y = 10 \\Rightarrow y = 2$, lalu $x = 3$.</p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Verifikasi Solusi', pageTitleEn:'Verify Solution', taskType:'checkbox',
+          question:'Sistem: $2x + 3y = 12$ dan $x - y = 1$ dengan solusi $(3, 2)$. Pilih semua pernyataan yang benar.', questionEn:'Select all true statements.',
+          options:[
+            {text:'$2(3) + 3(2) = 12$', correct:true},
+            {text:'$3 - 2 = 1$', correct:true},
+            {text:'$3 + 2 = 6$', correct:false},
+            {text:'$2(3) - 3(2) = 0$', correct:true}
+          ],
+          explanation:`<p>Substitusi $(3, 2)$: <span class="tr">Substitute</span></p>
+            <ul>
+              <li>$2(3) + 3(2) = 6 + 6 = 12$ ✓ (memenuhi persamaan 1)</li>
+              <li>$3 - 2 = 1$ ✓ (memenuhi persamaan 2)</li>
+              <li>$3 + 2 = 5 \\neq 6$ ✗ (pernyataan salah)</li>
+              <li>$2(3) - 3(2) = 6 - 6 = 0$ ✓ (pernyataan benar)</li>
+            </ul>
+            <p>Tiga pernyataan benar.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Selesaikan dengan Metode Bebas', pageTitleEn:'Solve Using Any Method', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Jumlahkan kedua persamaan. Hasil penjumlahan adalah $2x = \\dots$', questionEn:'Add both equations. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>Jumlahkan kedua persamaan: <span class="tr">Add both equations</span></p>
+            <p>$(x + y) + (x - y) = 5 + 1$</p>
+            <p>$2x = 6$</p>
+            <p>Bagian kosong diisi <strong>6</strong>.</p>
+            <p>Lalu $x = 3$ dan $y = 2$.</p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Urutkan Langkah Eliminasi', pageTitleEn:'Order Elimination Steps', taskType:'sorting',
+          question:'Urutkan langkah eliminasi untuk sistem $2x + 3y = 12$ dan $2x + y = 8$.', questionEn:'Order the elimination steps.',
+          items:[
+            'Kurangkan persamaan 2 dari persamaan 1',
+            'Sederhanakan: $2y = 4$',
+            'Selesaikan: $y = 2$',
+            'Substitusi $y = 2$ ke $2x + y = 8$',
+            'Selesaikan: $x = 3$'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol>
+              <li>$(2x + 3y) - (2x + y) = 12 - 8$ <span class="tr">Subtract</span></li>
+              <li>$2y = 4$ <span class="tr">Simplify</span></li>
+              <li>$y = \\dfrac{4}{2} = 2$ <span class="tr">Divide by 2</span></li>
+              <li>$2x + 2 = 8$ <span class="tr">Substitute</span></li>
+              <li>$2x = 6 \\Rightarrow x = 3$ <span class="tr">Solve for x</span></li>
+            </ol>
+            <p>Solusi: $(3, 2)$.</p>`
+        }
+      ]
+    },
+    f: {
+      title: 'Independent Practice',
+      titleEn: 'Independent Practice',
+      time: '00:45 - 00:55',
+      pages: [
+        // E1
+        { type:'explanation', pageTitle:'E1: Substitusi — Review & Tips', pageTitleEn:'Substitution — Review & Tips',
+          body:`
+            <p>Sebelum berlatih mandiri, mari kita ingat kembali langkah substitusi: <span class="tr">Let's review substitution steps:</span></p>
+            <div class="math-block">
+              <ol>
+                <li>Pilih variabel dengan koefisien 1 (paling mudah diisolasi).</li>
+                <li>Isolasi variabel tersebut dari persamaannya.</li>
+                <li>Substitusi ke persamaan lain.</li>
+                <li>Selesaikan persamaan satu variabel.</li>
+                <li>Substitusi kembali untuk variabel kedua.</li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips memilih variabel <span class="tr">Tips for choosing variable</span></h4>
+              Pilih variabel yang <em>koefisiennya 1</em> atau yang sudah berbentuk $y = \\dots$ / $x = \\dots$. Ini mempermudah perhitungan.
+              <span class="tr">Choose variable with coefficient 1.</span></div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $2x + 3y = 12$ dan $x + y = 5$<br><br>
+              Persamaan 2: koefisien $x = 1$ dan $y = 1$. Pilih isolasi $x$: $x = 5 - y$<br>
+              Substitusi: $2(5 - y) + 3y = 12 \\Rightarrow 10 - 2y + 3y = 12 \\Rightarrow y = 2$<br>
+              Kembali: $x = 5 - 2 = 3$<br>
+              <strong>Solusi: $(3, 2)$</strong>
+            </div>
+          `
+        },
+        // T1
+        { type:'task', pageTitle:'T1: Variabel yang Diisolasi', pageTitleEn:'Variable to Isolate', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $x + y = 5$. Variabel mana yang paling mudah diisolasi?', questionEn:'Which variable is easiest to isolate?',
+          options:[
+            {text:'$x$ dari persamaan 2 (koefisien 1)', correct:true},
+            {text:'$x$ dari persamaan 1 (perlu bagi 2)', correct:false},
+            {text:'$y$ dari persamaan 1 (perlu bagi 3)', correct:false},
+            {text:'Tidak ada yang mudah', correct:false}
+          ],
+          explanation:`<p>Persamaan 2 ($x + y = 5$) memiliki koefisien $x = 1$ dan $y = 1$. Salah satunya bisa langsung diisolasi: $x = 5 - y$ atau $y = 5 - x$. <span class="tr">Equation 2 has coefficients of 1.</span></p>`
+        },
+        // T2
+        { type:'task', pageTitle:'T2: Selesaikan dengan Substitusi', pageTitleEn:'Solve by Substitution', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $2x + 3y = 12$. Dengan substitusi, nilai $x = \\dots$', questionEn:'Solve by substitution. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Dari persamaan 1: $x = 5 - y$. <span class="tr">From equation 1</span></p>
+            <p>Substitusi ke persamaan 2:</p>
+            <ol>
+              <li>$2(5 - y) + 3y = 12$</li>
+              <li>$10 - 2y + 3y = 12$</li>
+              <li>$10 + y = 12$</li>
+              <li>$y = 2$</li>
+              <li>$x = 5 - 2 = 3$</li>
+            </ol>
+            <p>Solusi: $(3, 2)$.</p>`
+        },
+        // T3
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Setelah substitusi, kita harus selalu cek jawaban dengan substitusi kembali ke kedua persamaan.', questionEn:'True or false: We should always check by substituting back into both equations.',
+          correctAnswer:'true',
+          explanation:`<p>Mengecek jawaban adalah langkah penting untuk memastikan tidak ada kesalahan hitung. <span class="tr">Checking is important.</span></p>
+            <p>Jawaban <strong>Benar</strong>.</p>`
+        },
+        // E2
+        { type:'explanation', pageTitle:'E2: Eliminasi — Review & Tips', pageTitleEn:'Elimination — Review & Tips',
+          body:`
+            <p>Mari kita ingat kembali langkah eliminasi: <span class="tr">Let's review elimination steps:</span></p>
+            <div class="math-block">
+              <ol>
+                <li>Pilih variabel yang akan dieliminasi.</li>
+                <li>Samakan koefisien variabel tersebut (jika belum sama).</li>
+                <li>Jumlahkan (jika tanda berbeda) atau kurangkan (jika tanda sama).</li>
+                <li>Selesaikan persamaan satu variabel.</li>
+                <li>Substitusi kembali.</li>
+              </ol>
+            </div>
+            <div class="tip-box"><h4>Tips memilih variabel <span class="tr">Tips for choosing variable</span></h4>
+              Pilih variabel yang <em>koefisiennya sudah sama</em> atau <em>mudah disamakan</em> (mis. 2 dan 4, atau 3 dan 5).
+              <span class="tr">Choose variable with same or easily equalized coefficient.</span></div>
+            <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>
+              $3x + 2y = 13$ dan $x + 2y = 7$<br><br>
+              Koefisien $y$ sudah sama (2). Kurangkan:<br>
+              $(3x + 2y) - (x + 2y) = 13 - 7 \\Rightarrow 2x = 6 \\Rightarrow x = 3$<br>
+              Substitusi: $3 + 2y = 7 \\Rightarrow y = 2$<br>
+              <strong>Solusi: $(3, 2)$</strong>
+            </div>
+          `
+        },
+        // T4
+        { type:'task', pageTitle:'T4: Variabel yang Dieliminasi', pageTitleEn:'Variable to Eliminate', taskType:'radio',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Variabel mana yang paling mudah dieliminasi?', questionEn:'Which variable is easiest to eliminate?',
+          options:[
+            {text:'$y$ (koefisien 2 sudah sama)', correct:true},
+            {text:'$x$ (perlu kalikan persamaan 2 dengan 3)', correct:false},
+            {text:'Keduanya sama mudah', correct:false},
+            {text:'Tidak ada yang bisa dieliminasi', correct:false}
+          ],
+          explanation:`<p>Koefisien $y$ sudah sama (2) di kedua persamaan, sehingga tinggal kurangkan untuk eliminasi $y$. <span class="tr">$y$ coefficients are equal.</span></p>
+            <p>$(3x + 2y) - (x + 2y) = 13 - 7 \\Rightarrow 2x = 6 \\Rightarrow x = 3$.</p>`
+        },
+        // T5
+        { type:'task', pageTitle:'T5: Pasangkan Sistem dengan Metode', pageTitleEn:'Match System to Method', taskType:'pairing',
+          question:'Pasangkan setiap sistem dengan metode yang paling efisien.', questionEn:'Match each system with the best method.',
+          pairs:[
+            {left:'$y = 2x + 1$; $x + y = 7$', right:'Substitusi'},
+            {left:'$2x + 3y = 12$; $2x + y = 8$', right:'Eliminasi'},
+            {left:'$x + y = 5$; $x - y = 1$', right:'Eliminasi'},
+            {left:'Butuh melihat titik potong', right:'Grafik'}
+          ],
+          explanation:`<p>Panduan: <span class="tr">Guide</span></p>
+            <ul>
+              <li>Persamaan sudah $y = \\dots$ → substitusi</li>
+              <li>Koefisien sama → eliminasi</li>
+              <li>Tanda berlawanan (+ dan -) → jumlahkan untuk eliminasi</li>
+              <li>Visualisasi → grafik</li>
+            </ul>`
+        },
+        // T6
+        { type:'task', pageTitle:'T6: Selesaikan dengan Eliminasi', pageTitleEn:'Solve by Elimination', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Eliminasi $y$. Nilai $x = \\dots$', questionEn:'Eliminate $y$. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>Kurangkan kedua persamaan (koefisien $y$ sama): <span class="tr">Subtract</span></p>
+            <ol>
+              <li>$(3x + 2y) - (x + 2y) = 13 - 7$</li>
+              <li>$2x = 6$</li>
+              <li>$x = \\dfrac{6}{2} = 3$</li>
+            </ol>
+            <p>Substitusi: $3 + 2y = 7 \\Rightarrow 2y = 4 \\Rightarrow y = 2$.</p>
+            <p>Solusi: $(3, 2)$.</p>`
+        },
+        // E3
+        { type:'explanation', pageTitle:'E3: Soal Cerita SPLDV', pageTitleEn:'SPLDV Word Problems',
+          body:`
+            <p>Soal cerita SPLDV menggabungkan pemodelan dan penyelesaian. Mari kita lihat satu contoh lengkap: <span class="tr">Word problems combine modeling and solving.</span></p>
+            <div class="illustration">
+              <svg width="280" height="100" viewBox="0 0 280 100">
+                <circle cx="40" cy="50" r="20" fill="#ef4444"/>
+                <text x="40" y="55" text-anchor="middle" fill="white" font-size="13" font-weight="bold">A</text>
+                <text x="40" y="85" text-anchor="middle" font-size="10" fill="#666">3 kg</text>
+                <text x="80" y="55" font-size="14">+</text>
+                <circle cx="120" cy="50" r="20" fill="#f59e0b"/>
+                <text x="120" y="55" text-anchor="middle" fill="white" font-size="13" font-weight="bold">J</text>
+                <text x="120" y="85" text-anchor="middle" font-size="10" fill="#666">2 kg</text>
+                <text x="160" y="55" font-size="14">=</text>
+                <text x="180" y="55" font-size="12" font-weight="bold" fill="#10b981">Rp 13.000</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Belanja buah <span class="tr">Fruit shopping</span></div>
+            </div>
+            <div class="example-box"><h4>Contoh soal <span class="tr">Example problem</span></h4>
+              Pak Budi membeli <strong>3 kg apel dan 2 kg jeruk</strong> seharga <strong>Rp 13.000</strong>. Pak Andi membeli <strong>1 kg apel dan 2 kg jeruk</strong> seharga <strong>Rp 7.000</strong>. Berapa harga 1 kg apel dan 1 kg jeruk?
+              <span class="tr">Mr. Budi bought 3 kg apples and 2 kg oranges for Rp 13,000. Mr. Andi bought 1 kg apples and 2 kg oranges for Rp 7,000.</span>
+            </div>
+            <p><strong>Langkah pemodelan:</strong> <span class="tr">Modeling steps</span></p>
+            <ol>
+              <li>Variabel: $x$ = harga 1 kg apel, $y$ = harga 1 kg jeruk</li>
+              <li>Persamaan 1: $3x + 2y = 13000$</li>
+              <li>Persamaan 2: $x + 2y = 7000$</li>
+            </ol>
+            <p><strong>Penyelesaian dengan eliminasi:</strong> <span class="tr">Solve by elimination</span></p>
+            <p>Koefisien $y$ sama (2). Kurangkan:</p>
+            <p>$(3x + 2y) - (x + 2y) = 13000 - 7000 \\Rightarrow 2x = 6000 \\Rightarrow x = 3000$</p>
+            <p>Substitusi: $3000 + 2y = 7000 \\Rightarrow 2y = 4000 \\Rightarrow y = 2000$</p>
+            <div class="tip-box"><h4>Solusi <span class="tr">Solution</span></h4>
+              <strong>Harga 1 kg apel = Rp 3.000</strong><br>
+              <strong>Harga 1 kg jeruk = Rp 2.000</strong><br><br>
+              Cek: $3(3000) + 2(2000) = 9000 + 4000 = 13000$ ✓<br>
+              $3000 + 2(2000) = 3000 + 4000 = 7000$ ✓
+            </div>
+          `
+        },
+        // T7
+        { type:'task', pageTitle:'T7: Identifikasi Variabel', pageTitleEn:'Identify Variables', taskType:'radio',
+          question:'Pada soal cerita di atas, apa yang dimaksud $x$ dan $y$?', questionEn:'What do $x$ and $y$ represent?',
+          options:[
+            {text:'$x$ = harga 1 kg apel, $y$ = harga 1 kg jeruk', correct:true},
+            {text:'$x$ = jumlah apel, $y$ = jumlah jeruk', correct:false},
+            {text:'$x$ = total belanja, $y$ = berat buah', correct:false},
+            {text:'$x$ = berat apel, $y$ = berat jeruk', correct:false}
+          ],
+          explanation:`<p>$x$ dan $y$ dikalikan dengan berat (kg), sehingga keduanya adalah <strong>harga satuan</strong>. <span class="tr">Multiplied by weight → unit prices.</span></p>`
+        },
+        // T8
+        { type:'task', pageTitle:'T8: Pilih Sistem yang Tepat', pageTitleEn:'Choose Correct System', taskType:'radio',
+          question:'Manakah sistem persamaan yang sesuai dengan soal cerita di atas?', questionEn:'Which system matches the word problem?',
+          options:[
+            {text:'$3x + 2y = 13000$; $x + 2y = 7000$', correct:true},
+            {text:'$3x + 2y = 7000$; $x + 2y = 13000$', correct:false},
+            {text:'$2x + 3y = 13000$; $2x + y = 7000$', correct:false},
+            {text:'$x + 2y = 13000$; $3x + 2y = 7000$', correct:false}
+          ],
+          explanation:`<p>Pak Budi: 3 kg apel + 2 kg jeruk = Rp 13.000 → $3x + 2y = 13000$. <span class="tr">Mr. Budi</span></p>
+            <p>Pak Andi: 1 kg apel + 2 kg jeruk = Rp 7.000 → $x + 2y = 7000$.</p>`
+        },
+        // T9
+        { type:'task', pageTitle:'T9: Selesaikan Soal Cerita', pageTitleEn:'Solve Word Problem', taskType:'fill',
+          question:'Setelah eliminasi $y$ dari sistem $3x + 2y = 13000$ dan $x + 2y = 7000$, diperoleh $2x = 6000$. Maka nilai $x = \\dots$', questionEn:'After elimination, find $x$.',
+          correctAnswer:'3000', acceptableAnswers:['3000','3.000','3,000'],
+          explanation:`<p>$2x = 6000 \\Rightarrow x = \\dfrac{6000}{2} = 3000$. <span class="tr">Divide by 2</span></p>
+            <p>Jadi, harga 1 kg apel adalah <strong>Rp 3.000</strong>.</p>
+            <p>Substitusi: $3000 + 2y = 7000 \\Rightarrow 2y = 4000 \\Rightarrow y = 2000$.</p>`
+        },
+        // T10
+        { type:'task', pageTitle:'T10: Urutkan Langkah Soal Cerita', pageTitleEn:'Order Word Problem Steps', taskType:'sorting',
+          question:'Urutkan langkah menyelesaikan soal cerita SPLDV.', questionEn:'Order the steps to solve a word problem.',
+          items:[
+            'Identifikasi variabel yang tidak diketahui',
+            'Tulis sistem persamaan dari informasi soal',
+            'Pilih metode penyelesaian (substitusi/eliminasi)',
+            'Eliminasi atau substitusi untuk menemukan satu variabel',
+            'Substitusi kembali dan verifikasi jawaban'
+          ],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<p>Urutan benar: <span class="tr">Correct order</span></p>
+            <ol>
+              <li>Identifikasi variabel</li>
+              <li>Tulis sistem persamaan</li>
+              <li>Pilih metode</li>
+              <li>Eliminasi/substitusi</li>
+              <li>Substitusi kembali & verifikasi</li>
+            </ol>`
+        }
+      ]
+    },
+    g: {
+      title: 'Consolidation & Reflection',
+      titleEn: 'Consolidation & Reflection',
+      time: '00:55 - 01:00',
+      pages: [
+        // E1: Poin Penting
+        { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+          body:`
+            <div class="illustration">
+              <svg width="220" height="80" viewBox="0 0 220 80">
+                <circle cx="40" cy="40" r="28" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <text x="40" y="48" text-anchor="middle" font-size="22" fill="#2563eb">★</text>
+                <text x="85" y="35" font-size="13" fill="#1e40af" font-weight="bold">SPLDV</text>
+                <text x="85" y="52" font-size="10" fill="#64748b">Substitusi · Eliminasi · Grafik</text>
+              </svg>
+              <div style="font-size:.82em;color:var(--muted);margin-top:4px">Tiga metode, satu solusi <span class="tr">Three methods, one solution</span></div>
+            </div>
+            <p>Hari ini kita telah mempelajari <strong>Sistem Persamaan Linear Dua Variabel (SPLDV)</strong>. Berikut adalah poin-poin penting yang perlu diingat:
+              <span class="tr">Today we learned SPLDV. Here are the key points:</span></p>
+            <div class="math-block">
+              <ol>
+                <li><strong>SPLDV</strong> = dua persamaan linear dengan dua variabel yang dipenuhi bersamaan. <span class="tr">Two equations, two variables, satisfied together.</span></li>
+                <li><strong>Bentuk umum:</strong> $a_1x + b_1y = c_1$ dan $a_2x + b_2y = c_2$. <span class="tr">General form.</span></li>
+                <li><strong>Metode Substitusi:</strong> isolasi satu variabel → substitusi ke persamaan lain → selesaikan → substitusi kembali. <span class="tr">Isolate, substitute, solve, back-substitute.</span></li>
+                <li><strong>Metode Eliminasi:</strong> samakan koefisien → jumlahkan/kurangkan → selesaikan → substitusi kembali. <span class="tr">Equalize, add/subtract, solve, back-substitute.</span></li>
+                <li><strong>Metode Grafik:</strong> gambar kedua garis → titik potong = solusi. <span class="tr">Draw lines, intersection = solution.</span></li>
+                <li><strong>Selalu cek jawaban</strong> dengan substitusi kembali ke kedua persamaan. <span class="tr">Always check by substituting back.</span></li>
+              </ol>
+            </div>
+            <div class="tip-box">
+              <h4>Tips memilih metode <span class="tr">Tips for choosing method</span></h4>
+              <ul>
+                <li>Koefisien 1 atau sudah $y = \\dots$ → <strong>Substitusi</strong></li>
+                <li>Koefisien sama atau mudah disamakan → <strong>Eliminasi</strong></li>
+                <li>Butuh visualisasi → <strong>Grafik</strong></li>
+              </ul>
+            </div>
+          `
+        },
+        // T1: Pertanyaan Refleksi
+        { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+          question:'Benar atau salah: Saya sudah memahami minimal satu metode penyelesaian SPLDV (substitusi, eliminasi, atau grafik).', questionEn:'True or false: I understand at least one method of solving SPLDV.',
+          correctAnswer:'true',
+          explanation:`<p>Jika kamu menjawab <strong>Benar</strong>, kamu siap untuk latihan mandiri di Bagian Task 1–5. <span class="tr">If True, you are ready for independent practice.</span></p>
+            <p>Jika kamu menjawab <strong>Salah</strong>, coba baca kembali penjelasan di Bagian C–F dan tanyakan ke tutor bagian yang belum jelas. <span class="tr">If False, review sections C–F and ask your tutor.</span></p>
+            <div class="tip-box"><h4>Ingat <span class="tr">Remember</span></h4>
+              <ul>
+                <li>Substitusi: isolasi → substitusi → selesaikan → cek</li>
+                <li>Eliminasi: samakan → jumlahkan/kurangkan → selesaikan → cek</li>
+                <li>Tidak ada metode yang "salah" — pilih yang paling nyaman!</li>
+              </ul>
+            </div>`
+        },
+        // T2: Exit Ticket
+        { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+          question:'Selesaikan: $x + y = 7$ dan $x - y = 1$. Nilai $x = \\dots$', questionEn:'Solve: $x + y = 7$ and $x - y = 1$. Find $x$.',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<p>Jumlahkan kedua persamaan: <span class="tr">Add both equations</span></p>
+            <ol>
+              <li>$(x + y) + (x - y) = 7 + 1$</li>
+              <li>$2x = 8$</li>
+              <li>$x = \\dfrac{8}{2} = 4$</li>
+            </ol>
+            <p>Substitusi kembali: $y = 7 - 4 = 3$.</p>
+            <p><strong>Solusi: $(4, 3)$</strong></p>
+            <p>Cek: $4 + 3 = 7$ ✓, $4 - 3 = 1$ ✓</p>`
+        },
+        // E2: Follow-up Practice
+        { type:'explanation', pageTitle:'E2: Follow-up Practice', pageTitleEn:'Follow-up Practice',
+          body:`
+            <p>Latihan tambahan tersedia di <strong>Bagian H–L (Task 1–5)</strong>. Setiap bagian berisi 10 soal latihan dengan berbagai tipe:
+              <span class="tr">Additional practice available in sections H–L. Each has 10 questions of various types.</span>
+            </p>
+            <div class="math-block">
+              <ul>
+                <li><strong>Task 1 (H):</strong> Latihan campuran dasar <span class="tr">Mixed basics</span></li>
+                <li><strong>Task 2 (I):</strong> Fokus metode substitusi <span class="tr">Substitution focus</span></li>
+                <li><strong>Task 3 (J):</strong> Fokus metode eliminasi <span class="tr">Elimination focus</span></li>
+                <li><strong>Task 4 (K):</strong> Soal cerita SPLDV <span class="tr">Word problems</span></li>
+                <li><strong>Task 5 (L):</strong> Latihan campuran lanjutan <span class="tr">Advanced mixed</span></li>
+              </ul>
+            </div>
+            <div class="tip-box">
+              <h4>Cara menggunakan <span class="tr">How to use</span></h4>
+              <ol>
+                <li>Buka bagian H–L dari sidebar kiri.</li>
+                <li>Kerjakan setiap soal, lalu klik <strong>"Periksa Jawaban"</strong>.</li>
+                <li>Setelah selesai semua soal di satu bagian, klik tombol <strong>🖨 Print to PDF</strong> di pojok kanan atas.</li>
+                <li>Cetak atau simpan sebagai PDF untuk diperiksa oleh tutor.</li>
+              </ol>
+            </div>
+            <div class="example-box">
+              <h4>Tips mengerjakan <span class="tr">Tips</span></h4>
+              <ul>
+                <li>Kerjakan secara berurutan dari Task 1 ke Task 5.</li>
+                <li>Jika bingung, kembali ke penjelasan di Bagian C–F.</li>
+                <li>Gunakan kertas coreng-coretan untuk perhitungan.</li>
+                <li>Selalu cek jawaban dengan substitusi kembali.</li>
+              </ul>
+            </div>
+          `
+        }
+      ]
+    },
+    h: {
+      title: 'Task 1',
+      titleEn: 'Task 1',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Identifikasi SPLDV', pageTitleEn:'Identify SPLDV', taskType:'radio',
+          question:'Manakah yang merupakan SPLDV?', questionEn:'Which is a SPLDV?',
+          options:[
+            {text:'$x + y = 5$; $x - y = 1$', correct:true},
+            {text:'$x + y = 5$ (satu persamaan)', correct:false},
+            {text:'$x^2 + y = 4$; $x - y = 1$', correct:false},
+            {text:'$x + y + z = 5$; $x - z = 1$', correct:false}
+          ],
+          explanation:`<p>SPLDV harus memiliki <em>tepat dua variabel</em> di <em>dua persamaan</em>, keduanya linear. <span class="tr">Exactly two variables in two linear equations.</span></p>`},
+        { type:'task', pageTitle:'T2: Jumlahkan Persamaan', pageTitleEn:'Add Equations', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Jumlahkan kedua persamaan. $2x = \\dots$', questionEn:'Add both equations. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$(x + y) + (x - y) = 5 + 1 \\Rightarrow 2x = 6$</p><p>Bagian kosong: <strong>6</strong>.</p>`},
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: SPLDV selalu memiliki tepat satu solusi.', questionEn:'True or false: SPLDV always has exactly one solution.',
+          correctAnswer:'false',
+          explanation:`<p>SPLDV bisa memiliki satu solusi, tidak ada solusi (garis sejajar), atau tak terhingga solusi (garis berimpit). <span class="tr">Can have one, none, or infinitely many.</span></p><p>Jawaban <strong>Salah</strong>.</p>`},
+        { type:'task', pageTitle:'T4: Hasil Substitusi', pageTitleEn:'Substitution Result', taskType:'radio',
+          question:'Sistem: $2x + y = 7$ dan $x + y = 4$. Substitusi $y = 4 - x$ ke persamaan 1. Hasilnya?', questionEn:'Substitute $y = 4 - x$ into equation 1. Result?',
+          options:[
+            {text:'$2x + (4 - x) = 7$', correct:true},
+            {text:'$2x + (4 + x) = 7$', correct:false},
+            {text:'$2x - (4 - x) = 7$', correct:false},
+            {text:'$2x + 4x = 7$', correct:false}
+          ],
+          explanation:`<p>Substitusi $y = 4 - x$ ke $2x + y = 7$: <span class="tr">Substitute</span></p><p>$2x + (4 - x) = 7$ ✓</p>`},
+        { type:'task', pageTitle:'T5: Hasil Eliminasi', pageTitleEn:'Elimination Result', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Eliminasi $y$ dengan pengurangan. $2x = \\dots$', questionEn:'Eliminate $y$. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$(3x + 2y) - (x + 2y) = 13 - 7 \\Rightarrow 2x = 6$</p><p>Bagian kosong: <strong>6</strong>.</p>`},
+        { type:'task', pageTitle:'T6: Pasangkan Sistem dengan Solusi', pageTitleEn:'Match System to Solution', taskType:'pairing',
+          question:'Pasangkan setiap sistem dengan solusinya.', questionEn:'Match each system with its solution.',
+          pairs:[
+            {left:'$x + y = 5$; $x - y = 1$', right:'$(3, 2)$'},
+            {left:'$2x + y = 7$; $x + y = 4$', right:'$(3, 1)$'},
+            {left:'$3x + y = 7$; $2x + y = 5$', right:'$(2, 1)$'},
+            {left:'$x + 2y = 8$; $x + y = 5$', right:'$(2, 3)$'}
+          ],
+          explanation:`<p>Verifikasi: <span class="tr">Verify</span></p><ul><li>$3+2=5$✓ $3-2=1$✓</li><li>$2(3)+1=7$✓ $3+1=4$✓</li><li>$3(2)+1=7$✓ $2(2)+1=5$✓</li><li>$2+2(3)=8$✓ $2+3=5$✓</li></ul>`},
+        { type:'task', pageTitle:'T7: Verifikasi Solusi', pageTitleEn:'Verify Solution', taskType:'checkbox',
+          question:'Sistem: $2x + 3y = 12$ dan $x - y = 1$ dengan solusi $(3, 2)$. Pilih semua pernyataan yang benar.', questionEn:'Select all true statements.',
+          options:[
+            {text:'$2(3) + 3(2) = 12$', correct:true},
+            {text:'$3 - 2 = 1$', correct:true},
+            {text:'$3 + 2 = 6$', correct:false},
+            {text:'$2(3) + 3(2) = 6$', correct:false}
+          ],
+          explanation:`<p>Substitusi $(3, 2)$: <span class="tr">Substitute</span></p><ul><li>$2(3)+3(2)=6+6=12$ ✓</li><li>$3-2=1$ ✓</li><li>$3+2=5 \\neq 6$ ✗</li><li>$2(3)+3(2)=12 \\neq 6$ ✗</li></ul><p>Dua pernyataan benar.</p>`},
+        { type:'task', pageTitle:'T8: Urutkan Langkah Substitusi', pageTitleEn:'Order Substitution Steps', taskType:'sorting',
+          question:'Urutkan langkah substitusi untuk $x + y = 5$ dan $2x + y = 8$.', questionEn:'Order the substitution steps.',
+          items:['Isolasi $y = 5 - x$ dari persamaan 1','Substitusi: $2x + (5 - x) = 8$','Sederhanakan: $x + 5 = 8$','Selesaikan: $x = 3$','Substitusi kembali: $y = 2$'],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<ol><li>$y = 5 - x$</li><li>$2x + (5-x) = 8$</li><li>$x + 5 = 8$</li><li>$x = 3$</li><li>$y = 2$</li></ol>`},
+        { type:'task', pageTitle:'T9: Soal Cerita', pageTitleEn:'Word Problem', taskType:'fill',
+          question:'"2 mangga + 1 jeruk = Rp 5.000; 1 mangga + 1 jeruk = Rp 3.000." Eliminasi $y$. Harga 1 mangga ($x$) = $\\dots$', questionEn:'Eliminate $y$. Find $x$.',
+          correctAnswer:'2000', acceptableAnswers:['2000','2.000','2,000'],
+          explanation:`<p>Sistem: $2x + y = 5000$; $x + y = 3000$. <span class="tr">System</span></p><p>$(2x+y) - (x+y) = 5000-3000 \\Rightarrow x = 2000$</p><p>Harga 1 mangga = <strong>Rp 2.000</strong>.</p>`},
+        { type:'task', pageTitle:'T10: Pilih Metode', pageTitleEn:'Choose Method', taskType:'radio',
+          question:'Sistem: $y = 3x + 1$ dan $x + y = 9$. Metode apa yang paling efisien?', questionEn:'Which method is most efficient?',
+          options:[
+            {text:'Substitusi (persamaan 1 sudah $y = \\dots$)', correct:true},
+            {text:'Eliminasi (perlu ubah bentuk dulu)', correct:false},
+            {text:'Grafik (perlu gambar)', correct:false},
+            {text:'Tidak bisa diselesaikan', correct:false}
+          ],
+          explanation:`<p>Persamaan 1 sudah $y = 3x + 1$, tinggal substitusi: <span class="tr">Already isolated.</span></p><p>$x + (3x+1) = 9 \\Rightarrow 4x = 8 \\Rightarrow x = 2$, $y = 7$.</p>`}
+      ]
+    },
+    i: {
+      title: 'Task 2',
+      titleEn: 'Task 2',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Substitusi Sederhana', pageTitleEn:'Simple Substitution', taskType:'fill',
+          question:'Sistem: $y = 2x + 1$ dan $x + y = 7$. Substitusi. Nilai $x = \\dots$', questionEn:'Substitute. Find $x$.',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>$x + (2x + 1) = 7 \\Rightarrow 3x + 1 = 7 \\Rightarrow 3x = 6 \\Rightarrow x = 2$. <span class="tr">Substitute and solve.</span></p><p>$y = 2(2) + 1 = 5$. Solusi: $(2, 5)$.</p>`},
+        { type:'task', pageTitle:'T2: Substitusi Lanjutan', pageTitleEn:'Advanced Substitution', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $2x + y = 8$. Substitusi $y = 5 - x$. Nilai $x = \\dots$', questionEn:'Substitute $y = 5 - x$. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>$2x + (5 - x) = 8 \\Rightarrow x + 5 = 8 \\Rightarrow x = 3$. <span class="tr">Substitute and solve.</span></p><p>$y = 5 - 3 = 2$. Solusi: $(3, 2)$.</p>`},
+        { type:'task', pageTitle:'T3: Variabel yang Diisolasi', pageTitleEn:'Variable to Isolate', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $x + y = 5$. Variabel mana yang paling mudah diisolasi?', questionEn:'Which variable is easiest to isolate?',
+          options:[
+            {text:'$x$ dari persamaan 2 (koefisien 1)', correct:true},
+            {text:'$x$ dari persamaan 1 (perlu bagi 2)', correct:false},
+            {text:'$y$ dari persamaan 1 (perlu bagi 3)', correct:false},
+            {text:'Tidak ada yang mudah', correct:false}
+          ],
+          explanation:`<p>Persamaan 2 ($x + y = 5$) memiliki koefisien 1 → mudah diisolasi. <span class="tr">Coefficient 1.</span></p>`},
+        { type:'task', pageTitle:'T4: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Dalam substitusi, langkah pertama adalah mengisolasi satu variabel.', questionEn:'True or false: First step is isolating one variable.',
+          correctAnswer:'true',
+          explanation:`<p>Langkah pertama substitusi adalah mengisolasi satu variabel dari salah satu persamaan. <span class="tr">First step: isolate.</span></p><p>Jawaban <strong>Benar</strong>.</p>`},
+        { type:'task', pageTitle:'T5: Substitusi dengan Bentuk y=', pageTitleEn:'Substitution with y= Form', taskType:'fill',
+          question:'Sistem: $y = 2x$ dan $3x + y = 10$. Substitusi. Nilai $x = \\dots$', questionEn:'Substitute. Find $x$.',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>$3x + 2x = 10 \\Rightarrow 5x = 10 \\Rightarrow x = 2$. <span class="tr">Substitute.</span></p><p>$y = 2(2) = 4$. Solusi: $(2, 4)$.</p>`},
+        { type:'task', pageTitle:'T6: Pilih Langkah Substitusi', pageTitleEn:'Select Substitution Steps', taskType:'checkbox',
+          question:'Pilih semua langkah yang benar dalam metode substitusi.', questionEn:'Select all correct steps.',
+          options:[
+            {text:'Isolasi satu variabel terlebih dahulu', correct:true},
+            {text:'Substitusi ke persamaan lain', correct:true},
+            {text:'Selesaikan persamaan satu variabel', correct:true},
+            {text:'Substitusi kembali untuk variabel kedua', correct:true},
+            {text:'Langsung tebak jawaban', correct:false}
+          ],
+          explanation:`<p>Empat langkah substitusi yang benar. Menebak bukan langkah yang valid. <span class="tr">Four correct steps; guessing is invalid.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Sistem dengan Hasil Substitusi', pageTitleEn:'Match System to Substitution Result', taskType:'pairing',
+          question:'Pasangkan setiap sistem dengan hasil substitusi yang tepat.', questionEn:'Match each system with its substitution result.',
+          pairs:[
+            {left:'$y = 2x + 1$; $x + y = 7$', right:'$3x + 1 = 7$'},
+            {left:'$y = x + 3$; $2x + y = 9$', right:'$3x + 3 = 9$'},
+            {left:'$y = 3 - x$; $2x + y = 5$', right:'$x + 3 = 5$'},
+            {left:'$y = 2x$; $x + y = 6$', right:'$3x = 6$'}
+          ],
+          explanation:`<p>Substitusi $y$ ke persamaan 2: <span class="tr">Substitute $y$</span></p><ul><li>$x + (2x+1) = 7 \\Rightarrow 3x+1=7$ ✓</li><li>$2x + (x+3) = 9 \\Rightarrow 3x+3=9$ ✓</li><li>$2x + (3-x) = 5 \\Rightarrow x+3=5$ ✓</li><li>$x + 2x = 6 \\Rightarrow 3x=6$ ✓</li></ul>`},
+        { type:'task', pageTitle:'T8: Urutkan Langkah Substitusi', pageTitleEn:'Order Substitution Steps', taskType:'sorting',
+          question:'Urutkan langkah substitusi untuk $y = 2x + 1$ dan $x + y = 7$.', questionEn:'Order the substitution steps.',
+          items:['Substitusi $y = 2x + 1$ ke $x + y = 7$','Dapat $x + (2x + 1) = 7$','Sederhanakan: $3x + 1 = 7$','$3x = 6 \\Rightarrow x = 2$','Substitusi kembali: $y = 2(2) + 1 = 5$'],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<ol><li>$x + (2x+1) = 7$</li><li>$3x + 1 = 7$</li><li>$3x = 6$</li><li>$x = 2$</li><li>$y = 5$</li></ol><p>Solusi: $(2, 5)$.</p>`},
+        { type:'task', pageTitle:'T9: Substitusi Cepat', pageTitleEn:'Quick Substitution', taskType:'fill',
+          question:'Sistem: $y = 3x$ dan $2x + y = 10$. Nilai $x = \\dots$', questionEn:'Find $x$.',
+          correctAnswer:'2', acceptableAnswers:['2'],
+          explanation:`<p>$2x + 3x = 10 \\Rightarrow 5x = 10 \\Rightarrow x = 2$. <span class="tr">Substitute.</span></p><p>$y = 3(2) = 6$. Solusi: $(2, 6)$.</p>`},
+        { type:'task', pageTitle:'T10: Pilih Metode', pageTitleEn:'Choose Method', taskType:'radio',
+          question:'Sistem: $x = 3y$ dan $x + 2y = 10$. Metode apa yang paling efisien?', questionEn:'Which method is most efficient?',
+          options:[
+            {text:'Substitusi ($x$ sudah diisolasi)', correct:true},
+            {text:'Eliminasi (perlu ubah bentuk)', correct:false},
+            {text:'Grafik (perlu gambar)', correct:false},
+            {text:'Tidak bisa', correct:false}
+          ],
+          explanation:`<p>$x = 3y$ sudah diisolasi → substitusi: $3y + 2y = 10 \\Rightarrow 5y = 10 \\Rightarrow y = 2$, $x = 6$. <span class="tr">Already isolated.</span></p>`}
+      ]
+    },
+    j: {
+      title: 'Task 3',
+      titleEn: 'Task 3',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Eliminasi Sederhana', pageTitleEn:'Simple Elimination', taskType:'fill',
+          question:'Sistem: $2x + 3y = 12$ dan $2x + y = 8$. Eliminasi $x$ dengan pengurangan. $2y = \\dots$', questionEn:'Eliminate $x$. Fill the blank.',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<p>$(2x + 3y) - (2x + y) = 12 - 8 \\Rightarrow 2y = 4$. <span class="tr">Subtract.</span></p>`},
+        { type:'task', pageTitle:'T2: Eliminasi Lanjutan', pageTitleEn:'Advanced Elimination', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Eliminasi $y$. $2x = \\dots$', questionEn:'Eliminate $y$. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$(3x + 2y) - (x + 2y) = 13 - 7 \\Rightarrow 2x = 6$. <span class="tr">Subtract.</span></p>`},
+        { type:'task', pageTitle:'T3: Strategi Eliminasi', pageTitleEn:'Elimination Strategy', taskType:'radio',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Cara eliminasi yang tepat?', questionEn:'Which elimination approach?',
+          options:[
+            {text:'Jumlahkan kedua persamaan (koefisien $y$ berlawanan tanda)', correct:true},
+            {text:'Kurangkan kedua persamaan', correct:false},
+            {text:'Kalikan persamaan 1 dengan 2', correct:false},
+            {text:'Bagi persamaan 2 dengan 2', correct:false}
+          ],
+          explanation:`<p>Koefisien $y$: $+1$ dan $-1$ (berlawanan tanda) → <strong>jumlahkan</strong> untuk eliminasi $y$. <span class="tr">Opposite signs → add.</span></p>`},
+        { type:'task', pageTitle:'T4: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Eliminasi dilakukan dengan menjumlahkan atau mengurangkan kedua persamaan.', questionEn:'True or false: Elimination uses addition or subtraction.',
+          correctAnswer:'true',
+          explanation:`<p>Eliminasi menggunakan penjumlahan (tanda berlawanan) atau pengurangan (tanda sama) untuk menghilangkan satu variabel. <span class="tr">Add or subtract to eliminate.</span></p><p>Jawaban <strong>Benar</strong>.</p>`},
+        { type:'task', pageTitle:'T5: Hasil Penjumlahan', pageTitleEn:'Addition Result', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Jumlahkan. $2x = \\dots$', questionEn:'Add both equations. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$(x+y) + (x-y) = 5 + 1 \\Rightarrow 2x = 6$. <span class="tr">Add.</span></p>`},
+        { type:'task', pageTitle:'T6: Pasangkan Sistem dengan Hasil Eliminasi', pageTitleEn:'Match System to Elimination Result', taskType:'pairing',
+          question:'Pasangkan setiap sistem dengan hasil eliminasi yang tepat.', questionEn:'Match each system with its elimination result.',
+          pairs:[
+            {left:'$2x + 3y = 12$; $2x + y = 8$', right:'$2y = 4$'},
+            {left:'$3x + 2y = 13$; $x + 2y = 7$', right:'$2x = 6$'},
+            {left:'$x + y = 6$; $x - y = 2$', right:'$2x = 8$'},
+            {left:'$x + 2y = 8$; $x + y = 5$', right:'$y = 3$'}
+          ],
+          explanation:`<p>Verifikasi: <span class="tr">Verify</span></p><ul><li>$(2x+3y)-(2x+y)=4 \\Rightarrow 2y=4$ ✓</li><li>$(3x+2y)-(x+2y)=6 \\Rightarrow 2x=6$ ✓</li><li>$(x+y)+(x-y)=8 \\Rightarrow 2x=8$ ✓</li><li>$(x+2y)-(x+y)=3 \\Rightarrow y=3$ ✓</li></ul>`},
+        { type:'task', pageTitle:'T7: Pilih Langkah Eliminasi', pageTitleEn:'Select Elimination Steps', taskType:'checkbox',
+          question:'Pilih semua langkah yang benar dalam metode eliminasi.', questionEn:'Select all correct steps.',
+          options:[
+            {text:'Samakan koefisien salah satu variabel', correct:true},
+            {text:'Jumlahkan atau kurangkan kedua persamaan', correct:true},
+            {text:'Selesaikan persamaan satu variabel', correct:true},
+            {text:'Substitusi kembali untuk variabel kedua', correct:true},
+            {text:'Langsung tebak jawaban', correct:false}
+          ],
+          explanation:`<p>Empat langkah eliminasi yang benar. <span class="tr">Four correct steps.</span></p>`},
+        { type:'task', pageTitle:'T8: Urutkan Langkah Eliminasi', pageTitleEn:'Order Elimination Steps', taskType:'sorting',
+          question:'Urutkan langkah eliminasi untuk $2x + 3y = 12$ dan $2x + y = 8$.', questionEn:'Order the elimination steps.',
+          items:['Kurangkan persamaan 2 dari persamaan 1','Dapat $2y = 4$','Selesaikan: $y = 2$','Substitusi $y = 2$ ke $2x + y = 8$','Selesaikan: $x = 3$'],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<ol><li>$(2x+3y)-(2x+y) = 4$</li><li>$2y = 4$</li><li>$y = 2$</li><li>$2x + 2 = 8$</li><li>$x = 3$</li></ol><p>Solusi: $(3, 2)$.</p>`},
+        { type:'task', pageTitle:'T9: Eliminasi Cepat', pageTitleEn:'Quick Elimination', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Eliminasi $y$. Nilai $x = \\dots$', questionEn:'Eliminate $y$. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>$(3x+2y) - (x+2y) = 13 - 7 \\Rightarrow 2x = 6 \\Rightarrow x = 3$. <span class="tr">Subtract and solve.</span></p><p>$y = 2$. Solusi: $(3, 2)$.</p>`},
+        { type:'task', pageTitle:'T10: Pilih Metode', pageTitleEn:'Choose Method', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $4x + 3y = 18$. Metode eliminasi yang tepat?', questionEn:'Which elimination approach?',
+          options:[
+            {text:'Kurangkan (koefisien $y$ sama = 3)', correct:true},
+            {text:'Jumlahkan kedua persamaan', correct:false},
+            {text:'Substitusi (koefisien besar)', correct:false},
+            {text:'Grafik', correct:false}
+          ],
+          explanation:`<p>Koefisien $y$ sama (3) → kurangkan: $(4x+3y)-(2x+3y)=18-12 \\Rightarrow 2x=6 \\Rightarrow x=3$. <span class="tr">Same coefficient → subtract.</span></p>`}
+      ]
+    },
+    k: {
+      title: 'Task 4',
+      titleEn: 'Task 4',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Identifikasi Variabel', pageTitleEn:'Identify Variables', taskType:'radio',
+          question:'"3 apel dan 2 jeruk Rp 4.000; 1 apel dan 1 jeruk Rp 1.500." Apa yang dimaksud $x$ dan $y$?', questionEn:'What do $x$ and $y$ represent?',
+          options:[
+            {text:'$x$ = harga 1 apel, $y$ = harga 1 jeruk', correct:true},
+            {text:'$x$ = jumlah apel, $y$ = jumlah jeruk', correct:false},
+            {text:'$x$ = total, $y$ = berat', correct:false},
+            {text:'$x$ = berat apel, $y$ = berat jeruk', correct:false}
+          ],
+          explanation:`<p>$x$ dan $y$ dikalikan dengan jumlah → <strong>harga satuan</strong>. <span class="tr">Unit prices.</span></p>`},
+        { type:'task', pageTitle:'T2: Tulis Persamaan', pageTitleEn:'Write Equation', taskType:'fill',
+          question:'"2 buku + 1 pensil = Rp 7.000; 1 buku + 2 pensil = Rp 8.000." Persamaan 1: $2x + \\dots = 7000$.', questionEn:'Write equation 1. Fill the blank.',
+          correctAnswer:'y', acceptableAnswers:['y','1y'],
+          explanation:`<p>1 pensil = $y$ → $2x + y = 7000$. <span class="tr">1 pencil = $y$.</span></p>`},
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Untuk soal cerita SPLDV, kita butuh dua informasi untuk dua variabel.', questionEn:'True or false: Two unknowns need two pieces of info.',
+          correctAnswer:'true',
+          explanation:`<p>Setiap variabel membutuhkan satu persamaan independen. Dua variabel → dua persamaan. <span class="tr">Two unknowns need two equations.</span></p><p>Jawaban <strong>Benar</strong>.</p>`},
+        { type:'task', pageTitle:'T4: Pilih Sistem', pageTitleEn:'Choose System', taskType:'radio',
+          question:'"3 kg apel + 2 kg jeruk = Rp 13.000; 1 kg apel + 2 kg jeruk = Rp 7.000." Sistem yang tepat?', questionEn:'Which system matches?',
+          options:[
+            {text:'$3x + 2y = 13000$; $x + 2y = 7000$', correct:true},
+            {text:'$2x + 3y = 13000$; $2x + y = 7000$', correct:false},
+            {text:'$3x + 2y = 7000$; $x + 2y = 13000$', correct:false},
+            {text:'$x + 2y = 13000$; $3x + 2y = 7000$', correct:false}
+          ],
+          explanation:`<p>3 kg apel + 2 kg jeruk = $3x + 2y = 13000$. 1 kg apel + 2 kg jeruk = $x + 2y = 7000$. <span class="tr">Match quantities.</span></p>`},
+        { type:'task', pageTitle:'T5: Hasil Eliminasi Soal Cerita', pageTitleEn:'Elimination Result in Word Problem', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13000$ dan $x + 2y = 7000$. Eliminasi $y$. $2x = \\dots$', questionEn:'Eliminate $y$. Fill the blank.',
+          correctAnswer:'6000', acceptableAnswers:['6000','6.000','6,000'],
+          explanation:`<p>$(3x+2y) - (x+2y) = 13000-7000 \\Rightarrow 2x = 6000$. <span class="tr">Subtract.</span></p>`},
+        { type:'task', pageTitle:'T6: Pasangkan Cerita dengan Sistem', pageTitleEn:'Match Story to System', taskType:'pairing',
+          question:'Pasangkan setiap soal cerita dengan sistem persamaan yang tepat.', questionEn:'Match each story with its system.',
+          pairs:[
+            {left:'2 buku + 1 pensil = 7000; 1 buku + 2 pensil = 8000', right:'$2x + y = 7000$; $x + 2y = 8000$'},
+            {left:'3 apel + 2 jeruk = 4000; 1 apel + 1 jeruk = 1500', right:'$3x + 2y = 4000$; $x + y = 1500$'},
+            {left:'2 mangga + 1 jeruk = 5000; 1 mangga + 1 jeruk = 3000', right:'$2x + y = 5000$; $x + y = 3000$'},
+            {left:'5 ekor ayam & kelinci; 14 kaki total', right:'$x + y = 5$; $2x + 4y = 14$'}
+          ],
+          explanation:`<p>Setiap cerita menghasilkan dua persamaan: <span class="tr">Each story gives two equations.</span></p><ul><li>Total biaya → koefisien = jumlah barang.</li><li>Total kaki → koefisien = kaki per jenis.</li></ul>`},
+        { type:'task', pageTitle:'T7: Pilih Langkah Soal Cerita', pageTitleEn:'Select Word Problem Steps', taskType:'checkbox',
+          question:'Pilih semua langkah menyelesaikan soal cerita SPLDV.', questionEn:'Select all correct steps.',
+          options:[
+            {text:'Identifikasi variabel yang tidak diketahui', correct:true},
+            {text:'Tulis sistem persamaan dari informasi soal', correct:true},
+            {text:'Pilih metode penyelesaian', correct:true},
+            {text:'Selesaikan dan verifikasi jawaban', correct:true},
+            {text:'Langsung tebak jawaban', correct:false}
+          ],
+          explanation:`<p>Empat langkah benar. Menebak bukan langkah valid. <span class="tr">Four correct steps.</span></p>`},
+        { type:'task', pageTitle:'T8: Urutkan Langkah Soal Cerita', pageTitleEn:'Order Word Problem Steps', taskType:'sorting',
+          question:'Urutkan langkah menyelesaikan soal cerita SPLDV.', questionEn:'Order the steps.',
+          items:['Baca soal dan identifikasi variabel','Tulis sistem persamaan','Pilih metode (eliminasi/substitusi)','Selesaikan untuk satu variabel','Substitusi kembali dan verifikasi'],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<ol><li>Identifikasi variabel</li><li>Tulis sistem</li><li>Pilih metode</li><li>Selesaikan</li><li>Verifikasi</li></ol>`},
+        { type:'task', pageTitle:'T9: Selesaikan Soal Cerita', pageTitleEn:'Solve Word Problem', taskType:'fill',
+          question:'"2 mangga + 1 jeruk = Rp 5.000; 1 mangga + 1 jeruk = Rp 3.000." Eliminasi $y$. Harga 1 mangga ($x$) = $\\dots$', questionEn:'Eliminate $y$. Find $x$.',
+          correctAnswer:'2000', acceptableAnswers:['2000','2.000','2,000'],
+          explanation:`<p>Sistem: $2x + y = 5000$; $x + y = 3000$. <span class="tr">System</span></p><p>$(2x+y) - (x+y) = 5000-3000 \\Rightarrow x = 2000$.</p><p>Harga 1 mangga = <strong>Rp 2.000</strong>.</p>`},
+        { type:'task', pageTitle:'T10: Soal Umur', pageTitleEn:'Age Problem', taskType:'radio',
+          question:'"Umur ayah = 2× umur anak; selisih umur 25 tahun." Sistem yang tepat?', questionEn:'Which system matches?',
+          options:[
+            {text:'$a = 2b$; $a - b = 25$', correct:true},
+            {text:'$a = 2b$; $a + b = 25$', correct:false},
+            {text:'$2a = b$; $a - b = 25$', correct:false},
+            {text:'$a = b + 2$; $a - b = 25$', correct:false}
+          ],
+          explanation:`<p>$a$ = umur ayah, $b$ = umur anak. <span class="tr">$a$ = father, $b$ = child.</span></p><p>$a = 2b$ (umur ayah 2× anak), $a - b = 25$ (selisih). Solusi: $b = 25$, $a = 50$.</p>`}
+      ]
+    },
+    l: {
+      title: 'Task 5',
+      titleEn: 'Task 5',
+      time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Pilih Metode', pageTitleEn:'Choose Method', taskType:'radio',
+          question:'Sistem: $y = 2x + 1$ dan $x + y = 7$. Metode apa yang paling efisien?', questionEn:'Which method is most efficient?',
+          options:[
+            {text:'Substitusi (persamaan 1 sudah $y = \\dots$)', correct:true},
+            {text:'Eliminasi (perlu ubah bentuk)', correct:false},
+            {text:'Grafik (perlu gambar)', correct:false},
+            {text:'Tidak bisa', correct:false}
+          ],
+          explanation:`<p>Persamaan 1 sudah $y = 2x + 1$ → substitusi langsung. <span class="tr">Already isolated.</span></p>`},
+        { type:'task', pageTitle:'T2: Jumlahkan Persamaan', pageTitleEn:'Add Equations', taskType:'fill',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$. Jumlahkan. $2x = \\dots$', questionEn:'Add. Fill the blank.',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$(x+y) + (x-y) = 5+1 \\Rightarrow 2x = 6$. <span class="tr">Add.</span></p>`},
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: SPLDV bisa memiliki tidak ada solusi (garis sejajar).', questionEn:'True or false: SPLDV can have no solution.',
+          correctAnswer:'true',
+          explanation:`<p>Jika kedua garis sejajar (kemiringan sama, konstanta berbeda), SPLDV tidak memiliki solusi. <span class="tr">Parallel lines → no solution.</span></p><p>Jawaban <strong>Benar</strong>.</p>`},
+        { type:'task', pageTitle:'T4: Pilih Metode Eliminasi', pageTitleEn:'Choose Elimination Method', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $2x + y = 8$. Metode terbaik?', questionEn:'Which method is best?',
+          options:[
+            {text:'Eliminasi (koefisien $x$ sama = 2)', correct:true},
+            {text:'Substitusi (koefisien besar)', correct:false},
+            {text:'Grafik', correct:false},
+            {text:'Tidak bisa', correct:false}
+          ],
+          explanation:`<p>Koefisien $x$ sama (2) → kurangkan: $2y = 4 \\Rightarrow y = 2$, $x = 3$. <span class="tr">Same coefficient → subtract.</span></p>`},
+        { type:'task', pageTitle:'T5: Eliminasi Cepat', pageTitleEn:'Quick Elimination', taskType:'fill',
+          question:'Sistem: $3x + 2y = 13$ dan $x + 2y = 7$. Eliminasi $y$. Nilai $x = \\dots$', questionEn:'Eliminate $y$. Find $x$.',
+          correctAnswer:'3', acceptableAnswers:['3'],
+          explanation:`<p>$(3x+2y) - (x+2y) = 13-7 \\Rightarrow 2x = 6 \\Rightarrow x = 3$. <span class="tr">Subtract.</span></p><p>$y = 2$. Solusi: $(3, 2)$.</p>`},
+        { type:'task', pageTitle:'T6: Pasangkan Sistem dengan Solusi', pageTitleEn:'Match System to Solution', taskType:'pairing',
+          question:'Pasangkan setiap sistem dengan solusinya.', questionEn:'Match each system with its solution.',
+          pairs:[
+            {left:'$x + y = 5$; $x - y = 1$', right:'$(3, 2)$'},
+            {left:'$2x + y = 7$; $x + y = 4$', right:'$(3, 1)$'},
+            {left:'$3x + y = 7$; $2x + y = 5$', right:'$(2, 1)$'},
+            {left:'$x + 2y = 8$; $x + y = 5$', right:'$(2, 3)$'}
+          ],
+          explanation:`<p>Verifikasi: <span class="tr">Verify</span></p><ul><li>$3+2=5$✓ $3-2=1$✓</li><li>$2(3)+1=7$✓ $3+1=4$✓</li><li>$3(2)+1=7$✓ $2(2)+1=5$✓</li><li>$2+2(3)=8$✓ $2+3=5$✓</li></ul>`},
+        { type:'task', pageTitle:'T7: Verifikasi Solusi', pageTitleEn:'Verify Solution', taskType:'checkbox',
+          question:'Sistem: $x + y = 5$ dan $x - y = 1$ dengan solusi $(3, 2)$. Pilih semua pernyataan yang benar.', questionEn:'Select all true statements.',
+          options:[
+            {text:'$3 + 2 = 5$', correct:true},
+            {text:'$3 - 2 = 1$', correct:true},
+            {text:'$3 \\times 2 = 5$', correct:false},
+            {text:'$3 + 2 = 6$', correct:false}
+          ],
+          explanation:`<p>Substitusi $(3, 2)$: <span class="tr">Substitute</span></p><ul><li>$3 + 2 = 5$ ✓</li><li>$3 - 2 = 1$ ✓</li><li>$3 \\times 2 = 6 \\neq 5$ ✗</li><li>$3 + 2 = 5 \\neq 6$ ✗</li></ul><p>Dua pernyataan benar.</p>`},
+        { type:'task', pageTitle:'T8: Urutkan Langkah Eliminasi', pageTitleEn:'Order Elimination Steps', taskType:'sorting',
+          question:'Urutkan langkah eliminasi untuk $x + y = 5$ dan $x - y = 1$.', questionEn:'Order the elimination steps.',
+          items:['Jumlahkan kedua persamaan','Dapat $2x = 6$','Selesaikan: $x = 3$','Substitusi $x = 3$ ke $x + y = 5$','Selesaikan: $y = 2$'],
+          correctOrder:[0,1,2,3,4],
+          explanation:`<ol><li>$(x+y) + (x-y) = 6$</li><li>$2x = 6$</li><li>$x = 3$</li><li>$3 + y = 5$</li><li>$y = 2$</li></ol><p>Solusi: $(3, 2)$.</p>`},
+        { type:'task', pageTitle:'T9: Soal Cerita Cepat', pageTitleEn:'Quick Word Problem', taskType:'fill',
+          question:'"2 mangga + 1 jeruk = Rp 5.000; 1 mangga + 1 jeruk = Rp 3.000." Harga 1 mangga = $\\dots$', questionEn:'Find price of 1 mango.',
+          correctAnswer:'2000', acceptableAnswers:['2000','2.000','2,000'],
+          explanation:`<p>Sistem: $2x + y = 5000$; $x + y = 3000$. <span class="tr">System</span></p><p>$(2x+y) - (x+y) = 5000-3000 \\Rightarrow x = 2000$.</p><p>Harga 1 mangga = <strong>Rp 2.000</strong>.</p>`},
+        { type:'task', pageTitle:'T10: Pilih Metode Final', pageTitleEn:'Choose Method Final', taskType:'radio',
+          question:'Sistem: $2x + 3y = 12$ dan $x + y = 5$. Metode apa yang paling efisien?', questionEn:'Which method is most efficient?',
+          options:[
+            {text:'Substitusi (koefisien 1 di persamaan 2)', correct:true},
+            {text:'Eliminasi (perlu samakan koefisien)', correct:false},
+            {text:'Grafik', correct:false},
+            {text:'Tidak bisa', correct:false}
+          ],
+          explanation:`<p>Persamaan 2 ($x + y = 5$) memiliki koefisien 1 → mudah diisolasi: $x = 5 - y$. <span class="tr">Coefficient 1.</span></p><p>Substitusi: $2(5-y) + 3y = 12 \\Rightarrow 10 + y = 12 \\Rightarrow y = 2$, $x = 3$.</p>`}
+      ]
+    }
+  };
+
+  // ================= STATE =================
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  // ================= UTILITIES =================
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, {
+        delimiters: [
+          {left:'$$', right:'$$', display:true},
+          {left:'$', right:'$', display:false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  // ================= SIDEBAR =================
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review Warm-up', e:'Spiral Review Warm-up', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Intro & Real-World', time:'00:10-00:15'},
+      c:{t:'Review of Prior Knowledge', e:'Review of Prior Knowledge', time:'00:15-00:20'},
+      d:{t:'Problem Introduction', e:'Problem Introduction', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Guided Practice', time:'00:30-00:45'},
+      f:{t:'Independent Practice', e:'Independent Practice', time:'00:45-00:55'},
+      g:{t:'Consolidation & Reflection', e:'Consolidation & Reflection', time:'00:55-01:00'},
+      h:{t:'Task 1', e:'Task 1', time:'Printable'},
+      i:{t:'Task 2', e:'Task 2', time:'Printable'},
+      j:{t:'Task 3', e:'Task 3', time:'Printable'},
+      k:{t:'Task 4', e:'Task 4', time:'Printable'},
+      l:{t:'Task 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = sectionsData[key];
+      const isActive = currentSection === key;
+      if(section){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+
+  // ================= PAGE RENDER =================
+  function renderPage(){
+    const section = sectionsData[currentSection];
+    if(!section) return;
+    const page = section.pages[currentPage];
+    const contentEl = document.getElementById('pageContent');
+
+    // Print button for H-L sections
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Print to PDF <span class="tr">Cetak ke PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    // Numbered pagination
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    // Page number click handlers
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    // Prev/Next
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    // Print button handler
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    // Task handlers
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}">
+          <div class="marker"></div>
+          <div class="opt-text">${opt.text}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'Benar <span class="tr">True</span>', val:'true'},
+        {text:'Salah <span class="tr">False</span>', val:'false'}
+      ]);
+      html += '<div class="options">';
+      opts.forEach(o => {
+        html += `<div class="option radio" data-val="${o.val}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}">
+          <span class="pos">${i+1}</span>
+          <span class="sort-text">${it.text}</span>
+        </div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar posisi. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid">';
+      html += '<div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => {
+        html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`;
+      });
+      html += '</div>';
+      html += '<div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => {
+        html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`;
+      });
+      html += '</div></div>';
+      html += '<div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik item kiri lalu item kanan untuk memasangkan. <span class="tr">Click left then right to pair.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+      });
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){
+            firstClick = item;
+            item.classList.add('selected');
+          } else if(firstClick === item){
+            item.classList.remove('selected');
+            firstClick = null;
+          } else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            const sText = item.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = sText;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig;
+            firstClick.dataset.orig = item.dataset.orig;
+            item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected');
+            firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx;
+          pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Hapus">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', () => {
+            selectedLeft_restore(pairRow);
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('paired');
+          item.classList.add('paired');
+          selectedLeft = null;
+        });
+      });
+      function selectedLeft_restore(row){
+        const lIdx = row.dataset.leftIdx;
+        const rIdx = row.dataset.rightIdx;
+        const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${lIdx}"]`);
+        const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${rIdx}"]`);
+        if(lItem) lItem.classList.remove('paired');
+        if(rItem) rItem.classList.remove('paired');
+        row.remove();
+      }
+      window._pairingRestore = selectedLeft_restore;
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false;
+    let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selected = page._shuffledOptions[i];
+          selectedIdx = i;
+        }
+      });
+      if(!selected){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selected.correct;
+      userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')) selectedIdxs.push(i);
+      });
+      if(selectedIdxs.length === 0){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+	  isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'Benar <span class="tr">True</span>', val:'true'},
+        {text:'Salah <span class="tr">False</span>', val:'false'}
+      ]);
+      html += '<div class="options">';
+      opts.forEach(o => {
+        html += `<div class="option radio" data-val="${o.val}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(taskType === 'sorting'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => {
+        currentOrder.push(parseInt(item.dataset.orig));
+      });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){
+        showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false);
+        return;
+      }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        userPairs.push({
+          leftText: page._shuffledPairs.lefts[lIdx].text,
+          rightText: page._shuffledPairs.rights[rIdx].text
+        });
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up =>
+        correctPairs.some(cp => cp.left === up.leftText && cp.right === up.rightText)
+      ).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.leftText}↔${p.rightText}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        const lText = page._shuffledPairs.lefts[lIdx].text;
+        const rText = page._shuffledPairs.rights[rIdx].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Kurang tepat'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`;
+    } else {
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Kurang tepat'}</h4>`;
+    }
+    renderMath(feedback);
+  }
+
+  // ================= EVENT LISTENERS =================
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(currentPage > 0){ currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = sectionsData[currentSection].pages.length;
+    if(currentPage < total - 1){ currentPage++; renderPage(); }
+  });
+
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  // ================= PRINT TO PDF =================
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){
+      const c = task.options.find(o => o.correct);
+      return c ? c.text : '';
+    }
+    if(task.taskType === 'checkbox'){
+      return task.options.filter(o => o.correct).map(o => o.text).join(', ');
+    }
+    if(task.taskType === 'fill'){
+      return task.correctAnswer || '';
+    }
+    if(task.taskType === 'truefalse'){
+      return task.correctAnswer === 'true' ? 'Benar' : 'Salah';
+    }
+    if(task.taskType === 'sorting'){
+      return task.correctOrder.map(i => task.items[i]).join(' → ');
+    }
+    if(task.taskType === 'pairing'){
+      return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; ');
+    }
+    return '';
+  }
+
+  function printTask(sectionKey){
+    const section = sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(belum dijawab)';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '</td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Print - ' + section.title + '</title>' +
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>' +
+      '<style>' +
+      'body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}' +
+      'h1{font-size:1.2em;margin-bottom:5px}' +
+      '.info{margin-bottom:15px;font-size:.88em}' +
+      '.info div{margin:3px 0}' +
+      'table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}' +
+      'th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}' +
+      'th{background:#f1f5f9;font-weight:600}' +
+      '.checked-by{margin-top:30px;text-align:right;font-style:italic}' +
+      '.tr{font-style:italic;font-size:.85em;color:#64748b}' +
+      '@media print{body{padding:15px}}' +
+      '</style></head><body>' +
+      '<h1>Math Tutoring by Deni</h1>' +
+      '<div class="info">' +
+      '<div>Nama: ____________________________</div>' +
+      '<div>Tanggal: ' + today + '</div>' +
+      '<div>Topic: Sistem Persamaan Linear Dua Variabel <span class="tr">System of Two-Variable Linear Equations</span></div>' +
+      '<div>Grup task: ' + section.title + ' <span class="tr">' + section.titleEn + '</span></div>' +
+      '<div>Skor: <strong>' + score + '</strong></div>' +
+      '</div>' +
+      '<table><thead><tr>' +
+      '<th style="width:30px">No.</th>' +
+      '<th>Pertanyaan <span class="tr">Question</span></th>' +
+      '<th>Jawaban Siswa <span class="tr">Student Answer</span></th>' +
+      '<th>Jawaban Benar <span class="tr">Correct Answer</span></th>' +
+      '<th style="width:50px">Ket. <span class="tr">Note</span></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="checked-by">Checked by,<br>Deni</div>' +
+      '<script>document.addEventListener("DOMContentLoaded",function(){' +
+      'if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}' +
+      'setTimeout(function(){window.print();},500);});<\/script>' +
+      '</body></html>';
+
+    const w = window.open('', '_blank');
+    if(w){
+      w.document.write(html);
+      w.document.close();
+    } else {
+      alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Please allow pop-ups to print.</span>');
+    }
+  }
+
+  // ================= INIT =================
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
