@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - Luas Permukaan Bangun Ruang</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+.page-numbers {display:flex;gap:3px;flex-wrap:nowrap;justify-content:center;flex:1;overflow-x:auto;padding:0 3px;}
+.page-num {min-width:28px;height:26px;border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;font-size:.7em;display:flex;align-items:center;justify-content:center;padding:0 4px;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.page-num.page-num-e {background:#eff6ff;border-color:#93c5fd;color:#1e40af;}
+.page-num.page-num-t {background:#fffbeb;border-color:#fcd34d;color:#92400e;}
+.page-num.page-num-e:hover {background:#dbeafe;border-color:var(--primary);}
+.page-num.page-num-t:hover {background:#fef3c7;border-color:var(--secondary);}
+.page-num.page-num-e.active {background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600;}
+.page-num.page-num-t.active {background:var(--secondary);color:#fff;border-color:var(--secondary);font-weight:600;}
+.page-num:disabled {opacity:1;cursor:default;}
+@media(max-width:1100px){.main-container{grid-template-columns:180px 1fr}.content-area{padding:18px 20px}}
+@media(max-width:760px){.main-container{grid-template-columns:1fr}.sidebar{display:none}.content-area{padding:16px}header{font-size:.9em}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Luas Permukaan Kubus, Balok, dan Prisma <span class="tr">Topic: Surface Area of Cube, Cuboid, and Prism</span></div>
+  <button id="classRulesBtn">Aturan Kelas <span class="tr">Class Rules</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+window.sectionsData = {
+  a: {
+    title: 'Spiral Review Warm-up', titleEn: 'Spiral Review Warm-up', time: '00:00 - 00:10',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Review Luas Datar', pageTitleEn:'Review Plane Area',
+        body:`<p><strong>Bangun Datar Dasar</strong>. Sebelum menghitung luas permukaan bangun ruang, kita harus menguasai rumus luas bangun datar.<span class="tr"><strong>Basic Plane Figures</strong>. Before calculating the surface area of 3D shapes, we must master the area formulas of plane figures.</span></p>
+        <div class="math-block"><strong>Luas Persegi</strong> $L = s \\times s = s^2$ <span class="tr">Area of Square</span><br><strong>Luas Persegi Panjang</strong> $L = p \\times l$ <span class="tr">Area of Rectangle</span></div>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Hitung luas persegi dengan sisi $s = 5$ cm. <span class="tr">Calculate the area of a square with side $s = 5$ cm.</span>
+        <ol><li>$L = s^2$</li><li>$L = 5^2$</li><li>$L = 25$ cm$^2$</li></ol></div>`
+      },
+      { type:'task', pageTitle:'T1: Hitung Luas Persegi', pageTitleEn:'Calculate Square Area', taskType:'fill',
+        question:'Sebuah persegi memiliki panjang sisi $12$ cm. Berapakah luasnya? $L = \\dots$ cm$^2$', questionEn:'A square has a side length of $12$ cm. What is its area? $L = \\dots$ cm$^2$',
+        correctAnswer:'144', acceptableAnswers:['144'],
+        explanation:`<ol><li>$L = s^2$</li><li>$L = 12^2$</li><li>$L = 144$ cm$^2$</li></ol>`
+      },
+      { type:'task', pageTitle:'T2: Luas Persegi Panjang', pageTitleEn:'Rectangle Area', taskType:'radio',
+        question:'Hitung luas persegi panjang dengan panjang $8$ cm dan lebar $5$ cm.', questionEn:'Calculate the area of a rectangle with length $8$ cm and width $5$ cm.',
+        options:[{text:'$13$ cm$^2$', correct:false},{text:'$26$ cm$^2$', correct:false},{text:'$40$ cm$^2$', correct:true},{text:'$45$ cm$^2$', correct:false}],
+        explanation:`<p>$L = p \\times l = 8 \\times 5 = 40$ cm$^2$. <span class="tr">Multiply length by width.</span></p>`
+      },
+      { type:'task', pageTitle:'T3: Urutkan Langkah', pageTitleEn:'Order the Steps', taskType:'sorting',
+        question:'Urutkan langkah mencari luas persegi panjang jika diketahui kelilingnya.', questionEn:'Order the steps to find rectangle area given its perimeter.',
+        items:['Identifikasi setengah keliling bagi panjang dan lebar <span class="tr">Identify half perimeter for length and width</span>','Tulis rumus $L = p \\times l$ <span class="tr">Write formula</span>','Kalikan panjang dan lebar <span class="tr">Multiply</span>','Tuliskan satuan akhir <span class="tr">Write final unit</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Langkah tepat untuk menyelesaikan soal cerita. <span class="tr">Exact steps to solve word problems.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E2: Jaring-jaring Bangun Ruang', pageTitleEn:'3D Nets',
+        body:`<p><strong>Jaring-jaring</strong> adalah bentuk datar yang jika dilipat akan membentuk bangun ruang. <span class="tr"><strong>Net</strong> is a flat shape that when folded forms a 3D shape.</span></p>
+        <div class="illustration"><svg width="200" height="160" viewBox="0 0 200 160"><rect x="50" y="50" width="40" height="40" fill="#dbeafe" stroke="#2563eb"/><rect x="90" y="50" width="40" height="40" fill="#eff6ff" stroke="#2563eb"/><rect x="50" y="10" width="40" height="40" fill="#eff6ff" stroke="#2563eb"/><rect x="50" y="90" width="40" height="40" fill="#eff6ff" stroke="#2563eb"/><rect x="130" y="50" width="40" height="40" fill="#eff6ff" stroke="#2563eb"/><text x="70" y="80" font-size="10">Alas</text></svg><div style="font-size:.82em;color:var(--muted);margin-top:4px">Jaring-jaring Kubus (6 persegi) <span class="tr">Cube Net</span></div></div>
+        <p>Luas permukaan bangun ruang adalah jumlah luas seluruh sisi pada jaring-jaringnya. <span class="tr">Surface area is the total area of all faces in its net.</span></p>`
+      },
+      { type:'task', pageTitle:'T4: Unsur Kubus', pageTitleEn:'Cube Elements', taskType:'checkbox',
+        question:'Pilih pernyataan yang benar tentang kubus.', questionEn:'Select correct statements about a cube.',
+        options:[{text:'Kubus memiliki 6 sisi berbentuk persegi <span class="tr">Cube has 6 square faces</span>', correct:true},{text:'Kubus memiliki 12 rusuk <span class="tr">Cube has 12 edges</span>', correct:true},{text:'Kubus memiliki 8 titik sudut <span class="tr">Cube has 8 vertices</span>', correct:true},{text:'Kubus memiliki sisi alas berbentuk lingkaran <span class="tr">Cube has circular base</span>', correct:false}],
+        explanation:`<p>Kubus memiliki 6 sisi, 12 rusuk, dan 8 titik sudut. Semua sisinya berbentuk persegi. <span class="tr">Cube has 6 faces, 12 edges, 8 vertices. All faces are squares.</span></p>`
+      },
+      { type:'task', pageTitle:'T5: Keliling Persegi', pageTitleEn:'Square Perimeter', taskType:'truefalse',
+        question:'Benar atau salah: Jika keliling persegi adalah $20$ cm, maka luasnya adalah $25$ cm$^2$.', questionEn:'True or false: If square perimeter is $20$ cm, its area is $25$ cm$^2$.',
+        correctAnswer:'true',
+        explanation:`<p>$K = 4s = 20 \\Rightarrow s = 5$ cm. $L = s^2 = 5^2 = 25$ cm$^2$. <span class="tr">Find side from perimeter, then calculate area.</span></p>`
+      },
+      { type:'task', pageTitle:'T6: Pasangkan Rumus', pageTitleEn:'Match Formulas', taskType:'pairing',
+        question:'Pasangkan bangun datar dengan rumus luasnya.', questionEn:'Match shapes with their area formulas.',
+        pairs:[{left:'Persegi', right:'$s \\times s$'},{left:'Persegi Panjang', right:'$p \\times l$'},{left:'Segitiga', right:'$\\dfrac{1}{2} \\times a \\times t$'},{left:'Jajar Genjang', right:'$a \\times t$'}],
+        explanation:`<p>Pastikan menghafal rumus dasar bangun datar. <span class="tr">Memorize basic plane formulas.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E3: Pengenalan Prisma', pageTitleEn:'Prism Introduction',
+        body:`<p><strong>Prisma</strong> adalah bangun ruang yang memiliki alas dan tutup berbentuk segi banyak (poligon) yang identik, dan sisi tegak berbentuk persegi panjang. <span class="tr"><strong>Prism</strong> is a 3D shape with identical polygonal bases and rectangular lateral faces.</span></p>
+        <div class="math-block">Unsur prisma: Alas, Tutup, Sisi Tegak, Rusuk, Titik Sudut.</div>`
+      },
+      { type:'task', pageTitle:'T7: Bentuk Alas Prisma', pageTitleEn:'Prism Base Shape', taskType:'radio',
+        question:'Prisma segitiga memiliki alas berbentuk...', questionEn:'A triangular prism has a base shaped like...',
+        options:[{text:'Persegi <span class="tr">Square</span>', correct:false},{text:'Segitiga <span class="tr">Triangle</span>', correct:true},{text:'Lingkaran <span class="tr">Circle</span>', correct:false},{text:'Trapesium <span class="tr">Trapezoid</span>', correct:false}],
+        explanation:`<p>Prisma segitiga berarti alasnya berbentuk segitiga. <span class="tr">Triangular prism has triangle base.</span></p>`
+      },
+      { type:'task', pageTitle:'T8: Urutkan Unsur Balok', pageTitleEn:'Order Cuboid Elements', taskType:'dragdrop',
+        question:'Urutkan langkah membentuk jaring-jaring balok.', questionEn:'Order steps to form cuboid net.',
+        items:['Sediakan 6 bidang persegi panjang <span class="tr">Provide 6 rectangles</span>','Susun 2 sebagai alas dan tutup <span class="tr">Arrange 2 as base/top</span>','Tempel 4 lainnya di sisi samping <span class="tr">Attach 4 others to sides</span>','Lipat hingga membentuk balok <span class="tr">Fold to form cuboid</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Ikuti langkah visualisasi pembentukan balok. <span class="tr">Follow visualization steps.</span></p>`
+      },
+      { type:'task', pageTitle:'T9: Hitung Sisi Kubus', pageTitleEn:'Calculate Cube Side', taskType:'fill',
+        question:'Jika luas salah satu sisi kubus adalah $49$ cm$^2$, panjang rusuknya adalah $r = \\dots$ cm.', questionEn:'If area of one cube face is $49$ cm$^2$, edge length is $r = \\dots$ cm.',
+        correctAnswer:'7', acceptableAnswers:['7'],
+        explanation:`<p>$s^2 = 49 \\Rightarrow s = \\sqrt{49} = 7$ cm. <span class="tr">Square root of area.</span></p>`
+      },
+      { type:'task', pageTitle:'T10: Pasangkan Unsur', pageTitleEn:'Match Elements', taskType:'pairing',
+        question:'Pasangkan unsur dengan jumlahnya pada balok.', questionEn:'Match elements with their count in cuboid.',
+        pairs:[{left:'Jumlah Sisi', right:'6'},{left:'Jumlah Rusuk', right:'12'},{left:'Jumlah Titik Sudut', right:'8'},{left:'Diagonal Ruang', right:'4'}],
+        explanation:`<p>Ingat tabel unsur balok. <span class="tr">Remember cuboid elements table.</span></p>`
+      }
+    ]
+  },
+  b: {
+    title: 'Introduction & Real-World Connection', titleEn: 'Introduction & Real-World Connection', time: '00:10 - 00:15',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Penggunaan di Dunia Nyata', pageTitleEn:'Real-World Usage',
+        body:`<p>Kita sering menemui luas permukaan bangun ruang saat <strong>membungkus kado</strong>, <strong>mengecat kotak</strong>, atau <strong>membuat aquarium</strong>. <span class="tr">We often encounter surface area when wrapping gifts, painting boxes, or making aquariums.</span></p>
+        <div class="illustration"><svg width="180" height="120" viewBox="0 0 180 120"><path d="M40,80 L80,60 L140,60 L100,80 Z" fill="#fbbf24"/><path d="M40,80 L40,110 L100,110 L100,80 Z" fill="#f59e0b"/><path d="M100,80 L100,110 L140,90 L140,60 Z" fill="#d97706"/><text x="70" y="100" font-size="10" fill="#fff">Kado</text></svg><div style="font-size:.82em;color:var(--muted);margin-top:4px">Bungkus kado butuh luas permukaan <span class="tr">Wrapping needs surface area</span></div></div>`
+      },
+      { type:'task', pageTitle:'T1: Aplikasi Luas', pageTitleEn:'Area Application', taskType:'radio',
+        question:'Eko ingin mengecat seluruh bagian luar sebuah kotak besi berbentuk kubus. Apa yang harus dihitung?', questionEn:'Eko wants to paint the outside of a cube-shaped iron box. What must be calculated?',
+        options:[{text:'Volume <span class="tr">Volume</span>', correct:false},{text:'Luas Permukaan <span class="tr">Surface Area</span>', correct:true},{text:'Keliling Alas <span class="tr">Base Perimeter</span>', correct:false},{text:'Massa <span class="tr">Mass</span>', correct:false}],
+        explanation:`<p>Mengecat bagian luar berarti menghitung luas seluruh permukaan benda. <span class="tr">Painting outside means calculating surface area.</span></p>`
+      },
+      { type:'task', pageTitle:'T2: Estimasi Cat', pageTitleEn:'Paint Estimation', taskType:'fill',
+        question:'1 kaleng cat bisa mengecat $5$ m$^2$. Jika luas permukaan kotak adalah $15$ m$^2$, dibutuhkan $\\dots$ kaleng cat.', questionEn:'1 paint can covers $5$ m$^2$. If surface area is $15$ m$^2$, $\\dots$ cans are needed.',
+        correctAnswer:'3', acceptableAnswers:['3'],
+        explanation:`<p>$15 / 5 = 3$ kaleng. <span class="tr">Divide total area by coverage.</span></p>`
+      },
+      { type:'task', pageTitle:'T3: Aquarium Tanpa Tutup', pageTitleEn:'Open Aquarium', taskType:'truefalse',
+        question:'Benar atau salah: Aquarium biasanya dihitung luas permukaannya tanpa sisi tutup atas.', questionEn:'True or false: Aquariums usually calculate surface area without the top face.',
+        correctAnswer:'true',
+        explanation:`<p>Aquarium terbuka di bagian atas sehingga tidak ada kaca pada tutupnya. <span class="tr">Aquariums are open at the top.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E2: Konsep Luas Permukaan', pageTitleEn:'Surface Area Concept',
+        body:`<p><strong>Luas Permukaan</strong> adalah jumlah luas seluruh sisi (bidang) yang membatasi bangun ruang. <span class="tr"><strong>Surface Area</strong> is the sum of the areas of all faces bounding the 3D shape.</span></p>
+        <div class="math-block">Rumus Umum: $L_{permukaan} = L_{alas} + L_{tutup} + L_{selimut}$</div>`
+      },
+      { type:'task', pageTitle:'T4: Rumus Umum', pageTitleEn:'General Formula', taskType:'checkbox',
+        question:'Pilih komponen yang menyusun luas permukaan total sebuah prisma tertutup.', questionEn:'Select components that make up total surface area of a closed prism.',
+        options:[{text:'Luas Alas <span class="tr">Base Area</span>', correct:true},{text:'Luas Tutup <span class="tr">Top Area</span>', correct:true},{text:'Luas Selimut (Sisi Tegak) <span class="tr">Lateral Area</span>', correct:true},{text:'Volume <span class="tr">Volume</span>', correct:false}],
+        explanation:`<p>Luas permukaan total terdiri dari alas, tutup, dan selimut. <span class="tr">Total surface area consists of base, top, and lateral.</span></p>`
+      },
+      { type:'task', pageTitle:'T5: Pasangkan Sisi Balok', pageTitleEn:'Match Cuboid Faces', taskType:'pairing',
+        question:'Pasangkan sisi balok dengan bentuknya.', questionEn:'Match cuboid faces with their shapes.',
+        pairs:[{left:'Sisi Depan', right:'Persegi Panjang'},{left:'Sisi Alas', right:'Persegi Panjang'},{left:'Sisi Samping', right:'Persegi Panjang'},{left:'Titik Sudut', right:'Bukan Sisi'}],
+        explanation:`<p>Balok memiliki 6 sisi berbentuk persegi panjang. <span class="tr">Cuboid has 6 rectangular faces.</span></p>`
+      },
+      { type:'task', pageTitle:'T6: Urutkan Konsep', pageTitleEn:'Order Concept', taskType:'sorting',
+        question:'Urutkan konsep menemukan luas permukaan dari jaring-jaring.', questionEn:'Order concept of finding surface area from net.',
+        items:['Gambar jaring-jaring bangun ruang <span class="tr">Draw net</span>','Identifikasi bentuk setiap sisi <span class="tr">Identify shapes</span>','Hitung luas setiap sisi <span class="tr">Calculate each area</span>','Jumlahkan semua luas <span class="tr">Sum all areas</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Ini adalah esensi perhitungan luas permukaan. <span class="tr">This is the essence of surface area.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E3: Luas Selimut', pageTitleEn:'Lateral Area',
+        body:`<p><strong>Luas Selimut</strong> adalah jumlah luas semua sisi tegak (tidak termasuk alas dan tutup). <span class="tr"><strong>Lateral Area</strong> is the sum of all vertical faces.</span></p>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Luas selimut balok = $2 \\times (p \\times t) + 2 \\times (l \\times t)$. <span class="tr">Lateral area of cuboid.</span></div>`
+      },
+      { type:'task', pageTitle:'T7: Luas Selimut Balok', pageTitleEn:'Cuboid Lateral Area', taskType:'fill',
+        question:'Balok berukuran $p=10, l=5, t=4$. Luas selimutnya adalah $\\dots$', questionEn:'Cuboid $p=10, l=5, t=4$. Lateral area is $\\dots$',
+        correctAnswer:'120', acceptableAnswers:['120'],
+        explanation:`<p>$2 \\times (10 \\times 4) + 2 \\times (5 \\times 4) = 80 + 40 = 120$. <span class="tr">Calculate front/back and sides.</span></p>`
+      },
+      { type:'task', pageTitle:'T8: Luas Selimut Prisma', pageTitleEn:'Prism Lateral Area', taskType:'radio',
+        question:'Prisma dengan alas persegi sisi $5$ dan tinggi $10$. Luas selimutnya adalah...', questionEn:'Prism with square base $5$ and height $10$. Lateral area is...',
+        options:[{text:'$50$', correct:false},{text:'$100$', correct:false},{text:'$200$', correct:true},{text:'$250$', correct:false}],
+        explanation:`<p>Luas selimut prisma = Keliling alas $\\times$ tinggi = $(4 \\times 5) \\times 10 = 20 \\times 10 = 200$. <span class="tr">Perimeter times height.</span></p>`
+      },
+      { type:'task', pageTitle:'T9: Hubungan Luas Total', pageTitleEn:'Total Area Relation', taskType:'truefalse',
+        question:'Benar atau salah: Luas Permukaan Total = Luas Selimut + 2 $\\times$ Luas Alas.', questionEn:'True or false: Total Surface Area = Lateral Area + 2 $\\times$ Base Area.',
+        correctAnswer:'true',
+        explanation:`<p>Ini adalah rumus universal untuk semua prisma. <span class="tr">Universal formula for prisms.</span></p>`
+      },
+      { type:'task', pageTitle:'T10: Urutkan Langkah Selimut', pageTitleEn:'Order Lateral Steps', taskType:'dragdrop',
+        question:'Urutkan langkah mencari luas selimut prisma segitiga.', questionEn:'Order steps to find triangular prism lateral area.',
+        items:['Identifikasi sisi tegak (3 buah) <span class="tr">Identify lateral faces</span>','Hitung luas setiap sisi tegak <span class="tr">Calculate each face</span>','Jumlahkan ketiganya <span class="tr">Sum them</span>','Nyatakan dalam satuan luas <span class="tr">State unit</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Metode visualisasi sisi tegak. <span class="tr">Visualize lateral method.</span></p>`
+      }
+    ]
+  },
+  c: {
+    title: 'Review of Prior Knowledge', titleEn: 'Review of Prior Knowledge', time: '00:15 - 00:20',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Luas Permukaan Kubus', pageTitleEn:'Cube Surface Area',
+        body:`<p>Kubus memiliki 6 sisi yang identik berbentuk persegi. <span class="tr">Cube has 6 identical square faces.</span></p>
+        <div class="math-block"><strong>Rumus:</strong> $L = 6 \\times s^2$ <span class="tr">Formula</span></div>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Kubus memiliki rusuk $7$ cm. Hitung luas permukaannya. <span class="tr">Cube edge is $7$ cm. Calculate area.</span>
+        <ol><li>$L = 6 \\times s^2$</li><li>$L = 6 \\times 7^2$</li><li>$L = 6 \\times 49 = 294$ cm$^2$</li></ol></div>`
+      },
+      { type:'task', pageTitle:'T1: Hitung Luas Kubus', pageTitleEn:'Calculate Cube Area', taskType:'fill',
+        question:'Panjang rusuk kubus adalah $10$ cm. Luas permukaannya adalah $\\dots$ cm$^2$', questionEn:'Cube edge is $10$ cm. Surface area is $\\dots$ cm$^2$',
+        correctAnswer:'600', acceptableAnswers:['600'],
+        explanation:`<p>$L = 6 \\times 10^2 = 6 \\times 100 = 600$ cm$^2$. <span class="tr">Apply formula directly.</span></p>`
+      },
+      { type:'task', pageTitle:'T2: Kubus dari Volume', pageTitleEn:'Cube from Volume', taskType:'radio',
+        question:'Volume kubus adalah $125$ cm$^3$. Berapakah luas permukaannya?', questionEn:'Cube volume is $125$ cm$^3$. What is surface area?',
+        options:[{text:'$25$ cm$^2$', correct:false},{text:'$150$ cm$^2$', correct:true},{text:'$125$ cm$^2$', correct:false},{text:'$100$ cm$^2$', correct:false}],
+        explanation:`<p>$V = s^3 = 125 \\Rightarrow s = 5$. $L = 6 \\times 5^2 = 150$ cm$^2$. <span class="tr">Find edge from volume first.</span></p>`
+      },
+      { type:'task', pageTitle:'T3: Urutkan Langkah Kubus', pageTitleEn:'Order Cube Steps', taskType:'sorting',
+        question:'Urutkan langkah mencari luas permukaan kubus jika diketahui keliling satu sisinya $K=20$ cm.', questionEn:'Order steps to find cube area given face perimeter $K=20$ cm.',
+        items:['Bagi keliling dengan 4 untuk dapat sisi: $20/4=5$ <span class="tr">Divide perimeter by 4</span>','Kuadratkan sisi: $5^2=25$ <span class="tr">Square the side</span>','Kalikan dengan 6: $6 \\times 25=150$ <span class="tr">Multiply by 6</span>','Tulis satuan <span class="tr">Write unit</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Analisis bertahap dari keliling ke luas. <span class="tr">Step by step analysis.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E2: Luas Permukaan Balok', pageTitleEn:'Cuboid Surface Area',
+        body:`<p>Balok memiliki 3 pasang sisi yang berhadapan sama dan sejajar. <span class="tr">Cuboid has 3 pairs of identical parallel faces.</span></p>
+        <div class="math-block"><strong>Rumus:</strong> $L = 2 \\times (p \\times l + p \\times t + l \\times t)$ <span class="tr">Formula</span></div>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Balok berukuran $p=8, l=4, t=5$. <span class="tr">Cuboid $p=8, l=4, t=5$.</span>
+        <ol><li>$p \\times l = 8 \\times 4 = 32$</li><li>$p \\times t = 8 \\times 5 = 40$</li><li>$l \\times t = 4 \\times 5 = 20$</li><li>$L = 2 \\times (32 + 40 + 20) = 2 \\times 92 = 184$ cm$^2$</li></ol></div>`
+      },
+      { type:'task', pageTitle:'T4: Hitung Luas Balok', pageTitleEn:'Calculate Cuboid Area', taskType:'fill',
+        question:'Balok ukuran $p=6, l=4, t=3$. Luas permukaannya adalah $\\dots$ cm$^2$', questionEn:'Cuboid $p=6, l=4, t=3$. Surface area is $\\dots$ cm$^2$',
+        correctAnswer:'108', acceptableAnswers:['108'],
+        explanation:`<p>$L = 2 \\times (6\\times4 + 6\\times3 + 4\\times3) = 2 \\times (24 + 18 + 12) = 2 \\times 54 = 108$. <span class="tr">Direct calculation.</span></p>`
+      },
+      { type:'task', pageTitle:'T5: Balok Tanpa Tutup', pageTitleEn:'Open Cuboid', taskType:'radio',
+        question:'Aquarium balok $p=10, l=5, t=6$ tanpa tutup. Luas kacanya adalah...', questionEn:'Open aquarium cuboid $p=10, l=5, t=6$. Glass area is...',
+        options:[{text:'$280$', correct:false},{text:'$230$', correct:true},{text:'$300$', correct:false},{text:'$150$', correct:false}],
+        explanation:`<p>Total = $2(50+60+30)=280$. Tanpa tutup ($p \\times l = 50$): $280 - 50 = 230$. <span class="tr">Total minus top face.</span></p>`
+      },
+      { type:'task', pageTitle:'T6: Pasangkan Sisi Balok', pageTitleEn:'Match Cuboid Faces', taskType:'pairing',
+        question:'Pasangkan pasangan sisi dengan luasnya untuk balok $p=4, l=3, t=2$.', questionEn:'Match face pairs with areas for cuboid $p=4, l=3, t=2$.',
+        pairs:[{left:'Alas & Tutup ($p \\times l$)', right:'$12$'},{left:'Depan & Belakang ($p \\times t$)', right:'$8$'},{left:'Samping ($l \\times t$)', right:'$6$'},{left:'Total Luas', right:'$52$'}],
+        explanation:`<p>$2 \\times (12+8+6) = 2 \\times 26 = 52$. <span class="tr">Sum pairs and multiply by 2.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E3: Luas Selimut Balok', pageTitleEn:'Cuboid Lateral Area',
+        body:`<p>Luas selimut balok adalah luas 4 sisi tegak (tanpa atas dan bawah). <span class="tr">Lateral area is 4 vertical faces.</span></p>
+        <div class="math-block"><strong>Rumus:</strong> $L_{selimut} = 2 \\times (p + l) \\times t$ atau $K_{alas} \\times t$ <span class="tr">Formula</span></div>`
+      },
+      { type:'task', pageTitle:'T7: Hitung Selimut', pageTitleEn:'Calculate Lateral', taskType:'fill',
+        question:'Balok $p=10, l=5, t=8$. Luas selimutnya adalah $\\dots$', questionEn:'Cuboid $p=10, l=5, t=8$. Lateral area is $\\dots$',
+        correctAnswer:'240', acceptableAnswers:['240'],
+        explanation:`<p>$2 \\times (10 + 5) \\times 8 = 2 \\times 15 \\times 8 = 30 \\times 8 = 240$. <span class="tr">Use lateral formula.</span></p>`
+      },
+      { type:'task', pageTitle:'T8: Analisis Rumus', pageTitleEn:'Formula Analysis', taskType:'truefalse',
+        question:'Benar atau salah: $2 \\times (p+l) \\times t$ sama dengan $(2p + 2l) \\times t$.', questionEn:'True or false: $2 \\times (p+l) \\times t$ equals $(2p + 2l) \\times t$.',
+        correctAnswer:'true',
+        explanation:`<p>Secara aljabar $2(p+l)$ adalah keliling alas $2p+2l$. <span class="tr">Algebraically equivalent to perimeter.</span></p>`
+      },
+      { type:'task', pageTitle:'T9: Pilih Rumus Benar', pageTitleEn:'Select Correct Formula', taskType:'checkbox',
+        question:'Pilih rumus yang valid untuk luas permukaan balok tertutup.', questionEn:'Select valid formulas for closed cuboid area.',
+        options:[{text:'$2(pl + pt + lt)$', correct:true},{text:'$2(p+l) \\times t + 2pl$', correct:true},{text:'$K_{alas} \\times t + 2 \\times L_{alas}$', correct:true},{text:'$6 \\times s^2$', correct:false}],
+        explanation:`<p>Semua rumus pertama benar untuk balok. <span class="tr">First three are correct.</span></p>`
+      },
+      { type:'task', pageTitle:'T10: Urutkan Balok', pageTitleEn:'Order Cuboid', taskType:'dragdrop',
+        question:'Urutkan langkah mencari luas balok $p=5, l=4, t=3$.', questionEn:'Order steps to find cuboid area.',
+        items:['Hitung $pl = 20$ <span class="tr">Calculate pl</span>','Hitung $pt = 15$ <span class="tr">Calculate pt</span>','Hitung $lt = 12$ <span class="tr">Calculate lt</span>','Jumlahkan lalu kali 2: $2(20+15+12) = 94$ <span class="tr">Sum and multiply by 2</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Urutan perhitungan sistematis. <span class="tr">Systematic calculation.</span></p>`
+      }
+    ]
+  },
+  d: {
+    title: 'Problem Introduction', titleEn: 'Problem Introduction', time: '00:20 - 00:30',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Luas Permukaan Prisma Segitiga', pageTitleEn:'Triangular Prism Surface Area',
+        body:`<p><strong>Prisma Segitiga</strong> adalah prisma yang alasnya berbentuk segitiga. Luas permukaannya adalah jumlah luas seluruh sisi tegak (selimut) dan dua sisi alasnya. <span class="tr">A triangular prism has triangle bases. Surface area is the sum of lateral faces and two bases.</span></p>
+      <div class="math-block"><strong>Rumus:</strong> $L = 2 \\times L_{alas} + K_{alas} \\times t$ <span class="tr">Formula</span></div>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Prisma segitiga siku-siku dengan panjang sisi $3, 4, 5$ cm dan tinggi prisma $10$ cm. <span class="tr">Right triangular prism with sides $3, 4, 5$ cm and height $10$ cm.</span>
+      <ol><li>Luas alas segitiga: $L = \\dfrac{1}{2} \\times 3 \\times 4 = 6$ cm$^2$</li><li>Keliling alas segitiga: $K = 3 + 4 + 5 = 12$ cm</li><li>Luas selimut: $K \\times t = 12 \\times 10 = 120$ cm$^2$</li><li>Luas Permukaan Total: $L = 2 \\times 6 + 120 = 12 + 120 = 132$ cm$^2$</li></ol></div>`
+    },
+    { type:'task', pageTitle:'T1: Hitung Luas Prisma', pageTitleEn:'Calculate Prism Area', taskType:'fill',
+      question:'Prisma segitiga siku-siku dengan sisi alas $6, 8, 10$ cm dan tinggi prisma $15$ cm. Luas permukaannya adalah $\\dots$ cm$^2$', questionEn:'Right triangular prism with base sides $6, 8, 10$ cm and height $15$ cm. Surface area is $\\dots$ cm$^2$',
+      correctAnswer:'408', acceptableAnswers:['408'],
+      explanation:`<ol><li>$L_{alas} = \\dfrac{1}{2} \\times 6 \\times 8 = 24$</li><li>$K_{alas} = 6 + 8 + 10 = 24$</li><li>$L_{selimut} = 24 \\times 15 = 360$</li><li>$L_{total} = 2(24) + 360 = 48 + 360 = 408$ cm$^2$</li></ol>`
+    },
+    { type:'task', pageTitle:'T2: Komponen Luas Prisma', pageTitleEn:'Prism Area Components', taskType:'radio',
+      question:'Dalam rumus $L = 2 \\times L_{alas} + K_{alas} \\times t$, apa arti dari $K_{alas} \\times t$?', questionEn:'In the formula, what does $K_{alas} \\times t$ mean?',
+      options:[{text:'Volume Prisma <span class="tr">Prism Volume</span>', correct:false},{text:'Luas Selimut Prisma <span class="tr">Lateral Area</span>', correct:true},{text:'Luas Alas Prisma <span class="tr">Base Area</span>', correct:false},{text:'Keliling Alas <span class="tr">Base Perimeter</span>', correct:false}],
+      explanation:`<p>$K_{alas} \\times t$ menghitung luas semua sisi tegak (selimut). <span class="tr">Calculates lateral faces.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Urutkan Langkah Prisma', pageTitleEn:'Order Prism Steps', taskType:'dragdrop',
+      question:'Urutkan langkah mencari luas permukaan prisma segitiga sembarang.', questionEn:'Order steps to find scalene triangular prism area.',
+      items:['Hitung luas segitiga alas dengan rumus heron/atap <span class="tr">Calculate base area</span>','Hitung keliling segitiga alas <span class="tr">Calculate base perimeter</span>','Kalikan keliling dengan tinggi prisma <span class="tr">Multiply by height</span>','Jumlahkan luas selimut dan dua luas alas <span class="tr">Sum lateral and bases</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Sistematika perhitungan prisma. <span class="tr">Systematic calculation.</span></p>`
+    },
+    { type:'explanation', pageTitle:'E2: Prisma Alas Segitiga Sembarang', pageTitleEn:'Scalene Triangle Base Prism',
+      body:`<p>Jika alas prisma adalah segitiga sembarang, gunakan rumus Luas Segitiga untuk mencari $L_{alas}$. <span class="tr">If base is scalene, use Triangle Area formula.</span></p>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Prisma dengan alas segitiga sama sisi, sisi $6$ cm, tinggi prisma $10$ cm. <span class="tr">Equilateral triangle base, side $6$ cm, height $10$ cm.</span>
+      <ol><li>$L_{alas} = \\dfrac{1}{2} \\times \\text{alas} \\times \\text{tinggi segitiga} = \\dfrac{1}{2} \\times 6 \\times 3\\sqrt{3} = 9\\sqrt{3}$ cm$^2$</li><li>$K_{alas} = 3 \\times 6 = 18$ cm</li><li>$L_{total} = 2(9\\sqrt{3}) + 18 \\times 10 = 18\\sqrt{3} + 180$ cm$^2$</li></ol></div>`
+    },
+    { type:'task', pageTitle:'T4: Luas Selimut Prisma', pageTitleEn:'Prism Lateral Area', taskType:'fill',
+      question:'Prisma dengan alas segitiga sisi $5$ cm (sama sisi) dan tinggi prisma $12$ cm. Luas selimutnya adalah $\\dots$ cm$^2$', questionEn:'Equilateral base $5$ cm, height $12$ cm. Lateral area is $\\dots$ cm$^2$',
+      correctAnswer:'180', acceptableAnswers:['180'],
+      explanation:`<p>$K_{alas} = 3 \\times 5 = 15$. $L_{selimut} = 15 \\times 12 = 180$. <span class="tr">Perimeter times height.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Luas Total Prisma Sama Sisi', pageTitleEn:'Equilateral Prism Total Area', taskType:'radio',
+      question:'Prisma alas segitiga sama sisi $s=4$, $t=10$. Luas totalnya adalah...', questionEn:'Equilateral base $s=4$, $t=10$. Total area is...',
+      options:[{text:'$120 + 8\\sqrt{3}$', correct:true},{text:'$120 + 4\\sqrt{3}$', correct:false},{text:'$120$', correct:false},{text:'$40\\sqrt{3}$', correct:false}],
+      explanation:`<p>$L_{alas} = \\dfrac{1}{2} \\times 4 \\times 2\\sqrt{3} = 4\\sqrt{3}$. $L_{total} = 2(4\\sqrt{3}) + 12 \\times 10 = 8\\sqrt{3} + 120$. <span class="tr">Include roots in calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Nilai', pageTitleEn:'Match Values', taskType:'pairing',
+      question:'Pasangkan komponen dengan nilainya untuk prisma siku-siku (3,4,5) t=10.', questionEn:'Match components with values for (3,4,5) t=10 prism.',
+      pairs:[{left:'Luas Alas', right:'$6$'},{left:'Keliling Alas', right:'$12$'},{left:'Luas Selimut', right:'$120$'},{left:'Luas Total', right:'$132$'}],
+      explanation:`<p>Bedakan antara luas satu alas dan total luas alas (dua). <span class="tr">Distinguish single and double base.</span></p>`
+    },
+    { type:'explanation', pageTitle:'E3: Aplikasi Soal Cerita', pageTitleEn:'Word Problem Application',
+      body:`<p>Dalam soal cerita, identifikasi apakah bangun ruang tertutup penuh atau terbuka (seperti akuarium atau tenda). <span class="tr">Identify if shape is open or closed.</span></p>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Tenda prisma segitiga (alas segitiga tidak ikut dilapisi). Berarti luas permukaan = $L_{alas} + L_{selimut}$. <span class="tr">Tent has no base face.</span></div>`
+    },
+    { type:'task', pageTitle:'T7: Tenda Terbuka', pageTitleEn:'Open Tent', taskType:'truefalse',
+      question:'Benar atau salah: Luas permukaan tenda prisma (tanpa alas) adalah $L_{alas} + L_{selimut}$.', questionEn:'True or false: Tent surface area (no base) is $L_{alas} + L_{selimut}$.',
+      correctAnswer:'true',
+      explanation:`<p>Tenda memiliki 1 alas (tanah) dan sisi tegak. <span class="tr">Tent has 1 base and lateral.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Urutkan Soal Cerita', pageTitleEn:'Order Word Problem', taskType:'sorting',
+      question:'Urutkan langkah menyelesaikan soal: "Aquarium balok tanpa tutup p,l,t".', questionEn:'Order steps: "Open aquarium cuboid p,l,t".',
+      items:['Hitung luas total tertutup $2(pl+pt+lt)$ <span class="tr">Calculate closed total</span>','Kurangi dengan luas tutup ($p \\times l$) <span class="tr">Subtract top</span>','Kalikan dengan biaya per satuan luas <span class="tr">Multiply by cost</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Metode pengurangan sisi yang tidak ada. <span class="tr">Subtract missing face.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Rumus Terbuka', pageTitleEn:'Open Formulas', taskType:'checkbox',
+      question:'Pilih rumus yang benar untuk luas permukaan balok tanpa tutup.', questionEn:'Select correct formulas for open-top cuboid.',
+      options:[{text:'$p \\times l + 2(p \\times t + l \\times t)$', correct:true},{text:'$2(pl + pt + lt) - pl$', correct:true},{text:'$2(p+l) \\times t + p \\times l$', correct:true},{text:'$2 \\times (p \\times l + p \\times t + l \\times t)$', correct:false}],
+      explanation:`<p>Hapus komponen $p \\times l$ dari rumus total. <span class="tr">Remove top component.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Hitung Aquarium', pageTitleEn:'Calculate Aquarium', taskType:'fill',
+      question:'Aquarium balok $p=10, l=5, t=6$ tanpa tutup. Luas kaca yang dibutuhkan adalah $\\dots$ cm$^2$', questionEn:'Open aquarium $p=10, l=5, t=6$. Glass area is $\\dots$ cm$^2$',
+      correctAnswer:'230', acceptableAnswers:['230'],
+      explanation:`<p>$L_{total} = 2(50 + 60 + 30) = 280$. $L_{kaca} = 280 - 50 = 230$. <span class="tr">Calculate total minus top.</span></p>`
+    }
+  ]
+  },
+  e: {
+    title: 'Guided Practice', titleEn: 'Guided Practice', time: '00:30 - 00:45',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Mencari Tinggi Prisma', pageTitleEn:'Finding Prism Height',
+        body:`<p>Kita bisa mencari tinggi prisma jika diketahui luas permukaannya menggunakan aljabar. <span class="tr">Find height using algebra.</span></p>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Diketahui prisma dengan $L_{alas} = 24$ cm$^2$, $K_{alas} = 12$ cm, dan $L_{total} = 312$ cm$^2$. Cari tinggi $t$. <span class="tr">Find height $t$.</span>
+      <ol><li>$L_{total} = 2 \\times L_{alas} + K_{alas} \\times t$</li><li>$312 = 2(24) + 12 \\times t$</li><li>$312 = 48 + 12t$</li><li>$312 - 48 = 12t \\Rightarrow 264 = 12t$</li><li>$t = 22$ cm</li></ol></div>`
+    },
+    { type:'task', pageTitle:'T1: Cari Tinggi', pageTitleEn:'Find Height', taskType:'fill',
+      question:'Prisma $L_{alas}=10$, $K_{alas}=14$, $L_{total}=146$. Tinggi $t = \\dots$', questionEn:'Prism $L_{alas}=10$, $K_{alas}=14$, $L_{total}=146$. Height $t = \\dots$',
+      correctAnswer:'9', acceptableAnswers:['9'],
+      explanation:`<p>$146 = 2(10) + 14t \\Rightarrow 146 = 20 + 14t \\Rightarrow 126 = 14t \\Rightarrow t = 9$. <span class="tr">Isolate variable t.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Langkah Aljabar', pageTitleEn:'Algebra Step', taskType:'radio',
+      question:'Dari persamaan $312 = 48 + 12t$, apa langkah selanjutnya untuk mencari $t$?', questionEn:'From $312 = 48 + 12t$, what is next step?',
+      options:[{text:'Bagi 312 dengan 12 <span class="tr">Divide 312 by 12</span>', correct:false},{text:'Kurangi 48 dari 312 <span class="tr">Subtract 48 from 312</span>', correct:true},{text:'Kalikan 48 dengan 12 <span class="tr">Multiply 48 by 12</span>', correct:false},{text:'Bagi 48 dengan 12 <span class="tr">Divide 48 by 12</span>', correct:false}],
+      explanation:`<p>Kita harus mengisolasi $12t$ dengan mengurangkan 48 dari kedua sisi. <span class="tr">Isolate 12t first.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Urutkan Aljabar', pageTitleEn:'Order Algebra', taskType:'sorting',
+      question:'Urutkan langkah aljabar menemukan $t$.', questionEn:'Order algebraic steps to find $t$.',
+      items:['$312 = 48 + 12t$ <span class="tr">Equation</span>','$312 - 48 = 12t$ <span class="tr">Subtract 48</span>','$264 = 12t$ <span class="tr">Simplify</span>','$t = 22$ <span class="tr">Divide by 12</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Urutan standar penyelesaian persamaan linear satu variabel. <span class="tr">Standard linear equation.</span></p>`
+    },
+    { type:'explanation', pageTitle:'E2: Memotong Bangun Ruang', pageTitleEn:'Cutting 3D Shapes',
+      body:`<p>Jika sebuah balok dipotong menjadi dua bagian sama panjang, akan terbentuk 2 bangun ruang baru yang memiliki <strong>luas permukaan total lebih besar</strong> dari aslinya karena muncul 2 bidang baru. <span class="tr">Cutting creates new faces, increasing total area.</span></p>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Balok $p=10, l=5, t=4$. Luas awal $220$. Dipotong pada panjang jadi $p=5, l=5, t=4$. 
+      <ol><li>Luas satu bagian: $2(25 + 20 + 20) = 130$</li><li>Luas dua bagian: $2 \\times 130 = 260$</li><li>Selisih: $260 - 220 = 40$ (Sama dengan $2 \\times$ luas bidang potong $2 \\times (5 \\times 4) = 40$)</li></ol></div>`
+    },
+    { type:'task', pageTitle:'T4: Luas Potongan', pageTitleEn:'Cut Area', taskType:'fill',
+      question:'Balok $p=8, l=4, t=5$ dipotong jadi 2 sama panjang. Total luas permukaan kedua bangun baru adalah $\\dots$', questionEn:'Cuboid $p=8, l=4, t=5$ cut in half. Total new area is $\\dots$',
+      correctAnswer:'224', acceptableAnswers:['224'],
+      explanation:`<p>$L_{awal} = 2(32+40+20) = 184$. Potong panjang jadi $p=4$. $L_{baru}=2(16+20+20)=112$. Total kedua bagian = $2 \\times 112 = 224$. <span class="tr">Recalculate properly.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Analisis Pemotongan', pageTitleEn:'Cutting Analysis', taskType:'checkbox',
+      question:'Pilih pernyataan benar saat balok dipotong jadi 2 bagian.', questionEn:'Select true statements when cuboid is cut in half.',
+      options:[{text:'Volume total tetap <span class="tr">Total volume same</span>', correct:true},{text:'Luas permukaan total bertambah <span class="tr">Total area increases</span>', correct:true},{text:'Muncul 2 bidang baru <span class="tr">2 new faces</span>', correct:true},{text:'Volume bertambah <span class="tr">Volume increases</span>', correct:false}],
+      explanation:`<p>Volume kekal, luas bertambah. <span class="tr">Volume conserved, area increases.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Skenario', pageTitleEn:'Match Scenarios', taskType:'pairing',
+      question:'Pasangkan dampak pemotongan terhadap bangun.', questionEn:'Match cutting effects.',
+      pairs:[{left:'Dipotong jadi 2', right:'Luas total bertambah'},{left:'Tidak dipotong', right:'Luas total asli'},{left:'Bidang potong', right:'Sumber luas baru'},{left:'Volume', right:'Tetap / Kekal'}],
+      explanation:`<p>Pahami dampak geometris dari pemotongan. <span class="tr">Understand geometric impact.</span></p>`
+    },
+    { type:'explanation', pageTitle:'E3: Membandingkan Luas', pageTitleEn:'Comparing Areas',
+      body:`<p>Bangun ruang dengan volume sama belum tentu memiliki luas permukaan sama. <span class="tr">Same volume doesn't mean same area.</span></p>
+      <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Kubus $V=64 \\Rightarrow s=4 \\Rightarrow L=96$. Balok $V=64 \\Rightarrow p=8, l=4, t=2 \\Rightarrow L=2(32+16+8)=112$. <span class="tr">Compare shapes.</span></div>`
+    },
+    { type:'task', pageTitle:'T7: Bandingkan Luas', pageTitleEn:'Compare Area', taskType:'truefalse',
+      question:'Benar atau salah: Kubus dengan volume 64 cm$^3$ memiliki luas permukaan lebih kecil dari balok volume 64 cm$^3$ (8x4x2).', questionEn:'True or false: Cube V=64 has smaller area than cuboid V=64.',
+      correctAnswer:'true',
+      explanation:`<p>Kubus $L=96$, Balok $L=112$. Kubus lebih kecil. <span class="tr">Cube is smaller.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Hitung Balok', pageTitleEn:'Calculate Cuboid', taskType:'radio',
+      question:'Balok $p=16, l=2, t=2$. Luas permukaannya adalah...', questionEn:'Cuboid $p=16, l=2, t=2$. Area is...',
+      options:[{text:'$40$', correct:false},{text:'$72$', correct:true},{text:'$80$', correct:false},{text:'$100$', correct:false}],
+      explanation:`<p>$L = 2(32 + 4 + 4) = 2(40) = 72$. <span class="tr">Direct formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Urutkan Perbandingan', pageTitleEn:'Order Comparison', taskType:'dragdrop',
+      question:'Urutkan langkah membandingkan luas.', questionEn:'Order comparison steps.',
+      items:['Hitung luas kubus <span class="tr">Calculate cube area</span>','Hitung luas balok <span class="tr">Calculate cuboid area</span>','Kurangi luas kubus dari balok <span class="tr">Subtract cube from cuboid</span>','Simpulkan selisihnya <span class="tr">Conclude difference</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Bandingkan secara sistematis. <span class="tr">Compare systematically.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Selisih Luas', pageTitleEn:'Area Difference', taskType:'fill',
+      question:'Selisih luas kubus ($s=4$) dan balok ($8,4,2$) adalah $\\dots$', questionEn:'Difference between cube and cuboid is $\\dots$',
+      correctAnswer:'16', acceptableAnswers:['16'],
+      explanation:`<p>$112 - 96 = 16$. <span class="tr">Subtract areas.</span></p>`
+    }
+    ]
+  },
+  f: {
+    title: 'Independent Practice', titleEn: 'Independent Practice', time: '00:45 - 00:55',
+    pages: [
+      { type:'explanation', pageTitle:'E1: Gabungan Bangun Ruang', pageTitleEn:'Combined 3D Shapes',
+        body:`<p>Luas permukaan gabungan adalah jumlah luas seluruh permukaan luar yang terlihat. Jika dua bangun disatu, kurangi luas sisi yang menempel. <span class="tr">Subtract attached faces.</span></p>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Dua kubus $s=5$ disatukan. $L_{total} = 2 \\times (6 \\times 25) - 2 \\times 25 = 300 - 50 = 250$. <span class="tr">Two cubes attached.</span></div>`
+      },
+      { type:'task', pageTitle:'T1: Kubus Menempel', pageTitleEn:'Attached Cubes', taskType:'radio',
+        question:'Dua kubus rusuk $4$ cm disatukan. Berapakah luas permukaan totalnya?', questionEn:'Two cubes edge $4$ cm attached. Total area?',
+        options:[{text:'$192$ cm$^2$', correct:false},{text:'$160$ cm$^2$', correct:true},{text:'$128$ cm$^2$', correct:false},{text:'$96$ cm$^2$', correct:false}],
+        explanation:`<p>$2 \\times (6 \\times 16) - 2 \\times 16 = 192 - 32 = 160$. <span class="tr">Subtract two attached faces.</span></p>`
+      },
+      { type:'task', pageTitle:'T2: Sudut Dikikis', pageTitleEn:'Chiseled Corner', taskType:'truefalse',
+        question:'Benar atau salah: Jika sudut kubus dipotong kecil, luas permukaan total tetap sama (asumsi potong tegak lurus).', questionEn:'True or false: Cube corner cut, area remains same.',
+        correctAnswer:'true',
+        explanation:`<p>Menghilangkan 3 sisi kecil tapi menambah 3 sisi baru yang luasnya sama. <span class="tr">Removed 3 faces, added 3 equal faces.</span></p>`
+      },
+      { type:'task', pageTitle:'T3: Lubang Kubus', pageTitleEn:'Cube Hole', taskType:'fill',
+        question:'Kubus $s=10$ dilubangi persegi $2 \\times 2$ tembus. Luas total menjadi $\\dots$', questionEn:'Cube $s=10$ with $2 \\times 2$ hole. Area becomes $\\dots$',
+        correctAnswer:'672', acceptableAnswers:['672'],
+        explanation:`<p>$L_{awal}=600$. Hilang 2 lubang ($2 \\times 4=8$), Tambah 4 dinding dalam ($4 \\times 2 \\times 10=80$). $600 - 8 + 80 = 672$. <span class="tr">Calculate inner walls.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E2: Membuat Kotak Terbuka', pageTitleEn:'Making Open Box',
+        body:`<p><strong>Membuat Kotak Terbuka</strong> dari kertas karton dilakukan dengan memotong sudut persegi dan melipatnya. <span class="tr">Making open box by cutting corners.</span></p>
+        <div class="illustration"><svg width="200" height="120" viewBox="0 0 200 120"><rect x="20" y="10" width="160" height="100" fill="#eff6ff" stroke="#2563eb"/><rect x="20" y="10" width="40" height="40" fill="#fca5a5"/><rect x="140" y="10" width="40" height="40" fill="#fca5a5"/><rect x="20" y="70" width="40" height="40" fill="#fca5a5"/><rect x="140" y="70" width="40" height="40" fill="#fca5a5"/><text x="100" y="60" text-anchor="middle">Karton</text></svg></div>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Karton $20 \\times 15$ cm. Potong sudut $4 \\times 4$ cm. <span class="tr">Cardboard $20 \\times 15$ cm. Cut $4 \\times 4$.</span>
+        <ol><li>Panjang kotak: $p = 20 - 4 - 4 = 12$ cm</li><li>Lebar kotak: $l = 15 - 4 - 4 = 7$ cm</li><li>Tinggi: $t = 4$ cm</li><li>Luas: $p \\times l + 2(p \\times t) + 2(l \\times t) = 12 \\times 7 + 2(12 \\times 4) + 2(7 \\times 4) = 84 + 96 + 56 = 236$ cm$^2$</li></ol></div>`
+      },
+      { type:'task', pageTitle:'T4: Ukuran Kotak', pageTitleEn:'Box Dimension', taskType:'fill',
+        question:'Karton $30 \\times 20$, potong sudut $5 \\times 5$. Volume kotak adalah $\\dots$ cm$^3$', questionEn:'Cardboard $30 \\times 20$, cut $5 \\times 5$. Box volume is $\\dots$ cm$^3$',
+        correctAnswer:'1000', acceptableAnswers:['1000'],
+        explanation:`<p>$p=20, l=10, t=5$. $V = 20 \\times 10 \\times 5 = 1000$. <span class="tr">Calculate new dimensions.</span></p>`
+      },
+      { type:'task', pageTitle:'T5: Urutkan Pembuatan Kotak', pageTitleEn:'Order Box Making', taskType:'sorting',
+        question:'Urutkan langkah membuat kotak dari karton.', questionEn:'Order box making steps.',
+        items:['Potong 4 persegi di sudut <span class="tr">Cut 4 corners</span>','Lipat sisi-sisi karton ke atas <span class="tr">Fold sides up</span>','Hitung panjang dan lebar alas baru <span class="tr">Calculate new base</span>','Hitung luas permukaan kotak <span class="tr">Calculate area</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Urutan pembuatan dan perhitungan. <span class="tr">Making and calculating order.</span></p>`
+      },
+      { type:'task', pageTitle:'T6: Pasangkan Dimensi', pageTitleEn:'Match Dimensions', taskType:'pairing',
+        question:'Karton $20 \\times 15$, potong $3 \\times 3$. Pasangkan nilai yang benar.', questionEn:'Cardboard $20 \\times 15$, cut $3 \\times 3$. Match values.',
+        pairs:[{left:'Panjang', right:'$14$'},{left:'Lebar', right:'$9$'},{left:'Tinggi', right:'$3$'},{left:'Luas Alas', right:'$126$'}],
+        explanation:`<p>$p=14, l=9, t=3$. $L_{alas} = 14 \\times 9 = 126$. <span class="tr">Calculate correctly.</span></p>`
+      },
+      { type:'explanation', pageTitle:'E3: Soal Biaya Material', pageTitleEn:'Material Cost Problem',
+        body:`<p>Untuk menghitung biaya, gunakan prinsip <strong>Luas Permukaan $\\times$ Harga per satuan luas</strong>. <span class="tr">Cost = Area $\\times$ Rate.</span></p>
+        <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Prisma segitiga siku-siku (3,4,5), $t=10$, tanpa tutup alas. Biaya cat Rp 1.000/cm$^2$. <span class="tr">Cost calculation.</span>
+        <ol><li>Luas selimut = $12 \\times 10 = 120$</li><li>Luas tutup (1 segitiga) = $6$</li><li>Total area = $126$ cm$^2$</li><li>Biaya = $126 \\times 1000 = Rp 126.000$</li></ol></div>`
+      },
+      { type:'task', pageTitle:'T7: Biaya Prisma', pageTitleEn:'Prism Cost', taskType:'fill',
+        question:'Tenda prisma (3,4,5) $t=10$, hanya selimut dan tutup (1 alas). Biaya Rp 500/cm$^2$. Total biaya = $\\dots$', questionEn:'Tent prism (3,4,5) t=10, lateral + 1 base. Cost Rp 500/cm$^2$. Total = $\\dots$',
+        correctAnswer:'63000', acceptableAnswers:['63000', '63.000'],
+        explanation:`<p>$L_{total} = 120 + 6 = 126$. $126 \\times 500 = 63000$. <span class="tr">Multiply area by rate.</span></p>`
+      },
+      { type:'task', pageTitle:'T8: Komponen Biaya', pageTitleEn:'Cost Components', taskType:'checkbox',
+        question:'Pilih langkah menyelesaikan soal biaya material.', questionEn:'Select steps for material cost problem.',
+        options:[{text:'Cari luas permukaan bangun <span class="tr">Find surface area</span>', correct:true},{text:'Pastikan sisi yang tidak ditutup <span class="tr">Check missing faces</span>', correct:true},{text:'Kalikan luas dengan tarif <span class="tr">Multiply area by rate</span>', correct:true},{text:'Kalikan volume dengan tarif <span class="tr">Multiply volume by rate</span>', correct:false}],
+        explanation:`<p>Biaya material berdasarkan luas, bukan volume. <span class="tr">Based on area, not volume.</span></p>`
+      },
+      { type:'task', pageTitle:'T9: Analisis Biaya', pageTitleEn:'Cost Analysis', taskType:'radio',
+        question:'Jika luas permukaan $200$ cm$^2$ dan biaya total Rp $100.000$, berapa tarif per cm$^2$?', questionEn:'Area $200$ cm$^2$, total cost Rp $100.000$, rate per cm$^2$?',
+        options:[{text:'Rp 500', correct:true},{text:'Rp 200', correct:false},{text:'Rp 5.000', correct:false},{text:'Rp 50', correct:false}],
+        explanation:`<p>$100000 / 200 = 500$. <span class="tr">Divide cost by area.</span></p>`
+      },
+      { type:'task', pageTitle:'T10: Urutkan Biaya', pageTitleEn:'Order Cost', taskType:'dragdrop',
+        question:'Urutkan langkah menghitung biaya cat aquarium.', questionEn:'Order aquarium paint cost steps.',
+        items:['Hitung luas permukaan kaca <span class="tr">Calculate glass area</span>','Identifikasi sisi yang tidak dicat <span class="tr">Identify unpainted</span>','Kalikan luas total dicat dengan tarif <span class="tr">Multiply by rate</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+        explanation:`<p>Sistematika perhitungan biaya. <span class="tr">Cost calculation system.</span></p>`
+      }
+    ]
+  }
+};
+window.sectionsData.g = {
+  title: 'Consolidation & Reflection', titleEn: 'Consolidation & Reflection', time: '00:55 - 01:00',
+  pages: [
+    { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+      body:`<div class="illustration"><svg width="240" height="80" viewBox="0 0 240 80"><circle cx="40" cy="40" r="28" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="40" y="48" text-anchor="middle" font-size="22" fill="#2563eb">∑</text><text x="85" y="35" font-size="13" fill="#1e40af" font-weight="bold">Luas Permukaan</text><text x="85" y="52" font-size="10" fill="#64748b">Kubus, Balok, Prisma</text></svg><div style="font-size:.82em;color:var(--muted);margin-top:4px">Rumus Inti <span class="tr">Core Formulas</span></div></div>
+      <p>Hari ini kita belajar tentang <strong>Luas Permukaan Bangun Ruang</strong>. <span class="tr">Today we learned about Surface Area.</span></p>
+      <div class="math-block"><ol><li><strong>Kubus:</strong> $L = 6 \\times s^2$ <span class="tr">Cube</span></li><li><strong>Balok:</strong> $L = 2 \\times (pl + pt + lt)$ <span class="tr">Cuboid</span></li><li><strong>Prisma:</strong> $L = 2 \\times L_{alas} + K_{alas} \\times t$ <span class="tr">Prism</span></li></ol></div>
+      <p>Ingat! Perhatikan apakah benda tersebut tertutup penuh, terbuka (seperti aquarium), atau gabungan bangun ruang. <span class="tr">Check if closed, open, or combined.</span></p>`
+    },
+    { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+      question:'Benar atau salah: Saya memahami bahwa luas permukaan adalah jumlah dari semua sisi luar bangun ruang.', questionEn:'True or false: I understand surface area is the sum of all outer faces.',
+      correctAnswer:'true',
+      explanation:`<p>Benar, konsep dasar luas permukaan adalah jumlah seluruh sisi luar. <span class="tr">Basic concept is sum of outer faces.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+      question:'Hitung luas permukaan kubus dengan panjang rusuk $9$ cm. $L = \\dots$ cm$^2$', questionEn:'Calculate cube surface area with edge $9$ cm. $L = \\dots$ cm$^2$',
+      correctAnswer:'486', acceptableAnswers:['486'],
+      explanation:`<p>$L = 6 \\times 9^2 = 6 \\times 81 = 486$ cm$^2$. <span class="tr">Apply cube formula.</span></p>`
+    },
+    { type:'explanation', pageTitle:'E2: Follow-up Practice', pageTitleEn:'Follow-up Practice',
+      body:`<p>Latihan tambahan tersedia di <strong>Bagian H–L (Tugas 1–5)</strong>. Setiap bagian berisi 10 soal dengan berbagai tipe. <span class="tr">Additional practice in Sections H–L.</span></p>
+      <div class="math-block"><ul><li><strong>Tugas 1 (H):</strong> Soal Dasar Kubus & Balok <span class="tr">Basic Cube & Cuboid</span></li><li><strong>Tugas 2 (I):</strong> Prisma & Soal Cerita <span class="tr">Prism & Word Problems</span></li><li><strong>Tugas 3 (J):</strong> Bangun Ruang Terbuka <span class="tr">Open Shapes</span></li><li><strong>Tugas 4 (K):</strong> Gabungan Bangun <span class="tr">Combined Shapes</span></li><li><strong>Tugas 5 (L):</strong> Soal Campuran Tingkat Ujian <span class="tr">Mixed Exam Questions</span></li></ul></div>`
+    }
+  ]
+};
+
+window.sectionsData.h = {
+  title: 'Tugas 1', titleEn: 'Task 1', time: 'Printable',
+  pages: [
+    { type:'task', pageTitle:'T1: Luas Kubus', pageTitleEn:'Cube Area', taskType:'fill',
+      question:'Panjang rusuk kubus $15$ cm. Luas permukaannya adalah $\\dots$ cm$^2$', questionEn:'Cube edge $15$ cm. Surface area is $\\dots$ cm$^2$',
+      correctAnswer:'1350', acceptableAnswers:['1350'],
+      explanation:`<p>$L = 6 \\times 15^2 = 6 \\times 225 = 1350$. <span class="tr">Direct formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Luas Balok', pageTitleEn:'Cuboid Area', taskType:'radio',
+      question:'Balok $p=12, l=8, t=5$. Luas permukaannya adalah...', questionEn:'Cuboid $p=12, l=8, t=5$. Surface area is...',
+      options:[{text:'$392$', correct:true},{text:'$480$', correct:false},{text:'$296$', correct:false},{text:'$420$', correct:false}],
+      explanation:`<p>$L = 2(96 + 60 + 40) = 2(196) = 392$. <span class="tr">Use cuboid formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Kubus dari Diagonal', pageTitleEn:'Cube from Diagonal', taskType:'truefalse',
+      question:'Benar atau salah: Jika diagonal sisi kubus $12\\sqrt{2}$, luas permukaannya $864$.', questionEn:'True or false: Face diagonal $12\\sqrt{2}$, area $864$.',
+      correctAnswer:'true',
+      explanation:`<p>$d = s\\sqrt{2} = 12\\sqrt{2} \\Rightarrow s=12$. $L = 6 \\times 144 = 864$. <span class="tr">Find edge from diagonal.</span></p>`
+    },
+    { type:'task', pageTitle:'T4: Urutkan Kubus', pageTitleEn:'Order Cube', taskType:'sorting',
+      question:'Urutkan langkah mencari luas kubus dari keliling alas $K=36$.', questionEn:'Order steps for cube area from perimeter $K=36$.',
+      items:['Cari sisi: $36 / 4 = 9$ <span class="tr">Find side</span>','Kuadratkan: $9^2 = 81$ <span class="tr">Square</span>','Kali 6: $6 \\times 81 = 486$ <span class="tr">Multiply by 6</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Sistematika dari keliling ke luas. <span class="tr">Systematic calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Pilih Rumus', pageTitleEn:'Select Formulas', taskType:'checkbox',
+      question:'Pilih rumus yang benar untuk balok.', questionEn:'Select correct cuboid formulas.',
+      options:[{text:'$2(pl + pt + lt)$', correct:true},{text:'$2p(l+t) + 2lt$', correct:true},{text:'$6s^2$', correct:false},{text:'$2(p+l) \\times t + 2pl$', correct:true}],
+      explanation:`<p>Uji penguasaan manipulasi rumus aljabar. <span class="tr">Algebraic manipulation.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Sisi', pageTitleEn:'Match Faces', taskType:'pairing',
+      question:'Pasangkan sisi balok dengan luasnya ($p=10, l=6, t=5$).', questionEn:'Match cuboid faces with areas ($p=10, l=6, t=5$).',
+      pairs:[{left:'Alas ($p \\times l$)', right:'$60$'},{left:'Depan ($p \\times t$)', right:'$50$'},{left:'Samping ($l \\times t$)', right:'$30$'},{left:'Luas Total', right:'$280$'}],
+      explanation:`<p>$2(60+50+30) = 280$. <span class="tr">Sum pairs and multiply.</span></p>`
+    },
+    { type:'task', pageTitle:'T7: Balok dari Volume', pageTitleEn:'Cuboid from Volume', taskType:'fill',
+      question:'Balok volume $480$ cm$^3$, $p=10, l=6$. Tinggi $t = \\dots$ cm', questionEn:'Cuboid volume $480$, $p=10, l=6$. Height $t = \\dots$',
+      correctAnswer:'8', acceptableAnswers:['8'],
+      explanation:`<p>$V = p \\times l \\times t \\Rightarrow 480 = 60 \\times t \\Rightarrow t = 8$. <span class="tr">Find height from volume.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Luas Terbuka', pageTitleEn:'Open Area', taskType:'radio',
+      question:'Balok $p=10, l=6, t=8$ tanpa tutup. Luas permukaannya adalah...', questionEn:'Open cuboid $p=10, l=6, t=8$. Area is...',
+      options:[{text:'$316$', correct:true},{text:'$376$', correct:false},{text:'$356$', correct:false},{text:'$416$', correct:false}],
+      explanation:`<p>$L_{total} = 2(60+80+48) = 376$. Tanpa tutup: $376 - 60 = 316$. <span class="tr">Total minus top face.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Selimut Balok', pageTitleEn:'Cuboid Lateral', taskType:'truefalse',
+      question:'Benar atau salah: Luas selimut balok $p=10, l=6, t=8$ adalah $256$.', questionEn:'True or false: Lateral area $p=10, l=6, t=8$ is $256$.',
+      correctAnswer:'true',
+      explanation:`<p>$2(10+6) \\times 8 = 32 \\times 8 = 256$. <span class="tr">Lateral formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Hitung Balok Spesial', pageTitleEn:'Calculate Special Cuboid', taskType:'dragdrop',
+      question:'Urutkan langkah menghitung luas balok $p=a, l=a, t=2a$.', questionEn:'Order steps for cuboid $p=a, l=a, t=2a$.',
+      items:['$pl = a^2$ <span class="tr">Calculate pl</span>','$pt = 2a^2$ <span class="tr">Calculate pt</span>','$lt = 2a^2$ <span class="tr">Calculate lt</span>','$L = 2(a^2 + 4a^2) = 10a^2$ <span class="tr">Total area</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Aljabar sederhana untuk geometri. <span class="tr">Simple algebra in geometry.</span></p>`
+    }
+  ]
+};
+
+window.sectionsData.i = {
+  title: 'Tugas 2', titleEn: 'Task 2', time: 'Printable',
+  pages: [
+    { type:'task', pageTitle:'T1: Luas Prisma', pageTitleEn:'Prism Area', taskType:'fill',
+      question:'Prisma segitiga siku-siku (3,4,5) tinggi $12$. Luas totalnya $\\dots$ cm$^2$', questionEn:'Right prism (3,4,5) height $12$. Total area $\\dots$ cm$^2$',
+      correctAnswer:'156', acceptableAnswers:['156'],
+      explanation:`<p>$L_{alas}=6, K=12$. $L_{total} = 2(6) + 12 \\times 12 = 12 + 144 = 156$. <span class="tr">Prism formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Selimut Prisma', pageTitleEn:'Prism Lateral', taskType:'radio',
+      question:'Prisma alas segitiga sama sisi $s=8$, $t=15$. Luas selimutnya adalah...', questionEn:'Equilateral prism $s=8, t=15$. Lateral area is...',
+      options:[{text:'$360$', correct:true},{text:'$480$', correct:false},{text:'$120\\sqrt{3}$', correct:false},{text:'$240$', correct:false}],
+      explanation:`<p>$K = 24$. $L_{selimut} = 24 \\times 15 = 360$. <span class="tr">Perimeter times height.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Prisma Terbuka', pageTitleEn:'Open Prism', taskType:'truefalse',
+      question:'Benar atau salah: Tenda prisma (1 alas + selimut) (3,4,5) t=10 luasnya 126.', questionEn:'True or false: Tent prism (3,4,5) t=10 area 126.',
+      correctAnswer:'true',
+      explanation:`<p>$L = 6 + 12 \\times 10 = 126$. <span class="tr">Open prism formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T4: Urutkan Prisma', pageTitleEn:'Order Prism', taskType:'sorting',
+      question:'Urutkan langkah mencari luas prisma.', questionEn:'Order prism area steps.',
+      items:['Hitung luas alas segitiga <span class="tr">Calculate base area</span>','Hitung keliling alas <span class="tr">Calculate perimeter</span>','Hitung luas selimut <span class="tr">Calculate lateral</span>','Jumlahkan dengan 2 alas <span class="tr">Add 2 bases</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Langkah baku perhitungan prisma. <span class="tr">Standard steps.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Soal Cerita Cat', pageTitleEn:'Paint Word Problem', taskType:'checkbox',
+      question:'Pilih langkah menghitung biaya mengecat kubus $s=10$ (rp 500/cm2).', questionEn:'Select steps to paint cube $s=10$ (rp 500/cm2).',
+      options:[{text:'Hitung luas kubus: $600$ <span class="tr">Calculate area</span>', correct:true},{text:'Kali dengan tarif: $600 \\times 500$ <span class="tr">Multiply rate</span>', correct:true},{text:'Hitung volume: $1000$ <span class="tr">Calculate volume</span>', correct:false},{text:'Bagi dengan 6: $600/6$ <span class="tr">Divide by 6</span>', correct:false}],
+      explanation:`<p>Biaya berdasarkan luas permukaan luar. <span class="tr">Based on outer area.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Prisma', pageTitleEn:'Match Prism', taskType:'pairing',
+      question:'Pasangkan unsur prisma (3,4,5) t=10 dengan nilainya.', questionEn:'Match prism elements with values.',
+      pairs:[{left:'Luas Alas', right:'$6$'},{left:'Keliling Alas', right:'$12$'},{left:'Luas Selimut', right:'$120$'},{left:'Luas Total', right:'$132$'}],
+      explanation:`<p>Pembedaan komponen prisma. <span class="tr">Distinguish components.</span></p>`
+    },
+    { type:'task', pageTitle:'T7: Prisma Sama Sisi', pageTitleEn:'Equilateral Prism', taskType:'fill',
+      question:'Prisma segitiga sama sisi $s=6, t=10$. Luas totalnya = $180 + x\\sqrt{3}$. $x = \\dots$', questionEn:'Equilateral prism $s=6, t=10$. Total area = $180 + x\\sqrt{3}$. $x = \\dots$',
+      correctAnswer:'18', acceptableAnswers:['18'],
+      explanation:`<p>$L_{alas} = \\dfrac{1}{2} \\times 6 \\times 3\\sqrt{3} = 9\\sqrt{3}$. $2 \\times 9\\sqrt{3} = 18\\sqrt{3}$. Maka $x = 18$. <span class="tr">Root calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Prisma dari Luas', pageTitleEn:'Prism from Area', taskType:'radio',
+      question:'Prisma $L_{alas}=10, K_{alas}=14, L_{total}=230$. Tinggi $t$ adalah...', questionEn:'Prism $L_{alas}=10, K_{alas}=14, L_{total}=230$. Height $t$ is...',
+      options:[{text:'$15$', correct:true},{text:'$16$', correct:false},{text:'$14$', correct:false},{text:'$12$', correct:false}],
+      explanation:`<p>$230 = 2(10) + 14t \\Rightarrow 230 = 20 + 14t \\Rightarrow 210 = 14t \\Rightarrow t = 15$. <span class="tr">Algebraic solving.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Analisis Tenda', pageTitleEn:'Tent Analysis', taskType:'truefalse',
+      question:'Benar atau salah: Tenda prisma tidak memiliki luas tutup alas (karena menempel tanah).', questionEn:'True or false: Tent prism has no base face.',
+      correctAnswer:'true',
+      explanation:`<p>Tenda adalah prisma terbuka di bagian alas. <span class="tr">Usually open at base.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Soal Biaya Tenda', pageTitleEn:'Tent Cost Problem', taskType:'dragdrop',
+      question:'Urutkan langkah menghitung biaya kain tenda.', questionEn:'Order tent fabric cost steps.',
+      items:['Hitung luas selimut prisma <span class="tr">Calculate lateral area</span>','Identifikasi bahwa tidak perlu alas kain <span class="tr">Identify no base needed</span>','Kali dengan tarif kain <span class="tr">Multiply by rate</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Kain tenda hanya menutupi selimut. <span class="tr">Fabric covers lateral only.</span></p>`
+    }
+  ]
+};
+
+window.sectionsData.j = {
+  title: 'Tugas 3', titleEn: 'Task 3', time: 'Printable',
+  pages: [
+    { type:'task', pageTitle:'T1: Kubus Cekung', pageTitleEn:'Hollow Cube', taskType:'radio',
+      question:'Kubus $s=10$ dilubangi di tengah pada dua sisi berhadapan (persegi $4 \\times 4$ tembus). Luas total menjadi...', questionEn:'Cube $s=10$ with $4 \\times 4$ hole through two faces. Total area...',
+      options:[{text:'$672$', correct:false},{text:'$728$', correct:true},{text:'$632$', correct:false},{text:'$600$', correct:false}],
+      explanation:`<p>$L_{awal} = 600$. Hilang 2 lubang ($2 \\times 16 = 32$). Tambah 4 dinding dalam ($4 \\times 4 \\times 10 = 160$). $600 - 32 + 160 = 728$. <span class="tr">Correct calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Balok Tanpa 2 Tutup', pageTitleEn:'Cuboid No Top', taskType:'fill',
+      question:'Aquarium balok $p=20, l=10, t=12$ tanpa tutup atas. Luas kacanya adalah $\\dots$ cm$^2$', questionEn:'Open cuboid $p=20, l=10, t=12$. Glass area is $\\dots$ cm$^2$',
+      correctAnswer:'920', acceptableAnswers:['920'],
+      explanation:`<p>$L = 2(20 \\times 10 + 20 \\times 12 + 10 \\times 12) = 2(200 + 240 + 120) = 1120$. Tanpa tutup ($200$): $1120 - 200 = 920$. <span class="tr">Subtract top area.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Tabung Terbuka', pageTitleEn:'Open Cylinder Concept', taskType:'truefalse',
+      question:'Benar atau salah: Luas permukaan kaleng tanpa tutup adalah $L_{selimut} + L_{alas}$.', questionEn:'True or false: Open can area is $L_{selimut} + L_{alas}$.',
+      correctAnswer:'true',
+      explanation:`<p>Kaleng terbuka memiliki 1 alas dan selimut. <span class="tr">Open can has 1 base.</span></p>`
+    },
+    { type:'task', pageTitle:'T4: Urutkan Aquarium', pageTitleEn:'Order Aquarium', taskType:'sorting',
+      question:'Urutkan langkah menghitung biaya kaca aquarium.', questionEn:'Order aquarium glass cost steps.',
+      items:['Hitung luas selimut balok <span class="tr">Calculate lateral</span>','Tambah dengan luas 1 alas <span class="tr">Add 1 base</span>','Kali dengan harga per cm2 <span class="tr">Multiply by rate</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Aquarium = selimut + 1 alas. <span class="tr">Aquarium = lateral + 1 base.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Prisma Tanpa Tutup', pageTitleEn:'Open Prism', taskType:'checkbox',
+      question:'Pilih rumus yang benar untuk luas prisma tanpa tutup (hanya selimut dan 1 alas).', questionEn:'Select correct formulas for open prism (lateral + 1 base).',
+      options:[{text:'$K_{alas} \\times t + L_{alas}$', correct:true},{text:'$2 \\times L_{alas} + K_{alas} \\times t - L_{alas}$', correct:true},{text:'$L_{total} - L_{alas}$', correct:true},{text:'$2 \\times L_{alas} + K_{alas} \\times t$', correct:false}],
+      explanation:`<p>Kurangi 1 luas alas dari luas total. <span class="tr">Subtract 1 base from total.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Sisi Hilang', pageTitleEn:'Match Missing Faces', taskType:'pairing',
+      question:'Pasangkan bentuk terbuka dengan sisi yang hilang.', questionEn:'Match open shapes with missing faces.',
+      pairs:[{left:'Aquarium Balok', right:'Tutup Atas'},{left:'Tenda Prisma', right:'Alas Bawah'},{left:'Kubus Cekung 1 sisi', right:'1 Persegi'},{left:'Pipa', right:'2 Lingkaran'}],
+      explanation:`<p>Identifikasi sisi yang tidak ada. <span class="tr">Identify missing faces.</span></p>`
+    },
+    { type:'task', pageTitle:'T7: Kotak Karton', pageTitleEn:'Cardboard Box', taskType:'fill',
+      question:'Karton $30 \\times 20$ potong $5 \\times 5$. Luas permukaan kotak terbuka tersebut adalah $\\dots$ cm$^2$', questionEn:'Cardboard $30 \\times 20$, cut $5 \\times 5$. Open box area is $\\dots$ cm$^2$',
+      correctAnswer:'500', acceptableAnswers:['500'],
+      explanation:`<p>$p=20, l=10, t=5$. $L = 20 \\times 10 + 2(20 \\times 5) + 2(10 \\times 5) = 200 + 200 + 100 = 500$. <span class="tr">Calculate carefully.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Kubus Tanpa 1 Sisi', pageTitleEn:'Cube Missing 1 Face', taskType:'radio',
+      question:'Kubus $s=8$ tanpa 1 tutup. Luas totalnya adalah...', questionEn:'Cube $s=8$ missing 1 face. Total area is...',
+      options:[{text:'$320$', correct:true},{text:'$384$', correct:false},{text:'$256$', correct:false},{text:'$448$', correct:false}],
+      explanation:`<p>$L_{total} = 6 \\times 64 = 384$. Tanpa 1 sisi: $384 - 64 = 320$. <span class="tr">Subtract one face.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Selimut Kubus', pageTitleEn:'Cube Lateral', taskType:'truefalse',
+      question:'Benar atau salah: Luas selimut kubus sama dengan 4 kali luas alasnya.', questionEn:'True or false: Cube lateral area is 4 times base area.',
+      correctAnswer:'true',
+      explanation:`<p>4 sisi tegak + 1 alas + 1 tutup. Selimut = 4 sisi. <span class="tr">Lateral is 4 faces.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Hitung Selimut', pageTitleEn:'Calculate Lateral', taskType:'dragdrop',
+      question:'Urutkan langkah mencari selimut balok $p=15, l=10, t=8$.', questionEn:'Order lateral area for cuboid $p=15, l=10, t=8$.',
+      items:['Hitung $2 \\times p \\times t = 240$ <span class="tr">Calculate front</span>','Hitung $2 \\times l \\times t = 160$ <span class="tr">Calculate side</span>','Jumlahkan: $240 + 160 = 400$ <span class="tr">Sum</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Selimut adalah sisi tegak. <span class="tr">Lateral is vertical faces.</span></p>`
+    }
+  ]
+};
+
+window.sectionsData.k = {
+  title: 'Tugas 4', titleEn: 'Task 4', time: 'Printable',
+  pages: [
+    { type:'task', pageTitle:'T1: Dua Kubus', pageTitleEn:'Two Cubes', taskType:'radio',
+      question:'Dua kubus $s=6$ disatukan. Luas permukaan totalnya adalah...', questionEn:'Two cubes $s=6$ attached. Total area is...',
+      options:[{text:'$360$', correct:true},{text:'$432$', correct:false},{text:'$288$', correct:false},{text:'$252$', correct:false}],
+      explanation:`<p>$2 \\times (6 \\times 36) - 2 \\times 36 = 432 - 72 = 360$. <span class="tr">Subtract attached faces.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Kubus Balok', pageTitleEn:'Cube Cuboid', taskType:'fill',
+      question:'Kubus $s=4$ ditempel pada balok $p=10, l=4, t=4$. Luas totalnya adalah $\\dots$ cm$^2$', questionEn:'Cube $s=4$ on cuboid $10 \\times 4 \\times 4$. Total area is $\\dots$ cm$^2$',
+      correctAnswer:'256', acceptableAnswers:['256'],
+      explanation:`<p>Kubus $L=96$, Balok $L=2(40+16+40)=192$. Total awal = $288$. Hilang 2 sisi $4 \\times 4 = 32$. $288 - 32 = 256$. <span class="tr">Calculate carefully.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Tiga Kubus', pageTitleEn:'Three Cubes', taskType:'truefalse',
+      question:'Benar atau salah: Tiga kubus $s=5$ disusun memanjang membentuk balok. Luasnya $350$ cm$^2$.', questionEn:'True or false: Three cubes $s=5$ in a row. Area is $350$ cm$^2$.',
+      correctAnswer:'true',
+      explanation:`<p>Bentuk balok $p=15, l=5, t=5$. $L = 2(75 + 75 + 25) = 2(175) = 350$. <span class="tr">New shape calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T4: Urutkan Gabungan', pageTitleEn:'Order Combined', taskType:'sorting',
+      question:'Urutkan langkah mencari luas gabungan.', questionEn:'Order steps for combined area.',
+      items:['Hitung luas masing-masing bangun <span class="tr">Calculate each area</span>','Identifikasi sisi yang menempel <span class="tr">Identify attached</span>','Kurangi 2x luas sisi menempel <span class="tr">Subtract 2x attached</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Sistematika bangun gabungan. <span class="tr">Combined system.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Pasangan Gabungan', pageTitleEn:'Match Combined', taskType:'pairing',
+      question:'Pasangkan skenario dengan luasnya.', questionEn:'Match scenarios with areas.',
+      pairs:[{left:'2 Kubus s=5', right:'$250$'},{left:'3 Kubus s=5', right:'$350$'},{left:'4 Kubus s=5', right:'$450$'},{left:'1 Kubus s=5', right:'$150$'}],
+      explanation:`<p>2 kubus $L=300-50=250$. 3 kubus $L=450-100=350$. <span class="tr">Subtract attached.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Sudut Dipotong', pageTitleEn:'Cut Corner', taskType:'checkbox',
+      question:'Pilih dampak memotong sudut kubus segitiga siku-siku (sisi 3,4,5).', questionEn:'Select effects of cutting right triangle corner (3,4,5).',
+      options:[{text:'Volume berkurang <span class="tr">Volume decreases</span>', correct:true},{text:'Luas bertambah <span class="tr">Area increases</span>', correct:true},{text:'Luas tetap <span class="tr">Area same</span>', correct:false},{text:'Luas berkurang <span class="tr">Area decreases</span>', correct:false}],
+      explanation:`<p>Sisi segitiga hilang (6), tapi 3 sisi baru muncul (3+4+5=12). Luas bertambah 6. <span class="tr">Area increases by 6.</span></p>`
+    },
+    { type:'task', pageTitle:'T7: Balok Berlubang', pageTitleEn:'Hollow Cuboid', taskType:'fill',
+      question:'Balok $10 \\times 8 \\times 6$ dilubangi persegi $2 \\times 2$ tembus pada sisi $10 \\times 8$. Luas total = $\\dots$', questionEn:'Cuboid $10 \\times 8 \\times 6$ with $2 \\times 2$ hole on $10 \\times 8$ face. Total area = $\\dots$',
+      correctAnswer:'432', acceptableAnswers:['432'],
+      explanation:`<p>$L_{awal} = 2(80+60+48) = 376$. Hilang 2 lubang ($8$), tambah 4 dinding dalam ($4 \\times 2 \\times 8 = 64$). $376 - 8 + 64 = 432$. <span class="tr">Calculate inner walls.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Kubus Dibelah', pageTitleEn:'Cube Halved', taskType:'radio',
+      question:'Kubus $s=10$ dibelah menjadi 2 prisma segitiga. Luas salah satu prisma adalah...', questionEn:'Cube $s=10$ cut into 2 triangular prisms. Area of one prism is...',
+      options:[{text:'$300 + 100\\sqrt{2}$', correct:true},{text:'$400$', correct:false},{text:'$300$', correct:false},{text:'$600$', correct:false}],
+      explanation:`<p>Alas segitiga $L = \\frac{1}{2} \\times 10 \\times 10 = 50$. Selimut = $10 \\times 10 + 10 \\times 10 + 10 \\times 10\\sqrt{2} = 200 + 100\\sqrt{2}$. Total = $2(50) + 200 + 100\\sqrt{2} = 300 + 100\\sqrt{2}$. <span class="tr">Complex calculation.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Balok Lengket', pageTitleEn:'Attached Cuboids', taskType:'truefalse',
+      question:'Benar atau salah: Dua balok $10 \\times 5 \\times 4$ disatukan pada sisi $10 \\times 4$ menghasilkan balok $20 \\times 5 \\times 4$.', questionEn:'True or false: Two cuboids attached on $10 \\times 4$ form $20 \\times 5 \\times 4$.',
+      correctAnswer:'true',
+      explanation:`<p>Jika ditempel pada sisi $10 \\times 4$, sisi $10$ menjadi $20$. <span class="tr">Attached on length.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Prisma Gabungan', pageTitleEn:'Combined Prism', taskType:'dragdrop',
+      question:'Urutkan langkah mencari luas prisma segitiga dari kubus.', questionEn:'Order steps for prism area from cube.',
+      items:['Identifikasi alas segitiga <span class="tr">Identify triangle base</span>','Hitung luas 2 segitiga <span class="tr">Calculate 2 triangles</span>','Hitung selimut 3 persegi panjang <span class="tr">Calculate lateral</span>','Jumlahkan <span class="tr">Sum</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Analisis bangun baru. <span class="tr">Analyze new shape.</span></p>`
+    }
+  ]
+};
+
+window.sectionsData.l = {
+  title: 'Tugas 5', titleEn: 'Task 5', time: 'Printable',
+  pages: [
+    { type:'task', pageTitle:'T1: Kubus dari Luas', pageTitleEn:'Cube from Area', taskType:'fill',
+      question:'Luas permukaan kubus $864$ cm$^2$. Panjang rusuknya adalah $\\dots$ cm', questionEn:'Cube surface area $864$ cm$^2$. Edge length is $\\dots$ cm',
+      correctAnswer:'12', acceptableAnswers:['12'],
+      explanation:`<p>$6s^2 = 864 \\Rightarrow s^2 = 144 \\Rightarrow s = 12$. <span class="tr">Divide by 6 then square root.</span></p>`
+    },
+    { type:'task', pageTitle:'T2: Prisma dari Volume', pageTitleEn:'Prism from Volume', taskType:'radio',
+      question:'Prisma segitiga siku-siku (3,4,5) volume $120$ cm$^3$. Tinggi prisma $t$ adalah...', questionEn:'Right prism (3,4,5) volume $120$ cm$^3$. Height $t$ is...',
+      options:[{text:'$20$', correct:true},{text:'$10$', correct:false},{text:'$5$', correct:false},{text:'$15$', correct:false}],
+      explanation:`<p>$V = L_{alas} \\times t \\Rightarrow 120 = 6 \\times t \\Rightarrow t = 20$. <span class="tr">Find height from volume.</span></p>`
+    },
+    { type:'task', pageTitle:'T3: Selimut Balok', pageTitleEn:'Cuboid Lateral', taskType:'truefalse',
+      question:'Benar atau salah: Jika luas selimut balok $400$ cm$^2$ dan $p=15, l=5$, maka $t=10$.', questionEn:'True or false: Lateral area $400$, $p=15, l=5$, $t=10$.',
+      correctAnswer:'true',
+      explanation:`<p>$2(15+5) \\times t = 40t = 400 \\Rightarrow t = 10$. <span class="tr">Check algebra.</span></p>`
+    },
+    { type:'task', pageTitle:'T4: Rumus Balok', pageTitleEn:'Cuboid Formula', taskType:'sorting',
+      question:'Urutkan langkah mencari luas balok dari $p, l, t$.', questionEn:'Order steps for cuboid area.',
+      items:['$pl$ <span class="tr">Base</span>','$pt$ <span class="tr">Front</span>','$lt$ <span class="tr">Side</span>','$2 \\times (pl + pt + lt)$ <span class="tr">Total</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Urutan rumus standar. <span class="tr">Standard formula.</span></p>`
+    },
+    { type:'task', pageTitle:'T5: Soal Biaya', pageTitleEn:'Cost Problem', taskType:'checkbox',
+      question:'Pilih rumus biaya mengecat kubus $s=5$ (Rp 200/cm2).', questionEn:'Select cost formulas for cube $s=5$ (Rp 200/cm2).',
+      options:[{text:'$6 \\times 5^2 \\times 200$ <span class="tr">Direct formula</span>', correct:true},{text:'$150 \\times 200$ <span class="tr">Area times rate</span>', correct:true},{text:'$125 \\times 200$ <span class="tr">Volume times rate</span>', correct:false},{text:'$30000$ <span class="tr">Total cost</span>', correct:true}],
+      explanation:`<p>Luas kubus $s=5$ adalah $150$. Biaya = $150 \\times 200 = 30000$. <span class="tr">Calculate cost.</span></p>`
+    },
+    { type:'task', pageTitle:'T6: Pasangkan Rumus', pageTitleEn:'Match Formulas', taskType:'pairing',
+      question:'Pasukkan rumus dengan bangunnya.', questionEn:'Match formulas with shapes.',
+      pairs:[{left:'$6s^2$', right:'Kubus'},{left:'$2(pl+pt+lt)$', right:'Balok'},{left:'$2L_{alas} + K_{alas}t$', right:'Prisma'},{left:'$K_{alas}t$', right:'Selimut'}],
+      explanation:`<p>Uji penguasaan rumus. <span class="tr">Test formula mastery.</span></p>`
+    },
+    { type:'task', pageTitle:'T7: Soal Cerita Tenda', pageTitleEn:'Tent Problem', taskType:'fill',
+      question:'Tenda prisma (3,4,5) t=10. Biaya kain Rp 1.000/m2. Total = Rp $\\dots$ (dalam cm).', questionEn:'Tent prism (3,4,5) t=10. Fabric cost Rp 1.000/m2. Total = Rp $\\dots$ (in cm).',
+      correctAnswer:'126000', acceptableAnswers:['126000', '126.000'],
+      explanation:`<p>$L = 120 + 6 = 126$. $126 \\times 1000 = 126000$. <span class="tr">Calculate tent cost.</span></p>`
+    },
+    { type:'task', pageTitle:'T8: Balok dari Selimut', pageTitleEn:'Cuboid from Lateral', taskType:'radio',
+      question:'Luas selimut balok $200$ cm$^2$, $p=5, l=5$. Tinggi $t$ adalah...', questionEn:'Cuboid lateral $200$, $p=5, l=5$. Height $t$ is...',
+      options:[{text:'$10$', correct:true},{text:'$20$', correct:false},{text:'$5$', correct:false},{text:'$15$', correct:false}],
+      explanation:`<p>$2(5+5) \\times t = 20t = 200 \\Rightarrow t = 10$. <span class="tr">Find height from lateral.</span></p>`
+    },
+    { type:'task', pageTitle:'T9: Kubus dari Selimut', pageTitleEn:'Cube from Lateral', taskType:'truefalse',
+      question:'Benar atau salah: Luas selimut kubus $144$ cm$^2$, maka luas totalnya $216$ cm$^2$.', questionEn:'True or false: Cube lateral $144$, total area $216$.',
+      correctAnswer:'true',
+      explanation:`<p>$4s^2 = 144 \\Rightarrow s^2 = 36 \\Rightarrow s=6$. $L_{total} = 6 \\times 36 = 216$. <span class="tr">Find total from lateral.</span></p>`
+    },
+    { type:'task', pageTitle:'T10: Analisis Selimut', pageTitleEn:'Lateral Analysis', taskType:'dragdrop',
+      question:'Urutkan langkah mencari tinggi balok dari luas selimut.', questionEn:'Order steps to find height from lateral area.',
+      items:['Tulis rumus $2(p+l) \\times t = L_{selimut}$ <span class="tr">Write formula</span>','Substitusi nilai $p, l, L$ <span class="tr">Substitute values</span>','Bagi $L$ dengan $2(p+l)$ <span class="tr">Divide</span>','Selesai <span class="tr">Done</span>'], correctOrder:[0,1,2,3],
+      explanation:`<p>Langkah aljabar terstruktur. <span class="tr">Structured algebra.</span></p>`
+    }
+  ]
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, { delimiters: [ {left:'$$', right:'$$', display:true}, {left:'$', right:'$', display:false} ], throwOnError: false });
+    }
+  }
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review', e:'Spiral Review', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Pengantar & Dunia Nyata', time:'00:10-00:15'},
+      c:{t:'Prior Knowledge', e:'Pengetahuan Awal', time:'00:15-00:20'},
+      d:{t:'Problem Intro', e:'Pengantar Masalah', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Latihan Terbimbing', time:'00:30-00:45'},
+      f:{t:'Independent Prac', e:'Latihan Mandiri', time:'00:45-00:55'},
+      g:{t:'Consolidation', e:'Konsolidasi', time:'00:55-01:00'},
+      h:{t:'Tugas 1', e:'Task 1', time:'Printable'},
+      i:{t:'Tugas 2', e:'Task 2', time:'Printable'},
+      j:{t:'Tugas 3', e:'Task 3', time:'Printable'},
+      k:{t:'Tugas 4', e:'Task 4', time:'Printable'},
+      l:{t:'Tugas 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = window.sectionsData[key];
+      const isActive = currentSection === key;
+      if(section){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+  function renderPage(){
+    const section = window.sectionsData[currentSection];
+    if(!section) return;
+    const page = section.pages[currentPage];
+    const contentEl = document.getElementById('pageContent');
+
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Cetak ke PDF <span class="tr">Print to PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle.split(':')[0] + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${opt.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([{text:'Benar <span class="tr">True</span>', val:'true'},{text:'Salah <span class="tr">False</span>', val:'false'}]);
+      page._shuffledTF = opts;
+      html += '<div class="options">';
+      opts.forEach((o, i) => {
+        html += `<div class="option radio" data-val="${o.val}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}"><span class="pos">${i+1}</span><span class="sort-text">${it.text}</span></div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'dragdrop'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list" id="dragList">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" draggable="true" data-pos="${i}" data-orig="${it.originalIdx}"><span class="pos">${i+1}</span><span class="sort-text">${it.text}</span></div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Seret untuk mengurutkan. <span class="tr">Drag and drop to reorder.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid"><div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => { html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`; });
+      html += '</div><div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => { html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`; });
+      html += '</div></div><div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik kiri lalu kanan. <span class="tr">Click left then right.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => opt.addEventListener('click', () => opt.classList.toggle('selected')));
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){ firstClick = item; item.classList.add('selected'); }
+          else if(firstClick === item){ item.classList.remove('selected'); firstClick = null; }
+          else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = item.querySelector('.sort-text').innerHTML;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig; firstClick.dataset.orig = item.dataset.orig; item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected'); firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'dragdrop'){
+      let dragSrc = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+          dragSrc = this; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('textHTML', this.innerHTML); this.classList.add('selected');
+        });
+        item.addEventListener('dragend', function(e) { this.classList.remove('selected'); });
+        item.addEventListener('dragover', function(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; return false; });
+        item.addEventListener('drop', function(e) {
+          e.preventDefault(); e.stopPropagation();
+          if (dragSrc !== this) {
+            const srcText = dragSrc.querySelector('.sort-text').innerHTML;
+            const srcOrig = dragSrc.dataset.orig;
+            dragSrc.querySelector('.sort-text').innerHTML = this.querySelector('.sort-text').innerHTML;
+            dragSrc.dataset.orig = this.dataset.orig;
+            this.querySelector('.sort-text').innerHTML = srcText;
+            this.dataset.orig = srcOrig;
+          }
+          return false;
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected'); selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx; pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Hapus">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', function() {
+            const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${pairRow.dataset.leftIdx}"]`);
+            const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${pairRow.dataset.rightIdx}"]`);
+            if(lItem) lItem.classList.remove('paired');
+            if(rItem) rItem.classList.remove('paired');
+            pairRow.remove();
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected'); selectedLeft.classList.add('paired'); item.classList.add('paired'); selectedLeft = null;
+        });
+      });
+    }
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false; let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => { if(opt.classList.contains('selected')){ selected = page._shuffledOptions[i]; selectedIdx = i; } });
+      if(!selected){ showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false); return; }
+      isCorrect = selected.correct; userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => { if(opt.classList.contains('selected')) selectedIdxs.push(i); });
+      if(selectedIdxs.length === 0){ showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select.</span>', false); return; }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+      isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(taskType === 'truefalse'){
+      let selectedVal = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => { if(opt.classList.contains('selected')){ selectedVal = opt.dataset.val; selectedIdx = i; } });
+      if(!selectedVal){ showFeedback(false, 'Silakan pilih. <span class="tr">Please select.</span>', false); return; }
+      isCorrect = selectedVal === page.correctAnswer;
+      userAnswerStr = selectedVal === 'true' ? 'True' : 'False';
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(opt.dataset.val === page.correctAnswer) opt.classList.add('correct');
+        else if(i === selectedIdx) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'sorting' || taskType === 'dragdrop'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => { currentOrder.push(parseInt(item.dataset.orig)); });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){ showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false); return; }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lText = page._shuffledPairs.lefts[parseInt(row.dataset.leftIdx)].text;
+        const rText = page._shuffledPairs.rights[parseInt(row.dataset.rightIdx)].text;
+        userPairs.push({left:lText, right:rText});
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up => correctPairs.some(cp => cp.left === up.left && cp.right === up.right)).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.left}↔${p.right}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lText = page._shuffledPairs.lefts[parseInt(row.dataset.leftIdx)].text;
+        const rText = page._shuffledPairs.rights[parseInt(row.dataset.rightIdx)].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){ feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`; }
+    else { feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'}</h4>`; }
+    renderMath(feedback);
+  }
+  document.getElementById('prevBtn').addEventListener('click', () => { if(currentPage > 0){ currentPage--; renderPage(); } });
+  document.getElementById('nextBtn').addEventListener('click', () => { const total = window.sectionsData[currentSection].pages.length; if(currentPage < total - 1){ currentPage++; renderPage(); } });
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){ const c = task.options.find(o => o.correct); return c ? c.text : ''; }
+    if(task.taskType === 'checkbox'){ return task.options.filter(o => o.correct).map(o => o.text).join(', '); }
+    if(task.taskType === 'fill'){ return task.correctAnswer || ''; }
+    if(task.taskType === 'truefalse'){ return task.correctAnswer === 'true' ? 'Benar' : 'Salah'; }
+    if(task.taskType === 'sorting' || task.taskType === 'dragdrop'){ return task.correctOrder.map(i => task.items[i]).join(' → '); }
+    if(task.taskType === 'pairing'){ return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; '); }
+    return '';
+  }
+  function printTask(sectionKey){
+    const section = window.sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(tidak dijawab)';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '<br><span class="tr">' + (task.questionEn || '') + '</span></td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak - ' + section.title + '</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script><style>body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}h1{font-size:1.2em;margin-bottom:5px}.info{margin-bottom:15px;font-size:.88em}.info div{margin:3px 0}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}th{background:#f1f5f9;font-weight:600}.checked-by{margin-top:30px;text-align:right;font-style:italic}.tr{font-style:italic;font-size:.85em;color:#64748b}@media print{body{padding:15px}}</style></head><body><h1>Math Tutoring by Deni</h1><div class="info"><div>Nama: ____________________________ <span class="tr">Name</span></div><div>Tanggal: ' + today + ' <span class="tr">Date</span></div><div>Topik: Luas Permukaan Bangun Ruang <span class="tr">Topic: Surface Area</span></div><div>Grup Tugas: ' + section.title + ' <span class="tr">Task Group</span></div><div>Skor: <strong>' + score + '</strong> <span class="tr">Score</span></div></div><table><thead><tr><th style="width:30px">No.</th><th>Pertanyaan <span class="tr">Question</span></th><th>Jawaban Siswa <span class="tr">Student Answer</span></th><th>Jawaban Benar <span class="tr">Correct Answer</span></th><th style="width:50px">Ket. <span class="tr">Note</span></th></tr></thead><tbody>' + rows + '</tbody></table><div class="checked-by">Diperiksa oleh, <span class="tr">Checked by,</span><br>Deni</div><script>document.addEventListener("DOMContentLoaded",function(){if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}setTimeout(function(){window.print();},500);});<\/script></body></html>';
+    const w = window.open('', '_blank');
+    if(w){ w.document.write(html); w.document.close(); } else { alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Allow pop-ups.</span>'); }
+  }
+
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
