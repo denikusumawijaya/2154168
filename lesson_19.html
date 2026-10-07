@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring by Deni - Luas Permukaan Limas</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1e40af;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.tr{font-style:italic;font-size:.82em;color:var(--muted);display:block;margin-top:2px}
+header{background:var(--primary);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:8px}
+header .brand{font-weight:700;font-size:1.05em}
+header .topic{font-size:.88em;text-align:center;flex:1}
+header .topic .tr{color:rgba(255,255,255,.85)}
+header button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:.85em;white-space:nowrap}
+header button:hover{background:rgba(255,255,255,.25)}
+.main-container{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
+.sidebar{background:var(--card);border-right:1px solid var(--border);padding:14px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.sidebar h3{font-size:.72em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px}
+.nav-link{display:block;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:.84em;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{background:#eff6ff}
+.nav-link.active{background:var(--primary);color:#fff;pointer-events:none;cursor:default}
+.nav-link .nl-title{display:block;font-weight:600}
+.nav-link .time{font-size:.76em;color:var(--muted);display:block;margin-top:2px}
+.nav-link.active .time,.nav-link.active .tr{color:rgba(255,255,255,.85)}
+.nav-link.disabled{opacity:.45;cursor:not-allowed;font-size:.8em;padding:6px 10px}
+.content-area{padding:22px 28px;overflow-y:auto;max-width:1100px;margin:0 auto;width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--border);flex-wrap:wrap;gap:8px}
+.page-header h2{color:var(--primary-dark);font-size:1.1em}
+.page-header .badge{background:var(--secondary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.76em;font-weight:600}
+.card{background:var(--card);border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:16px;border:1px solid var(--border)}
+.card.explain{border-left:4px solid var(--primary)}
+.card.task{border-left:4px solid var(--secondary)}
+.card h3{color:var(--primary-dark);margin-bottom:12px;font-size:1.1em}
+.math-block{background:#f1f5f9;padding:12px 14px;border-radius:8px;margin:12px 0;overflow-x:auto}
+.example-box{background:#fef3c7;border-left:4px solid var(--secondary);padding:12px 16px;margin:12px 0;border-radius:6px}
+.example-box h4{color:#92400e;margin-bottom:6px;font-size:.95em}
+.tip-box{background:#dbeafe;border-left:4px solid var(--primary);padding:10px 14px;margin:10px 0;border-radius:6px}
+.tip-box h4{color:#1e40af;margin-bottom:4px;font-size:.9em}
+.illustration{text-align:center;margin:14px 0;padding:14px;background:#f1f5f9;border-radius:8px}
+.q-text{font-size:1em;margin-bottom:12px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.option:hover{border-color:var(--primary);background:#eff6ff}
+.option.selected{border-color:var(--primary);background:#dbeafe}
+.option.correct{border-color:var(--success);background:#d1fae5}
+.option.incorrect{border-color:var(--danger);background:#fee2e2}
+.option .marker{min-width:18px;width:18px;height:18px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.7em;color:#fff}
+.option.selected .marker{background:var(--primary);border-color:var(--primary)}
+.option.correct .marker{background:var(--success);border-color:var(--success)}
+.option.incorrect .marker{background:var(--danger);border-color:var(--danger)}
+.option.checkbox .marker{border-radius:3px}
+.option .opt-text{flex:1}
+.fill-input{padding:8px 12px;border:2px solid var(--border);border-radius:6px;font-size:1em;width:100%;margin:8px 0;font-family:inherit}
+.fill-input:focus{border-color:var(--primary);outline:none}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:.88em;font-weight:600;margin-top:12px}
+.btn-submit:hover{background:var(--primary-dark)}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#d1fae5;border:1px solid var(--success)}
+.feedback.incorrect{background:#fee2e2;border:1px solid var(--danger)}
+.feedback h4{margin-bottom:6px}
+.feedback ol,.feedback ul{margin:6px 0;padding-left:22px}
+.feedback li{margin:4px 0}
+.card ol, .card ul { padding-left: 26px; margin: 10px 0; }
+.card li { margin: 5px 0; }
+.example-box ol, .example-box ul { padding-left: 22px; margin: 8px 0; }
+.tip-box ol, .tip-box ul { padding-left: 22px; margin: 8px 0; }
+.math-block ol, .math-block ul { padding-left: 22px; margin: 8px 0; }
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.pagination button{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.84em}
+.pagination button:disabled{background:#cbd5e1;cursor:not-allowed}
+.pagination .indicator{font-size:.82em;color:var(--muted);text-align:center;flex:1;padding:0 10px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;padding:22px;border-radius:12px;max-width:460px;width:90%}
+.modal-content h3{color:var(--primary-dark);margin-bottom:12px}
+.modal-content ul{list-style:none;padding-left:0}
+.modal-content li{padding:10px 0;border-bottom:1px solid var(--border)}
+.modal-content li:last-child{border-bottom:none}
+.modal-close{background:var(--primary);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;margin-top:12px}
+.sort-list{display:flex;flex-direction:column;gap:6px}
+.sort-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sort-item:hover{border-color:var(--primary)}
+.sort-item.selected{border-color:var(--primary);background:#dbeafe}
+.sort-item .pos{background:var(--primary);color:#fff;min-width:24px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;flex-shrink:0}
+.sort-item .sort-text{flex:1}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair-col h4{font-size:.85em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pair-col{display:flex;flex-direction:column;gap:6px}
+.pair-item{padding:10px 12px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-size:.92em}
+.pair-item.selected{border-color:var(--primary);background:#dbeafe}
+.pair-item.paired{opacity:.5;cursor:default;border-color:var(--success);background:#d1fae5}
+.pairs-list{margin-top:10px}
+.pair-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f1f5f9;border-radius:6px;margin-bottom:4px;font-size:.85em}
+.pair-row .remove{cursor:pointer;color:var(--danger);font-weight:700;margin-left:6px}
+.page-numbers {display:flex;gap:3px;flex-wrap:nowrap;justify-content:center;flex:1;overflow-x:auto;padding:0 3px;}
+.page-num {min-width:28px;height:26px;border:1px solid var(--border);background:#fff;border-radius:4px;cursor:pointer;font-size:.7em;display:flex;align-items:center;justify-content:center;padding:0 4px;white-space:nowrap;transition:all .15s;flex-shrink:0;}
+.page-num.page-num-e {background:#eff6ff;border-color:#93c5fd;color:#1e40af;}
+.page-num.page-num-t {background:#fffbeb;border-color:#fcd34d;color:#92400e;}
+.page-num.page-num-e:hover {background:#dbeafe;border-color:var(--primary);}
+.page-num.page-num-t:hover {background:#fef3c7;border-color:var(--secondary);}
+.page-num.page-num-e.active {background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600;}
+.page-num.page-num-t.active {background:var(--secondary);color:#fff;border-color:var(--secondary);font-weight:600;}
+.page-num:disabled {opacity:1;cursor:default;}
+@media(max-width:1100px){.main-container{grid-template-columns:180px 1fr}.content-area{padding:18px 20px}}
+@media(max-width:760px){.main-container{grid-template-columns:1fr}.sidebar{display:none}.content-area{padding:16px}header{font-size:.9em}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Math Tutoring by Deni</div>
+  <div class="topic">Topik: Luas Permukaan Limas <span class="tr">Topic: Surface Area of a Pyramid</span></div>
+  <button id="classRulesBtn">Aturan Kelas <span class="tr">Class Rules</span></button>
+</header>
+<div class="main-container">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content-area">
+    <div id="pageContent"></div>
+    <div class="pagination">
+      <button id="prevBtn">← Sebelumnya <span class="tr">Previous</span></button>
+      <div class="page-numbers" id="pageNums"></div>
+      <button id="nextBtn">Berikutnya <span class="tr">Next</span> →</button>
+    </div>
+  </main>
+</div>
+<div id="classRulesModal" class="modal">
+  <div class="modal-content">
+    <h3>Aturan Kelas <span class="tr">Class Rules</span></h3>
+    <ul>
+      <li>Berbicara secara bergantian <span class="tr">Speak in turn</span></li>
+      <li>Meminta izin jika ingin meninggalkan kelas <span class="tr">Ask permission before leaving the class</span></li>
+      <li>Menyalakan microphone dan camera jika diperlukan <span class="tr">Turn on microphone and camera when needed</span></li>
+    </ul>
+    <button class="modal-close">Tutup <span class="tr">Close</span></button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(!window.renderMathInElement){setTimeout(arguments.callee,50);return;}
+  const sectionsData = {
+    a: {
+      title: 'Spiral Review Warm-up', titleEn: 'Spiral Review Warm-up', time: '00:00 - 00:10',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Luas Bangun Datar Dasar', pageTitleEn:'Basic 2D Area',
+          body:`<p>Pada pelajaran geometri, <strong>Luas</strong> adalah ukuran banyaknya permukaan yang dibatasi oleh suatu bangun datar. <span class="tr">In geometry, <strong>Area</strong> is the measure of the surface bounded by a 2D shape.</span></p>
+          <div class="math-block"><ul><li>Luas Persegi: $L = s \\times s = s^2$ <span class="tr">Area of a Square</span></li><li>Luas Persegi Panjang: $L = p \\times l$ <span class="tr">Area of a Rectangle</span></li><li>Luas Segitiga: $L = \\dfrac{1}{2} \\times a \\times t$ <span class="tr">Area of a Triangle</span></li></ul></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Hitunglah luas segitiga dengan alas $a = 6 \\text{ cm}$ dan tinggi $t = 8 \\text{ cm}$. <span class="tr">Calculate the area of a triangle with base $6 \\text{ cm}$ and height $8 \\text{ cm}$.</span>
+          <ol><li>$L = \\dfrac{1}{2} \\times a \\times t$</li><li>$L = \\dfrac{1}{2} \\times 6 \\times 8$</li><li>$L = \\dfrac{1}{2} \\times 48$</li><li>$L = 24 \\text{ cm}^2$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T1: Hitung Luas Persegi', pageTitleEn:'Calculate Square Area', taskType:'fill',
+          question:'Sebuah persegi memiliki sisi $s = 7 \\text{ cm}$. Luas persegi tersebut adalah $\\dots \\text{ cm}^2$', questionEn:'A square has a side of $7 \\text{ cm}$. The area is $\\dots \\text{ cm}^2$',
+          correctAnswer:'49', acceptableAnswers:['49'],
+          explanation:`<ol><li>$L = s^2$</li><li>$L = 7^2$</li><li>$L = 7 \\times 7 = 49 \\text{ cm}^2$</li></ol>`
+        },
+        { type:'task', pageTitle:'T2: Luas Segitiga', pageTitleEn:'Triangle Area', taskType:'radio',
+          question:'Sebuah segitiga memiliki alas $10 \\text{ cm}$ dan tinggi $9 \\text{ cm}$. Berapa luasnya?', questionEn:'A triangle has base $10 \\text{ cm}$ and height $9 \\text{ cm}$. What is the area?',
+          options:[{text:'$90 \\text{ cm}^2$', correct:false},{text:'$45 \\text{ cm}^2$', correct:true},{text:'$19 \\text{ cm}^2$', correct:false},{text:'$100 \\text{ cm}^2$', correct:false}],
+          explanation:`<p>$L = \\dfrac{1}{2} \\times a \\times t = \\dfrac{1}{2} \\times 10 \\times 9 = \\dfrac{1}{2} \\times 90 = 45 \\text{ cm}^2$. <span class="tr">Base times height divided by two.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Benar atau Salah', pageTitleEn:'True or False', taskType:'truefalse',
+          question:'Benar atau salah: Luas persegi panjang dengan panjang $4 \\text{ cm}$ dan lebar $5 \\text{ cm}$ adalah $20 \\text{ cm}^2$.', questionEn:'True or false: Area of a rectangle with length $4 \\text{ cm}$ and width $5 \\text{ cm}$ is $20 \\text{ cm}^2$.',
+          correctAnswer:'true',
+          explanation:`<p>$L = p \\times l = 4 \\times 5 = 20 \\text{ cm}^2$. <span class="tr">Length times width.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Teorema Pythagoras', pageTitleEn:'Pythagorean Theorem',
+          body:`<p><strong>Teorema Pythagoras</strong> digunakan untuk mencari panjang sisi pada segitiga siku-siku. <span class="tr">The <strong>Pythagorean Theorem</strong> is used to find the length of sides in a right triangle.</span></p>
+          <div class="math-block">$a^2 + b^2 = c^2$ <span class="tr">where $c$ is the hypotenuse</span></div>
+          <div class="illustration"><svg width="180" height="150" viewBox="0 0 180 150"><polygon points="30,120 150,120 30,30" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="80" y="140" font-size="12">b</text><text x="20" y="80" font-size="12">a</text><text x="100" y="70" font-size="12">c (hipotenusa)</text></svg><div style="font-size:.82em;color:var(--muted)">Segitiga Siku-siku <span class="tr">Right Triangle</span></div></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Sisi siku-siku sebuah segitiga memiliki panjang $3 \\text{ cm}$ dan $4 \\text{ cm}$. Cari panjang hipotenusanya. <span class="tr">The legs are $3 \\text{ cm}$ and $4 \\text{ cm}$. Find the hypotenuse.</span>
+          <ol><li>$c^2 = a^2 + b^2$</li><li>$c^2 = 3^2 + 4^2$</li><li>$c^2 = 9 + 16 = 25$</li><li>$c = \\sqrt{25} = 5 \\text{ cm}$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T4: Cari Hipotenusa', pageTitleEn:'Find Hypotenuse', taskType:'fill',
+          question:'Sisi siku-siku segitiga berukuran $6 \\text{ cm}$ dan $8 \\text{ cm}$. Panjang hipotenusanya adalah $\\dots \\text{ cm}$', questionEn:'Legs are $6 \\text{ cm}$ and $8 \\text{ cm}$. Hypotenuse is $\\dots \\text{ cm}$',
+          correctAnswer:'10', acceptableAnswers:['10'],
+          explanation:`<p>$c = \\sqrt{6^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10 \\text{ cm}$. <span class="tr">Square roots of the sum of squares.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Pasangkan Sisi', pageTitleEn:'Match Sides', taskType:'pairing',
+          question:'Pasangkan sisi siku-siku dengan panjang hipotenusanya.', questionEn:'Match the legs with their hypotenuse.',
+          pairs:[{left:'$3$ dan $4$', right:'$5$'},{left:'$5$ dan $12$', right:'$13$'},{left:'$8$ dan $15$', right:'$17$'},{left:'$9$ dan $12$', right:'$15$'}],
+          explanation:`<p>Gunakan rumus $c = \\sqrt{a^2 + b^2}$. <span class="tr">Use the formula $c = \\sqrt{a^2 + b^2}$.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Urutkan Langkah', pageTitleEn:'Order the Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari panjang hipotenusa jika $a=6, b=8$.', questionEn:'Order steps to find hypotenuse if $a=6, b=8$.',
+          items:['$c^2 = a^2 + b^2$ <span class="tr">Rumus Pythagoras</span>','$c^2 = 6^2 + 8^2$ <span class="tr">Substitusi nilai</span>','$c^2 = 36 + 64$ <span class="tr">Hitung kuadrat</span>','$c = \\sqrt{100} = 10$ <span class="tr">Akar kuadrat</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Ikuti urutan operasi Pythagoras standar. <span class="tr">Follow standard Pythagorean order.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Pengenalan Jaring-jaring Limas', pageTitleEn:'Introduction to Pyramid Nets',
+          body:`<p><strong>Limas</strong> adalah bangun ruang yang memiliki alas berbentuk segi banyak dan sisi-sisi tegak berbentuk segitiga yang bertemu pada satu titik puncak. <span class="tr">A <strong>Pyramid</strong> is a 3D shape with a polygonal base and triangular faces that meet at an apex.</span></p>
+          <div class="illustration"><svg width="220" height="180" viewBox="0 0 220 180"><polygon points="110,20 190,160 30,160" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><polygon points="30,160 190,160 110,20" fill="none" stroke="#92400e" stroke-width="1" stroke-dasharray="4"/><text x="100" y="175" font-size="12">Alas (Persegi)</text><text x="140" y="90" font-size="12">Sisi Tegak</text></svg><div style="font-size:.82em;color:var(--muted)">Limas Segiempat <span class="tr">Square Pyramid</span></div></div>
+          <p><strong>Jaring-jaring</strong> limas adalah bentangan permukaan limas jika dipotong pada rusuk-rusuknya. <span class="tr">The net of a pyramid is its unfolded surface.</span></p>`
+        },
+        { type:'task', pageTitle:'T7: Jumlah Sisi Tegak', pageTitleEn:'Number of Lateral Faces', taskType:'radio',
+          question:'Limas segiempat memiliki berapa sisi tegak berbentuk segitiga?', questionEn:'How many triangular lateral faces does a square pyramid have?',
+          options:[{text:'$3$', correct:false},{text:'$4$', correct:true},{text:'$5$', correct:false},{text:'$6$', correct:false}],
+          explanation:`<p>Jumlah sisi tegak limas sama dengan jumlah sisi pada alasnya. Alas segiempat punya 4 sisi, jadi ada 4 sisi tegak. <span class="tr">Lateral faces equal base sides.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Pilih Sisi Jaring-jaring', pageTitleEn:'Select Net Faces', taskType:'checkbox',
+          question:'Pilih semua bangun yang termasuk dalam jaring-jaring limas segiempat.', questionEn:'Select all shapes in a square pyramid net.',
+          options:[{text:'1 buah persegi', correct:true},{text:'4 buah segitiga', correct:true},{text:'1 buah lingkaran', correct:false},{text:'4 buah persegi panjang', correct:false}],
+          explanation:`<p>Jaring-jaring limas segiempat terdiri dari 1 alas persegi dan 4 sisi tegak segitiga. <span class="tr">1 square base and 4 triangles.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Sifat Limas', pageTitleEn:'Pyramid Properties', taskType:'truefalse',
+          question:'Benar atau salah: Limas segitiga memiliki 3 buah sisi tegak.', questionEn:'True or false: A triangular pyramid has 3 lateral faces.',
+          correctAnswer:'true',
+          explanation:`<p>Alas segitiga memiliki 3 sisi, sehingga sisi tegaknya juga ada 3. <span class="tr">Triangular base means 3 lateral faces.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Pasangkan Jaring-jaring', pageTitleEn:'Match Nets', taskType:'pairing',
+          question:'Pasangkan jenis limas dengan jumlah segitiga pada jaring-jaringnya.', questionEn:'Match pyramid type with number of triangles in net.',
+          pairs:[{left:'Limas Segiempat', right:'4 segitiga'},{left:'Limas Segitiga', right:'3 segitiga'},{left:'Limas Segi lima', right:'5 segitiga'},{left:'Limas Segi enam', right:'6 segitiga'}],
+          explanation:`<p>Jumlah segitiga = jumlah sisi pada bidang alas. <span class="tr">Triangles = sides of base.</span></p>`
+        }
+      ]
+    },
+    b: {
+      title: 'Introduction & Real-World Connection', titleEn: 'Introduction & Real-World Connection', time: '00:10 - 00:15',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Limas di Dunia Nyata', pageTitleEn:'Pyramids in Real World',
+          body:`<p>Bentuk limas sering kita jumpai dalam kehidupan sehari-hari, seperti atap rumah, tenda, dan menara piramida. <span class="tr">Pyramid shapes are found in roofs, tents, and pyramids.</span></p>
+          <div class="illustration"><svg width="240" height="140" viewBox="0 0 240 140"><polygon points="120,20 220,120 20,120" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><rect x="20" y="120" width="200" height="20" fill="#94a3b8"/><text x="90" y="80" font-size="12">Atap Limas</text></svg><div style="font-size:.82em;color:var(--muted)">Atap Rumah <span class="tr">House Roof</span></div></div>
+          <p>Untuk mengetahui berapa banyak material (seperti kanvas tenda atau genteng atap) yang dibutuhkan, kita harus menghitung <strong>Luas Permukaan Limas</strong>. <span class="tr">To find material needed, we calculate <strong>Surface Area of Pyramid</strong>.</span></p>`
+        },
+        { type:'task', pageTitle:'T1: Bentuk Dasar Piramida', pageTitleEn:'Base Shape of Pyramids', taskType:'radio',
+          question:'Piramida Mesir yang terkenal memiliki bentuk alas apa?', questionEn:'What is the base shape of Egyptian pyramids?',
+          options:[{text:'Segitiga', correct:false},{text:'Persegi', correct:true},{text:'Lingkaran', correct:false},{text:'Segi enam', correct:false}],
+          explanation:`<p>Piramida Mesir (seperti Giza) memiliki alas berbentuk persegi. <span class="tr">Egyptian pyramids have square bases.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Tenda', pageTitleEn:'Tents', taskType:'fill',
+          question:'Sebuah tenda berbentuk limas segitiga. Jika luas salah satu sisinya $2 \\text{ m}^2$, total luas kanvas tenda (3 sisi) adalah $\\dots \\text{ m}^2$', questionEn:'A triangular pyramid tent. If one face is $2 \\text{ m}^2$, total canvas (3 faces) is $\\dots \\text{ m}^2$',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$3 \\text{ sisi} \\times 2 \\text{ m}^2 = 6 \\text{ m}^2$. <span class="tr">3 faces times 2.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Atap Rumah', pageTitleEn:'House Roof', taskType:'truefalse',
+          question:'Benar atau salah: Atap rumah sering berbentuk limas karena dapat melancarkan air hujan.', questionEn:'True or false: Roofs are pyramidal to drain rainwater.',
+          correctAnswer:'true',
+          explanation:`<p>Bentuk limas miring sehingga air hujan langsung turun. <span class="tr">Pyramid shape allows water to slide down.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Anatomi Limas', pageTitleEn:'Anatomy of a Pyramid',
+          body:`<p>Berikut adalah bagian-bagian penting dari limas segiempat: <span class="tr">Parts of a square pyramid:</span></p>
+          <div class="math-block"><ul><li><strong>Alas (Base)</strong>: Sisi bagian bawah berbentuk persegi (sisi = $s$).</li><li><strong>Puncak (Apex)</strong>: Titik paling atas.</li><li><strong>Sisi Tegak (Lateral Faces)</strong>: Segitiga yang menghubungkan alas ke puncak.</li><li><strong>Tinggi Limas (Height, $t$)</strong>: Jarak tegak lurus dari puncak ke alas.</li><li><strong>Tinggi Sisi Tegak (Slant Height, $l$)</strong>: Tinggi dari segitiga sisi tegak (dari puncak tegak lurus ke rusuk alas).</li></ul></div>
+          <div class="illustration"><svg width="220" height="200" viewBox="0 0 220 200"><polygon points="110,20 190,160 30,160" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><line x1="110" y1="20" x2="110" y2="160" stroke="#2563eb" stroke-width="1" stroke-dasharray="4"/><line x1="110" y1="160" x2="110" y2="120" stroke="#ef4444" stroke-width="2"/><line x1="110" y1="20" x2="110" y2="120" stroke="#10b981" stroke-width="2"/><text x="115" y="140" font-size="11">t (tinggi limas)</text><text x="115" y="80" font-size="11">l (tinggi sisi)</text></svg></div>`
+        },
+        { type:'task', pageTitle:'T4: Identifikasi Bagian', pageTitleEn:'Identify Parts', taskType:'radio',
+          question:'Bagian limas yang berbentuk segitiga disebut...', questionEn:'The triangular part of a pyramid is called...',
+          options:[{text:'Alas', correct:false},{text:'Sisi Tegak', correct:true},{text:'Puncak', correct:false},{text:'Diagonal', correct:false}],
+          explanation:`<p>Sisi tegak selalu berbentuk segitiga pada limas. <span class="tr">Lateral faces are always triangles.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Pilih Komponen', pageTitleEn:'Select Components', taskType:'checkbox',
+          question:'Pilih semua yang merupakan bagian dari limas.', questionEn:'Select all parts of a pyramid.',
+          options:[{text:'Puncak (Apex)', correct:true},{text:'Alas (Base)', correct:true},{text:'Jari-jari (Radius)', correct:false},{text:'Sisi Tegak', correct:true}],
+          explanation:`<p>Limas tidak memiliki jari-jari (itu milik tabung/kerucut). <span class="tr">Pyramids don't have radius.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangkan Definisi', pageTitleEn:'Match Definitions', taskType:'pairing',
+          question:'Pasangkan bagian dengan deskripsinya.', questionEn:'Match parts with descriptions.',
+          pairs:[{left:'Tinggi Limas ($t$)', right:'Puncak ke tengah alas'},{left:'Alas', right:'Sisi bawah'},{left:'Sisi Tegak', right:'Segitiga samping'},{left:'Tinggi Sisi ($l$)', right:'Puncak ke rusuk alas'}],
+          explanation:`<p>Bedakan tinggi limas (ke pusat alas) dan tinggi sisi tegak (ke rusuk alas). <span class="tr">Differentiate height and slant height.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Jaring-Jaring dan Luas', pageTitleEn:'Nets and Area',
+          body:`<p>Untuk menghitung luas permukaan, kita bayangkan limas dibentangkan menjadi jaring-jaring. <span class="tr">To calculate surface area, unfold the pyramid into a net.</span></p>
+          <div class="illustration"><svg width="240" height="160" viewBox="0 0 240 160"><polygon points="120,100 80,140 160,140" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><polygon points="120,100 160,140 200,100" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><polygon points="120,100 200,100 160,60" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><polygon points="120,100 160,60 80,60" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><polygon points="120,100 80,60 80,140" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/></svg><div style="font-size:.82em;color:var(--muted)">Jaring-jaring Limas Segiempat <span class="tr">Square Pyramid Net</span></div></div>
+          <div class="math-block">Luas Permukaan = Luas Alas + Jumlah Luas Sisi Tegak</div>`
+        },
+        { type:'task', pageTitle:'T7: Luas Alas', pageTitleEn:'Base Area', taskType:'fill',
+          question:'Sebuah limas segiempat memiliki sisi alas $s = 10 \\text{ cm}$. Luas alasnya adalah $\\dots \\text{ cm}^2$', questionEn:'Base side $s = 10 \\text{ cm}$. Base area is $\\dots$',
+          correctAnswer:'100', acceptableAnswers:['100'],
+          explanation:`<p>Luas persegi = $s^2 = 10^2 = 100 \\text{ cm}^2$. <span class="tr">Square area.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Jumlah Sisi', pageTitleEn:'Total Lateral Area', taskType:'fill',
+          question:'Jika luas satu segitiga sisi tegak adalah $15 \\text{ cm}^2$, jumlah luas keempat sisi tegak limas segiempat adalah $\\dots \\text{ cm}^2$', questionEn:'If one triangle face is $15 \\text{ cm}^2$, total 4 faces area is $\\dots$',
+          correctAnswer:'60', acceptableAnswers:['60'],
+          explanation:`<p>$4 \\times 15 = 60 \\text{ cm}^2$. <span class="tr">4 times the triangle area.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Rumus Total', pageTitleEn:'Total Formula', taskType:'truefalse',
+          question:'Benar atau salah: Luas permukaan limas = Luas Alas + Luas Selimut (Total Sisi Tegak).', questionEn:'True or false: Surface area = Base area + Lateral area.',
+          correctAnswer:'true',
+          explanation:`<p>Luas total mencakup alas dan semua sisi tegaknya. <span class="tr">Total includes base and faces.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Pasangkan Rumus', pageTitleEn:'Match Formulas', taskType:'pairing',
+          question:'Pasangkan komponen dengan rumus luasnya (limas segiempat).', questionEn:'Match components with area formulas.',
+          pairs:[{left:'Luas Alas', right:'$s^2$'},{left:'Luas 1 Sisi Tegak', right:'$\\dfrac{1}{2} \\times s \\times l$'},{left:'Luas Selimut (4 Sisi)', right:'$2 \\times s \\times l$'},{left:'Luas Permukaan Total', right:'$s^2 + 2sl$'}],
+          explanation:`<p>Luas selimut = $4 \\times (\\frac{1}{2}sl) = 2sl$. Total = Alas + Selimut. <span class="tr">Lateral area is $2sl$.</span></p>`
+        }
+      ]
+    },
+    c: {
+      title: 'Review of Prior Knowledge', titleEn: 'Review of Prior Knowledge', time: '00:15 - 00:20',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Mencari Tinggi Sisi Tegak ($l$)', pageTitleEn:'Finding Slant Height ($l$)',
+          body:`<p>Pada limas segiempat, seringkali kita tidak diberi tinggi sisi tegak ($l$), melainkan tinggi limas ($t$). Kita gunakan Teorema Pythagoras untuk mencari $l$. <span class="tr">We use Pythagorean theorem to find slant height $l$ from height $t$.</span></p>
+          <div class="math-block">$l^2 = t^2 + \\left( \\dfrac{s}{2} \\right)^2$ <span class="tr">because $\\frac{s}{2}$ is half the base side.</span></div>
+          <div class="illustration"><svg width="220" height="180" viewBox="0 0 220 180"><polygon points="110,20 190,160 30,160" fill="#f1f5f9" stroke="#333" stroke-width="2"/><line x1="110" y1="20" x2="110" y2="160" stroke="#2563eb" stroke-width="2" stroke-dasharray="4"/><line x1="110" y1="20" x2="190" y2="160" stroke="#f59e0b" stroke-width="2"/><line x1="110" y1="160" x2="190" y2="160" stroke="#10b981" stroke-width="2"/><text x="115" y="90" font-size="12">t</text><text x="140" y="90" font-size="12">l</text><text x="145" y="155" font-size="12">s/2</text></svg></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Alas persegi $s = 6 \\text{ cm}$, tinggi limas $t = 4 \\text{ cm}$. Cari $l$.
+          <ol><li>$l^2 = t^2 + \\left( \\dfrac{s}{2} \\right)^2$</li><li>$l^2 = 4^2 + \\left( \\dfrac{6}{2} \\right)^2$</li><li>$l^2 = 16 + 3^2 = 16 + 9 = 25$</li><li>$l = \\sqrt{25} = 5 \\text{ cm}$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T1: Hitung $l$', pageTitleEn:'Calculate $l$', taskType:'fill',
+          question:'Diketahui $s=8 \\text{ cm}$ dan $t=3 \\text{ cm}$. Maka $l = \\dots \\text{ cm}$', questionEn:'Given $s=8 \\text{ cm}$ and $t=3 \\text{ cm}$. Find $l = \\dots$',
+          correctAnswer:'5', acceptableAnswers:['5'],
+          explanation:`<p>$l = \\sqrt{t^2 + (s/2)^2} = \\sqrt{3^2 + 4^2} = \\sqrt{9+16} = \\sqrt{25} = 5 \\text{ cm}$. <span class="tr">Use Pythagorean theorem.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Pilih Nilai $l$', pageTitleEn:'Choose $l$ Value', taskType:'radio',
+          question:'Jika $s=10 \\text{ cm}$ dan $t=12 \\text{ cm}$, berapa nilai $l$?', questionEn:'If $s=10 \\text{ cm}$ and $t=12 \\text{ cm}$, what is $l$?',
+          options:[{text:'$13 \\text{ cm}$', correct:true},{text:'$15 \\text{ cm}$', correct:false},{text:'$14 \\text{ cm}$', correct:false},{text:'$12 \\text{ cm}$', correct:false}],
+          explanation:`<p>$l = \\sqrt{12^2 + 5^2} = \\sqrt{144+25} = \\sqrt{169} = 13 \\text{ cm}$. <span class="tr">Square root of 169.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Hubungan $l$ dan $t$', pageTitleEn:'$l$ and $t$ Relationship', taskType:'truefalse',
+          question:'Benar atau salah: Tinggi sisi tegak ($l$) selalu lebih pendek dari tinggi limas ($t$).', questionEn:'True or false: Slant height ($l$) is always shorter than height ($t$).',
+          correctAnswer:'false',
+          explanation:`<p>$l$ adalah hipotenusa, sehingga $l > t$. <span class="tr">$l$ is hypotenuse, so $l > t$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Luas Selimut Limas Segiempat', pageTitleEn:'Lateral Area of Square Pyramid',
+          body:`<p>Setelah menemukan $l$, kita bisa menghitung luas selimut (luas sisi tegak). <span class="tr">After finding $l$, we calculate lateral area.</span></p>
+          <div class="math-block">$L = 4 \\times \\left( \\dfrac{1}{2} \\times s \\times l \\right) = 2 \\times s \\times l$</div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Jika $s=6 \\text{ cm}$ dan $l=5 \\text{ cm}$, maka:
+          <ol><li>$L = 2 \\times s \\times l$</li><li>$L = 2 \\times 6 \\times 5$</li><li>$L = 60 \\text{ cm}^2$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T4: Hitung Luas Selimut', pageTitleEn:'Lateral Area', taskType:'fill',
+          question:'Diketahui $s = 10 \\text{ cm}$ dan $l = 13 \\text{ cm}$. Luas selimutnya adalah $\\dots \\text{ cm}^2$', questionEn:'Given $s=10, l=13$. Lateral area is $\\dots$',
+          correctAnswer:'260', acceptableAnswers:['260'],
+          explanation:`<p>$L = 2 \\times 10 \\times 13 = 260 \\text{ cm}^2$. <span class="tr">2 times side times slant height.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Urutkan Langkah', pageTitleEn:'Order Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari luas selimut jika $s=4, l=6$.', questionEn:'Order steps for lateral area if $s=4, l=6$.',
+          items:['$L = 2 \\times s \\times l$ <span class="tr">Rumus</span>','$L = 2 \\times 4 \\times 6$ <span class="tr">Substitusi</span>','$L = 8 \\times 6$ <span class="tr">Sederhanakan</span>','$L = 48 \\text{ cm}^2$ <span class="tr">Hasil</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Ikuti urutan perhitungan aljabar. <span class="tr">Follow algebraic order.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangkan Nilai', pageTitleEn:'Match Values', taskType:'pairing',
+          question:'Pasangkan $s$ dan $l$ dengan Luas Selimutnya.', questionEn:'Match $s, l$ with Lateral Area.',
+          pairs:[{left:'$s=6, l=5$', right:'$60$'},{left:'$s=10, l=13$', right:'$260$'},{left:'$s=4, l=6$', right:'$48$'},{left:'$s=8, l=15$', right:'$240$'}],
+          explanation:`<p>Gunakan $L = 2sl$. <span class="tr">Use $L = 2sl$.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Luas Permukaan Total', pageTitleEn:'Total Surface Area',
+          body:`<p><strong>Luas Permukaan Total</strong> adalah jumlah luas seluruh permukaan bangun ruang, yaitu luas selimut (sisi tegak) ditambah luas alas. <span class="tr">Total surface area = lateral area + base area.</span></p>
+          <div class="math-block">$L_{total} = L_{selimut} + L_{alas} = 2sl + s^2$</div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Limas segiempat $s=6 \\text{ cm}, l=5 \\text{ cm}$.
+          <ol><li>$L_{total} = 2sl + s^2$</li><li>$L_{total} = 2(6)(5) + 6^2$</li><li>$L_{total} = 60 + 36$</li><li>$L_{total} = 96 \\text{ cm}^2$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T7: Hitung Luas Total', pageTitleEn:'Total Area', taskType:'fill',
+          question:'Diketahui $s=8 \\text{ cm}, l=10 \\text{ cm}$. Luas permukaan total limas adalah $\\dots \\text{ cm}^2$', questionEn:'Given $s=8, l=10$. Total area is $\\dots$',
+          correctAnswer:'224', acceptableAnswers:['224'],
+          explanation:`<p>$L = 2(8)(10) + 8^2 = 160 + 64 = 224 \\text{ cm}^2$. <span class="tr">Lateral plus base.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Komponen Luas', pageTitleEn:'Area Components', taskType:'checkbox',
+          question:'Pilih komponen yang menjumlahkan luas permukaan limas segiempat.', questionEn:'Select components for total area.',
+          options:[{text:'Luas 4 segitiga', correct:true},{text:'Luas 1 persegi', correct:true},{text:'Luas 2 lingkaran', correct:false},{text:'Volume air', correct:false}],
+          explanation:`<p>Luas total = 4 segitiga (selimut) + 1 persegi (alas). <span class="tr">4 triangles + 1 square.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Pernyataan Rumus', pageTitleEn:'Formula Statement', taskType:'truefalse',
+          question:'Benar atau salah: Rumus $L = s^2 + 2sl$ berlaku untuk semua limas segi-n.', questionEn:'True or false: Formula applies to all pyramids.',
+          correctAnswer:'false',
+          explanation:`<p>Rumus $s^2 + 2sl$ khusus limas segiempat. Untuk segitiga, luas alasnya bukan $s^2$. <span class="tr">Only for square pyramids.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Pasangkan Rumus', pageTitleEn:'Match Formulas', taskType:'pairing',
+          question:'Pasangkan luas dengan rumus matematikanya (Limas Segiempat).', questionEn:'Match areas with formulas.',
+          pairs:[{left:'Luas Alas', right:'$s^2$'},{left:'Luas Selimut', right:'$2sl$'},{left:'Luas 1 Sisi Tegak', right:'$\\dfrac{1}{2}sl$'},{left:'Luas Total', right:'$s^2 + 2sl$'}],
+          explanation:`<p>Ingat: Selimut = 4 kali sisi tegak. <span class="tr">Lateral = 4 times face.</span></p>`
+        }
+      ]
+    },
+    d: {
+      title: 'Problem Introduction', titleEn: 'Problem Introduction', time: '00:20 - 00:30',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Menerapkan Rumus Limas Segiempat', pageTitleEn:'Applying Square Pyramid Formula',
+          body:`<p>Pada bagian ini, kita akan menggabungkan langkah mencari $l$ dan menghitung Luas Permukaan Total. <span class="tr">In this section, we combine finding $l$ and Total Surface Area.</span></p>
+          <div class="illustration"><svg width="220" height="180" viewBox="0 0 220 180"><polygon points="110,20 190,160 30,160" fill="#f1f5f9" stroke="#333" stroke-width="2"/><line x1="110" y1="20" x2="110" y2="160" stroke="#2563eb" stroke-width="2" stroke-dasharray="4"/><line x1="110" y1="20" x2="190" y2="160" stroke="#f59e0b" stroke-width="2"/><line x1="110" y1="160" x2="190" y2="160" stroke="#10b981" stroke-width="2"/><text x="115" y="90" font-size="12">t</text><text x="140" y="90" font-size="12">l</text><text x="145" y="155" font-size="12">s/2</text></svg><div style="font-size:.82em;color:var(--muted)">Penampang Limas <span class="tr">Pyramid Cross-Section</span></div></div>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Diketahui limas segiempat $s = 10 \\text{ cm}$ dan tinggi $t = 12 \\text{ cm}$. Hitung Luas Permukaan Total!
+          <ol><li><strong>Cari $l$:</strong> $l = \\sqrt{t^2 + (\\dfrac{s}{2})^2} = \\sqrt{12^2 + 5^2} = \\sqrt{144 + 25} = \\sqrt{169} = 13 \\text{ cm}$</li><li><strong>Luas Alas:</strong> $s^2 = 10^2 = 100 \\text{ cm}^2$</li><li><strong>Luas Selimut:</strong> $2sl = 2(10)(13) = 260 \\text{ cm}^2$</li><li><strong>Luas Total:</strong> $100 + 260 = 360 \\text{ cm}^2$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T1: Cari $l$', pageTitleEn:'Find $l$', taskType:'fill',
+          question:'Limas segiempat $s=14 \\text{ cm}$, $t=24 \\text{ cm}$. Nilai $l = \\dots \\text{ cm}$', questionEn:'Square pyramid $s=14, t=24$. Find $l$',
+          correctAnswer:'25', acceptableAnswers:['25'],
+          explanation:`<p>$l = \\sqrt{24^2 + 7^2} = \\sqrt{576 + 49} = \\sqrt{625} = 25 \\text{ cm}$. <span class="tr">Half of 14 is 7.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Hitung Luas Total', pageTitleEn:'Calculate Total Area', taskType:'radio',
+          question:'Diketahui $s=14 \\text{ cm}$ dan $l=25 \\text{ cm}$. Berapa Luas Permukaan Total limas tersebut?', questionEn:'Given $s=14, l=25$. What is Total Surface Area?',
+          options:[{text:'$896 \\text{ cm}^2$', correct:true},{text:'$700 \\text{ cm}^2$', correct:false},{text:'$350 \\text{ cm}^2$', correct:false},{text:'$966 \\text{ cm}^2$', correct:false}],
+          explanation:`<p>$L_{total} = s^2 + 2sl = 14^2 + 2(14)(25) = 196 + 700 = 896 \\text{ cm}^2$. <span class="tr">Base area plus lateral area.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Rumus Benar/Salah', pageTitleEn:'Formula True/False', taskType:'truefalse',
+          question:'Benar atau salah: Luas permukaan total limas segiempat didapatkan dari luas selimut dikurangi luas alas.', questionEn:'True or false: Total surface area is lateral area minus base area.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Luas total adalah luas selimut <strong>ditambah</strong> luas alas. <span class="tr">Plus, not minus.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Limas Segitiga (Tetrahedron)', pageTitleEn:'Triangular Pyramid',
+          body:`<p><strong>Limas Segitiga</strong> memiliki alas berbentuk segitiga dan 3 buah sisi tegak berbentuk segitiga. Total ada 4 buah sisi segitiga. <span class="tr">A triangular pyramid has a triangular base and 3 triangular faces. Total 4 triangles.</span></p>
+          <div class="illustration"><svg width="160" height="180" viewBox="0 0 160 180"><polygon points="80,20 140,140 20,140" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><polygon points="80,20 20,140 80,100" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><polygon points="80,20 80,100 140,140" fill="#f1f5f9" stroke="#333" stroke-width="1" stroke-dasharray="4"/></svg><div style="font-size:.82em;color:var(--muted)">Limas Segitiga <span class="tr">Triangular Pyramid</span></div></div>
+          <div class="math-block">Jika semua sisi sama (Tetrahedron beraturan):<br>$L_{total} = 4 \\times \\text{Luas Segitiga}$</div>`
+        },
+        { type:'task', pageTitle:'T4: Beda Limas', pageTitleEn:'Pyramid Differences', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar mengenai limas segitiga.', questionEn:'Select correct statements about triangular pyramids.',
+          options:[{text:'Memiliki 4 buah sisi (faces)', correct:true},{text:'Alasnya berbentuk segitiga', correct:true},{text:'Memiliki 4 buah titik sudut', correct:true},{text:'Memiliki 6 rusuk (edges)', correct:true}],
+          explanation:`<p>Limas segitiga (tetrahedron) memiliki 4 sisi, 4 titik sudut, dan 6 rusuk. <span class="tr">4 faces, 4 vertices, 6 edges.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Luas Alas Segitiga', pageTitleEn:'Triangle Base Area', taskType:'fill',
+          question:'Alas limas berbentuk segitiga siku-siku dengan sisi $3, 4, 5$. Luas alasnya adalah $\\dots \\text{ cm}^2$', questionEn:'Right triangle base with sides 3, 4, 5. Base area is $\\dots$',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>Luas segitiga = $\\frac{1}{2} \\times 3 \\times 4 = 6 \\text{ cm}^2$. <span class="tr">Half of 3 times 4.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Pasangkan Rumus', pageTitleEn:'Match Formulas', taskType:'pairing',
+          question:'Pasangkan bagian limas dengan rumusnya.', questionEn:'Match pyramid part with formula.',
+          pairs:[{left:'Luas Alas Persegi', right:'$s^2$'},{left:'Luas Selimut Segiempat', right:'$2sl$'},{left:'Luas 1 Sisi Tegak', right:'$\\frac{1}{2}sl$'},{left:'Luas Alas Segitiga', right:'$\\frac{1}{2}at$'}],
+          explanation:`<p>Sesuaikan rumus luas dengan bentuk bidang alasnya. <span class="tr">Match formulas with base shapes.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Memecahkan Masalah Kata', pageTitleEn:'Solving Word Problems',
+          body:`<p>Pada soal cerita, sering kita temukan <strong>tenda</strong> atau <strong>atap</strong>. Tenda biasanya <strong>tidak memiliki alas</strong> karena dilantai, sehingga luas kain = luas selimut. <span class="tr">Tents usually have no base, so area = lateral area.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Tenda berbentuk limas segiempat dengan $s=2 \\text{ m}$ dan $l=2,5 \\text{ m}$. Luas kain tenda?
+          <ol><li>$L_{kain} = L_{selimut} = 2sl$</li><li>$L_{kain} = 2(2)(2,5) = 10 \\text{ m}^2$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T7: Urutkan Tenda', pageTitleEn:'Order Tent Steps', taskType:'sorting',
+          question:'Urutkan langkah menghitung luas kain tenda limas segiempat.', questionEn:'Order steps to calculate tent canvas area.',
+          items:['Identifikasi $s$ dan $l$ <span class="tr">Identify $s$ and $l$</span>','Gunakan rumus $L = 2sl$ <span class="tr">Use $L = 2sl$</span>','Substitusi nilai $s$ dan $l$ <span class="tr">Substitute values</span>','Hitung hasilnya <span class="tr">Calculate result</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah standar penyelesaian soal cerita. <span class="tr">Standard problem solving steps.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Hitung Kain', pageTitleEn:'Canvas Area', taskType:'fill',
+          question:'Tenda limas segiempat $s=3 \\text{ m}$, $l=4 \\text{ m}$. Luas kain yang dibutuhkan adalah $\\dots \\text{ m}^2$', questionEn:'Tent $s=3, l=4$. Canvas area is $\\dots$',
+          correctAnswer:'24', acceptableAnswers:['24'],
+          explanation:`<p>$L = 2sl = 2(3)(4) = 24 \\text{ m}^2$. <span class="tr">No base needed for tent.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Tenda dengan Alas?', pageTitleEn:'Tent with Base?', taskType:'truefalse',
+          question:'Benar atau salah: Untuk mengecat atap limas, kita menghitung luas total (alas + selimut).', questionEn:'True or false: Painting a roof uses total area (base + lateral).',
+          correctAnswer:'false',
+          explanation:`<p>Atap tidak dicat bagian alasnya (menempel ke langit-langit), jadi hanya luas selimut. <span class="tr">Roof = lateral area only.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Soal Atap', pageTitleEn:'Roof Problem', taskType:'radio',
+          question:'Atap limas segiempat $s=6 \\text{ m}$, $l=5 \\text{ m}$. Biaya cat $\\text{Rp} 10.000/ \\text{m}^2$. Total biaya cat adalah...', questionEn:'Roof $s=6, l=5$. Cost is 10k/m2. Total cost...',
+          options:[{text:'$\\text{Rp} 600.000$', correct:true},{text:'$\\text{Rp} 300.000$', correct:false},{text:'$\\text{Rp} 360.000$', correct:false},{text:'$\\text{Rp} 60.000$', correct:false}],
+          explanation:`<p>$L_{atap} = 2sl = 2(6)(5) = 60 \\text{ m}^2$. $60 \\times 10.000 = 600.000$. <span class="tr">Calculate area then multiply by rate.</span></p>`
+        }
+      ]
+    },
+    e: {
+      title: 'Guided Practice', titleEn: 'Guided Practice', time: '00:30 - 00:45',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Latihan Terbimbing Luas Total', pageTitleEn:'Guided Practice Total Area',
+          body:`<p>Mari kita kerjakan soal yang membutuhkan ketelitian tinggi. Perhatikan satuan dan bentuk akar. <span class="tr">Let's solve problems requiring high accuracy. Watch units and roots.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Limas segiempat $s = 8 \\text{ cm}$, $t = 6 \\text{ cm}$.
+          <ol><li>$l = \\sqrt{6^2 + 4^2} = \\sqrt{52} = 2\\sqrt{13} \\text{ cm}$</li><li>$L_{total} = s^2 + 2sl = 64 + 2(8)(2\\sqrt{13}) = 64 + 32\\sqrt{13} \\text{ cm}^2$</li></ol>
+          <p>Jika diminta nilai pendekatan, $\\sqrt{13} \\approx 3,6$, maka $64 + 115,2 = 179,2 \\text{ cm}^2$.</p></div>`
+        },
+        { type:'task', pageTitle:'T1: Cari $l$ Akar', pageTitleEn:'Find $l$ Root', taskType:'fill',
+          question:'Limas $s=8 \\text{ cm}$, $t=6 \\text{ cm}$. Nilai $l$ dalam bentuk akar adalah $\\dots \\text{ cm}$', questionEn:'Pyramid $s=8, t=6$. $l$ in root form is $\\dots$',
+          correctAnswer:'2\\sqrt{13}', acceptableAnswers:['2\\sqrt{13}','2akar13','2sqrt13','2√13'],
+          explanation:`<p>$l = \\sqrt{t^2 + (s/2)^2} = \\sqrt{36 + 16} = \\sqrt{52} = 2\\sqrt{13} \\text{ cm}$. <span class="tr">Simplify the root.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Luas Selimut Akar', pageTitleEn:'Lateral Area Root', taskType:'fill',
+          question:'Dengan $s=8$ dan $l=2\\sqrt{13}$, Luas Selimut adalah $\\dots \\text{ cm}^2$', questionEn:'With $s=8, l=2\\sqrt{13}$, Lateral Area is $\\dots$',
+          correctAnswer:'32\\sqrt{13}', acceptableAnswers:['32\\sqrt{13}','32sqrt13','32akar13','32√13'],
+          explanation:`<p>$L_{selimut} = 2sl = 2(8)(2\\sqrt{13}) = 32\\sqrt{13} \\text{ cm}^2$. <span class="tr">Multiply coefficients.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Luas Total Akar', pageTitleEn:'Total Area Root', taskType:'radio',
+          question:'Diketahui $s=8 \\text{ cm}$ dan $l=2\\sqrt{13} \\text{ cm}$. Berapa Luas Total dalam bentuk akar?', questionEn:'Given $s=8, l=2\\sqrt{13}$. Total Area in root form?',
+          options:[{text:'$64 + 32\\sqrt{13}$', correct:true},{text:'$64 + 16\\sqrt{13}$', correct:false},{text:'$64 + 2\\sqrt{13}$', correct:false},{text:'$32\\sqrt{13}$', correct:false}],
+          explanation:`<p>$L_{total} = s^2 + 2sl = 64 + 32\\sqrt{13} \\text{ cm}^2$. <span class="tr">Base plus lateral in root form.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Limas Alas Persegi Panjang', pageTitleEn:'Rectangular Base Pyramid',
+          body:`<p>Alas limas tidak selalu persegi. Jika alasnya persegi panjang ($p$ dan $l$), maka sisi tegaknya terdiri dari 2 pasang segitiga yang berbeda ukuran. <span class="tr">If base is rectangle, lateral faces are 2 pairs of different triangles.</span></p>
+          <div class="illustration"><svg width="240" height="160" viewBox="0 0 240 160"><polygon points="120,20 200,120 40,120" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/><line x1="120" y1="20" x2="120" y2="120" stroke="#2563eb" stroke-dasharray="4"/></svg><div style="font-size:.82em;color:var(--muted)">Penampang Limas Persegi Panjang <span class="tr">Rectangular Pyramid Section</span></div></div>
+          <div class="math-block">Luas Selimut = $2 \\times (\\frac{1}{2} \\times p \\times l_1) + 2 \\times (\\frac{1}{2} \\times l \\times l_2)$</div>`
+        },
+        { type:'task', pageTitle:'T4: Pasangkan Sisi', pageTitleEn:'Match Sides', taskType:'pairing',
+          question:'Pasangkan dimensi segitiga sisi tegak pada limas persegi panjang.', questionEn:'Match triangle dimensions for rectangular pyramid.',
+          pairs:[{left:'Segitiga depan/belakang', right:'Alas $p$, Tinggi $l_1$'},{left:'Segitiga kiri/kanan', right:'Alas $l$, Tinggi $l_2$'},{left:'Luas Alas', right:'$p \\times l$'},{left:'Tinggi Limas', right:'$t$'}],
+          explanation:`<p>Sisi tegak depan/belakang sejajar dengan rusuk $p$, sisi tegak kiri/kanan sejajar dengan $l$. <span class="tr">Front faces parallel to $p$.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Luas Selimut Persegi Panjang', pageTitleEn:'Rectangular Lateral Area', taskType:'fill',
+          question:'Limas persegi panjang $p=6, l=8$. Tinggi sisi depan $l_1=5$, tinggi sisi samping $l_2=4,5$. Luas Selimutnya adalah $\\dots \\text{ cm}^2$', questionEn:'Rectangular pyramid $p=6, l=8$. Slant heights $5$ and $4.5$. Lateral area is $\\dots$',
+          correctAnswer:'66', acceptableAnswers:['66'],
+          explanation:`<p>$L = 2(\\frac{1}{2} \\times 6 \\times 5) + 2(\\frac{1}{2} \\times 8 \\times 4.5) = 30 + 36 = 66 \\text{ cm}^2$. <span class="tr">Calculate carefully.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Sisi Tegak Sama?', pageTitleEn:'Equal Faces?', taskType:'truefalse',
+          question:'Benar atau salah: Pada limas alas persegi panjang, keempat sisi tegaknya memiliki luas yang sama besar.', questionEn:'True or false: Rectangular pyramid has 4 equal lateral faces.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Terdapat 2 pasang segitiga dengan ukuran berbeda (kecuali jika $p=l$). <span class="tr">Two pairs of different triangles.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Kerja Mundur (Reverse Engineering)', pageTitleEn:'Reverse Engineering',
+          body:`<p>Kita bisa mencari tinggi limas ($t$) jika diketahui Luas Total dan sisi alas ($s$). <span class="tr">We can find $t$ if Total Area and $s$ are known.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Luas total limas segiempat $96 \\text{ cm}^2$, $s=6 \\text{ cm}$. Cari $t$.
+          <ol><li>$L_{total} = s^2 + 2sl \\Rightarrow 96 = 36 + 2(6)l$</li><li>$60 = 12l \\Rightarrow l = 5 \\text{ cm}$</li><li>$t = \\sqrt{l^2 - (s/2)^2} = \\sqrt{25 - 9} = \\sqrt{16} = 4 \\text{ cm}$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T7: Urutkan Kerja Mundur', pageTitleEn:'Order Reverse Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari $t$ dari Luas Total.', questionEn:'Order steps to find $t$ from Total Area.',
+          items:['Gunakan rumus $L_{total} = s^2 + 2sl$ <span class="tr">Use total area formula</span>','Substitusi Luas Total dan $s$ untuk cari $l$ <span class="tr">Find $l$</span>','Gunakan Pythagoras $t = \\sqrt{l^2 - (s/2)^2}$ <span class="tr">Use Pythagoras</span>','Hitung nilai $t$ <span class="tr">Calculate $t$</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Kerja mundur membutuhkan urutan dari rumus utama ke komponen. <span class="tr">Reverse engineering requires working backwards.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Cari $l$ Mundur', pageTitleEn:'Find $l$ Reverse', taskType:'fill',
+          question:'Luas total $144 \\text{ cm}^2$, $s=8 \\text{ cm}$. Nilai $l = \\dots \\text{ cm}$', questionEn:'Total area $144, s=8$. $l = \\dots$',
+          correctAnswer:'5', acceptableAnswers:['5'],
+          explanation:`<p>$144 = 8^2 + 2(8)l \\Rightarrow 144 = 64 + 16l \\Rightarrow 80 = 16l \\Rightarrow l = 5 \\text{ cm}$. <span class="tr">Isolate $l$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Pernyataan Kerja Mundur', pageTitleEn:'Reverse Statements', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang mencari $t$ dari Luas Total.', questionEn:'Select correct statements about finding $t$ from Total Area.',
+          options:[{text:'Kita harus mencari $l$ terlebih dahulu', correct:true},{text:'Rumus $l^2 = t^2 + (s/2)^2$ digunakan terakhir', correct:false},{text:'Luas alas harus dikurangkan dari Luas total', correct:true},{text:'$t$ selalu lebih besar dari $l$', correct:false}],
+          explanation:`<p>Kita kurangkan luas alas dari total untuk dapat luas selimut, lalu cari $l$, lalu cari $t$ dengan Pythagoras. <span class="tr">Subtract base, find $l$, find $t$.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Cari $t$ Akhir', pageTitleEn:'Find Final $t$', taskType:'radio',
+          question:'Diketahui Luas total $144 \\text{ cm}^2$, $s=8 \\text{ cm}$, $l=5 \\text{ cm}$. Berapa nilai $t$?', questionEn:'Given Total $144, s=8, l=5$. Find $t$?',
+          options:[{text:'$3 \\text{ cm}$', correct:true},{text:'$4 \\text{ cm}$', correct:false},{text:'$5 \\text{ cm}$', correct:false},{text:'$6 \\text{ cm}$', correct:false}],
+          explanation:`<p>$t = \\sqrt{l^2 - (s/2)^2} = \\sqrt{5^2 - 4^2} = \\sqrt{25 - 16} = \\sqrt{9} = 3 \\text{ cm}$. <span class="tr">$t$ is 3.</span></p>`
+        }
+      ]
+    },
+    f: {
+      title: 'Independent Practice', titleEn: 'Independent Practice', time: '00:45 - 00:55',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Aplikasi Biaya & Material', pageTitleEn:'Cost & Material Application',
+          body:`<p>Seringkali soal limas berhubungan dengan biaya pembuatan. Misalnya, kaca untuk akuarium limas atau kain untuk payung. <span class="tr">Pyramid problems often involve cost of materials.</span></p>
+          <div class="example-box"><h4>Contoh <span class="tr">Example</span></h4>Akuarium berbentuk limas (tanpa tutup alas) $s=20 \\text{ cm}$, $l=15 \\text{ cm}$. Biaya kaca Rp500/cm². Total biaya?
+          <ol><li>$L_{kaca} = s^2 + 2sl = 400 + 2(20)(15) = 1000 \\text{ cm}^2$</li><li>$\\text{Biaya} = 1000 \\times 500 = \\text{Rp} 500.000$</li></ol>
+          <p>Catatan: Akuarium berbentuk limas biasanya memiliki kaca alas. Jika hanya rangka, maka tidak ada alasnya.</p></div>`
+        },
+        { type:'task', pageTitle:'T1: Biaya Cat', pageTitleEn:'Paint Cost', taskType:'fill',
+          question:'Limas segiempat $s=10 \\text{ m}$, $l=12 \\text{ m}$ dicat seluruh permukaannya. Biaya cat Rp5.000/m². Total biaya adalah Rp... <span class="tr">(just input the number)</span>', questionEn:'Square pyramid $s=10, l=12$. Paint cost 5k/m². Total cost is...',
+          correctAnswer:'1700000', acceptableAnswers:['1700000','1.700.000','1700000.00'],
+          explanation:`<p>$L_{total} = 10^2 + 2(10)(12) = 100 + 240 = 340 \\text{ m}^2$. $340 \\times 5000 = 1.700.000$. <span class="tr">Calculate area times rate.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Pilihan Biaya', pageTitleEn:'Cost Options', taskType:'radio',
+          question:'Limas $s=4, l=5$. Biaya Rp2.000/m². Total biaya cat seluruh permukaan?', questionEn:'Pyramid $s=4, l=5$. Cost 2k/m². Total cost?',
+          options:[{text:'Rp 112.000', correct:true},{text:'Rp 56.000', correct:false},{text:'Rp 28.000', correct:false},{text:'Rp 224.000', correct:false}],
+          explanation:`<p>$L = 4^2 + 2(4)(5) = 16 + 40 = 56 \\text{ m}^2$. $56 \\times 2000 = 112.000$. <span class="tr">Check calculations.</span></p>`
+        },
+        { type:'task', pageTitle:'T3: Mengecat Dalam/Luar', pageTitleEn:'Paint Inside/Outside', taskType:'truefalse',
+          question:'Benar atau salah: Jika mengecat bagian dalam dan luar limas, luas total dikalikan 2.', questionEn:'True or false: Painting inside and outside doubles the area.',
+          correctAnswer:'true',
+          explanation:`<p>Ya, permukaan yang dicat menjadi dua kali lipat. <span class="tr">Yes, doubled.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Limas Segibanyak (N-gonal)', pageTitleEn:'N-gonal Pyramids',
+          body:`<p>Limas bisa memiliki alas segibanyak (segi-5, segi-6, dll). Jumlah sisi tegaknya = jumlah sisi alas. <span class="tr">Pyramids can have any polygonal base. Lateral faces = base sides.</span></p>
+          <div class="illustration"><svg width="160" height="160" viewBox="0 0 160 160"><polygon points="80,20 140,70 120,140 40,140 20,70" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/></svg><div style="font-size:.82em;color:var(--muted)">Limas Segi-5 <span class="tr">Pentagonal Pyramid</span></div></div>
+          <div class="math-block">$L_{total} = L_{alas} + (n \\times \\text{Luas 1 Segitiga})$</div>`
+        },
+        { type:'task', pageTitle:'T4: Pasangkan Jumlah Sisi', pageTitleEn:'Match Sides Number', taskType:'pairing',
+          question:'Pasangkan bentuk alas dengan jumlah sisi tegak limas.', questionEn:'Match base shape with number of lateral faces.',
+          pairs:[{left:'Segi-5', right:'5 Sisi Tegak'},{left:'Segi-6', right:'6 Sisi Tegak'},{left:'Segi-8', right:'8 Sisi Tegak'},{left:'Segi-3', right:'3 Sisi Tegak'}],
+          explanation:`<p>Jumlah segitiga = jumlah sisi pada bidang alas. <span class="tr">Triangles = base sides.</span></p>`
+        },
+        { type:'task', pageTitle:'T5: Limas Segi-6', pageTitleEn:'Hexagonal Pyramid', taskType:'fill',
+          question:'Limas segi-6 memiliki luas 1 segitiga sisi tegak $10 \\text{ cm}^2$. Luas selimutnya adalah $\\dots \\text{ cm}^2$', questionEn:'Hexagonal pyramid 1 face area $10$. Lateral area is $\\dots$',
+          correctAnswer:'60', acceptableAnswers:['60'],
+          explanation:`<p>$L_{selimut} = 6 \\times 10 = 60 \\text{ cm}^2$. <span class="tr">6 times the face.</span></p>`
+        },
+        { type:'task', pageTitle:'T6: Urutkan Segibanyak', pageTitleEn:'Order N-gonal', taskType:'sorting',
+          question:'Urutkan langkah menghitung luas total limas segibanyak beraturan.', questionEn:'Order steps for regular n-gonal pyramid.',
+          items:['Hitung Luas Alas (n-segibanyak) <span class="tr">Base area</span>','Hitung Luas 1 segitiga sisi tegak <span class="tr">1 face area</span>','Kalikan luas segitiga dengan jumlah sisi $n$ <span class="tr">Multiply by $n$</span>','Jumlahkan Luas Alas dan Luas Selimut <span class="tr">Add base and lateral</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Urutan standar menghitung luas limas umum. <span class="tr">Standard order.</span></p>`
+        },
+        { type:'explanation', pageTitle:'E3: Miskonsepsi Umum', pageTitleEn:'Common Misconceptions',
+          body:`<p>Banyak siswa salah menghitung karena: <span class="tr">Common mistakes:</span></p>
+          <ol><li><strong>Tertukar $t$ dan $l$</strong>: $t$ adalah tinggi tegak lurus dari puncak ke alas, $l$ adalah garis miring di sisi segitiga.</li><li><strong>Lupa menghitung setengah dari $s$</strong> saat menggunakan Pythagoras untuk mencari $l$.</li><li><strong>Satuan tidak konsisten</strong>: $s$ dalam cm, $l$ dalam m. Harus disamakan.</li></ol>
+          <div class="tip-box"><h4>Tips <span class="tr">Tip</span></h4>Selalu gambar penampang limas sebelum menghitung!</div>`
+        },
+        { type:'task', pageTitle:'T7: Pilih Pernyataan Benar', pageTitleEn:'Select True Statements', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang $t$ dan $l$.', questionEn:'Select correct statements about $t$ and $l$.',
+          options:[{text:'$l$ adalah tinggi sisi tegak segitiga', correct:true},{text:'$t$ tegak lurus terhadap bidang alas', correct:true},{text:'$l$ selalu lebih pendek dari $t$', correct:false},{text:'$t$ menghubungkan puncak ke rusuk alas', correct:false}],
+          explanation:`<p>$l$ lebih panjang dari $t$ karena $l$ adalah hipotenusa. $t$ ke pusat alas, $l$ ke rusuk alas. <span class="tr">$l$ > $t$. $t$ to center, $l$ to edge.</span></p>`
+        },
+        { type:'task', pageTitle:'T8: Perbaiki Kesalahan', pageTitleEn:'Fix Error', taskType:'fill',
+          question:'Ali menghitung $l = \\sqrt{t^2 + s^2}$. Jika $t=3, s=4$, seharusnya nilai $l$ yang benar adalah $\\dots$ <span class="tr">(Assume $s$ is base side, so use $s/2$)</span>', questionEn:'Ali calculated $l = \\sqrt{t^2 + s^2}$. If $t=3, s=4$, correct $l$ is $\\dots$',
+          correctAnswer:'3.605', acceptableAnswers:['3.6','3.605','√13','akar13'],
+          explanation:`<p>Rumus benar $l = \\sqrt{t^2 + (s/2)^2} = \\sqrt{9 + 4} = \\sqrt{13} \\approx 3,6$. <span class="tr">Must use half of $s$.</span></p>`
+        },
+        { type:'task', pageTitle:'T9: Posisi Tinggi Sisi', pageTitleEn:'Slant Position', taskType:'truefalse',
+          question:'Benar atau salah: Tinggi sisi tegak $l$ berakhir tegak lurus pada rusuk alas.', questionEn:'True or false: Slant height meets base edge perpendicularly.',
+          correctAnswer:'true',
+          explanation:`<p>Ya, $l$ selalu tegak lurus dengan rusuk alas pada segitiga sisi tegak. <span class="tr">Yes, perpendicular.</span></p>`
+        },
+        { type:'task', pageTitle:'T10: Campuran Soal', pageTitleEn:'Mixed Problem', taskType:'radio',
+          question:'Limas segitiga semua sisinya segitiga sama sisi $s=4$. Luas totalnya adalah...', questionEn:'Triangular pyramid all sides equilateral $s=4$. Total area is...',
+          options:[{text:'$16\\sqrt{3}$', correct:true},{text:'$4\\sqrt{3}$', correct:false},{text:'$16$', correct:false},{text:'$12\\sqrt{3}$', correct:false}],
+          explanation:`<p>Ada 4 segitiga sama sisi. Luas 1 segitiga = $\\frac{1}{2} \\times 4 \\times 4 \\times \\frac{1}{2}\\sqrt{3} = 4\\sqrt{3}$. Total = $4 \\times 4\\sqrt{3} = 16\\sqrt{3}$. <span class="tr">4 times equilateral triangle area.</span></p>`
+        }
+      ]
+    },
+    g: {
+      title: 'Consolidation & Reflection', titleEn: 'Consolidation & Reflection', time: '00:55 - 01:00',
+      pages: [
+        { type:'explanation', pageTitle:'E1: Poin Penting', pageTitleEn:'Key Takeaways',
+          body:`<div class="illustration"><svg width="240" height="80" viewBox="0 0 240 80"><circle cx="40" cy="40" r="28" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="40" y="48" text-anchor="middle" font-size="22" fill="#2563eb">△</text><text x="85" y="35" font-size="13" fill="#1e40af" font-weight="bold">Luas Limas</text><text x="85" y="52" font-size="10" fill="#64748b">L = L_alas + L_selimut</text></svg><div style="font-size:.82em;color:var(--muted);margin-top:4px">Rumus & Aturan <span class="tr">Formulas & Rules</span></div></div>
+          <p>Hari ini kita belajar <strong>Luas Permukaan Limas</strong>. Berikut rumus utamanya: <span class="tr">Today we learned <strong>Surface Area of a Pyramid</strong>. Key formulas:</span></p>
+          <div class="math-block"><ol><li><strong>Pythagoras (cari $l$):</strong> $l = \\sqrt{t^2 + (\\dfrac{s}{2})^2}$</li><li><strong>Luas Selimut (Segiempat):</strong> $L = 2 \\times s \\times l$</li><li><strong>Luas Total (Segiempat):</strong> $L = s^2 + 2sl$</li><li><strong>Luas Total (N-segi):</strong> $L = L_{alas} + (n \\times \\text{Luas Segitiga})$</li></ol></div>`
+        },
+        { type:'task', pageTitle:'T1: Pertanyaan Refleksi', pageTitleEn:'Reflection Question', taskType:'truefalse',
+          question:'Benar atau salah: Saya memahami bahwa untuk mencari luas permukaan limas segiempat, saya bisa langsung menggunakan rumus $s^2 + 2sl$ tanpa mencari $l$ terlebih dahulu jika $l$ sudah diketahui di soal.', questionEn:'True or false: I understand I can use $s^2 + 2sl$ directly if $l$ is given.',
+          correctAnswer:'true',
+          explanation:`<p>Benar! Jika $l$ (tinggi sisi tegak) sudah diketahui, kita tidak perlu mencarinya lagi dengan Pythagoras. <span class="tr">Correct! Skip Pythagoras if $l$ is known.</span></p>`
+        },
+        { type:'task', pageTitle:'T2: Exit Ticket', pageTitleEn:'Exit Ticket', taskType:'fill',
+          question:'Sebuah limas segiempat memiliki $s=5 \\text{ cm}$ dan $l=6 \\text{ cm}$. Tuliskan Luas Permukaan Totalnya! $L = \\dots \\text{ cm}^2$', questionEn:'Square pyramid $s=5, l=6$. Total Area $L = \\dots$',
+          correctAnswer:'85', acceptableAnswers:['85'],
+          explanation:`<p>$L = s^2 + 2sl = 5^2 + 2(5)(6) = 25 + 60 = 85 \\text{ cm}^2$. <span class="tr">Good job!</span></p>`
+        },
+        { type:'explanation', pageTitle:'E2: Follow-up Practice', pageTitleEn:'Follow-up Practice',
+          body:`<p>Latihan tambahan tersedia di <strong>Bagian H–L (Task 1–5)</strong>. Setiap bagian berisi 10 soal dengan berbagai tipe. <span class="tr">Additional practice is available in <strong>Sections H–L</strong>. Each contains 10 questions.</span></p>
+          <div class="math-block"><ul><li><strong>Task 1 (H):</strong> Luas Dasar & Pythagoras <span class="tr">Base Area & Pythagoras</span></li><li><strong>Task 2 (I):</strong> Mencari $l$ dan $L_{selimut}$ <span class="tr">Finding $l$ & Lateral Area</span></li><li><strong>Task 3 (J):</strong> Luas Total & Soal Cerita <span class="tr">Total Area & Word Problems</span></li><li><strong>Task 4 (K):</strong> Limas Khusus (Segitiga/Segi-banyak) <span class="tr">Special Pyramids</span></li><li><strong>Task 5 (L):</strong> Soal Campuran tingkat Ujian <span class="tr">Exam-style Mixed</span></li></ul></div>`
+        }
+      ]
+    },
+    h: {
+      title: 'Task 1', titleEn: 'Task 1', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Luas Alas Persegi', pageTitleEn:'Square Base Area', taskType:'fill',
+          question:'Limas segiempat memiliki sisi alas $s = 9 \\text{ cm}$. Luas alas limas tersebut adalah $\\dots \\text{ cm}^2$', questionEn:'Square pyramid has base side $s = 9 \\text{ cm}$. The base area is $\\dots$',
+          correctAnswer:'81', acceptableAnswers:['81'],
+          explanation:`<p>Luas alas persegi = $s^2 = 9^2 = 81 \\text{ cm}^2$. <span class="tr">Square the side.</span></p>`},
+        { type:'task', pageTitle:'T2: Pythagoras Dasar', pageTitleEn:'Basic Pythagoras', taskType:'radio',
+          question:'Segitiga siku-siku memiliki sisi $6 \\text{ cm}$ dan $8 \\text{ cm}$. Berapa panjang sisi miringnya?', questionEn:'Right triangle has sides $6$ and $8$. What is the hypotenuse?',
+          options:[{text:'$10 \\text{ cm}$', correct:true},{text:'$12 \\text{ cm}$', correct:false},{text:'$14 \\text{ cm}$', correct:false},{text:'$9 \\text{ cm}$', correct:false}],
+          explanation:`<p>$c = \\sqrt{6^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10 \\text{ cm}$. <span class="tr">Pythagorean theorem.</span></p>`},
+        { type:'task', pageTitle:'T3: Hubungan $t$ dan $l$', pageTitleEn:'$t$ and $l$ Relationship', taskType:'truefalse',
+          question:'Benar atau salah: Pada limas, tinggi sisi tegak ($l$) selalu tegak lurus dengan rusuk alas.', questionEn:'True or false: Slant height ($l$) is always perpendicular to the base edge.',
+          correctAnswer:'true',
+          explanation:`<p>Ya, $l$ selalu tegak lurus dengan rusuk alas pada segitiga sisi tegak. <span class="tr">Yes, perpendicular.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutkan Langkah Pythagoras', pageTitleEn:'Order Pythagoras Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari $l$ pada limas segiempat jika diketahui $t$ dan $s$.', questionEn:'Order steps to find $l$ if $t$ and $s$ are given.',
+          items:['Identifikasi $t$ dan $s$ <span class="tr">Identify $t$ and $s$</span>','Bagi $s$ dengan 2 untuk dapat $s/2$ <span class="tr">Divide $s$ by 2</span>','Gunakan rumus $l = \\sqrt{t^2 + (s/2)^2}$ <span class="tr">Use formula</span>','Hitung nilai $l$ <span class="tr">Calculate $l$</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah standar mencari tinggi sisi tegak limas. <span class="tr">Standard steps.</span></p>`},
+        { type:'task', pageTitle:'T5: Pilih Rumus Benar', pageTitleEn:'Select Correct Formulas', taskType:'checkbox',
+          question:'Pilih semua rumus yang benar untuk limas segiempat.', questionEn:'Select all correct formulas for square pyramid.',
+          options:[{text:'$l = \\sqrt{t^2 + (s/2)^2}$', correct:true},{text:'$L_{selimut} = 2sl$', correct:true},{text:'$L_{total} = s^2 + 4sl$', correct:false},{text:'$L_{alas} = s^2$', correct:true}],
+          explanation:`<p>$L_{total} = s^2 + 2sl$, bukan $4sl$. <span class="tr">Total area uses $2sl$.</span></p>`},
+        { type:'task', pageTitle:'T6: Cari $l$', pageTitleEn:'Find $l$', taskType:'fill',
+          question:'Diketahui $t = 8 \\text{ cm}$ dan $s = 12 \\text{ cm}$. Nilai $l = \\dots \\text{ cm}$', questionEn:'Given $t=8, s=12$. Find $l$',
+          correctAnswer:'10', acceptableAnswers:['10'],
+          explanation:`<p>$l = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = \\sqrt{100} = 10 \\text{ cm}$. <span class="tr">$s/2 = 6$.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Nilai', pageTitleEn:'Match Values', taskType:'pairing',
+          question:'Pasangkan $t$ dan $s$ dengan nilai $l$ yang sesuai.', questionEn:'Match $t, s$ with $l$.',
+          pairs:[{left:'$t=3, s=8$', right:'$5$'},{left:'$t=12, s=10$', right:'$13$'},{left:'$t=15, s=16$', right:'$17$'},{left:'$t=8, s=12$', right:'$10$'}],
+          explanation:`<p>$l = \\sqrt{t^2 + (s/2)^2}$. <span class="tr">Use formula.</span></p>`},
+        { type:'task', pageTitle:'T8: Cari $l$ Akar', pageTitleEn:'Find $l$ Root', taskType:'radio',
+          question:'Jika $t=6 \\text{ cm}$ dan $s=6 \\text{ cm}$, berapa nilai $l$ dalam bentuk akar?', questionEn:'If $t=6, s=6$, what is $l$ in root form?',
+          options:[{text:'$3\\sqrt{5} \\text{ cm}$', correct:true},{text:'$5\\sqrt{3} \\text{ cm}$', correct:false},{text:'$6\\sqrt{2} \\text{ cm}$', correct:false},{text:'$4\\sqrt{3} \\text{ cm}$', correct:false}],
+          explanation:`<p>$l = \\sqrt{6^2 + 3^2} = \\sqrt{36 + 9} = \\sqrt{45} = 3\\sqrt{5} \\text{ cm}$. <span class="tr">Simplify the root.</span></p>`},
+        { type:'task', pageTitle:'T9: Cari $t$', pageTitleEn:'Find $t$', taskType:'fill',
+          question:'Diketahui $l = 15 \\text{ cm}$ dan $s = 18 \\text{ cm}$. Nilai $t = \\dots \\text{ cm}$', questionEn:'Given $l=15, s=18$. Find $t$',
+          correctAnswer:'12', acceptableAnswers:['12'],
+          explanation:`<p>$t = \\sqrt{l^2 - (s/2)^2} = \\sqrt{225 - 81} = \\sqrt{144} = 12 \\text{ cm}$. <span class="tr">Reverse Pythagoras.</span></p>`},
+        { type:'task', pageTitle:'T10: Geometri Limas', pageTitleEn:'Pyramid Geometry', taskType:'truefalse',
+          question:'Benar atau salah: Jumlah sudut pada satu titik puncak limas segiempat adalah $360^\\circ$.', questionEn:'True or false: Angles at the apex of a square pyramid sum to $360^\\circ$.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Jika $360^\\circ$, maka akan rata (membentuk bidang). Sudut di puncak harus kurang dari $360^\\circ$. <span class="tr">Must be less than 360.</span></p>`}
+      ]
+    },
+    i: {
+      title: 'Task 2', titleEn: 'Task 2', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Hitung $l$', pageTitleEn:'Calculate $l$', taskType:'fill',
+          question:'Limas segiempat $t=12 \\text{ cm}$, $s=10 \\text{ cm}$. Nilai $l = \\dots \\text{ cm}$', questionEn:'Square pyramid $t=12, s=10$. Find $l$',
+          correctAnswer:'13', acceptableAnswers:['13'],
+          explanation:`<p>$l = \\sqrt{12^2 + 5^2} = \\sqrt{144 + 25} = \\sqrt{169} = 13 \\text{ cm}$. <span class="tr">Half of 10 is 5.</span></p>`},
+        { type:'task', pageTitle:'T2: Luas 1 Sisi Tegak', pageTitleEn:'1 Lateral Face Area', taskType:'radio',
+          question:'Diketahui $s=10 \\text{ cm}$ dan $l=13 \\text{ cm}$. Berapa luas 1 buah sisi tegak segitiga?', questionEn:'Given $s=10, l=13$. What is the area of 1 triangular face?',
+          options:[{text:'$65 \\text{ cm}^2$', correct:true},{text:'$130 \\text{ cm}^2$', correct:false},{text:'$100 \\text{ cm}^2$', correct:false},{text:'$26 \\text{ cm}^2$', correct:false}],
+          explanation:`<p>Luas segitiga = $\\frac{1}{2} \\times s \\times l = \\frac{1}{2} \\times 10 \\times 13 = 65 \\text{ cm}^2$. <span class="tr">Half base times height.</span></p>`},
+        { type:'task', pageTitle:'T3: Rumus Luas Selimut', pageTitleEn:'Lateral Area Formula', taskType:'truefalse',
+          question:'Benar atau salah: Luas selimut limas segiempat didapatkan dari $4 \\times (\\frac{1}{2} \\times s \\times l)$.', questionEn:'True or false: Lateral area is $4 \\times (\\frac{1}{2}sl)$.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, karena ada 4 segitiga yang masing-masing luasnya $\\frac{1}{2}sl$. <span class="tr">4 triangles.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutkan Langkah Selimut', pageTitleEn:'Order Lateral Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari luas selimut limas segiempat.', questionEn:'Order steps for lateral area.',
+          items:['Identifikasi $s$ dan $l$ <span class="tr">Identify $s, l$</span>','Gunakan rumus $L = 2sl$ <span class="tr">Use $L = 2sl$</span>','Substitusi nilai <span class="tr">Substitute</span>','Hitung hasil <span class="tr">Calculate</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Urutan perhitungan standar. <span class="tr">Standard order.</span></p>`},
+        { type:'task', pageTitle:'T5: Pilih Komponen', pageTitleEn:'Select Components', taskType:'checkbox',
+          question:'Pilih komponen yang dibutuhkan untuk menghitung luas selimut limas segiempat.', questionEn:'Select components for lateral area.',
+          options:[{text:'Panjang sisi alas ($s$)', correct:true},{text:'Tinggi sisi tegak ($l$)', correct:true},{text:'Tinggi limas ($t$)', correct:false},{text:'Luas alas', correct:false}],
+          explanation:`<p>$t$ dan luas alas tidak dipakai untuk mencari luas selimut. <span class="tr">Only $s$ and $l$.</span></p>`},
+        { type:'task', pageTitle:'T6: Hitung Luas Selimut', pageTitleEn:'Calculate Lateral Area', taskType:'fill',
+          question:'Diketahui $s=8 \\text{ cm}$ dan $l=15 \\text{ cm}$. Luas selimut limas adalah $\\dots \\text{ cm}^2$', questionEn:'Given $s=8, l=15$. Lateral area is $\\dots$',
+          correctAnswer:'240', acceptableAnswers:['240'],
+          explanation:`<p>$L = 2sl = 2(8)(15) = 240 \\text{ cm}^2$. <span class="tr">2 times side times slant.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Luas Selimut', pageTitleEn:'Match Lateral Area', taskType:'pairing',
+          question:'Pasangkan $s$ dan $l$ dengan luas selimutnya.', questionEn:'Match $s, l$ with lateral area.',
+          pairs:[{left:'$s=6, l=5$', right:'$60$'},{left:'$s=10, l=13$', right:'$260$'},{left:'$s=8, l=15$', right:'$240$'},{left:'$s=14, l=25$', right:'$700$'}],
+          explanation:`<p>Gunakan rumus $L = 2sl$. <span class="tr">Use $L = 2sl$.</span></p>`},
+        { type:'task', pageTitle:'T8: Soal Tenda', pageTitleEn:'Tent Problem', taskType:'radio',
+          question:'Tenda limas segiempat $s=2 \\text{ m}$, $l=2,5 \\text{ m}$. Luas kain tenda adalah...', questionEn:'Tent $s=2, l=2.5$. Canvas area is...',
+          options:[{text:'$10 \\text{ m}^2$', correct:true},{text:'$5 \\text{ m}^2$', correct:false},{text:'$14 \\text{ m}^2$', correct:false},{text:'$12 \\text{ m}^2$', correct:false}],
+          explanation:`<p>$L = 2sl = 2(2)(2,5) = 10 \\text{ m}^2$. Tenda tidak punya alas. <span class="tr">No base.</span></p>`},
+        { type:'task', pageTitle:'T9: Cari $l$ Mundur', pageTitleEn:'Find $l$ Reverse', taskType:'fill',
+          question:'Luas selimut limas segiempat adalah $120 \\text{ cm}^2$. Jika $s=10 \\text{ cm}$, maka $l = \\dots \\text{ cm}$', questionEn:'Lateral area $120, s=10$. Find $l$',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>$120 = 2(10)l \\Rightarrow 120 = 20l \\Rightarrow l = 6 \\text{ cm}$. <span class="tr">Isolate $l$.</span></p>`},
+        { type:'task', pageTitle:'T10: Sifat Segitiga Sisi Tegak', pageTitleEn:'Lateral Triangle Property', taskType:'truefalse',
+          question:'Benar atau salah: Keempat segitiga sisi tegak pada limas segiempat beraturan selalu kongruen.', questionEn:'True or false: 4 lateral faces of regular square pyramid are congruent.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, karena memiliki alas yang sama ($s$) dan tinggi yang sama ($l$). <span class="tr">Same $s$ and $l$.</span></p>`}
+      ]
+    },
+    j: {
+      title: 'Task 3', titleEn: 'Task 3', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Hitung Luas Total', pageTitleEn:'Calculate Total Area', taskType:'fill',
+          question:'Limas segiempat $s=6 \\text{ cm}$, $l=5 \\text{ cm}$. Luas permukaan totalnya adalah $\\dots \\text{ cm}^2$', questionEn:'Square pyramid $s=6, l=5$. Total area is $\\dots$',
+          correctAnswer:'96', acceptableAnswers:['96'],
+          explanation:`<p>$L = s^2 + 2sl = 6^2 + 2(6)(5) = 36 + 60 = 96 \\text{ cm}^2$. <span class="tr">Base plus lateral.</span></p>`},
+        { type:'task', pageTitle:'T2: Pilih Hasil', pageTitleEn:'Select Result', taskType:'radio',
+          question:'Diketahui $s=14 \\text{ cm}$, $l=25 \\text{ cm}$. Berapa Luas total limas?', questionEn:'Given $s=14, l=25$. Total area?',
+          options:[{text:'$896 \\text{ cm}^2$', correct:true},{text:'$700 \\text{ cm}^2$', correct:false},{text:'$196 \\text{ cm}^2$', correct:false},{text:'$966 \\text{ cm}^2$', correct:false}],
+          explanation:`<p>$L = 14^2 + 2(14)(25) = 196 + 700 = 896 \\text{ cm}^2$. <span class="tr">Calculate carefully.</span></p>`},
+        { type:'task', pageTitle:'T3: Tenda Tanpa Alas', pageTitleEn:'Tent No Base', taskType:'truefalse',
+          question:'Benar atau salah: Pada soal atap rumah limas, luas yang dihitung adalah luas total (alas + selimut).', questionEn:'True or false: Roof uses total area.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Atap tidak hitung luas alasnya. <span class="tr">Only lateral area.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutkan Langkah Total', pageTitleEn:'Order Total Steps', taskType:'sorting',
+          question:'Urutkan langkah menghitung luas permukaan total limas segiempat.', questionEn:'Order steps for total area.',
+          items:['Hitung luas alas $s^2$ <span class="tr">Base area</span>','Hitung luas selimut $2sl$ <span class="tr">Lateral area</span>','Jumlahkan keduanya <span class="tr">Add them</span>','Tulis satuan $\\text{cm}^2$ <span class="tr">Write unit</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Urutan perhitungan luas total. <span class="tr">Total area order.</span></p>`},
+        { type:'task', pageTitle:'T5: Unsurl Rumus', pageTitleEn:'Formula Elements', taskType:'checkbox',
+          question:'Pilih unsur yang ada di rumus $L_{total} = s^2 + 2sl$.', questionEn:'Select elements in formula.',
+          options:[{text:'$s^2$', correct:true},{text:'$2$', correct:true},{text:'$s$', correct:true},{text:'$t$', correct:false}],
+          explanation:`<p>$t$ (tinggi limas) tidak ada di rumus luas total jika $l$ sudah diketahui. <span class="tr">No $t$ in formula.</span></p>`},
+        { type:'task', pageTitle:'T6: Soal Biaya Cat', pageTitleEn:'Paint Cost Problem', taskType:'fill',
+          question:'Limas total $s=10, l=12$. Biaya cat Rp5.000/m². Total biaya (just number) = ...', questionEn:'Total area $s=10, l=12$. Cost 5k/m². Total = ...',
+          correctAnswer:'1700000', acceptableAnswers:['1700000','1.700.000'],
+          explanation:`<p>$L = 100 + 2(10)(12) = 340 \\text{ m}^2$. $340 \\times 5000 = 1.700.000$. <span class="tr">Calculate cost.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Luas Total', pageTitleEn:'Match Total Area', taskType:'pairing',
+          question:'Pasangkan $s$ dan $l$ dengan Luas Totalnya.', questionEn:'Match $s, l$ with Total Area.',
+          pairs:[{left:'$s=6, l=5$', right:'$96$'},{left:'$s=8, l=10$', right:'$224$'},{left:'$s=10, l=12$', right:'$340$'},{left:'$s=4, l=5$', right:'$56$'}],
+          explanation:`<p>$L = s^2 + 2sl$. <span class="tr">Use formula.</span></p>`},
+        { type:'task', pageTitle:'T8: Akuarium Limas', pageTitleEn:'Pyramid Aquarium', taskType:'radio',
+          question:'Akuarium limas (bawah tutup) $s=20, l=15$. Biaya kaca Rp500/cm². Total biaya?', questionEn:'Aquarium $s=20, l=15$. Cost 500/cm². Total?',
+          options:[{text:'Rp 500.000', correct:true},{text:'Rp 100.000', correct:false},{text:'Rp 250.000', correct:false},{text:'Rp 1.000.000', correct:false}],
+          explanation:`<p>$L = 400 + 2(20)(15) = 1000 \\text{ cm}^2$. $1000 \\times 500 = 500.000$. <span class="tr">Total cost.</span></p>`},
+        { type:'task', pageTitle:'T9: Luas Total Akar', pageTitleEn:'Total Area Root', taskType:'fill',
+          question:'Diketahui $s=8$, $l=2\\sqrt{13}$. Tuliskan Luas Totalnya (bentuk akar)! $L = \\dots \\text{ cm}^2$', questionEn:'Given $s=8, l=2\\sqrt{13}$. Total area in root form?',
+          correctAnswer:'64 + 32\\sqrt{13}', acceptableAnswers:['64 + 32\\sqrt{13}','64+32\\sqrt{13}','64+32akar13','64 + 32akar13'],
+          explanation:`<p>$L = 8^2 + 2(8)(2\\sqrt{13}) = 64 + 32\\sqrt{13} \\text{ cm}^2$. <span class="tr">Root form.</span></p>`},
+        { type:'task', pageTitle:'T10: Hubungan Luas', pageTitleEn:'Area Relationship', taskType:'truefalse',
+          question:'Benar atau salah: Luas selimut selalu lebih kecil dari luas alas pada limas segiempat.', questionEn:'True or false: Lateral area is always smaller than base area.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Biasanya luas selimut ($2sl$) jauh lebih besar dari luas alas ($s^2$). <span class="tr">Lateral is larger.</span></p>`}
+      ]
+    },
+    k: {
+      title: 'Task 4', titleEn: 'Task 4', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: Luas Alas Segitiga', pageTitleEn:'Triangle Base Area', taskType:'fill',
+          question:'Limas segitiga memiliki alas segitiga siku-siku $3, 4, 5$. Luas alasnya adalah $\\dots \\text{ cm}^2$', questionEn:'Triangular pyramid base $3, 4, 5$. Base area is $\\dots$',
+          correctAnswer:'6', acceptableAnswers:['6'],
+          explanation:`<p>Luas segitiga = $\\frac{1}{2} \\times 3 \\times 4 = 6 \\text{ cm}^2$. <span class="tr">Half base times height.</span></p>`},
+        { type:'task', pageTitle:'T2: Sisi Tegak Segi-6', pageTitleEn:'Hexagon Lateral Faces', taskType:'radio',
+          question:'Berapa banyak sisi tegak berbentuk segitiga pada limas segi-6?', questionEn:'How many triangular faces in a hexagonal pyramid?',
+          options:[{text:'$6$', correct:true},{text:'$5$', correct:false},{text:'$7$', correct:false},{text:'$12$', correct:false}],
+          explanation:`<p>Jumlah sisi tegak = jumlah sisi alas. <span class="tr">Equals base sides.</span></p>`},
+        { type:'task', pageTitle:'T3: Limas Persegi Panjang', pageTitleEn:'Rectangular Pyramid', taskType:'truefalse',
+          question:'Benar atau salah: Limas dengan alas persegi panjang memiliki 2 pasang segitiga sisi tegak yang luasnya berbeda.', questionEn:'True or false: Rectangular pyramid has 2 pairs of different lateral faces.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, sepasang menghadap sisi $p$, sepasang menghadap sisi $l$. <span class="tr">Two pairs.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutkan N-gonal', pageTitleEn:'Order N-gonal', taskType:'sorting',
+          question:'Urutkan langkah mencari luas total limas N-gonal beraturan.', questionEn:'Order steps for regular n-gonal pyramid.',
+          items:['Cari luas alas segibanyak <span class="tr">Base area</span>','Cari luas 1 segitiga sisi tegak <span class="tr">1 face area</span>','Kalikan luas segitiga dengan $n$ <span class="tr">Multiply by $n$</span>','Jumlahkan luas alas dan luas selimut <span class="tr">Add base and lateral</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah umum limas N-gonal. <span class="tr">General steps.</span></p>`},
+        { type:'task', pageTitle:'T5: Ciri Limas Segitiga', pageTitleEn:'Triangular Pyramid Features', taskType:'checkbox',
+          question:'Pilih ciri-ciri limas segitiga (tetrahedron).', questionEn:'Select features of triangular pyramid.',
+          options:[{text:'Memiliki 4 buah sisi', correct:true},{text:'Semua sisi berbentuk segitiga', correct:true},{text:'Memiliki 4 titik sudut', correct:true},{text:'Alasnya berbentuk persegi', correct:false}],
+          explanation:`<p>Tetrahedron memiliki 4 sisi segitiga, 4 titik sudut, 6 rusuk. <span class="tr">4 faces, 4 vertices.</span></p>`},
+        { type:'task', pageTitle:'T6: Luas Selimut Segi-5', pageTitleEn:'Pentagon Lateral Area', taskType:'fill',
+          question:'Limas segi-5 beraturan. Luas 1 sisi tegak segitiga adalah $12 \\text{ cm}^2$. Luas selimutnya adalah $\\dots \\text{ cm}^2$', questionEn:'Pentagonal pyramid. 1 face is $12$. Lateral area is $\\dots$',
+          correctAnswer:'60', acceptableAnswers:['60'],
+          explanation:`<p>$L = 5 \\times 12 = 60 \\text{ cm}^2$. <span class="tr">5 times face.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Limas', pageTitleEn:'Match Pyramids', taskType:'pairing',
+          question:'Pasukkan jenis limas dengan rumus luas alasnya.', questionEn:'Match pyramid with base area formula.',
+          pairs:[{left:'Limas Segiempat', right:'$s^2$'},{left:'Limas Segitiga Siku', right:'$\\frac{1}{2}at$'},{left:'Limas Persegi Panjang', right:'$p \\times l$'},{left:'Limas Segibanyak', right:'$\\frac{n}{4}s^2\\cot(\\frac{180}{n})$'}],
+          explanation:`<p>Sesuaikan rumus luas dengan bentuk alasnya. <span class="tr">Match formulas.</span></p>`},
+        { type:'task', pageTitle:'T8: Luas Total Tetrahedron', pageTitleEn:'Tetrahedron Total Area', taskType:'radio',
+          question:'Tetrahedron dengan semua sisi segitiga sama sisi $s=4$. Berapa luas totalnya?', questionEn:'Tetrahedron with equilateral triangles $s=4$. Total area?',
+          options:[{text:'$16\\sqrt{3}$', correct:true},{text:'$4\\sqrt{3}$', correct:false},{text:'$24$', correct:false},{text:'$32$', correct:false}],
+          explanation:`<p>4 segitiga. Luas 1 = $\\frac{1}{2} \\times 4 \\times 2\\sqrt{3} = 4\\sqrt{3}$. Total = $16\\sqrt{3}$. <span class="tr">4 times triangle area.</span></p>`},
+        { type:'task', pageTitle:'T9: Sisi Tegak Persegi Panjang', pageTitleEn:'Rectangular Lateral Face', taskType:'fill',
+          question:'Limas persegi panjang $p=6, l=8$. Tinggi sisi tegak depan $l_1=5$. Luas 2 segitiga depan adalah $\\dots \\text{ cm}^2$', questionEn:'Rectangular pyramid $p=6, l=8$. Front slant $l_1=5$. Area of 2 front faces is $\\dots$',
+          correctAnswer:'30', acceptableAnswers:['30'],
+          explanation:`<p>2 segitiga depan = $2 \\times (\\frac{1}{2} \\times 6 \\times 5) = 30 \\text{ cm}^2$. <span class="tr">2 times half base times height.</span></p>`},
+        { type:'task', pageTitle:'T10: Sisi Tetrahedron', pageTitleEn:'Tetrahedron Faces', taskType:'truefalse',
+          question:'Benar atau salah: Semua sisi pada tetrahedron beraturan memiliki bentuk dan ukuran yang sama.', questionEn:'True or false: All faces of regular tetrahedron are congruent.',
+          correctAnswer:'true',
+          explanation:`<p>Benar, 4 buah segitiga sama sisi yang kongruen. <span class="tr">4 congruent equilateral triangles.</span></p>`}
+      ]
+    },
+    l: {
+      title: 'Task 5', titleEn: 'Task 5', time: 'Printable',
+      pages: [
+        { type:'task', pageTitle:'T1: $l$ Akar', pageTitleEn:'$l$ Root', taskType:'fill',
+          question:'Limas segiempat $t=6 \\text{ cm}$, $s=6 \\text{ cm}$. Nilai $l$ dalam bentuk akar adalah $\\dots \\text{ cm}$', questionEn:'Square pyramid $t=6, s=6$. $l$ in root form is $\\dots$',
+          correctAnswer:'3\\sqrt{5}', acceptableAnswers:['3\\sqrt{5}','3akar5','3sqrt5','3√5'],
+          explanation:`<p>$l = \\sqrt{6^2 + 3^2} = \\sqrt{36 + 9} = \\sqrt{45} = 3\\sqrt{5} \\text{ cm}$. <span class="tr">Simplify the root.</span></p>`},
+        { type:'task', pageTitle:'T2: Luas Total Akar', pageTitleEn:'Total Area Root', taskType:'radio',
+          question:'Diketahui $s=6 \\text{ cm}$ dan $l=3\\sqrt{5} \\text{ cm}$. Berapa Luas Total limas dalam bentuk akar?', questionEn:'Given $s=6, l=3\\sqrt{5}$. Total area in root form?',
+          options:[{text:'$36 + 36\\sqrt{5}$', correct:true},{text:'$36 + 12\\sqrt{5}$', correct:false},{text:'$36\\sqrt{5}$', correct:false},{text:'$72\\sqrt{5}$', correct:false}],
+          explanation:`<p>$L = s^2 + 2sl = 36 + 2(6)(3\\sqrt{5}) = 36 + 36\\sqrt{5} \\text{ cm}^2$. <span class="tr">Base plus lateral.</span></p>`},
+        { type:'task', pageTitle:'T3: Kerja Mundur $t$', pageTitleEn:'Reverse $t$', taskType:'truefalse',
+          question:'Benar atau salah: Jika diketahui luas total dan $s$, kita bisa mencari nilai $t$ secara langsung tanpa mencari $l$ terlebih dahulu.', questionEn:'True or false: If total area and $s$ are known, we can find $t$ directly without finding $l$.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Kita harus mencari $l$ terlebih dahulu dari rumus luas total, baru gunakan Pythagoras untuk mencari $t$. <span class="tr">Must find $l$ first.</span></p>`},
+        { type:'task', pageTitle:'T4: Urutkan Kerja Mundur', pageTitleEn:'Order Reverse Steps', taskType:'sorting',
+          question:'Urutkan langkah mencari $t$ jika diketahui Luas Total $= 96 \\text{ cm}^2$ dan $s=6 \\text{ cm}$.', questionEn:'Order steps to find $t$ if Total Area $= 96, s=6$.',
+          items:['$96 = 6^2 + 2(6)l$ <span class="tr">Substitute to formula</span>','$60 = 12l \\Rightarrow l = 5$ <span class="tr">Solve for $l$</span>','$t = \\sqrt{l^2 - (s/2)^2}$ <span class="tr">Pythagoras formula</span>','$t = \\sqrt{25 - 9} = 4$ <span class="tr">Calculate $t$</span>'], correctOrder:[0,1,2,3],
+          explanation:`<p>Langkah kerja mundur yang benar. <span class="tr">Correct reverse steps.</span></p>`},
+        { type:'task', pageTitle:'T5: Pernyataan Benar', pageTitleEn:'True Statements', taskType:'checkbox',
+          question:'Pilih pernyataan yang benar tentang perhitungan limas.', questionEn:'Select true statements about pyramid calculations.',
+          options:[{text:'$l$ adalah hipotenusa dari $t$ dan $s/2$', correct:true},{text:'Tenda tidak memiliki luas alas', correct:true},{text:'Limas segiempat punya 5 titik sudut', correct:true},{text:'Luas selimut = $s^2$', correct:false}],
+          explanation:`<p>Luas selimut adalah $2sl$, bukan $s^2$. <span class="tr">Lateral is $2sl$.</span></p>`},
+        { type:'task', pageTitle:'T6: Biaya Bahan', pageTitleEn:'Material Cost', taskType:'fill',
+          question:'Tenda limas $s=3 \\text{ m}$, $l=4 \\text{ m}$. Biaya kain Rp15.000/m². Total biaya (just number) = ...', questionEn:'Tent $s=3, l=4$. Cost 15k/m². Total = ...',
+          correctAnswer:'360000', acceptableAnswers:['360000','360.000'],
+          explanation:`<p>$L = 2sl = 2(3)(4) = 24 \\text{ m}^2$. $24 \\times 15.000 = 360.000$. <span class="tr">Calculate cost.</span></p>`},
+        { type:'task', pageTitle:'T7: Pasangkan Masalah', pageTitleEn:'Match Problems', taskType:'pairing',
+          question:'Pasukkan soal dengan jawaban yang benar.', questionEn:'Match problems with correct answers.',
+          pairs:[{left:'Tenda $s=2, l=3$', right:'Luas kain $= 12$'},{left:'Limas total $s=2, l=3$', right:'Luas total $= 16$'},{left:'$t=6, s=8$', right:'$l = 10$'},{left:'Tenda $s=4, l=5$', right:'Biaya (10k/m²) $= 400.000$'}],
+          explanation:`<p>Tenda: $2sl$. Total: $s^2+2sl$. Biaya: $L \\times \\text{harga}$. <span class="tr">Different formulas.</span></p>`},
+        { type:'task', pageTitle:'T8: Limas Akar Tidak Sempurna', pageTitleEn:'Imperfect Root Pyramid', taskType:'radio',
+          question:'Limas segiempat $s=4 \\text{ cm}$, $t=5 \\text{ cm}$. Berapa nilai $l$ (pendekatan 1 desimal)?', questionEn:'Square pyramid $s=4, t=5$. What is $l$ (1 decimal place)?',
+          options:[{text:'$5,4 \\text{ cm}$', correct:true},{text:'$5,0 \\text{ cm}$', correct:false},{text:'$6,0 \\text{ cm}$', correct:false},{text:'$4,5 \\text{ cm}$', correct:false}],
+          explanation:`<p>$l = \\sqrt{5^2 + 2^2} = \\sqrt{29} \\approx 5,385 \\approx 5,4 \\text{ cm}$. <span class="tr">Approximate square root.</span></p>`},
+        { type:'task', pageTitle:'T9: Cari $t$ Akhir', pageTitleEn:'Find Final $t$', taskType:'fill',
+          question:'Luas total limas segiempat $= 96 \\text{ cm}^2$, $s=6 \\text{ cm}$. Nilai $t = \\dots \\text{ cm}$', questionEn:'Total area $= 96, s=6$. Find $t$',
+          correctAnswer:'4', acceptableAnswers:['4'],
+          explanation:`<p>$96 = 36 + 2(6)l \\Rightarrow 60 = 12l \\Rightarrow l=5$. $t = \\sqrt{l^2 - (s/2)^2} = \\sqrt{5^2 - 3^2} = \\sqrt{25 - 9} = 4 \\text{ cm}$. <span class="tr">Find $l$ then find $t$.</span></p>`},
+        { type:'task', pageTitle:'T10: Miskonsepsi', pageTitleEn:'Misconceptions', taskType:'truefalse',
+          question:'Benar atau salah: Jika menghitung luas permukaan limas segiempat, kita bisa menggunakan rumus $s^2 + 4 \\times (\\frac{1}{2}s \\times t)$.', questionEn:'True or false: We can use $s^2 + 4 \\times (\\frac{1}{2}s \\times t)$ for total area.',
+          correctAnswer:'false',
+          explanation:`<p>Salah. Tinggi yang dipakai pada segitiga sisi tegak adalah $l$ (tinggi sisi tegak), bukan $t$ (tinggi limas). <span class="tr">Use $l$, not $t$.</span></p>`}
+      ]
+    }
+  };
+
+  // ================= STATE =================
+  let currentSection = 'a';
+  let currentPage = 0;
+  let userAnswers = {};
+
+  // ================= UTILITIES =================
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function renderMath(el){
+    if(window.renderMathInElement){
+      renderMathInElement(el, {
+        delimiters: [
+          {left:'$$', right:'$$', display:true},
+          {left:'$', right:'$', display:false}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+
+  // ================= SIDEBAR =================
+  function renderSidebar(){
+    const sidebar = document.getElementById('sidebar');
+    const sectionKeys = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    const meta = {
+      a:{t:'Spiral Review', e:'Spiral Review', time:'00:00-00:10'},
+      b:{t:'Intro & Real-World', e:'Intro & Real-World', time:'00:10-00:15'},
+      c:{t:'Prior Knowledge', e:'Prior Knowledge', time:'00:15-00:20'},
+      d:{t:'Problem Intro', e:'Problem Intro', time:'00:20-00:30'},
+      e:{t:'Guided Practice', e:'Guided Practice', time:'00:30-00:45'},
+      f:{t:'Independent Prac', e:'Independent Prac', time:'00:45-00:55'},
+      g:{t:'Consolidation', e:'Consolidation', time:'00:55-01:00'},
+      h:{t:'Task 1', e:'Task 1', time:'Printable'},
+      i:{t:'Task 2', e:'Task 2', time:'Printable'},
+      j:{t:'Task 3', e:'Task 3', time:'Printable'},
+      k:{t:'Task 4', e:'Task 4', time:'Printable'},
+      l:{t:'Task 5', e:'Task 5', time:'Printable'}
+    };
+    let html = '<h3>Bagian <span class="tr">Sections</span></h3>';
+    sectionKeys.forEach(key => {
+      const section = sectionsData[key];
+      const isActive = currentSection === key;
+      if(section){
+        html += `<div class="nav-link ${isActive?'active':''}" data-section="${key}">
+          <span class="nl-title">${key.toUpperCase()}. ${meta[key].t}</span>
+          <span class="tr">${meta[key].e}</span>
+          <span class="time">${meta[key].time}</span>
+        </div>`;
+      } else {
+        html += `<div class="nav-link disabled">${key.toUpperCase()}. ${meta[key].t}<br><span class="tr">${meta[key].e}</span><br><span class="time">${meta[key].time} (segera)</span></div>`;
+      }
+    });
+    sidebar.innerHTML = html;
+    sidebar.querySelectorAll('.nav-link[data-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        currentSection = el.dataset.section;
+        currentPage = 0;
+        renderSidebar();
+        renderPage();
+      });
+    });
+  }
+
+  // ================= PAGE RENDER =================
+  function renderPage(){
+    const section = sectionsData[currentSection];
+    if(!section) return;
+    const page = section.pages[currentPage];
+    const contentEl = document.getElementById('pageContent');
+
+    let printBtnHtml = '';
+    if(['h','i','j','k','l'].includes(currentSection)){
+      printBtnHtml = '<button id="printBtnTop" style="background:var(--success);color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:600;white-space:nowrap">🖨 Cetak ke PDF <span class="tr">Print to PDF</span></button>';
+    }
+
+    let html = '<div class="page-header"><h2>' + section.title + ' <span class="tr">' + section.titleEn + '</span></h2><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + printBtnHtml + '<span class="badge">' + page.pageTitle.split(':')[0] + '</span></div></div>';
+
+    if(page.type === 'explanation'){
+      html += '<div class="card explain"><h3>' + page.pageTitle + ' <span class="tr">' + page.pageTitleEn + '</span></h3>' + page.body + '</div>';
+    } else if(page.type === 'task'){
+      html += renderTask(page);
+    }
+    contentEl.innerHTML = html;
+    renderMath(contentEl);
+
+    const total = section.pages.length;
+    const pageNumsEl = document.getElementById('pageNums');
+    let pageNumHtml = '';
+    section.pages.forEach(function(p, i){
+      var raw = p.pageTitle.split(':')[0].trim();
+      var type = raw.charAt(0);
+      var num = parseInt(raw.substring(1));
+      var label = type + '-' + String(num).padStart(2, '0');
+      var typeClass = (type === 'E') ? 'page-num-e' : 'page-num-t';
+      var isActive = (i === currentPage);
+      pageNumHtml += '<button class="page-num ' + typeClass + ' ' + (isActive ? 'active' : '') + '" data-page="' + i + '"' + (isActive ? ' disabled' : '') + '>' + label + '</button>';
+    });
+    pageNumsEl.innerHTML = pageNumHtml;
+
+    pageNumsEl.querySelectorAll('.page-num').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentPage = parseInt(btn.dataset.page);
+        renderPage();
+      });
+    });
+
+    document.getElementById('prevBtn').disabled = (currentPage === 0);
+    document.getElementById('nextBtn').disabled = (currentPage === total - 1);
+
+    var printBtnTop = document.getElementById('printBtnTop');
+    if(printBtnTop){
+      printBtnTop.addEventListener('click', function(){ printTask(currentSection); });
+    }
+
+    if(page.type === 'task'){
+      attachTaskHandlers(page);
+    }
+  }
+
+  function renderTask(page){
+    let html = `<div class="card task"><h3>${page.pageTitle} <span class="tr">${page.pageTitleEn}</span></h3>`;
+    html += `<div class="q-text">${page.question} <span class="tr">${page.questionEn || ''}</span></div>`;
+
+    if(page.taskType === 'radio' || page.taskType === 'checkbox'){
+      const options = shuffle(page.options);
+      page._shuffledOptions = options;
+      html += '<div class="options">';
+      options.forEach((opt, i) => {
+        const cls = page.taskType === 'checkbox' ? 'option checkbox' : 'option radio';
+        html += `<div class="${cls}" data-idx="${i}">
+          <div class="marker"></div>
+          <div class="opt-text">${opt.text}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'fill'){
+      html += `<input type="text" class="fill-input" id="fillInput" placeholder="...">`;
+    } else if(page.taskType === 'truefalse'){
+      const opts = shuffle([
+        {text:'Benar <span class="tr">True</span>', val:'true'},
+        {text:'Salah <span class="tr">False</span>', val:'false'}
+      ]);
+      page._shuffledTF = opts;
+      html += '<div class="options">';
+      opts.forEach((o, i) => {
+        html += `<div class="option radio" data-val="${o.val}" data-idx="${i}"><div class="marker"></div><div class="opt-text">${o.text}</div></div>`;
+      });
+      html += '</div>';
+    } else if(page.taskType === 'sorting'){
+      const shuffled = shuffle(page.items.map((item, idx) => ({text:item, originalIdx:idx})));
+      page._shuffledItems = shuffled;
+      html += '<div class="sort-list">';
+      shuffled.forEach((it, i) => {
+        html += `<div class="sort-item" data-pos="${i}" data-orig="${it.originalIdx}">
+          <span class="pos">${i+1}</span>
+          <span class="sort-text">${it.text}</span>
+        </div>`;
+      });
+      html += '</div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik dua item untuk menukar. <span class="tr">Click two items to swap.</span></p>';
+    } else if(page.taskType === 'pairing'){
+      const lefts = shuffle(page.pairs.map((p, idx) => ({text:p.left, originalIdx:idx})));
+      const rights = shuffle(page.pairs.map((p, idx) => ({text:p.right, originalIdx:idx})));
+      page._shuffledPairs = {lefts, rights};
+      html += '<div class="pair-grid">';
+      html += '<div class="pair-col"><h4>Kiri <span class="tr">Left</span></h4>';
+      lefts.forEach((l, i) => {
+        html += `<div class="pair-item" data-side="left" data-idx="${i}">${l.text}</div>`;
+      });
+      html += '</div>';
+      html += '<div class="pair-col"><h4>Kanan <span class="tr">Right</span></h4>';
+      rights.forEach((r, i) => {
+        html += `<div class="pair-item" data-side="right" data-idx="${i}">${r.text}</div>`;
+      });
+      html += '</div></div>';
+      html += '<div class="pairs-list" id="pairsList"></div>';
+      html += '<p style="font-size:.82em;color:var(--muted);margin-top:6px">Klik kiri lalu kanan untuk memasangkan. <span class="tr">Click left then right to pair.</span></p>';
+    }
+    html += `<button class="btn-submit" id="submitBtn">Periksa Jawaban <span class="tr">Check Answer</span></button>`;
+    html += `<div class="feedback" id="feedback"></div></div>`;
+    return html;
+  }
+
+  function attachTaskHandlers(page){
+    const taskType = page.taskType;
+
+    if(taskType === 'radio' || taskType === 'truefalse'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      });
+    } else if(taskType === 'checkbox'){
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+      });
+    } else if(taskType === 'sorting'){
+      let firstClick = null;
+      document.querySelectorAll('.sort-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if(firstClick === null){
+            firstClick = item;
+            item.classList.add('selected');
+          } else if(firstClick === item){
+            item.classList.remove('selected');
+            firstClick = null;
+          } else {
+            const fText = firstClick.querySelector('.sort-text').innerHTML;
+            const sText = item.querySelector('.sort-text').innerHTML;
+            firstClick.querySelector('.sort-text').innerHTML = sText;
+            item.querySelector('.sort-text').innerHTML = fText;
+            const fOrig = firstClick.dataset.orig;
+            firstClick.dataset.orig = item.dataset.orig;
+            item.dataset.orig = fOrig;
+            firstClick.classList.remove('selected');
+            firstClick = null;
+          }
+        });
+      });
+    } else if(taskType === 'pairing'){
+      let selectedLeft = null;
+      document.querySelectorAll('.pair-item[data-side="left"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired')) return;
+          document.querySelectorAll('.pair-item[data-side="left"]').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedLeft = item;
+        });
+      });
+      document.querySelectorAll('.pair-item[data-side="right"]').forEach(item => {
+        item.addEventListener('click', () => {
+          if(item.classList.contains('paired') || !selectedLeft) return;
+          const leftIdx = selectedLeft.dataset.idx;
+          const rightIdx = item.dataset.idx;
+          const pairList = document.getElementById('pairsList');
+          const pairRow = document.createElement('div');
+          pairRow.className = 'pair-row';
+          pairRow.dataset.leftIdx = leftIdx;
+          pairRow.dataset.rightIdx = rightIdx;
+          pairRow.innerHTML = `<span>${selectedLeft.innerHTML}</span> <span>↔</span> <span>${item.innerHTML}</span> <span class="remove" title="Hapus">×</span>`;
+          pairRow.querySelector('.remove').addEventListener('click', function() {
+            const lIdx = pairRow.dataset.leftIdx;
+            const rIdx = pairRow.dataset.rightIdx;
+            const lItem = document.querySelector(`.pair-item[data-side="left"][data-idx="${lIdx}"]`);
+            const rItem = document.querySelector(`.pair-item[data-side="right"][data-idx="${rIdx}"]`);
+            if(lItem) lItem.classList.remove('paired');
+            if(rItem) rItem.classList.remove('paired');
+            pairRow.remove();
+          });
+          pairList.appendChild(pairRow);
+          selectedLeft.classList.remove('selected');
+          selectedLeft.classList.add('paired');
+          item.classList.add('paired');
+          selectedLeft = null;
+        });
+      });
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => checkAnswer(page));
+  }
+
+  function checkAnswer(page){
+    const taskType = page.taskType;
+    let isCorrect = false;
+    let userAnswerStr = '';
+
+    if(taskType === 'radio'){
+      let selected = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selected = page._shuffledOptions[i];
+          selectedIdx = i;
+        }
+      });
+      if(!selected){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selected.correct;
+      userAnswerStr = selected.text;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(i === selectedIdx && !selected.correct) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'checkbox'){
+      const selectedIdxs = [];
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')) selectedIdxs.push(i);
+      });
+      if(selectedIdxs.length === 0){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      const correctSet = new Set();
+      page._shuffledOptions.forEach((opt, i) => { if(opt.correct) correctSet.add(i); });
+      const selectedSet = new Set(selectedIdxs);
+      isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(i => selectedSet.has(i));
+      userAnswerStr = selectedIdxs.map(i => page._shuffledOptions[i].text).join(', ');
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(page._shuffledOptions[i].correct) opt.classList.add('correct');
+        else if(selectedSet.has(i)) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'fill'){
+      const val = document.getElementById('fillInput').value.trim();
+      const acceptable = page.acceptableAnswers || [page.correctAnswer];
+      const norm = s => s.toLowerCase().replace(/\s+/g, '').trim();
+      isCorrect = acceptable.some(a => norm(a) === norm(val));
+      userAnswerStr = val;
+    } else if(taskType === 'truefalse'){
+      let selectedVal = null, selectedIdx = -1;
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        if(opt.classList.contains('selected')){
+          selectedVal = opt.dataset.val;
+          selectedIdx = i;
+        }
+      });
+      if(!selectedVal){
+        showFeedback(false, 'Silakan pilih jawaban. <span class="tr">Please select an answer.</span>', false);
+        return;
+      }
+      isCorrect = selectedVal === page.correctAnswer;
+      userAnswerStr = selectedVal === 'true' ? 'Benar' : 'Salah';
+      document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.remove('selected');
+        if(opt.dataset.val === page.correctAnswer) opt.classList.add('correct');
+        else if(i === selectedIdx) opt.classList.add('incorrect');
+      });
+    } else if(taskType === 'sorting'){
+      const currentOrder = [];
+      document.querySelectorAll('.sort-item').forEach(item => {
+        currentOrder.push(parseInt(item.dataset.orig));
+      });
+      isCorrect = currentOrder.every((idx, i) => idx === page.correctOrder[i]);
+      userAnswerStr = currentOrder.map((idx, i) => `${i+1}. ${page.items[idx] || '?'}`).join('  |  ');
+      document.querySelectorAll('.sort-item').forEach((item, i) => {
+        if(currentOrder[i] === page.correctOrder[i]) item.style.borderColor = 'var(--success)';
+        else item.style.borderColor = 'var(--danger)';
+      });
+    } else if(taskType === 'pairing'){
+      const pairRows = document.querySelectorAll('.pair-row');
+      if(pairRows.length === 0){
+        showFeedback(false, 'Silakan buat pasangan. <span class="tr">Please make pairs.</span>', false);
+        return;
+      }
+      const userPairs = [];
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        userPairs.push({
+          leftText: page._shuffledPairs.lefts[lIdx].text,
+          rightText: page._shuffledPairs.rights[rIdx].text
+        });
+      });
+      const correctPairs = page.pairs.map(p => ({left:p.left, right:p.right}));
+      const correctCount = userPairs.filter(up =>
+        correctPairs.some(cp => cp.left === up.leftText && cp.right === up.rightText)
+      ).length;
+      isCorrect = correctCount === correctPairs.length && userPairs.length === correctPairs.length;
+      userAnswerStr = userPairs.map(p => `${p.leftText}↔${p.rightText}`).join('  |  ');
+      pairRows.forEach(row => {
+        const lIdx = parseInt(row.dataset.leftIdx);
+        const rIdx = parseInt(row.dataset.rightIdx);
+        const lText = page._shuffledPairs.lefts[lIdx].text;
+        const rText = page._shuffledPairs.rights[rIdx].text;
+        const ok = correctPairs.some(cp => cp.left === lText && cp.right === rText);
+        row.style.background = ok ? '#d1fae5' : '#fee2e2';
+      });
+    }
+
+    const pageKey = `${currentSection}-${currentPage}`;
+    userAnswers[pageKey] = {userAnswer:userAnswerStr, correct:isCorrect, pageTitle:page.pageTitle};
+    showFeedback(isCorrect, page.explanation, true);
+  }
+
+  function showFeedback(isCorrect, explanation, showAnswer){
+    const feedback = document.getElementById('feedback');
+    feedback.className = `feedback show ${isCorrect?'correct':'incorrect'}`;
+    if(showAnswer){
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'} <span class="tr">${isCorrect?'Correct!':'Incorrect'}</span></h4>${explanation}`;
+    } else {
+      feedback.innerHTML = `<h4>${isCorrect?'✓ Benar!':'✗ Salah'}</h4>`;
+    }
+    renderMath(feedback);
+  }
+
+  // ================= EVENT LISTENERS =================
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(currentPage > 0){ currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    const total = sectionsData[currentSection].pages.length;
+    if(currentPage < total - 1){ currentPage++; renderPage(); }
+  });
+
+  const modal = document.getElementById('classRulesModal');
+  document.getElementById('classRulesBtn').addEventListener('click', () => modal.classList.add('active'));
+  document.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+  // ================= PRINT TO PDF =================
+  function getCorrectAnswer(task){
+    if(task.taskType === 'radio'){
+      const c = task.options.find(o => o.correct);
+      return c ? c.text : '';
+    }
+    if(task.taskType === 'checkbox'){
+      return task.options.filter(o => o.correct).map(o => o.text).join(', ');
+    }
+    if(task.taskType === 'fill'){
+      return task.correctAnswer || '';
+    }
+    if(task.taskType === 'truefalse'){
+      return task.correctAnswer === 'true' ? 'Benar' : 'Salah';
+    }
+    if(task.taskType === 'sorting'){
+      return task.correctOrder.map(i => task.items[i]).join(' → ');
+    }
+    if(task.taskType === 'pairing'){
+      return task.pairs.map(p => p.left + ' ↔ ' + p.right).join('; ');
+    }
+    return '';
+  }
+
+  function printTask(sectionKey){
+    const section = sectionsData[sectionKey];
+    if(!section) return;
+    const tasks = section.pages;
+    let correctCount = 0;
+
+    const rows = tasks.map((task, idx) => {
+      const pageKey = sectionKey + '-' + idx;
+      const ua = userAnswers[pageKey];
+      const isCorrect = ua ? ua.correct : false;
+      const userAns = ua ? ua.userAnswer : '(tidak dijawab)';
+      const correctAns = getCorrectAnswer(task);
+      if(ua && ua.correct) correctCount++;
+      return '<tr><td>' + (idx+1) + '</td><td>' + task.question + '<br><span class="tr">' + (task.questionEn || '') + '</span></td><td>' + userAns + '</td><td>' + correctAns + '</td><td style="text-align:center;font-size:1.1em">' + (isCorrect ? '✓' : '✗') + '</td></tr>';
+    }).join('');
+
+    const score = correctCount + ' / ' + tasks.length;
+    const today = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
+
+    const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cetak - ' + section.title + '</title>' +
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>' +
+      '<style>' +
+      'body{font-family:Segoe UI,sans-serif;padding:30px;color:#1e293b;line-height:1.5}' +
+      'h1{font-size:1.2em;margin-bottom:5px}' +
+      '.info{margin-bottom:15px;font-size:.88em}' +
+      '.info div{margin:3px 0}' +
+      'table{width:100%;border-collapse:collapse;margin:15px 0;font-size:.82em}' +
+      'th,td{border:1px solid #cbd5e1;padding:6px 8px;text-align:left;vertical-align:top}' +
+      'th{background:#f1f5f9;font-weight:600}' +
+      '.checked-by{margin-top:30px;text-align:right;font-style:italic}' +
+      '.tr{font-style:italic;font-size:.85em;color:#64748b}' +
+      '@media print{body{padding:15px}}' +
+      '</style></head><body>' +
+      '<h1>Math Tutoring by Deni</h1>' +
+      '<div class="info">' +
+      '<div>Nama: ____________________________ <span class="tr">Name</span></div>' +
+      '<div>Tanggal: ' + today + ' <span class="tr">Date</span></div>' +
+      '<div>Topik: Luas Permukaan Limas <span class="tr">Topic: Surface Area of Pyramid</span></div>' +
+      '<div>Grup Tugas: ' + section.title + ' <span class="tr">Task Group</span></div>' +
+      '<div>Skor: <strong>' + score + '</strong> <span class="tr">Score</span></div>' +
+      '</div>' +
+      '<table><thead><tr>' +
+      '<th style="width:30px">No.</th>' +
+      '<th>Pertanyaan <span class="tr">Question</span></th>' +
+      '<th>Jawaban Siswa <span class="tr">Student Answer</span></th>' +
+      '<th>Jawaban Benar <span class="tr">Correct Answer</span></th>' +
+      '<th style="width:50px">Ket. <span class="tr">Note</span></th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="checked-by">Diperiksa oleh, <span class="tr">Checked by,</span><br>Deni</div>' +
+      '<script>document.addEventListener("DOMContentLoaded",function(){' +
+      'if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}' +
+      'setTimeout(function(){window.print();},500);});<\/script>' +
+      '</body></html>';
+
+    const w = window.open('', '_blank');
+    if(w){
+      w.document.write(html);
+      w.document.close();
+    } else {
+      alert('Mohon izinkan pop-up untuk mencetak. <span class="tr">Please allow pop-ups to print.</span>');
+    }
+  }
+
+  // ================= INIT =================
+  renderSidebar();
+  renderPage();
+});
+</script>
+</body>
+</html>
