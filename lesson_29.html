@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bilangan Real – TKA SMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: guru yang jelas dan tenang; buku latihan, bukan brosur
+   IDEA: buku tulis kotak-kotak yang dikoreksi dengan pena merah
+   PICTURE: diagram himpunan bilangan real bersarang, besar di sampul
+   COLOUR and TYPE: kertas putih, tinta gelap, pena merah sebagai aksen, biru untuk rumus; Lexend
+   LAYOUT: sampul + tab 6 bagian; tiap bagian: materi, 3 contoh, 10 latihan dengan skor */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#13161b);--ink:light-dark(#16191f,#e8ebf0);--mute:light-dark(#5b6270,#9aa3b2);--grid:light-dark(#e6ecf5,#1e232b);--soft:light-dark(#f4f6fa,#1b1f26);--line:light-dark(#dde2ea,#2c323c);--red:light-dark(#cf3434,#ff7070);--blue:light-dark(#2459c9,#86aaff);--bsoft:light-dark(#eaf0fc,#1c2639);--rsoft:light-dark(#fcecec,#3a1f22);--ok:light-dark(#1d7f46,#62d394);--oksoft:light-dark(#e6f5ec,#17301f)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Lexend,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1100px;margin:0 auto}
+header.band{background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;border-bottom:1px solid var(--line)}
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,4vw,48px);align-items:center}
+.brand{font-size:14px;color:var(--red);font-weight:600;margin:0 0 8px}
+h1{font-size:clamp(32px,5vw,50px);line-height:1.05;margin:0 0 14px;text-wrap:balance;font-weight:700}
+.lead{font-size:17px;color:var(--mute);margin:0 0 16px;max-width:56ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.chips li{font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 12px}
+.sets{width:100%;height:auto;display:block}
+.sets text{font-family:Lexend,sans-serif;fill:var(--ink)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto;max-width:1100px;margin:0 auto;padding:10px max(5vw,16px)}
+.tabs a{flex:none;text-decoration:none;color:var(--ink);font-size:14px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);min-height:44px;display:flex;align-items:center;gap:6px}
+.tabs a b{color:var(--red)}
+.tabs a[aria-current=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs a[aria-current=true] b{color:inherit}
+.tabs a:focus-visible,button:focus-visible,label:focus-within{outline:3px solid var(--blue);outline-offset:2px}
+h2{font-size:clamp(26px,3.4vw,36px);line-height:1.1;margin:0 0 6px;text-wrap:balance}
+.kisi{color:var(--mute);margin:0 0 24px;max-width:70ch}
+h3{font-size:20px;margin:36px 0 14px;display:flex;align-items:center;gap:10px}
+h3 .n{font-size:13px;font-weight:600;color:var(--red);border:1.5px solid var(--red);border-radius:99px;padding:1px 10px}
+h4{font-size:17px;margin:22px 0 8px}
+.materi p,.materi li{max-width:72ch}
+.box{background:var(--bsoft);border-radius:12px;padding:14px 18px;margin:14px 0}
+.box.r{background:var(--rsoft)}
+.box b.t{display:block;color:var(--blue);margin-bottom:4px}
+.box.r b.t{color:var(--red)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.scroll{overflow-x:auto}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.86em;line-height:1.15;margin:0 .12em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em}
+.q{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px;background:var(--bg)}
+.q .h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.q .no{font-weight:700;color:var(--red)}
+.q .tag{font-size:13px;color:var(--mute);background:var(--soft);border-radius:6px;padding:1px 8px}
+.q .txt{margin:0 0 10px}
+.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-height:44px;cursor:pointer;background:var(--bg)}
+.opt input{width:18px;height:18px;accent-color:var(--blue);flex:none}
+.opt .l{font-weight:600;color:var(--mute);flex:none}
+.opt.ok{border-color:var(--ok);background:var(--oksoft)}
+.opt.no{border-color:var(--red);background:var(--rsoft)}
+.static .opt{cursor:default}
+.kt td{vertical-align:middle}
+.kt td.c{text-align:center;width:96px}
+.kt input{width:20px;height:20px;accent-color:var(--blue)}
+.kt tr.ok td:first-child{box-shadow:inset 4px 0 var(--ok)}
+.kt tr.no td:first-child{box-shadow:inset 4px 0 var(--red)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;font-size:15px;font-weight:600;border-radius:10px;padding:10px 18px;min-height:44px;cursor:pointer;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg)}
+button.ghost{background:transparent;color:var(--ink)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:600}.fb.ok{color:var(--ok)}.fb.no{color:var(--red)}
+details.pb{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+details.pb summary{cursor:pointer;color:var(--blue);font-weight:600;min-height:32px}
+.pb ol,.pb ul{margin:6px 0;padding-left:22px}
+.pb .ans{margin:8px 0 0;font-weight:600}
+.pb .ans span{color:var(--red)}
+.score{position:sticky;top:66px;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--soft);border-radius:12px;padding:10px 16px;margin:0 0 16px}
+.score .big{font-size:22px;font-weight:700}
+.bar{flex:1 1 160px;height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.graphs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+.graphs figure{margin:0;border:1px solid var(--line);border-radius:12px;padding:12px}
+.graphs svg{width:100%;height:auto;display:block}
+.graphs svg text{font:13px Lexend,sans-serif;fill:var(--mute)}
+figcaption{font-size:14px;color:var(--mute);margin-top:6px}
+.pager{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:28px}
+.pager a{color:var(--blue);font-weight:600;text-decoration:none;padding:10px 0;min-height:44px}
+footer{color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+[hidden]{display:none!important}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.score{top:64px}}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap hero">
+    <div>
+      <p class="brand">Math Tutoring by Deni · TKA SMP Matematika</p>
+      <h1>Bilangan Real: materi, contoh, dan latihan</h1>
+      <p class="lead">Enam sub-elemen kisi-kisi TKA. Tiap bagian berisi ringkasan materi, 3 contoh soal dengan pembahasan, dan 10 soal latihan yang bisa langsung dikerjakan dan diperiksa.</p>
+      <ul class="chips"><li>PG: pilihan ganda</li><li>PGK MCMA: pilih lebih dari satu</li><li>PGK Kategori: Benar/Salah</li></ul>
+    </div>
+    <svg class="sets" viewBox="0 0 560 340" role="img" aria-label="Diagram himpunan bilangan: asli di dalam cacah, di dalam bulat, di dalam rasional; rasional dan irasional membentuk bilangan real">
+      <rect x="1" y="1" width="558" height="338" rx="18" fill="var(--bg)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="18" y="28" font-weight="700" font-size="17">Bilangan Real (ℝ)</text>
+      <rect x="16" y="42" width="360" height="282" rx="14" fill="var(--bsoft)" stroke="var(--blue)" stroke-width="1.5"/>
+      <text x="30" y="66" font-weight="600" font-size="15">Rasional (ℚ)</text>
+      <text x="30" y="308" font-size="14" fill="var(--mute)">3/5,  −0,25,  0,333…</text>
+      <rect x="30" y="78" width="300" height="200" rx="12" fill="var(--bg)" stroke="var(--blue)" stroke-width="1.2" opacity=".95"/>
+      <text x="44" y="100" font-weight="600" font-size="15">Bulat (ℤ)</text>
+      <text x="44" y="264" font-size="14" fill="var(--mute)">…, −3, −2, −1</text>
+      <rect x="44" y="110" width="240" height="128" rx="10" fill="var(--bsoft)" stroke="var(--blue)" stroke-width="1"/>
+      <text x="58" y="132" font-weight="600" font-size="15">Cacah</text>
+      <text x="58" y="226" font-size="14" fill="var(--mute)">0</text>
+      <rect x="58" y="142" width="196" height="66" rx="9" fill="var(--bg)" stroke="var(--red)" stroke-width="1.5"/>
+      <text x="72" y="166" font-weight="600" font-size="15" fill="var(--red)">Asli (ℕ)</text>
+      <text x="72" y="192" font-size="14" fill="var(--mute)">1, 2, 3, …</text>
+      <rect x="392" y="42" width="152" height="282" rx="14" fill="var(--rsoft)" stroke="var(--red)" stroke-width="1.5"/>
+      <text x="406" y="66" font-weight="600" font-size="15">Irasional</text>
+      <text x="406" y="116" font-size="20">√2</text>
+      <text x="406" y="156" font-size="20">π</text>
+      <text x="406" y="196" font-size="20">√5</text>
+      <text x="406" y="236" font-size="14" fill="var(--mute)">1,41421…</text>
+      <text x="406" y="258" font-size="13" fill="var(--mute)">tak berhenti,</text>
+      <text x="406" y="276" font-size="13" fill="var(--mute)">tak berulang</text>
+    </svg>
+  </div>
+</header>
+<nav aria-label="Bagian"><div class="tabs" id="tabs"></div></nav>
+<main class="band"><div class="wrap" id="main"></div></main>
+<footer class="band"><div class="wrap">Math Tutoring by Deni · Materi TKA SMP: Bilangan Real. Jawaban latihan tidak disimpan; tekan “Ulangi latihan” untuk mengerjakan dari awal.</div></footer>
+
+<script>
+{
+const F = s => s.replace(/\{([^{}\/]+)\/([^{}]+)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+const L = ['A','B','C','D','E'];
+
+const S = [
+/* ================= 1 ================= */
+{t:'Perbandingan dan sifat bilangan',kisi:'Membandingkan dan mengurutkan bilangan real (pecahan, desimal, persen, bilangan negatif), mengenal jenis bilangan, dan memakai sifat-sifat operasi.',
+m:`<h4>1. Jenis-jenis bilangan</h4>
+<div class="scroll"><table><tr><th>Himpunan</th><th>Anggota</th><th>Contoh</th></tr>
+<tr><td>Asli (ℕ)</td><td>1, 2, 3, …</td><td>7, 120</td></tr>
+<tr><td>Cacah</td><td>0, 1, 2, 3, …</td><td>0, 15</td></tr>
+<tr><td>Bulat (ℤ)</td><td>…, −2, −1, 0, 1, 2, …</td><td>−9, 0, 4</td></tr>
+<tr><td>Rasional (ℚ)</td><td>Dapat ditulis {a/b} dengan a, b bulat dan b ≠ 0; desimalnya berhenti atau berulang</td><td>{3/4} = 0,75; {1/3} = 0,333…; −5</td></tr>
+<tr><td>Irasional</td><td>Tidak dapat ditulis {a/b}; desimalnya tidak berhenti dan tidak berulang</td><td>√2, √3, π</td></tr>
+<tr><td>Real (ℝ)</td><td>Gabungan rasional dan irasional</td><td>semua bilangan di garis bilangan</td></tr></table></div>
+<div class="box r"><b class="t">Hati-hati</b>√16 = 4 adalah bilangan rasional. {22/7} juga rasional; ia hanya <i>pendekatan</i> nilai π.</div>
+<h4>2. Membandingkan dan mengurutkan</h4>
+<ul><li><b>Ubah ke bentuk yang sama</b>: semua ke desimal atau semua ke persen. Contoh: {3/5} = 0,6 = 60%.</li>
+<li><b>Samakan penyebut</b>: {2/3} = {8/12} dan {3/4} = {9/12}, jadi {2/3} &lt; {3/4}.</li>
+<li><b>Perkalian silang</b> (penyebut positif): {a/b} &lt; {c/d} jika a × d &lt; b × c.</li>
+<li><b>Bilangan negatif</b>: makin jauh di kiri nol, makin kecil. −7 &lt; −2, dan −0,6 &lt; −0,45.</li>
+<li><b>Titik tengah</b> antara a dan b pada garis bilangan adalah {(a + b)/2}.</li></ul>
+<h4>3. Sifat-sifat operasi</h4>
+<div class="scroll"><table><tr><th>Sifat</th><th>Penjumlahan</th><th>Perkalian</th></tr>
+<tr><td>Komutatif (tukar)</td><td>a + b = b + a</td><td>a × b = b × a</td></tr>
+<tr><td>Asosiatif (kelompok)</td><td>(a + b) + c = a + (b + c)</td><td>(a × b) × c = a × (b × c)</td></tr>
+<tr><td>Distributif (sebar)</td><td colspan="2">a × (b + c) = a × b + a × c</td></tr>
+<tr><td>Identitas</td><td>a + 0 = a</td><td>a × 1 = a</td></tr>
+<tr><td>Invers</td><td>a + (−a) = 0</td><td>a × {1/a} = 1 (a ≠ 0)</td></tr></table></div>
+<div class="box"><b class="t">Sifat tertutup</b>Suatu himpunan tertutup terhadap operasi jika hasilnya selalu tetap di himpunan itu. Bilangan cacah tertutup terhadap penjumlahan dan perkalian, tetapi <b>tidak</b> terhadap pengurangan (3 − 5 = −2) dan pembagian (1 : 2 = 0,5). Pengurangan dan pembagian juga tidak komutatif.</div>`,
+c:[
+{q:'Urutan bilangan {3/5}; 0,58; 62%; {5/8} dari yang terkecil adalah …',o:['0,58; {3/5}; 62%; {5/8}','{3/5}; 0,58; {5/8}; 62%','0,58; 62%; {3/5}; {5/8}','{5/8}; 62%; {3/5}; 0,58'],a:0,p:['Ubah semua ke desimal: {3/5} = 0,6; 0,58; 62% = 0,62; {5/8} = 0,625.','Bandingkan: 0,58 &lt; 0,60 &lt; 0,62 &lt; 0,625.','Kembalikan ke bentuk aslinya: 0,58; {3/5}; 62%; {5/8}.']},
+{q:'Untuk menghitung 25 × 44 dengan cepat, Sinta menulis 25 × (40 + 4) = 25 × 40 + 25 × 4 = 1.000 + 100 = 1.100. Sifat yang digunakan Sinta adalah …',o:['komutatif','asosiatif','distributif','identitas'],a:2,p:['Bentuk a × (b + c) = a × b + a × c: perkalian “disebar” ke setiap suku penjumlahan.','Itu adalah sifat <b>distributif</b> perkalian terhadap penjumlahan.']},
+{q:'Suhu siang hari di empat kota: Jakarta 31°C, Tokyo 4°C, Moskow −8°C, dan Oslo −12°C. Selisih suhu kota terpanas dan kota terdingin adalah …',o:['19°C','27°C','39°C','43°C'],a:3,p:['Terpanas: Jakarta 31°C. Terdingin: bilangan terkecil, yaitu −12°C (Oslo), karena −12 &lt; −8.','Selisih = 31 − (−12) = 31 + 12 = 43°C.','Jebakan: 31 − 12 = 19 (lupa tanda negatif) atau memilih Moskow sebagai yang terdingin (39).']}
+],
+x:[
+{q:'Bilangan berikut yang merupakan bilangan irasional adalah …',o:['√49','0,333…','√12','{22/7}'],a:2,p:['√49 = 7 (rasional). 0,333… = {1/3} (desimal berulang, rasional). {22/7} adalah pecahan (rasional).','√12 = 3,4641… tidak berhenti dan tidak berulang, karena 12 bukan bilangan kuadrat. Jadi √12 irasional.']},
+{q:'Bilangan terbesar di antara {7/9}; 0,78; 77%; {4/5} adalah …',o:['{7/9}','0,78','77%','{4/5}'],a:3,p:['{7/9} = 0,777…; 0,78; 77% = 0,77; {4/5} = 0,8.','Yang terbesar 0,8 = {4/5}.']},
+{q:'Banyak bilangan bulat a yang memenuhi −3 &lt; a &lt; 2 adalah …',o:['3','4','5','6'],a:1,p:['Tanda “&lt;” berarti −3 dan 2 tidak termasuk.','Nilai a: −2, −1, 0, 1. Banyaknya 4.']},
+{q:'Pecahan yang terletak di antara {2/3} dan {3/4} adalah …',o:['{3/5}','{5/8}','{17/24}','{4/5}'],a:2,p:['Samakan penyebut 24: {2/3} = {16/24} dan {3/4} = {18/24}.','{17/24} berada tepat di antara keduanya.','Cek lainnya: {3/5} = 0,6 dan {5/8} = 0,625 lebih kecil dari {2/3} ≈ 0,667; {4/5} = 0,8 lebih besar dari 0,75.']},
+{q:'Pernyataan (−7) + 7 = 0 menunjukkan sifat …',o:['identitas penjumlahan','invers penjumlahan','komutatif penjumlahan','asosiatif penjumlahan'],a:1,p:['Bilangan ditambah lawannya menghasilkan 0 (unsur identitas).','−7 adalah <b>invers (lawan)</b> penjumlahan dari 7.']},
+{t:'m',q:'Pilih <b>semua</b> pernyataan yang benar.',o:['Setiap bilangan bulat adalah bilangan rasional.','√16 adalah bilangan irasional.','0 adalah bilangan cacah, tetapi bukan bilangan asli.','Hasil bagi dua bilangan bulat selalu bilangan bulat.'],a:[0,2],p:['(1) Benar: setiap bilangan bulat n dapat ditulis {n/1}.','(2) Salah: √16 = 4, rasional.','(3) Benar: bilangan asli dimulai dari 1, bilangan cacah dimulai dari 0.','(4) Salah: 3 : 4 = 0,75 bukan bilangan bulat.']},
+{q:'Urutan bilangan −{1/2}; −0,6; −{2/5}; −0,45 dari yang <b>terbesar</b> adalah …',o:['−0,6; −{1/2}; −0,45; −{2/5}','−{2/5}; −0,45; −{1/2}; −0,6','−{2/5}; −{1/2}; −0,45; −0,6','−0,45; −{2/5}; −{1/2}; −0,6'],a:1,p:['Desimal: −{1/2} = −0,5; −0,6; −{2/5} = −0,4; −0,45.','Untuk bilangan negatif, yang paling dekat ke nol paling besar: −0,4 &gt; −0,45 &gt; −0,5 &gt; −0,6.','Urutan: −{2/5}; −0,45; −{1/2}; −0,6.']},
+{q:'Pada garis bilangan, titik P terletak tepat di tengah-tengah antara −5 dan 9. Nilai P adalah …',o:['−2','2','4','7'],a:1,p:['Titik tengah = {(−5 + 9)/2} = {4/2} = 2.','Cek: jarak −5 ke 2 adalah 7, jarak 2 ke 9 juga 7.']},
+{t:'k',q:'Tentukan <b>Benar</b> atau <b>Salah</b> untuk setiap pernyataan berikut.',items:['Hasil penjumlahan dua bilangan cacah selalu bilangan cacah.','Hasil pengurangan dua bilangan cacah selalu bilangan cacah.','Hasil kali dua bilangan irasional selalu bilangan irasional.','Hasil penjumlahan bilangan rasional dan bilangan irasional selalu bilangan irasional.'],lab:['Benar','Salah'],a:[0,1,1,0],p:['(1) Benar: bilangan cacah tertutup terhadap penjumlahan.','(2) Salah: contoh 3 − 5 = −2, bukan bilangan cacah.','(3) Salah: contoh √2 × √2 = 2, rasional.','(4) Benar: misalnya 1 + √2. Jika hasilnya rasional, maka √2 = hasil − 1 juga rasional, padahal tidak mungkin.']},
+{q:'Seorang penyelam berada di kedalaman 18 m di bawah permukaan laut. Ia naik 7 m, lalu turun lagi 12 m. Posisi penyelam sekarang adalah …',o:['23 m di bawah permukaan laut','13 m di bawah permukaan laut','1 m di bawah permukaan laut','37 m di bawah permukaan laut'],a:0,p:['Tulis di bawah permukaan sebagai negatif: posisi awal −18.','Naik 7: −18 + 7 = −11. Turun 12: −11 − 12 = −23.','Jadi 23 m di bawah permukaan laut.']}
+]},
+/* ================= 2 ================= */
+{t:'Operasi aritmetika',kisi:'Menghitung operasi campuran pada bilangan bulat, pecahan, desimal, pangkat, dan akar, serta memakainya dalam masalah sehari-hari.',
+m:`<h4>1. Urutan pengerjaan</h4>
+<ol><li>Tanda kurung ( )</li><li>Pangkat dan akar</li><li>Perkalian dan pembagian: setara, kerjakan <b>dari kiri ke kanan</b></li><li>Penjumlahan dan pengurangan: setara, kerjakan <b>dari kiri ke kanan</b></li></ol>
+<h4>2. Aturan tanda</h4>
+<div class="scroll"><table><tr><th>Operasi</th><th>Aturan</th><th>Contoh</th></tr>
+<tr><td>Kali / bagi</td><td>tanda sama → positif; tanda beda → negatif</td><td>(−4) × (−3) = 12; 18 : (−6) = −3</td></tr>
+<tr><td>Kurang negatif</td><td>a − (−b) = a + b</td><td>5 − (−8) = 13</td></tr>
+<tr><td>Tambah negatif</td><td>a + (−b) = a − b</td><td>4 + (−15) = −11</td></tr></table></div>
+<h4>3. Pecahan dan desimal</h4>
+<ul><li>Tambah/kurang: samakan penyebut dengan KPK. {3/4} + {2/3} = {9/12} + {8/12} = {17/12}.</li>
+<li>Kali: pembilang × pembilang, penyebut × penyebut.</li>
+<li>Bagi: kalikan dengan kebalikan. {a/b} : {c/d} = {a/b} × {d/c}.</li>
+<li>Pecahan campuran ubah dulu ke pecahan biasa: 2{1/2} = {5/2}.</li>
+<li>Bagi desimal: geser koma pembagi agar bulat. 1,2 : 0,4 = 12 : 4 = 3.</li></ul>
+<h4>4. Pangkat dan akar</h4>
+<ul><li>a<sup>n</sup> = a × a × … × a (n faktor). 2<sup>3</sup> = 8.</li><li>(−2)<sup>3</sup> = −8, (−3)<sup>2</sup> = 9.</li><li>√81 = 9 karena 9<sup>2</sup> = 81.</li></ul>
+<div class="box r"><b class="t">Jebakan umum</b>−3<sup>2</sup> = −(3 × 3) = −9, berbeda dengan (−3)<sup>2</sup> = 9. Pangkat hanya mengenai bilangan yang menempel padanya.</div>
+<div class="box"><b class="t">Trik deret pecahan</b>{1/(n(n+1))} = {1/n} − {1/(n+1)}. Misalnya {1/6} = {1/2} − {1/3}. Suku-suku tengah akan saling menghapus.</div>`,
+c:[
+{q:'Hasil dari −24 : (−6) + 3 × (−5) − (−8) adalah …',o:['−19','−3','3','13'],a:1,p:['Kerjakan pembagian dan perkalian dulu: −24 : (−6) = 4 dan 3 × (−5) = −15.','4 + (−15) − (−8) = 4 − 15 + 8 = −3.','Jebakan: menulis −(−8) sebagai −8 menghasilkan −19.']},
+{q:'Hasil dari 2{1/2} + {3/4} × 1{1/3} − {5/6} adalah …',o:['2{2/3}','3{1/2}','1{5/6}','3{1/6}'],a:0,p:['Perkalian dulu: {3/4} × 1{1/3} = {3/4} × {4/3} = 1.','2{1/2} + 1 − {5/6} = {5/2} + 1 − {5/6} = {15/6} + {6/6} − {5/6} = {16/6} = {8/3} = 2{2/3}.','Jika dikerjakan langsung dari kiri tanpa mendahulukan perkalian, hasilnya salah (3{1/2}).']},
+{q:'Ibu membeli 6 kg tepung. Setiap adonan kue memerlukan {3/4} kg tepung. Setelah membuat beberapa adonan, tepung tersisa 1,5 kg. Banyak adonan yang dibuat ibu adalah …',o:['4','5','6','8'],a:2,p:['Tepung terpakai = 6 − 1,5 = 4,5 kg.','Banyak adonan = 4,5 : {3/4} = {9/2} × {4/3} = 6.']}
+],
+x:[
+{q:'Hasil dari 15 − 4 × (−3) + 18 : (−2) adalah …',o:['−36','0','12','18'],a:3,p:['4 × (−3) = −12 dan 18 : (−2) = −9.','15 − (−12) + (−9) = 15 + 12 − 9 = 18.']},
+{q:'Hasil dari {3/4} + {2/3} − {5/6} adalah …',o:['{7/12}','{5/12}','{1/2}','{11/12}'],a:0,p:['KPK dari 4, 3, 6 adalah 12.','{9/12} + {8/12} − {10/12} = {7/12}.']},
+{q:'Hasil dari 2{2/5} : 1{1/5} × {3/4} adalah …',o:['{3/8}','1{1/2}','2','2{2/3}'],a:1,p:['Pembagian dan perkalian setara, kerjakan dari kiri.','2{2/5} : 1{1/5} = {12/5} × {5/6} = 2.','2 × {3/4} = {3/2} = 1{1/2}.','Jika perkalian dikerjakan lebih dulu, hasilnya salah (2{2/3}).']},
+{q:'Hasil dari 0,25 × 4,8 + 1,2 : 0,4 adalah …',o:['1,5','3,12','4,2','6'],a:2,p:['0,25 × 4,8 = 1,2 (seperempat dari 4,8).','1,2 : 0,4 = 12 : 4 = 3.','1,2 + 3 = 4,2.']},
+{q:'Hasil dari (−2)<sup>3</sup> + 4<sup>2</sup> − √81 adalah …',o:['−33','−1','1','15'],a:1,p:['(−2)<sup>3</sup> = −8; 4<sup>2</sup> = 16; √81 = 9.','−8 + 16 − 9 = −1.']},
+{q:'Suhu awal sebuah ruang pendingin −5°C. Suhunya naik 3°C setiap jam selama 4 jam, lalu turun 2°C setiap jam selama 3 jam. Suhu akhir ruang itu adalah …',o:['−1°C','1°C','3°C','13°C'],a:1,p:['Naik: 4 × 3 = 12°C. Turun: 3 × 2 = 6°C.','Suhu akhir = −5 + 12 − 6 = 1°C.']},
+{q:'Dalam suatu tes 50 soal, jawaban benar diberi skor 4, salah diberi skor −1, dan tidak dijawab diberi skor 0. Rina menjawab benar 38 soal dan salah 7 soal. Skor Rina adalah …',o:['138','140','145','152'],a:2,p:['Tidak dijawab = 50 − 38 − 7 = 5 soal (skor 0).','Skor = 38 × 4 + 7 × (−1) + 5 × 0 = 152 − 7 = 145.']},
+{q:'Pak Andi memiliki tali 12 m. Sebanyak {3/8} bagian diberikan kepada Ali, lalu {2/5} dari <i>sisanya</i> diberikan kepada Budi. Panjang tali yang tersisa adalah …',o:['2,7 m','3 m','4,5 m','7,5 m'],a:2,p:['Untuk Ali: {3/8} × 12 = 4,5 m. Sisa: 12 − 4,5 = 7,5 m.','Untuk Budi: {2/5} × 7,5 = 3 m. Sisa: 7,5 − 3 = 4,5 m.','Perhatikan kata “dari sisanya”: {2/5} dihitung dari 7,5 m, bukan dari 12 m.']},
+{t:'m',q:'Pilih <b>semua</b> bentuk yang hasilnya −6.',o:['−18 : 3','(−2) × (−3)','4 − 2 × 5','−3<sup>2</sup> + 3'],a:[0,2,3],p:['−18 : 3 = −6 ✓','(−2) × (−3) = 6 ✗ (tanda sama → positif)','4 − 2 × 5 = 4 − 10 = −6 ✓','−3<sup>2</sup> + 3 = −9 + 3 = −6 ✓ (−3<sup>2</sup> = −9, bukan 9)']},
+{q:'Hasil dari {1/2} + {1/6} + {1/12} + {1/20} + {1/30} adalah …',o:['{1/2}','{5/6}','{29/30}','1'],a:1,p:['Perhatikan penyebut: 2 = 1×2, 6 = 2×3, 12 = 3×4, 20 = 4×5, 30 = 5×6.','Gunakan {1/(n(n+1))} = {1/n} − {1/(n+1)}:','(1 − {1/2}) + ({1/2} − {1/3}) + ({1/3} − {1/4}) + ({1/4} − {1/5}) + ({1/5} − {1/6}).','Suku tengah saling menghapus, tersisa 1 − {1/6} = {5/6}.']}
+]},
+/* ================= 3 ================= */
+{t:'Estimasi hasil perhitungan',kisi:'Membulatkan bilangan, memperkirakan hasil operasi dan nilai akar, serta menilai kapan perkiraan perlu dibulatkan ke atas.',
+m:`<h4>1. Aturan pembulatan</h4>
+<p>Lihat angka tepat di kanan tempat pembulatan: <b>5 atau lebih → naik</b>, <b>kurang dari 5 → tetap</b>.</p>
+<div class="scroll"><table><tr><th>Bilangan</th><th>Dibulatkan ke</th><th>Hasil</th></tr>
+<tr><td>3,4762</td><td>dua tempat desimal</td><td>3,48</td></tr>
+<tr><td>48.500</td><td>ribuan terdekat</td><td>49.000</td></tr>
+<tr><td>812</td><td>ratusan terdekat</td><td>800</td></tr></table></div>
+<h4>2. Strategi estimasi</h4>
+<ul><li>Bulatkan ke bilangan yang “ramah” agar mudah dihitung: 49,8 × 20,3 ≈ 50 × 20 = 1.000.</li>
+<li>Untuk pembagian, pilih bilangan yang habis dibagi: 812 : 39 ≈ 800 : 40 = 20.</li>
+<li>Estimasi dipakai untuk mengecek apakah jawaban masuk akal dan untuk keputusan cepat (cukupkah uangnya?).</li></ul>
+<h4>3. Memperkirakan akar</h4>
+<p>Cari dua bilangan kuadrat terdekat. Karena 64 &lt; 70 &lt; 81, maka 8 &lt; √70 &lt; 9, dan lebih dekat ke 8.</p>
+<div class="scroll"><table><tr><th>n</th><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+<tr><th>n²</th><td>36</td><td>49</td><td>64</td><td>81</td><td>100</td><td>121</td><td>144</td><td>169</td><td>196</td><td>225</td></tr></table></div>
+<div class="box r"><b class="t">Pembulatan menurut konteks</b>Jika hasilnya harus <b>cukup</b> (kaleng cat, bus, kotak), bulatkan <b>ke atas</b> walaupun desimalnya kecil: 103,6 kaleng → beli 104 kaleng. Jika menanyakan berapa yang <b>bisa dibuat penuh</b>, bulatkan ke bawah.</div>`,
+c:[
+{q:'Nilai perkiraan terbaik dari 49,8 × 20,3 adalah …',o:['100','1.000','1.200','10.000'],a:1,p:['49,8 ≈ 50 dan 20,3 ≈ 20.','50 × 20 = 1.000. (Hasil sebenarnya 1.010,94.)']},
+{q:'Nilai √70 terletak di antara …',o:['7 dan 8','8 dan 9','9 dan 10','34 dan 36'],a:1,p:['8<sup>2</sup> = 64 dan 9<sup>2</sup> = 81.','64 &lt; 70 &lt; 81, maka 8 &lt; √70 &lt; 9. (√70 ≈ 8,37.)','Pilihan “34 dan 36” muncul jika 70 keliru dibagi 2.']},
+{q:'Dina berbelanja barang seharga Rp18.900, Rp24.750, Rp31.200, dan Rp9.800. Ia membawa uang Rp80.000. Perkiraan total belanja dan kesimpulan yang tepat adalah …',o:['sekitar Rp75.000, uangnya cukup','sekitar Rp85.000, uangnya tidak cukup','sekitar Rp80.000, uangnya pas','sekitar Rp95.000, uangnya tidak cukup'],a:1,p:['Bulatkan ke ribuan terdekat: 19.000 + 25.000 + 31.000 + 10.000 = 85.000.','Perkiraan Rp85.000 &gt; Rp80.000, jadi uangnya tidak cukup.','Cek tepat: 18.900 + 24.750 + 31.200 + 9.800 = 84.650.']}
+],
+x:[
+{q:'Hasil perkiraan dari 398 + 203 + 497 adalah …',o:['1.000','1.100','1.200','900'],a:1,p:['398 ≈ 400; 203 ≈ 200; 497 ≈ 500.','400 + 200 + 500 = 1.100. (Tepatnya 1.098.)']},
+{q:'Hasil perkiraan dari 6,02 × 7,95 adalah …',o:['42','48','56','480'],a:1,p:['6,02 ≈ 6 dan 7,95 ≈ 8.','6 × 8 = 48.']},
+{q:'Hasil perkiraan dari 812 : 39 adalah …',o:['2','20','30','200'],a:1,p:['812 ≈ 800 dan 39 ≈ 40.','800 : 40 = 20. (Tepatnya ≈ 20,8.)']},
+{q:'Nilai √40 terletak di antara …',o:['4 dan 5','5 dan 6','6 dan 7','19 dan 21'],a:2,p:['6<sup>2</sup> = 36 dan 7<sup>2</sup> = 49.','36 &lt; 40 &lt; 49, jadi 6 &lt; √40 &lt; 7.']},
+{q:'Bilangan 3,4762 dibulatkan sampai dua tempat desimal menjadi …',o:['3,47','3,48','3,50','3,5'],a:1,p:['Angka desimal kedua adalah 7; angka di kanannya 6 (≥ 5), maka 7 naik menjadi 8.','Hasil: 3,48.']},
+{q:'Bilangan bulat yang paling dekat dengan √150 adalah …',o:['11','12','13','75'],a:1,p:['12<sup>2</sup> = 144 dan 13<sup>2</sup> = 169.','150 − 144 = 6, sedangkan 169 − 150 = 19. Jadi 150 lebih dekat ke 144.','√150 ≈ 12,25, paling dekat dengan 12.']},
+{q:'Seorang pekerja dibayar Rp48.500 per jam dan bekerja 39 jam dalam seminggu. Perkiraan upahnya dalam seminggu adalah …',o:['Rp200.000','Rp1.500.000','Rp2.000.000','Rp2.500.000'],a:2,p:['Rp48.500 ≈ Rp50.000 dan 39 jam ≈ 40 jam.','50.000 × 40 = Rp2.000.000. (Tepatnya Rp1.891.500.)']},
+{q:'Sebuah mobil menempuh 318 km dengan menghabiskan 21,2 liter bensin. Perkiraan jarak yang ditempuh untuk setiap liter bensin adalah …',o:['10 km','15 km','20 km','25 km'],a:1,p:['318 ≈ 300 dan 21,2 ≈ 20.','300 : 20 = 15 km per liter. (Tepatnya 318 : 21,2 = 15.)']},
+{t:'m',q:'Pilih <b>semua</b> bentuk yang hasilnya mendekati 100.',o:['9,8 × 10,3','498 : 5,1','0,51 × 19,6','√9.900'],a:[0,1,3],p:['9,8 × 10,3 ≈ 10 × 10 = 100 ✓','498 : 5,1 ≈ 500 : 5 = 100 ✓','0,51 × 19,6 ≈ 0,5 × 20 = 10 ✗','√9.900 ≈ √10.000 = 100 ✓ (tepatnya ≈ 99,5)']},
+{q:'Sebuah sekolah akan mengecat 28 ruang kelas. Setiap ruang memerlukan 3,7 kaleng cat, dan cat hanya dijual per kaleng utuh. Banyak kaleng minimum yang harus dibeli adalah …',o:['100','103','104','112'],a:2,p:['Kebutuhan = 28 × 3,7 = 103,6 kaleng.','Cat harus cukup, jadi dibulatkan <b>ke atas</b>: 104 kaleng.','103 kaleng kurang 0,6 kaleng sehingga tidak cukup.']}
+]},
+/* ================= 4 ================= */
+{t:'Faktorisasi prima',kisi:'Menyatakan bilangan asli sebagai perkalian faktor prima, lalu memakainya untuk FPB, KPK, banyak faktor, dan masalah sehari-hari.',
+m:`<h4>1. Bilangan prima</h4>
+<p>Bilangan prima adalah bilangan asli yang tepat memiliki dua faktor: 1 dan dirinya sendiri. Bilangan prima di bawah 50: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47.</p>
+<div class="box r"><b class="t">Ingat</b>1 bukan bilangan prima. 2 adalah satu-satunya bilangan prima genap.</div>
+<h4>2. Faktorisasi prima (pembagian berulang)</h4>
+<p>Bagi terus dengan bilangan prima terkecil yang mungkin sampai hasilnya 1.</p>
+<div class="scroll"><table><tr><th>Pembagi prima</th><td>2</td><td>2</td><td>2</td><td>3</td><td>3</td><td>5</td></tr>
+<tr><th>Bilangan</th><td>360</td><td>180</td><td>90</td><td>45</td><td>15</td><td>5 → 1</td></tr></table></div>
+<p>Jadi 360 = 2 × 2 × 2 × 3 × 3 × 5 = 2<sup>3</sup> × 3<sup>2</sup> × 5.</p>
+<h4>3. FPB dan KPK dari faktorisasi prima</h4>
+<div class="scroll"><table><tr><th></th><th>Cara</th><th>Contoh: 72 = 2<sup>3</sup>×3<sup>2</sup>, 120 = 2<sup>3</sup>×3×5</th></tr>
+<tr><td><b>FPB</b></td><td>faktor prima yang <b>sama</b>, pangkat <b>terkecil</b></td><td>2<sup>3</sup> × 3 = 24</td></tr>
+<tr><td><b>KPK</b></td><td><b>semua</b> faktor prima, pangkat <b>terbesar</b></td><td>2<sup>3</sup> × 3<sup>2</sup> × 5 = 360</td></tr></table></div>
+<div class="box"><b class="t">Rumus penting</b>
+• Jika n = p<sup>a</sup> × q<sup>b</sup> × r<sup>c</sup>, maka banyak faktor n = (a + 1)(b + 1)(c + 1).<br>
+• Untuk dua bilangan A dan B: FPB × KPK = A × B.<br>
+• n habis dibagi m jika semua faktor prima m (dengan pangkatnya) ada di n.</div>
+<h4>4. Kapan memakai FPB atau KPK?</h4>
+<ul><li><b>FPB</b>: membagi rata menjadi kelompok/kantong sebanyak-banyaknya, memotong menjadi ukuran terbesar yang sama (ubin, pita).</li>
+<li><b>KPK</b>: kejadian berulang yang terjadi <b>bersamaan lagi</b> (lampu berkedip, jadwal piket, bus berangkat), bilangan terkecil yang habis dibagi beberapa bilangan.</li></ul>`,
+c:[
+{q:'Faktorisasi prima dari 360 adalah …',o:['2<sup>2</sup> × 3<sup>2</sup> × 10','2<sup>3</sup> × 3<sup>2</sup> × 5','2<sup>3</sup> × 3 × 15','2<sup>4</sup> × 3 × 5'],a:1,p:['360 : 2 = 180; 180 : 2 = 90; 90 : 2 = 45; 45 : 3 = 15; 15 : 3 = 5; 5 : 5 = 1.','360 = 2<sup>3</sup> × 3<sup>2</sup> × 5.','Pilihan lain memuat 10 atau 15 yang bukan bilangan prima, atau hasil kalinya bukan 360.']},
+{q:'FPB dan KPK dari 72 dan 120 berturut-turut adalah …',o:['12 dan 720','24 dan 360','24 dan 720','12 dan 360'],a:1,p:['72 = 2<sup>3</sup> × 3<sup>2</sup>; 120 = 2<sup>3</sup> × 3 × 5.','FPB: faktor sama pangkat terkecil = 2<sup>3</sup> × 3 = 24.','KPK: semua faktor pangkat terbesar = 2<sup>3</sup> × 3<sup>2</sup> × 5 = 360.','Cek: 24 × 360 = 8.640 = 72 × 120 ✓']},
+{q:'Lampu A berkedip setiap 12 detik, lampu B setiap 18 detik, dan lampu C setiap 30 detik. Ketiganya berkedip bersamaan pada pukul 08.00.00. Ketiga lampu akan berkedip bersamaan lagi pada pukul …',o:['08.01.30','08.03.00','08.06.00','09.48.00'],a:1,p:['Kejadian berulang bersamaan → KPK.','12 = 2<sup>2</sup> × 3; 18 = 2 × 3<sup>2</sup>; 30 = 2 × 3 × 5.','KPK = 2<sup>2</sup> × 3<sup>2</sup> × 5 = 180 detik = 3 menit.','Bersamaan lagi pukul 08.03.00. (09.48.00 muncul jika 12 × 18 × 30 dikalikan langsung.)']}
+],
+x:[
+{q:'Faktorisasi prima dari 252 adalah …',o:['2<sup>2</sup> × 3<sup>2</sup> × 7','2 × 3<sup>2</sup> × 14','2<sup>3</sup> × 3 × 7','2<sup>2</sup> × 3 × 21'],a:0,p:['252 : 2 = 126; 126 : 2 = 63; 63 : 3 = 21; 21 : 3 = 7; 7 : 7 = 1.','252 = 2<sup>2</sup> × 3<sup>2</sup> × 7.']},
+{q:'Banyak faktor prima <b>berbeda</b> dari 210 adalah …',o:['3','4','5','16'],a:1,p:['210 = 2 × 3 × 5 × 7.','Faktor prima berbeda: 2, 3, 5, 7 → 4 buah. (16 adalah banyak <i>semua</i> faktor 210.)']},
+{q:'FPB dari 48 dan 84 adalah …',o:['6','12','24','336'],a:1,p:['48 = 2<sup>4</sup> × 3; 84 = 2<sup>2</sup> × 3 × 7.','FPB = 2<sup>2</sup> × 3 = 12. (336 adalah KPK-nya.)']},
+{q:'KPK dari 15, 20, dan 24 adalah …',o:['60','120','240','7.200'],a:1,p:['15 = 3 × 5; 20 = 2<sup>2</sup> × 5; 24 = 2<sup>3</sup> × 3.','KPK = 2<sup>3</sup> × 3 × 5 = 120.']},
+{q:'Banyak faktor dari 72 adalah …',o:['6','8','10','12'],a:3,p:['72 = 2<sup>3</sup> × 3<sup>2</sup>.','Banyak faktor = (3 + 1)(2 + 1) = 4 × 3 = 12.','Cek: 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72.']},
+{q:'Bu Rina memiliki 60 apel, 84 jeruk, dan 108 salak. Buah-buah itu akan dimasukkan ke kantong sehingga setiap kantong berisi jenis dan jumlah buah yang sama banyak. Banyak kantong maksimum adalah …',o:['6','12','24','36'],a:1,p:['Membagi rata sebanyak-banyaknya → FPB.','60 = 2<sup>2</sup> × 3 × 5; 84 = 2<sup>2</sup> × 3 × 7; 108 = 2<sup>2</sup> × 3<sup>3</sup>.','FPB = 2<sup>2</sup> × 3 = 12 kantong (tiap kantong: 5 apel, 7 jeruk, 9 salak).']},
+{q:'Lantai berukuran 360 cm × 480 cm akan ditutup ubin persegi yang ukurannya sama dan sebesar mungkin, tanpa memotong ubin. Banyak ubin yang diperlukan adalah …',o:['12','20','48','120'],a:0,p:['Sisi ubin terbesar = FPB(360, 480).','360 = 2<sup>3</sup> × 3<sup>2</sup> × 5; 480 = 2<sup>5</sup> × 3 × 5 → FPB = 2<sup>3</sup> × 3 × 5 = 120 cm.','Banyak ubin = (360 : 120) × (480 : 120) = 3 × 4 = 12.','Pilihan 120 adalah ukuran sisi ubin, bukan banyaknya.']},
+{q:'FPB dua bilangan adalah 6 dan KPK-nya 180. Jika salah satu bilangan adalah 36, bilangan yang lain adalah …',o:['18','24','30','60'],a:2,p:['FPB × KPK = A × B → 6 × 180 = 36 × B.','B = 1.080 : 36 = 30.','Cek: 36 = 2<sup>2</sup>×3<sup>2</sup>, 30 = 2×3×5 → FPB 6, KPK 180 ✓']},
+{t:'k',q:'Diketahui n = 2<sup>3</sup> × 3 × 5<sup>2</sup>. Tentukan <b>Benar</b> atau <b>Salah</b> untuk setiap pernyataan.',items:['n habis dibagi 40.','n habis dibagi 9.','Banyak faktor n adalah 24.','n adalah bilangan kuadrat sempurna.'],lab:['Benar','Salah'],a:[0,1,0,1],p:['n = 600.','(1) Benar: 40 = 2<sup>3</sup> × 5, semuanya ada di n (600 : 40 = 15).','(2) Salah: 9 = 3<sup>2</sup>, padahal n hanya memuat 3<sup>1</sup>.','(3) Benar: (3 + 1)(1 + 1)(2 + 1) = 24.','(4) Salah: kuadrat sempurna membutuhkan semua pangkat genap; pangkat 2 dan 3 di sini ganjil.']},
+{q:'Bilangan tiga angka terkecil yang jika dibagi 6, 8, atau 10 selalu bersisa 4 adalah …',o:['104','120','124','244'],a:2,p:['Bilangan yang habis dibagi 6, 8, dan 10 adalah kelipatan KPK-nya.','6 = 2 × 3; 8 = 2<sup>3</sup>; 10 = 2 × 5 → KPK = 2<sup>3</sup> × 3 × 5 = 120.','Bilangan bersisa 4: 120k + 4 → 4, 124, 244, … Tiga angka terkecil adalah 124.','Cek: 124 = 6×20+4 = 8×15+4 = 10×12+4 ✓']}
+]},
+/* ================= 5 ================= */
+{t:'Rasio: skala, proporsi, laju',kisi:'Menggunakan rasio untuk skala peta/denah, pembagian dalam perbandingan, harga satuan, kecepatan, debit, dan laju perubahan.',
+m:`<h4>1. Rasio</h4>
+<p>Rasio a : b membandingkan dua besaran <b>bersatuan sama</b>. Sederhanakan dengan membagi FPB. 45 menit : 2 jam = 45 : 120 = 3 : 8.</p>
+<div class="box"><b class="t">Membagi dalam perbandingan</b>Jika total T dibagi a : b : c, maka bagian pertama = {a/(a+b+c)} × T.<br>Jika yang diketahui <b>selisih</b> a dan b, maka 1 bagian = {selisih/(a − b)}.</div>
+<h4>2. Skala</h4>
+<div class="scroll"><table><tr><th>Mencari</th><th>Rumus</th></tr>
+<tr><td>Skala</td><td>{jarak pada peta/jarak sebenarnya} (satuan disamakan)</td></tr>
+<tr><td>Jarak sebenarnya</td><td>jarak peta × penyebut skala</td></tr>
+<tr><td>Jarak pada peta</td><td>jarak sebenarnya : penyebut skala</td></tr></table></div>
+<p>Konversi: 1 km = 1.000 m = 100.000 cm. Skala 1 : 250.000 berarti 1 cm di peta = 250.000 cm = 2,5 km.</p>
+<div class="box r"><b class="t">Peta diperbesar/diperkecil</b>Diperbesar k kali → penyebut skala dibagi k (1 : 1.500.000 diperbesar 2 kali menjadi 1 : 750.000). Diperkecil → penyebut dikali.</div>
+<h4>3. Proporsi</h4>
+<p>Proporsi adalah kesamaan dua rasio: {a/b} = {c/d} ⇔ a × d = b × c.</p>
+<h4>4. Laju</h4>
+<div class="scroll"><table><tr><th>Laju</th><th>Rumus</th><th>Satuan</th></tr>
+<tr><td>Kecepatan rata-rata</td><td>jarak : waktu</td><td>km/jam, m/detik</td></tr>
+<tr><td>Debit</td><td>volume : waktu</td><td>liter/menit</td></tr>
+<tr><td>Harga satuan</td><td>harga : banyak</td><td>Rp/ml, Rp/kg</td></tr>
+<tr><td>Laju perubahan</td><td>(nilai akhir − nilai awal) : selang waktu</td><td>cm/hari, orang/tahun</td></tr></table></div>
+<p>Waktu dalam menit diubah ke jam: 2 jam 15 menit = 2{15/60} jam = 2,25 jam.</p>`,
+c:[
+{q:'Pada peta berskala 1 : 250.000, jarak dua kota adalah 6 cm. Jarak sebenarnya kedua kota adalah …',o:['1,5 km','15 km','41,7 km','150 km'],a:1,p:['Jarak sebenarnya = 6 × 250.000 = 1.500.000 cm.','1.500.000 cm : 100.000 = 15 km.']},
+{q:'Uang Rp360.000 dibagikan kepada A, B, dan C dengan perbandingan 2 : 3 : 4. Bagian C adalah …',o:['Rp80.000','Rp120.000','Rp160.000','Rp180.000'],a:2,p:['Jumlah bagian = 2 + 3 + 4 = 9.','Bagian C = {4/9} × 360.000 = 4 × 40.000 = Rp160.000.']},
+{q:'Tinggi sebuah tanaman pada hari ke-3 adalah 12 cm dan pada hari ke-10 adalah 26 cm. Jika laju pertumbuhannya tetap, tinggi tanaman pada hari ke-15 adalah …',o:['30 cm','34 cm','36 cm','40 cm'],a:2,p:['Laju = (26 − 12) : (10 − 3) = 14 : 7 = 2 cm per hari.','Dari hari ke-10 ke hari ke-15 ada 5 hari: 26 + 5 × 2 = 36 cm.']}
+],
+x:[
+{q:'Rasio 45 menit terhadap 2 jam dalam bentuk paling sederhana adalah …',o:['45 : 2','3 : 4','3 : 8','8 : 3'],a:2,p:['Samakan satuan: 2 jam = 120 menit.','45 : 120, bagi FPB 15 → 3 : 8.']},
+{q:'Jarak sebenarnya dua tempat 24 km, sedangkan jaraknya pada peta 8 cm. Skala peta tersebut adalah …',o:['1 : 3.000','1 : 30.000','1 : 300.000','1 : 3.000.000'],a:2,p:['24 km = 2.400.000 cm.','Skala = 8 : 2.400.000 = 1 : 300.000.']},
+{q:'Sebuah kamar berukuran 4 m × 3,5 m digambar pada denah berskala 1 : 200. Ukuran kamar pada denah adalah …',o:['2 cm × 1,75 cm','20 cm × 17,5 cm','0,2 cm × 0,175 cm','8 cm × 7 cm'],a:0,p:['4 m = 400 cm → 400 : 200 = 2 cm.','3,5 m = 350 cm → 350 : 200 = 1,75 cm.']},
+{q:'Perbandingan kelereng Andi dan Budi adalah 5 : 3. Selisih kelereng mereka 18 butir. Jumlah kelereng mereka adalah …',o:['48','54','72','144'],a:2,p:['Selisih bagian = 5 − 3 = 2 bagian = 18 butir → 1 bagian = 9 butir.','Jumlah = (5 + 3) × 9 = 72 butir.']},
+{q:'Perbandingan usia ayah dan anaknya adalah 7 : 2. Jumlah usia mereka 54 tahun. Usia ayah adalah …',o:['12 tahun','38 tahun','42 tahun','47 tahun'],a:2,p:['Jumlah bagian = 9 → 1 bagian = 54 : 9 = 6 tahun.','Usia ayah = 7 × 6 = 42 tahun (anak 12 tahun).']},
+{q:'Sebuah mobil menempuh jarak 180 km dalam waktu 2 jam 15 menit. Kecepatan rata-rata mobil itu adalah …',o:['72 km/jam','80 km/jam','85 km/jam','90 km/jam'],a:1,p:['2 jam 15 menit = 2,25 jam.','Kecepatan = 180 : 2,25 = 80 km/jam.','Jebakan: menulis 2 jam 15 menit sebagai 2,15 jam.']},
+{q:'Sebuah keran memiliki debit 12 liter/menit. Waktu yang diperlukan untuk mengisi bak berkapasitas 540 liter sampai penuh adalah …',o:['36 menit','45 menit','54 menit','60 menit'],a:1,p:['Waktu = volume : debit = 540 : 12 = 45 menit.']},
+{q:'Sabun cair dijual dalam empat kemasan. Kemasan yang harga per mililiternya paling murah adalah …',o:['A: 750 ml, Rp21.000','B: 1 liter, Rp26.000','C: 500 ml, Rp14.500','D: 2 liter, Rp54.000'],a:1,p:['A: 21.000 : 750 = Rp28/ml.','B: 26.000 : 1.000 = Rp26/ml.','C: 14.500 : 500 = Rp29/ml.','D: 54.000 : 2.000 = Rp27/ml.','Paling murah: B. Kemasan terbesar belum tentu paling hemat.']},
+{t:'m',q:'Sebuah peta berskala 1 : 1.500.000. Pilih <b>semua</b> pernyataan yang benar.',o:['1 cm pada peta mewakili 15 km.','Jarak 4 cm pada peta sama dengan 60 km sebenarnya.','Jarak sebenarnya 45 km digambar 4,5 cm pada peta.','Jika peta diperbesar 2 kali, skalanya menjadi 1 : 3.000.000.'],a:[0,1],p:['(1) Benar: 1.500.000 cm = 15 km.','(2) Benar: 4 × 15 km = 60 km.','(3) Salah: 45 km : 15 km = 3 cm, bukan 4,5 cm.','(4) Salah: diperbesar 2 kali → 1 : 750.000.']},
+{q:'Jumlah penduduk sebuah desa pada tahun 2020 adalah 8.000 orang dan pada tahun 2024 adalah 9.200 orang. Jika laju pertambahan per tahun tetap, jumlah penduduk pada tahun 2027 adalah …',o:['9.500 orang','9.800 orang','10.100 orang','10.400 orang'],a:2,p:['Laju = (9.200 − 8.000) : (2024 − 2020) = 1.200 : 4 = 300 orang per tahun.','2024 → 2027 ada 3 tahun: 9.200 + 3 × 300 = 10.100 orang.']}
+]},
+/* ================= 6 ================= */
+{t:'Perbandingan senilai dan berbalik nilai',kisi:'Mengenali hubungan senilai dan berbalik nilai dari situasi, tabel, dan grafik, lalu menyelesaikan masalah termasuk pekerjaan yang tertunda.',
+m:`<div class="scroll"><table><tr><th></th><th>Senilai (sebanding)</th><th>Berbalik nilai</th></tr>
+<tr><td>Ciri</td><td>x naik → y naik dengan kelipatan yang sama</td><td>x naik → y turun</td></tr>
+<tr><td>Hubungan</td><td>{y/x} = k (tetap), y = kx</td><td>x × y = k (tetap)</td></tr>
+<tr><td>Rumus</td><td>{x₁/x₂} = {y₁/y₂}</td><td>{x₁/x₂} = {y₂/y₁}</td></tr>
+<tr><td>Grafik</td><td>garis lurus melalui (0, 0)</td><td>kurva hiperbola, tidak memotong sumbu</td></tr>
+<tr><td>Contoh</td><td>banyak barang – harga total; bensin – jarak; waktu kerja – upah</td><td>pekerja – waktu selesai; kecepatan – waktu (jarak tetap); banyak ternak – lama persediaan pakan</td></tr></table></div>
+<div class="graphs">
+<figure><svg viewBox="0 0 240 150" aria-label="Grafik senilai: garis lurus melalui titik asal"><line x1="30" y1="130" x2="230" y2="130" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="130" x2="30" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="130" x2="200" y2="25" stroke="var(--blue)" stroke-width="3"/><text x="222" y="146">x</text><text x="12" y="20">y</text><text x="18" y="146">0</text></svg><figcaption>Senilai: y = kx</figcaption></figure>
+<figure><svg viewBox="0 0 240 150" aria-label="Grafik berbalik nilai: kurva hiperbola"><line x1="30" y1="130" x2="230" y2="130" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="130" x2="30" y2="10" stroke="currentColor" stroke-width="1.5"/><path d="M45 15 Q60 100 120 112 T225 122" fill="none" stroke="var(--red)" stroke-width="3"/><text x="222" y="146">x</text><text x="12" y="20">y</text><text x="18" y="146">0</text></svg><figcaption>Berbalik nilai: x × y = k</figcaption></figure>
+</div>
+<h4>Strategi cepat</h4>
+<ul><li><b>Senilai</b>: cari nilai satuan dulu. 5 buku Rp37.500 → 1 buku Rp7.500 → 8 buku Rp60.000.</li>
+<li><b>Berbalik nilai</b>: hitung hasil kali tetapnya. 12 pekerja × 30 hari = 360 “orang-hari” → 18 pekerja perlu 360 : 18 = 20 hari.</li></ul>
+<div class="box"><b class="t">Pekerjaan yang tertunda atau berubah di tengah jalan</b>
+1) Hitung total pekerjaan dalam orang-hari. 2) Kurangi pekerjaan yang sudah selesai. 3) Bagi sisa pekerjaan dengan sisa waktu (untuk mencari banyak pekerja) atau dengan banyak pekerja baru (untuk mencari waktu). Hari libur/berhenti tidak menghasilkan pekerjaan.</div>`,
+c:[
+{q:'Harga 5 buku tulis Rp37.500. Harga 8 buku tulis yang sama adalah …',o:['Rp52.500','Rp56.000','Rp60.000','Rp62.500'],a:2,p:['Senilai: makin banyak buku, makin mahal.','Harga 1 buku = 37.500 : 5 = Rp7.500.','Harga 8 buku = 8 × 7.500 = Rp60.000.']},
+{q:'Sebuah proyek dapat diselesaikan 12 pekerja dalam 30 hari. Jika dikerjakan 18 pekerja dengan kemampuan sama, proyek selesai dalam …',o:['18 hari','20 hari','24 hari','45 hari'],a:1,p:['Berbalik nilai: makin banyak pekerja, makin cepat.','12 × 30 = 360 orang-hari → 360 : 18 = 20 hari.','45 hari diperoleh jika keliru memakai cara senilai.']},
+{q:'Sebuah pekerjaan direncanakan selesai dalam 24 hari oleh 20 pekerja. Setelah dikerjakan 6 hari, pekerjaan terhenti selama 3 hari. Agar pekerjaan selesai tepat waktu, banyak pekerja tambahan yang diperlukan adalah …',o:['4 orang','6 orang','8 orang','24 orang'],a:0,p:['Total pekerjaan = 20 × 24 = 480 orang-hari.','Sudah dikerjakan 6 hari: 20 × 6 = 120 → sisa 360 orang-hari.','Sisa waktu = 24 − 6 − 3 = 15 hari.','Pekerja yang dibutuhkan = 360 : 15 = 24 orang → tambahan 24 − 20 = 4 orang.']}
+],
+x:[
+{q:'Sebuah mobil memerlukan 12 liter bensin untuk menempuh 150 km. Dengan 20 liter bensin, mobil itu dapat menempuh …',o:['200 km','225 km','250 km','300 km'],a:2,p:['Senilai. 1 liter = 150 : 12 = 12,5 km.','20 liter = 20 × 12,5 = 250 km.']},
+{q:'Persediaan pakan cukup untuk 40 ekor ayam selama 15 hari. Jika ayamnya 60 ekor, pakan itu akan habis dalam …',o:['10 hari','12 hari','20 hari','22,5 hari'],a:0,p:['Berbalik nilai: makin banyak ayam, makin cepat habis.','40 × 15 = 600 → 600 : 60 = 10 hari.']},
+{q:'Pasangan besaran berikut yang merupakan perbandingan <b>berbalik nilai</b> adalah …',o:['banyak barang dan harga total','kecepatan dan waktu tempuh untuk jarak yang sama','jarak tempuh dan bensin yang dipakai','lama bekerja dan upah yang diterima'],a:1,p:['Untuk jarak tetap, kecepatan × waktu = jarak (tetap). Makin cepat, makin singkat waktunya.','Tiga pilihan lain adalah perbandingan senilai.']},
+{q:'Sebuah resep kue memerlukan 3 butir telur untuk 250 gram tepung. Banyak telur yang diperlukan untuk 1 kg tepung adalah …',o:['4 butir','9 butir','12 butir','15 butir'],a:2,p:['1 kg = 1.000 gram = 4 × 250 gram.','Telur = 4 × 3 = 12 butir.']},
+{q:'Sawah dapat dibajak 6 traktor dalam 8 hari. Agar selesai dalam 4 hari, banyak traktor <b>tambahan</b> yang diperlukan adalah …',o:['3','4','6','12'],a:2,p:['6 × 8 = 48 traktor-hari → 48 : 4 = 12 traktor.','Tambahan = 12 − 6 = 6 traktor. (12 adalah banyak traktor seluruhnya.)']},
+{q:'Dengan kecepatan rata-rata 60 km/jam, sebuah bus tiba dalam 3 jam. Agar tiba dalam 2,5 jam, kecepatan rata-ratanya harus …',o:['50 km/jam','65 km/jam','72 km/jam','75 km/jam'],a:2,p:['Jarak = 60 × 3 = 180 km (tetap).','Kecepatan baru = 180 : 2,5 = 72 km/jam.']},
+{q:'Tabel berikut menunjukkan perbandingan senilai antara x dan y.<div class="scroll"><table style="max-width:320px"><tr><th>x</th><td>2</td><td>5</td><td>p</td></tr><tr><th>y</th><td>7</td><td>q</td><td>28</td></tr></table></div>Nilai p dan q berturut-turut adalah …',o:['8 dan 17,5','8 dan 14','7 dan 17,5','14 dan 10'],a:0,p:['Senilai: {y/x} tetap = {7/2} = 3,5.','q = 5 × 3,5 = 17,5.','p = 28 : 3,5 = 8.']},
+{q:'Tabel berikut menunjukkan perbandingan berbalik nilai antara x dan y.<div class="scroll"><table style="max-width:320px"><tr><th>x</th><td>4</td><td>6</td><td>m</td></tr><tr><th>y</th><td>15</td><td>n</td><td>5</td></tr></table></div>Nilai m + n adalah …',o:['17','22','25','32'],a:1,p:['Berbalik nilai: x × y tetap = 4 × 15 = 60.','n = 60 : 6 = 10; m = 60 : 5 = 12.','m + n = 22.']},
+{t:'k',q:'Tentukan jenis perbandingan setiap pasangan besaran berikut.',items:['Banyak keran (debit sama) dan waktu mengisi kolam sampai penuh.','Panjang sisi persegi dan kelilingnya.','Banyak siswa dan bagian kue yang diterima tiap siswa (kue tetap 1 loyang).','Banyak bensin yang terpakai dan jarak tempuh mobil.'],lab:['Senilai','Berbalik nilai'],a:[1,0,1,0],p:['(1) Berbalik nilai: makin banyak keran, makin cepat penuh.','(2) Senilai: K = 4s, sisi dua kali lipat → keliling dua kali lipat.','(3) Berbalik nilai: makin banyak siswa, makin kecil bagiannya.','(4) Senilai: makin banyak bensin, makin jauh jaraknya.']},
+{q:'Sebuah gedung direncanakan selesai dibangun 15 pekerja dalam 40 hari. Setelah 10 hari bekerja, 5 pekerja dipindahkan ke proyek lain. Waktu total penyelesaian gedung sejak awal adalah …',o:['45 hari','50 hari','55 hari','60 hari'],a:2,p:['Total pekerjaan = 15 × 40 = 600 orang-hari.','10 hari pertama: 15 × 10 = 150 → sisa 450 orang-hari.','Sisa dikerjakan 10 pekerja: 450 : 10 = 45 hari.','Waktu total = 10 + 45 = 55 hari (terlambat 15 hari). Pilihan 45 hari hanya waktu sisanya.']}
+]}
+];
+
+const tabs = document.getElementById('tabs'), main = document.getElementById('main');
+tabs.innerHTML = S.map((s,i)=>`<a href="#bagian-${i+1}" data-i="${i}"><b>${i+1}</b>${s.t}</a>`).join('');
+
+const pb = (p, ansText, open) => `<details class="pb"${open?' open':''}><summary>Pembahasan</summary><ul>${p.map(l=>`<li>${F(l)}</li>`).join('')}</ul>${ansText?`<p class="ans">Jawaban: <span>${F(ansText)}</span></p>`:''}</details>`;
+const ansOf = q => q.t==='k' ? '' : (Array.isArray(q.a) ? q.a.map(i=>L[i]).join(', ') : L[q.a]+'. '+q.o[q.a]);
+const tagOf = q => q.t==='m' ? 'PGK MCMA' : q.t==='k' ? 'PGK Kategori' : 'PG';
+
+function exampleHTML(q,i){
+  const body = q.t==='k' ? '' : `<div class="opts static">${q.o.map((o,j)=>`<div class="opt"><span class="l">${L[j]}.</span><span>${F(o)}</span></div>`).join('')}</div>`;
+  return `<div class="q"><div class="h"><span class="no">Contoh ${i+1}</span><span class="tag">${tagOf(q)}</span></div><div class="txt">${F(q.q)}</div>${body}${pb(q.p,ansOf(q),false)}</div>`;
+}
+function practiceHTML(q,s,i){
+  const id = `s${s}q${i}`;
+  let body;
+  if(q.t==='k'){
+    body = `<div class="scroll"><table class="kt"><tr><th>Pernyataan</th>${q.lab.map(l=>`<th class="c">${l}</th>`).join('')}</tr>${q.items.map((it,r)=>`<tr data-r="${r}"><td>${F(it)}</td>${q.lab.map((l,c)=>`<td class="c"><input type="radio" name="${id}r${r}" value="${c}" aria-label="${l}"></td>`).join('')}</tr>`).join('')}</table></div>`;
+  } else {
+    const type = q.t==='m' ? 'checkbox' : 'radio';
+    body = `<div class="opts">${q.o.map((o,j)=>`<label class="opt"><input type="${type}" name="${id}" value="${j}"><span class="l">${L[j]}.</span><span>${F(o)}</span></label>`).join('')}</div>`;
+  }
+  return `<div class="q" id="${id}" data-s="${s}" data-i="${i}"><div class="h"><span class="no">Soal ${i+1}</span><span class="tag">${tagOf(q)}</span>${q.t==='m'?'<span class="tag">pilih semua yang benar</span>':''}</div><div class="txt">${F(q.q)}</div>${body}<div class="row"><button class="chk" disabled>Periksa</button><span class="fb" aria-live="polite"></span></div><div class="pbw"></div></div>`;
+}
+
+main.innerHTML = S.map((s,si)=>`<section id="bagian-${si+1}" hidden>
+<h2>${si+1}. ${s.t}</h2><p class="kisi">${s.kisi}</p>
+<h3><span class="n">Materi</span>Ringkasan konsep</h3><div class="materi">${F(s.m)}</div>
+<h3><span class="n">Contoh</span>3 contoh soal dan pembahasan</h3>${s.c.map(exampleHTML).join('')}
+<h3><span class="n">Latihan</span>10 soal latihan</h3>
+<div class="score"><span>Skor: <span class="big" data-sc="${si}">0</span> / 10 · dijawab <span data-dn="${si}">0</span></span><span class="bar"><i data-bar="${si}"></i></span><button class="ghost rst" data-s="${si}">Ulangi latihan</button></div>
+${s.x.map((q,i)=>practiceHTML(q,si,i)).join('')}
+<div class="pager">${si>0?`<a href="#bagian-${si}">← ${si}. ${S[si-1].t}</a>`:'<span></span>'}${si<S.length-1?`<a href="#bagian-${si+2}">${si+2}. ${S[si+1].t} →</a>`:''}</div>
+</section>`).join('');
+
+const state = S.map(()=>({})); // per section: {i: true/false}
+function updScore(s){
+  const v = Object.values(state[s]), ok = v.filter(Boolean).length;
+  main.querySelector(`[data-sc="${s}"]`).textContent = ok;
+  main.querySelector(`[data-dn="${s}"]`).textContent = v.length;
+  main.querySelector(`[data-bar="${s}"]`).style.width = (ok*10)+'%';
+}
+function ready(card,q){
+  if(q.t==='k') return q.items.every((_,r)=>card.querySelector(`input[name="${card.id}r${r}"]:checked`));
+  return !!card.querySelector('input:checked');
+}
+main.addEventListener('change', e=>{
+  const card = e.target.closest('.q[data-s]'); if(!card) return;
+  const q = S[+card.dataset.s].x[+card.dataset.i];
+  card.querySelector('.chk').disabled = !ready(card,q) || card.dataset.done==='1';
+});
+main.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.classList.contains('chk')){
+    const card = b.closest('.q'), s=+card.dataset.s, i=+card.dataset.i, q=S[s].x[i];
+    let correct;
+    if(q.t==='k'){
+      correct = true;
+      q.items.forEach((_,r)=>{const v=+card.querySelector(`input[name="${card.id}r${r}"]:checked`).value, tr=card.querySelector(`tr[data-r="${r}"]`), good=v===q.a[r]; tr.classList.add(good?'ok':'no'); if(!good) correct=false;});
+    } else {
+      const picked = [...card.querySelectorAll('input:checked')].map(x=>+x.value);
+      const key = Array.isArray(q.a)?q.a:[q.a];
+      correct = picked.length===key.length && picked.every(v=>key.includes(v));
+      card.querySelectorAll('.opt').forEach((o,j)=>{ if(key.includes(j)) o.classList.add('ok'); else if(picked.includes(j)) o.classList.add('no'); });
+    }
+    card.querySelectorAll('input').forEach(x=>x.disabled=true);
+    card.dataset.done='1'; b.disabled=true;
+    const fb = card.querySelector('.fb'); fb.className='fb '+(correct?'ok':'no'); fb.textContent = correct?'Benar!':'Belum tepat. Lihat pembahasan.';
+    const kAns = q.t==='k' ? q.items.map((_,r)=>`(${r+1}) ${q.lab[q.a[r]]}`).join('; ') : ansOf(q);
+    card.querySelector('.pbw').innerHTML = pb(q.p,kAns,!correct);
+    state[s][i]=correct; updScore(s);
+  }
+  if(b.classList.contains('rst')){
+    const s=+b.dataset.s; state[s]={};
+    main.querySelectorAll(`.q[data-s="${s}"]`).forEach(card=>{
+      card.dataset.done=''; card.querySelectorAll('input').forEach(x=>{x.disabled=false;x.checked=false});
+      card.querySelectorAll('.ok,.no').forEach(x=>{if(!x.classList.contains('fb'))x.classList.remove('ok','no')});
+      const fb=card.querySelector('.fb'); fb.className='fb'; fb.textContent='';
+      card.querySelector('.pbw').innerHTML=''; card.querySelector('.chk').disabled=true;
+    });
+    updScore(s);
+  }
+});
+
+function show(){
+  let n = /^#bagian-([1-6])$/.exec(location.hash); n = n? +n[1]-1 : 0;
+  main.querySelectorAll('section').forEach((sec,i)=>sec.hidden = i!==n);
+  tabs.querySelectorAll('a').forEach((a,i)=>a.setAttribute('aria-current', i===n?'true':'false'));
+  const cur = tabs.querySelector('[aria-current=true]'); if(cur && cur.scrollIntoView) cur.scrollIntoView({block:'nearest',inline:'nearest'});
+}
+window.addEventListener('hashchange',()=>{show(); document.querySelector('nav').scrollIntoView({block:'start'});});
+show();
+}
+</script>
+</body>
+</html>
